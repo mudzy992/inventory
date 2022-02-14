@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { AddArticleDto } from 'src/dtos/article/add.article.dto';
-import { EditArticleInStockDto } from 'src/dtos/stock/edit.article.in.stock.dto';
+import { ArticleStockComponentDto } from 'src/dtos/article/article.stock.component.dto';
+import { EditFullArticleDto } from 'src/dtos/article/edit.full.article.dto';
 import { Article } from 'src/entities/Article';
 import { ArticleFeature } from 'src/entities/ArticleFeature';
 import { Stock } from 'src/entities/Stock';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository } from 'typeorm';
-import { dataCollectionPhase } from 'typeorm-model-generator/dist/src/Engine';
 
 @Injectable()
 export class ArticleService extends TypeOrmCrudService<Article> {
@@ -62,9 +62,9 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
     const newArticleInStock: Stock = new Stock();
     newArticleInStock.articleId = savedArticle.articleId;
-    newArticleInStock.valueOnConcract = data.valueOnConcract;
-    newArticleInStock.valueAvailable = data.valueAvailable;
-    newArticleInStock.sapNumber = data.sap_number;
+    newArticleInStock.valueOnConcract = data.stock.valueOnConcract;
+    newArticleInStock.valueAvailable = data.stock.valueAvailable;
+    newArticleInStock.sapNumber = data.stock.sap_number;
 
     await this.stock.save(newArticleInStock);
 
@@ -83,28 +83,75 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     return null;
   }
 
-  async changeArticleAvailableValueInStock(
+  async editFullArticle(
     articleId: number,
-    newArticleValue: number,
+    data: EditFullArticleDto,
   ): Promise<Article | ApiResponse> {
-    const existingArticleInStock: Stock = await this.stock.findOne({
-      articleId: articleId,
+    const existingArticle: Article = await this.article.findOne(articleId, {
+      relations: ['articlesInStock', 'articleFeature'],
     });
 
-    if (!existingArticleInStock) {
-      console.log(existingArticleInStock);
-      return new ApiResponse('error', -1001, 'artikal ne postoji u skladištu');
+    if (!existingArticle) {
+      return new ApiResponse('error', -1001, 'Artikal ne postoji u skladištu');
+    }
+    existingArticle.name = data.name;
+    existingArticle.categoryId = data.categoryId;
+    existingArticle.excerpt = data.excerpt;
+    existingArticle.description = data.description;
+    existingArticle.concract = data.concract;
+    existingArticle.comment = data.comment;
+
+    const savedArticle = await this.article.save(existingArticle);
+
+    if (!savedArticle) {
+      return new ApiResponse('error', -1002, 'Artikal nije moguće spasiti');
     }
 
-    const newArticleDataInStock = new Stock();
-    console.log(existingArticleInStock);
-    newArticleDataInStock.valueAvailable =
-      existingArticleInStock.valueAvailable + newArticleValue;
-    console.log(newArticleDataInStock);
-    await this.stock.save(newArticleDataInStock);
+    if (data.stock !== null) {
+      await this.stock.remove(
+        await this.stock.findOne({ articleId: articleId }),
+      );
+      const newArticleStock: Stock = new Stock();
+      newArticleStock.articleId = articleId;
+      newArticleStock.valueOnConcract = data.stock.valueOnConcract;
+      newArticleStock.valueAvailable = data.stock.valueAvailable;
+      newArticleStock.sapNumber = data.stock.sap_number;
+      await this.stock.save(newArticleStock);
+    }
+
+    if (data.features !== null) {
+      await this.articleFeature.remove(existingArticle.articleFeature);
+      for (const feature of data.features) {
+        const newArticleFeature: ArticleFeature = new ArticleFeature();
+        newArticleFeature.articleId = articleId;
+        newArticleFeature.featureId = feature.featureId;
+        newArticleFeature.value = feature.value;
+        await this.articleFeature.save(newArticleFeature);
+      }
+    }
 
     return await this.findOne(articleId, {
       relations: ['category', 'articleFeature', 'features', 'articlesInStock'],
     });
+  }
+  async changeStockExistArticle(
+    articleId: number,
+    data: ArticleStockComponentDto,
+  ): Promise<Stock> {
+    const existingStockArticle = await this.stock.findOne({
+      articleId: articleId,
+    });
+    if (existingStockArticle) {
+      await this.stock.remove(
+        await this.stock.findOne({ articleId: articleId }),
+      );
+      const newArticleStock: Stock = new Stock();
+      newArticleStock.articleId = articleId;
+      newArticleStock.valueOnConcract = data.valueOnConcract;
+      newArticleStock.valueAvailable = data.valueAvailable;
+      newArticleStock.sapNumber = data.sap_number;
+      await this.stock.save(newArticleStock);
+      return newArticleStock;
+    }
   }
 } /* Kraj koda */

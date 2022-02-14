@@ -1,7 +1,8 @@
 import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
 import { AddArticleDto } from 'src/dtos/article/add.article.dto';
-import { EditArticleInStockDto } from 'src/dtos/stock/edit.article.in.stock.dto';
+import { ArticleStockComponentDto } from 'src/dtos/article/article.stock.component.dto';
+import { EditFullArticleDto } from 'src/dtos/article/edit.full.article.dto';
 import { Article } from 'src/entities/Article';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { ArticleService } from 'src/services/article/article.service';
@@ -43,6 +44,7 @@ import { ArticleService } from 'src/services/article/article.service';
       },
     },
   },
+  routes: { exclude: ['updateOneBase'] },
 })
 export class ArticleController {
   constructor(public service: ArticleService) {}
@@ -50,7 +52,7 @@ export class ArticleController {
   async createFullArticle(
     @Body() data: AddArticleDto,
   ): Promise<Article | ApiResponse> {
-    const sapnumber = await this.service.getBySapNumber(data.sap_number);
+    const sapnumber = await this.service.getBySapNumber(data.stock.sap_number);
     /* Ako artikal po sap broju već postoji u skladištu, isti ne dodavati ponovo */
     if (sapnumber) {
       /* Implementirati mehanizam, ako artikal postoji promjeniti mu količinu, tj. dodati novu količinu na postojeću */
@@ -62,11 +64,16 @@ export class ArticleController {
   @Patch(':id')
   async editArticleDataInStock(
     @Param('id') id: number,
-    @Body() data: EditArticleInStockDto,
+    @Body() data: EditFullArticleDto,
   ) {
-    return await this.service.changeArticleAvailableValueInStock(
-      id,
-      data.valueAvailable,
-    );
+    return await this.service.editFullArticle(id, data);
+  }
+
+  @Patch('/stock/:id')
+  async changeStockExistArticle(
+    @Param('id') id: number,
+    @Body() data: ArticleStockComponentDto,
+  ) {
+    return await this.service.changeStockExistArticle(id, data);
   }
 } /* Kraj koda */

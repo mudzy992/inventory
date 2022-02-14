@@ -1,13 +1,16 @@
 import { ArticleFeatureComponentDto } from './article.feature.component.dto';
-import { ArticleStockComponentDto } from './article.stock.component.dto';
 
-export class AddArticleDto {
+export class EditFullArticleDto {
   name: string;
   categoryId: number;
   excerpt: string;
   description: string;
   concract: string;
   comment: string;
-  stock: ArticleStockComponentDto;
-  features: ArticleFeatureComponentDto[];
+  stock: {
+    valueOnConcract: number;
+    valueAvailable: number;
+    sap_number: string;
+  };
+  features: ArticleFeatureComponentDto[] | null;
 }

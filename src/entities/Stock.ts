@@ -39,24 +39,10 @@ export class Stock {
   @OneToMany(() => Stock, (stock) => stock.articles)
   articlesInStock: Article[];
 
-  /* @OneToMany(() => Article, (article) => article.stock)
-  articleStocDestroys: ArticleStocDestroy[]; */
-
   @ManyToOne(() => Article, (article) => article.articlesInStock, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'article_id', referencedColumnName: 'articleId' }])
   articles: Article;
-
-  /* @OneToMany((type) => Article, (article) => article.articleInStock)
-  @JoinTable({
-    name: 'article_stoc_destroy',
-    joinColumn: { name: 'stock_id', referencedColumnName: 'stockId' },
-    inverseJoinColumn: {
-      name: 'article_id',
-      referencedColumnName: 'articleId',
-    },
-  })
-  articles: Stock[]; */
 }

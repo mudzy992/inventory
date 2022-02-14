@@ -11,7 +11,7 @@ import { Stock } from 'src/entities/Stock';
 import { User } from 'src/entities/User';
 import { UserArticle } from 'src/entities/UserArticle';
 import { ArticleController } from './controllers/api/article.controller';
-import { UserService } from './services/user/article.service';
+import { UserService } from './services/user/user.service';
 import { UserController } from './controllers/api/user.controller';
 import { CategoryService } from './services/category/category.service';
 import { CategoryController } from './controllers/api/category.controller';
