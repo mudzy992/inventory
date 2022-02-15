@@ -58,7 +58,10 @@ export class UserService extends TypeOrmCrudService<User> {
     /* Provjera ako korisnik već ima zadužen artikal pod articleId i userId i userArticle DONE*/
     /* Provjera da li na stanju više ima artikala da se zaduži DONE */
     /* Implementacija mehanizma za automacko umanjenje količine na skladištu DONE*/
-    /* Implementacija vraćanja artikla iz zaduženo u na skladištu, uvećavanje (pogledati bazu, podataka zaduženja u userArticles) */
+    /* Implementacija vraćanja artikla iz zaduženo u na skladištu, uvećavanje (pogledati bazu, podataka zaduženja u userArticles) 
+    promjeniti u bazi na stockArticles i stock postaviti status, te ako je u dto status razduzeno izvrsiti + onoliko koliko je zaduzeno bilo 
+    te ga brisati iz stockArticles u stock koji ce imati za taj article status na stanju ili nema na stanju (promjeniti if statement za nema na stanju na osnov statusa) */
+    /* napraviti tabelu gdje ce se vrsiti historija zaduzenja i razduzenja sa timestamp */
 
     const user: User = await this.user.findOne({ userId: userId });
 
