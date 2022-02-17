@@ -22,6 +22,9 @@ export class Destroyed {
   @Column('varchar', { name: 'comment' })
   comment: string;
 
-/*   @OneToMany(() => Article, (Article) => Article.articleDestroyed)
+  @Column('int', { name: 'user_id', unsigned: true })
+  userId: number;
+
+  /* @OneToMany(() => Article, (Article) => Article.articleDestroyed)
   destroyed: Article[]; */
 }

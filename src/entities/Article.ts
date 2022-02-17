@@ -32,14 +32,6 @@ export class Article {
   @Column('varchar', { name: 'description', length: 45 })
   description: string;
 
-  @Column('enum', {
-    name: 'status',
-    nullable: true,
-    enum: ['zaduženo', 'na skladištu', 'otpisano'],
-    default: () => "'zaduženo'",
-  })
-  status: 'zaduženo' | 'na skladištu' | 'otpisano' | null;
-
   @Column('varchar', { name: 'comment', nullable: true })
   comment: string | null;
 
@@ -48,6 +40,9 @@ export class Article {
 
   @Column('int', { name: 'category_id', unsigned: true })
   categoryId: number;
+
+  @Column('varchar', { name: 'sap_number', nullable: false })
+  sapNumber: string;
 
   @ManyToOne(() => Category, (category) => category.articles, {
     onDelete: 'RESTRICT',
@@ -98,7 +93,7 @@ export class Article {
   })
   articleInStock: Article[]; */
 
-  /*   @ManyToOne((type) => Destroyed, (destroyed) => destroyed.destroyed)
+    /* @ManyToOne((type) => Destroyed, (destroyed) => destroyed.destroyed)
   @JoinTable({
     name: 'destroyed',
     joinColumn: { name: 'article_id', referencedColumnName: 'articleId' },

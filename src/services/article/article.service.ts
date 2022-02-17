@@ -40,6 +40,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     newArticle.description = data.description;
     newArticle.concract = data.concract;
     newArticle.comment = data.comment;
+    newArticle.sapNumber = data.sap_number;
     /* Sada kada smo kreirali artikal, njega je potrebno snimiti u neku konstantu i čuvati ga na await 
       to radimo u ovom trenutku jer ćemo tako dobiti articleId, već ovdje artikal ide u bazu podataka (na returnu)*/
 
@@ -64,7 +65,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     newArticleInStock.articleId = savedArticle.articleId;
     newArticleInStock.valueOnConcract = data.stock.valueOnConcract;
     newArticleInStock.valueAvailable = data.stock.valueAvailable;
-    newArticleInStock.sapNumber = data.stock.sap_number;
+    newArticleInStock.sapNumber = data.sap_number;
 
     await this.stock.save(newArticleInStock);
 
@@ -136,7 +137,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
   }
   async changeStockExistArticle(
     articleId: number,
-    data: ArticleStockComponentDto,
+    data: AddArticleDto,
   ): Promise<Stock> {
     const existingStockArticle = await this.stock.findOne({
       articleId: articleId,
@@ -147,8 +148,8 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       );
       const newArticleStock: Stock = new Stock();
       newArticleStock.articleId = articleId;
-      newArticleStock.valueOnConcract = data.valueOnConcract;
-      newArticleStock.valueAvailable = data.valueAvailable;
+      newArticleStock.valueOnConcract = data.stock.valueOnConcract;
+      newArticleStock.valueAvailable = data.stock.valueAvailable;
       newArticleStock.sapNumber = data.sap_number;
       await this.stock.save(newArticleStock);
       return newArticleStock;

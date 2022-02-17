@@ -19,6 +19,8 @@ import { StockService } from './services/stock/stock.service';
 import { StockController } from './controllers/api/stock.controller';
 import { FeatureService } from './services/feature/feature.service';
 import { FeatureController } from './controllers/api/feature.controller';
+import { UserArticleController } from './controllers/api/user.article.controller';
+import { UserArticleService } from './services/userArticle/user.article.service';
 
 @Module({
   imports: [
@@ -56,6 +58,7 @@ import { FeatureController } from './controllers/api/feature.controller';
     CategoryController,
     StockController,
     FeatureController,
+    UserArticleController,
   ],
   providers: [
     ArticleService,
@@ -63,6 +66,7 @@ import { FeatureController } from './controllers/api/feature.controller';
     CategoryService,
     StockService,
     FeatureService,
+    UserArticleService,
   ],
 })
 export class AppModule {}

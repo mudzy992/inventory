@@ -29,6 +29,20 @@ export class UserArticle {
   @Column('int', { name: 'value' })
   value: number;
 
+  @Column('enum', {
+    name: 'status',
+    enum: ['zaduženo', 'razduženo', 'otpisano'],
+    default: () => "'zaduženo'",
+  })
+  status: 'zaduženo' | 'razduženo' | 'otpisano';
+
+  @Column('timestamp', {
+    name: 'timestamp',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  timestamp: Date;
+
   @ManyToOne(() => Article, (article) => article.userArticles, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',

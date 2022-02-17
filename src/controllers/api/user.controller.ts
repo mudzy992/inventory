@@ -31,7 +31,7 @@ import { UserService } from 'src/services/user/user.service';
 })
 export class UserController {
   constructor(public service: UserService) {}
-  @Post('/createUser/')
+  @Post('/add/')
   async createNewUser(
     @Body() data: AddNewEmployeDto,
   ): Promise<User | ApiResponse> {
@@ -44,13 +44,5 @@ export class UserController {
       );
     }
     return await this.service.createNewUser(data);
-  }
-
-  @Post('/responsibility/:id')
-  async responsibilityArticleToUser (
-    @Param('id') id: number,
-    @Body() data: AddEmployeArticleDto,
-  ) {
-    return await this.service.addEmployeArticle(id, data);
   }
 } /* Kraj koda */

@@ -8,6 +8,7 @@ export class AddArticleDto {
   description: string;
   concract: string;
   comment: string;
+  sap_number: string;
   stock: ArticleStockComponentDto;
   features: ArticleFeatureComponentDto[];
 }

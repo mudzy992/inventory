@@ -52,7 +52,7 @@ export class ArticleController {
   async createFullArticle(
     @Body() data: AddArticleDto,
   ): Promise<Article | ApiResponse> {
-    const sapnumber = await this.service.getBySapNumber(data.stock.sap_number);
+    const sapnumber = await this.service.getBySapNumber(data.sap_number);
     /* Ako artikal po sap broju već postoji u skladištu, isti ne dodavati ponovo */
     if (sapnumber) {
       /* Implementirati mehanizam, ako artikal postoji promjeniti mu količinu, tj. dodati novu količinu na postojeću */
@@ -72,7 +72,7 @@ export class ArticleController {
   @Patch('/stock/:id')
   async changeStockExistArticle(
     @Param('id') id: number,
-    @Body() data: ArticleStockComponentDto,
+    @Body() data: AddArticleDto,
   ) {
     return await this.service.changeStockExistArticle(id, data);
   }
