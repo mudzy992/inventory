@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Article } from './Article';
+import { Destroyed } from './Destroyed';
 import { UserArticle } from './UserArticle';
 
 @Entity('user', { schema: 'inventory' })
@@ -42,4 +43,6 @@ export class User {
     },
   })
   articles: Article[];
+
+  
 }

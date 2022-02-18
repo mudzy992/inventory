@@ -36,10 +36,13 @@ import { ArticleService } from 'src/services/article/article.service';
       userDetails: {
         eager: true,
       },
-      articles: {
+      articlearticlesInStock: {
         eager: true,
       },
-      articleStocDestroy: {
+      destroyed: { 
+        eager: true,
+      },
+      articleDestroyed: { 
         eager: true,
       },
     },

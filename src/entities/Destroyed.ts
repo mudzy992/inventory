@@ -2,13 +2,18 @@ import {
   Column,
   Entity,
   Index,
+  JoinColumn,
+  JoinTable,
+  ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Article } from './Article';
+import { User } from './User';
 
 @Index('article_id', ['articleId'], { unique: true })
-@Entity('destroyed', { schema: 'inventory' })
+@Entity('destroyed')
 export class Destroyed {
   @PrimaryGeneratedColumn({ type: 'int', name: 'destroyed_id', unsigned: true })
   destroyedId: number;
@@ -22,9 +27,21 @@ export class Destroyed {
   @Column('varchar', { name: 'comment' })
   comment: string;
 
+  @Column('timestamp', {
+    name: 'timestamp',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  timestamp: Date;
+
   @Column('int', { name: 'user_id', unsigned: true })
   userId: number;
 
-  /* @OneToMany(() => Article, (Article) => Article.articleDestroyed)
-  destroyed: Article[]; */
+  @ManyToOne(() => Article, (article) => article.destroyed, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'article_id', referencedColumnName: 'articleId' }])
+  article: Article;
+
 }

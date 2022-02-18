@@ -7,6 +7,7 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Category } from './Category';
@@ -82,25 +83,6 @@ export class Article {
   })
   features: Feature[];
 
-  /* @ManyToOne((type) => Stock, (stock) => stock.articles)
-  @JoinTable({
-    name: 'stock',
-    joinColumn: { name: 'article_id', referencedColumnName: 'articleId' },
-    inverseJoinColumn: {
-      name: 'stock_id',
-      referencedColumnName: 'stockId',
-    },
-  })
-  articleInStock: Article[]; */
-
-    /* @ManyToOne((type) => Destroyed, (destroyed) => destroyed.destroyed)
-  @JoinTable({
-    name: 'destroyed',
-    joinColumn: { name: 'article_id', referencedColumnName: 'articleId' },
-    inverseJoinColumn: {
-      name: 'destroyed_id',
-      referencedColumnName: 'destroyedId',  
-    },
-  })
-  articleDestroyed: Article[]; */
+  @OneToMany(() => Destroyed, (destroyed) => destroyed.article)
+  destroyed: Destroyed[];
 }

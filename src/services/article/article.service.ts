@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { AddArticleDto } from 'src/dtos/article/add.article.dto';
-import { ArticleStockComponentDto } from 'src/dtos/article/article.stock.component.dto';
 import { EditFullArticleDto } from 'src/dtos/article/edit.full.article.dto';
 import { Article } from 'src/entities/Article';
 import { ArticleFeature } from 'src/entities/ArticleFeature';
@@ -71,7 +70,13 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
     /* Vrati artikal na prikaz */
     return await this.findOne(savedArticle.articleId, {
-      relations: ['category', 'articleFeature', 'features', 'articlesInStock'],
+      relations: [
+        'category',
+        'articleFeature',
+        'features',
+        'articlesInStock',
+        'destroyed',
+      ],
     });
   } /* Kraj metoda za kreiranje novog artikla */
 
@@ -132,7 +137,13 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     }
 
     return await this.findOne(articleId, {
-      relations: ['category', 'articleFeature', 'features', 'articlesInStock'],
+      relations: [
+        'category',
+        'articleFeature',
+        'features',
+        'articlesInStock',
+        'destroyed',
+      ],
     });
   }
   async changeStockExistArticle(
