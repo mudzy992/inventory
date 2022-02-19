@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { AddEmployeArticleDto } from 'src/dtos/user/add.employe.article.dto';
+import { DebtItems } from 'src/entities/DebtItems';
+import { Destroyed } from 'src/entities/Destroyed';
 import { Stock } from 'src/entities/Stock';
+import { User } from 'src/entities/User';
 import { UserArticle } from 'src/entities/UserArticle';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository } from 'typeorm';
@@ -14,13 +17,19 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     private readonly userArticle: Repository<UserArticle>,
     @InjectRepository(Stock)
     private readonly stock: Repository<Stock>,
+    @InjectRepository(Destroyed)
+    private readonly destroyed: Repository<Destroyed>,
+    @InjectRepository(DebtItems)
+    private readonly debtItems: Repository<DebtItems>,
+    @InjectRepository(User)
+    private readonly user: Repository<User>,
   ) {
     super(userArticle);
   }
   async addArticleToEmploye(
     userId: number,
     data: AddEmployeArticleDto,
-  ): Promise<Stock | UserArticle | ApiResponse> {
+  ): Promise<User | Stock | UserArticle | ApiResponse> {
     /* Provjera ako korisnik već ima zadužen artikal pod articleId i userId i userArticle DONE*/
     /* Provjera da li na stanju više ima artikala da se zaduži DONE */
     /* Implementacija mehanizma za automacko umanjenje količine na skladištu DONE*/
@@ -102,35 +111,39 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     }
 
     if (data.status === 'razduženo') {
-      if (existingArticleOnUser) {
-        return new ApiResponse(
-          'error',
-          -2006,
-          'Artikal je već razdužen s radnika',
-        );
-      }
-
-      const newArticleOnUser: UserArticle = new UserArticle();
-      newArticleOnUser.userId = userId;
-      newArticleOnUser.articleId = data.articleId;
-      newArticleOnUser.value = data.value;
-      newArticleOnUser.status = data.status;
-
-      const savedUserArticle = await this.userArticle.save(newArticleOnUser);
-
-      if (!savedUserArticle) {
-        return new ApiResponse(
-          'error',
-          -2006,
-          'Artikal je već razdužen s radnika',
-        );
-      }
       const existingResponsibilityArticleOnUser: UserArticle =
         await this.userArticle.findOne({
           userId: userId,
           articleId: data.articleId,
           status: 'zaduženo',
         });
+
+      if (!existingResponsibilityArticleOnUser) {
+        return new ApiResponse(
+          'error',
+          -2006,
+          'Artikal je već razdužen s radnika',
+        );
+      }
+
+      await this.userArticle.remove(existingResponsibilityArticleOnUser);
+
+      const newDebtArticle: DebtItems = new DebtItems();
+      newDebtArticle.userId = userId;
+      newDebtArticle.articleId = existingResponsibilityArticleOnUser.articleId;
+      newDebtArticle.value = existingResponsibilityArticleOnUser.value;
+      newDebtArticle.comment = data.comment;
+
+      const savedArticleInDebtItems = await this.debtItems.save(newDebtArticle);
+
+      if (!savedArticleInDebtItems) {
+        return new ApiResponse(
+          'error',
+          -2006,
+          'Artikal nije zadužen na radnika',
+        );
+      }
+
       const articleInStock: Stock = await this.stock.findOne({
         articleId: data.articleId,
       });
@@ -144,46 +157,54 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       newArticleStock.sapNumber = articleInStock.sapNumber;
       await this.stock.save(newArticleStock);
 
-      return newArticleStock;
+      return await this.user.findOne(userId, {
+        relations: ['debtItems', 'debtItems.article'],
+      });
     }
 
     if (data.status === 'otpisano') {
-      if (existingArticleOnUser) {
-        return new ApiResponse(
-          'error',
-          -2008,
-          'Artikal je već otpisan sa radnika',
-        );
-      }
       const existingResponsibilityArticleOnUser: UserArticle =
         await this.userArticle.findOne({
           userId: userId,
           articleId: data.articleId,
           status: 'zaduženo',
         });
+
+      if (!existingResponsibilityArticleOnUser) {
+        return new ApiResponse(
+          'error',
+          -2006,
+          'Artikal nije zadužen na radnika',
+        );
+      }
       await this.userArticle.remove(existingResponsibilityArticleOnUser);
-      const newArticleOnUser: UserArticle = new UserArticle();
-      newArticleOnUser.userId = userId;
-      newArticleOnUser.articleId = data.articleId;
-      newArticleOnUser.value = data.value;
-      newArticleOnUser.status = data.status;
 
-      const savedUserArticle = await this.userArticle.save(newArticleOnUser);
+      const destroyedArticle: Destroyed = new Destroyed();
+      destroyedArticle.userId = userId;
+      destroyedArticle.articleId = data.articleId;
+      destroyedArticle.value = existingResponsibilityArticleOnUser.value;
+      destroyedArticle.comment = data.comment;
 
-      if (!savedUserArticle) {
+      const saveDestroyedArticle = await this.destroyed.save(destroyedArticle);
+
+      if (!saveDestroyedArticle) {
         return new ApiResponse(
           'error',
           -2003,
           'Artikal ne može biti zadužen za tog radnika',
         );
       }
+      return await this.user.findOne(userId, {
+        relations: ['destroyeds', 'destroyeds.article'],
+      });
     }
   }
+  /* FUNKCIJE */
 } /* KRAJ KODA */
 
 /* Iz razloga što ne brišem iz userArticle stanje zaduženog artikla, dolazi do zabune u aplikaciji, gdje se dešava da sam artikal koji je bio
 zadužen na radnik, razdužio ga, ali ostao je u evidenciji userArticle sa statusom zadužen, i samim tim funkciju otpisivanja ne radi kako treba, 
 jer u tom trenutku trenutni artikal nije ustvari zadužen (otpisan je već ranije ali stoji u evidenciji), i kada se pokrene fukncija otpisivanja,
-ona ustvari otpiše, već razduženi artikal sa korisnika. Da bi se sve to izbjeglo, potrebno je ipak izvršiti evidenciju razdužena i otpisivanja u posebnim tabelama */
+ona ustvari otpiše, već razduženi artikal sa korisnika. Da bi se sve to izbjeglo, potrebno je ipak izvršiti evidenciju razdužena i otpisivanja u posebnim tabelama DONE */
 
 /* Uraditi funkcije da se rastereti kod, i malo reorganizuje jer ima kodova koji se ponavljaju */

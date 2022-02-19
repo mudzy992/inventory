@@ -17,6 +17,7 @@ import { Feature } from './Feature';
 import { User } from './User';
 import { Stock } from './Stock';
 import { Destroyed } from './Destroyed';
+import { DebtItems } from './DebtItems';
 
 @Index('fk_article_category_id', ['categoryId'], {})
 @Entity('article')
@@ -61,6 +62,9 @@ export class Article {
   @OneToMany(() => Stock, (stock) => stock.articles)
   articlesInStock: Article[];
 
+  @OneToMany(() => DebtItems, (debtItems) => debtItems.article)
+  debtItems: DebtItems[];
+
   @ManyToMany(() => User, (user) => user.articles)
   @JoinTable({
     name: 'user_article',
@@ -83,6 +87,6 @@ export class Article {
   })
   features: Feature[];
 
-  @OneToMany(() => Destroyed, (destroyed) => destroyed.article)
-  destroyed: Destroyed[];
+  @OneToOne(() => Destroyed, (destroyed) => destroyed.article)
+  destroyed: Destroyed;
 }

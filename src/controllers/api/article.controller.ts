@@ -1,7 +1,6 @@
 import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
 import { AddArticleDto } from 'src/dtos/article/add.article.dto';
-import { ArticleStockComponentDto } from 'src/dtos/article/article.stock.component.dto';
 import { EditFullArticleDto } from 'src/dtos/article/edit.full.article.dto';
 import { Article } from 'src/entities/Article';
 import { ApiResponse } from 'src/misc/api.response.class';
@@ -39,10 +38,13 @@ import { ArticleService } from 'src/services/article/article.service';
       articlearticlesInStock: {
         eager: true,
       },
-      destroyed: { 
+      destroyed: {
         eager: true,
       },
-      articleDestroyed: { 
+      articleDestroyed: {
+        eager: true,
+      },
+      debtItems: {
         eager: true,
       },
     },

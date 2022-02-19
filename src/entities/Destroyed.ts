@@ -3,16 +3,16 @@ import {
   Entity,
   Index,
   JoinColumn,
-  JoinTable,
   ManyToOne,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Article } from './Article';
 import { User } from './User';
 
-@Index('article_id', ['articleId'], { unique: true })
+@Index('article_id_timestamp_user_id', ['articleId', 'userId', 'timestamp'], {
+  unique: true,
+})
 @Entity('destroyed')
 export class Destroyed {
   @PrimaryGeneratedColumn({ type: 'int', name: 'destroyed_id', unsigned: true })
@@ -37,11 +37,17 @@ export class Destroyed {
   @Column('int', { name: 'user_id', unsigned: true })
   userId: number;
 
-  @ManyToOne(() => Article, (article) => article.destroyed, {
+  @OneToOne(() => Article, (article) => article.destroyed, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'article_id', referencedColumnName: 'articleId' }])
   article: Article;
 
+  @ManyToOne(() => User, (user) => user.destroyeds, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'userId' }])
+  user: User;
 }

@@ -21,6 +21,8 @@ import { FeatureService } from './services/feature/feature.service';
 import { FeatureController } from './controllers/api/feature.controller';
 import { UserArticleController } from './controllers/api/user.article.controller';
 import { UserArticleService } from './services/userArticle/user.article.service';
+import { DebtItems } from './entities/DebtItems';
+import { DebtItemsService } from './services/debtItems/debt.items.service';
 
 @Module({
   imports: [
@@ -39,6 +41,7 @@ import { UserArticleService } from './services/userArticle/user.article.service'
         Stock,
         User,
         UserArticle,
+        DebtItems,
       ],
     }),
     TypeOrmModule.forFeature([
@@ -50,6 +53,7 @@ import { UserArticleService } from './services/userArticle/user.article.service'
       Stock,
       User,
       UserArticle,
+      DebtItems,
     ]),
   ],
   controllers: [
@@ -67,6 +71,7 @@ import { UserArticleService } from './services/userArticle/user.article.service'
     StockService,
     FeatureService,
     UserArticleService,
+    DebtItemsService,
   ],
 })
 export class AppModule {}

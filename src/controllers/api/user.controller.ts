@@ -1,6 +1,5 @@
 import { Body, Controller, Param, Post } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
-import { AddEmployeArticleDto } from 'src/dtos/user/add.employe.article.dto';
 import { AddNewEmployeDto } from 'src/dtos/user/add.new.employe.dto';
 import { User } from 'src/entities/User';
 import { ApiResponse } from 'src/misc/api.response.class';
@@ -20,10 +19,16 @@ import { UserService } from 'src/services/user/user.service';
   },
   query: {
     join: {
-      userArticles: {
+      articles: {
         eager: true,
       },
-      articles: {
+      responsibilityArticles: {
+        eager: true,
+      },
+      debtItems: {
+        eager: true,
+      },
+      destroyeds: {
         eager: true,
       },
     },
@@ -35,7 +40,7 @@ export class UserController {
   async createNewUser(
     @Body() data: AddNewEmployeDto,
   ): Promise<User | ApiResponse> {
-    const email = await this.service.getByEmail(data.surename);
+    const email = await this.service.getByEmail(data.email);
     if (email) {
       return new ApiResponse(
         'error',

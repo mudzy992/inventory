@@ -9,48 +9,45 @@ import {
 import { Article } from './Article';
 import { User } from './User';
 
-@Index('FK_104', ['articleId'], {})
-@Index('FK_92', ['userId'], {})
-@Entity('user_article', { schema: 'inventory' })
-export class UserArticle {
+@Index('article_id_user_id_timestamp', ['articleId', 'userId', 'timestamp'], {
+  unique: true,
+})
+@Index('fk_debt_items_user_id', ['userId'], {})
+@Entity('debt_items', { schema: 'inventory' })
+export class DebtItems {
   @PrimaryGeneratedColumn({
     type: 'int',
-    name: 'user_article_id',
+    name: 'debt_items_id',
     unsigned: true,
   })
-  userArticleId: number;
-
-  @Column('int', { name: 'user_id', unsigned: true })
-  userId: number;
+  debtItemsId: number;
 
   @Column('int', { name: 'article_id', unsigned: true })
   articleId: number;
 
-  @Column('int', { name: 'value' })
+  @Column('int', { name: 'user_id', unsigned: true })
+  userId: number;
+
+  @Column('int', { name: 'value', unsigned: true })
   value: number;
 
-  @Column('enum', {
-    name: 'status',
-    enum: ['zaduženo', 'razduženo', 'otpisano'],
-    default: () => "'zaduženo'",
-  })
-  status: 'zaduženo' | 'razduženo' | 'otpisano';
+  @Column('varchar', { name: 'comment', nullable: true, length: 255 })
+  comment: string | null;
 
   @Column('timestamp', {
     name: 'timestamp',
-    nullable: false,
     default: () => 'CURRENT_TIMESTAMP',
   })
   timestamp: Date;
 
-  @ManyToOne(() => Article, (article) => article.userArticles, {
+  @ManyToOne(() => Article, (article) => article.debtItems, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'article_id', referencedColumnName: 'articleId' }])
   article: Article;
 
-  @ManyToOne(() => User, (user) => user.responsibilityArticles, {
+  @ManyToOne(() => User, (user) => user.debtItems, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',
   })
