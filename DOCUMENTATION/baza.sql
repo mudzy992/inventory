@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `article` (
   PRIMARY KEY (`article_id`),
   KEY `fk_article_category_id` (`category_id`),
   CONSTRAINT `fk_article_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DELETE FROM `article`;
 /*!40000 ALTER TABLE `article` DISABLE KEYS */;
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `article_feature` (
   KEY `fk_article_feature_feature_id` (`feature_id`) USING BTREE,
   CONSTRAINT `fk_article_feature_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_article_feature_feature_id` FOREIGN KEY (`feature_id`) REFERENCES `feature` (`feature_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DELETE FROM `article_feature`;
 /*!40000 ALTER TABLE `article_feature` DISABLE KEYS */;
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `category` (
   UNIQUE KEY `uq_category_image_path` (`image_path`),
   KEY `fk_category_parent__category_id` (`parent__category_id`) USING BTREE,
   CONSTRAINT `FK_category_category` FOREIGN KEY (`parent__category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DELETE FROM `category`;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
@@ -78,6 +78,24 @@ INSERT INTO `category` (`category_id`, `name`, `image_path`, `parent__category_i
 	(8, 'Memorija pohrane', '/memorija.png', 7),
 	(9, 'Radne stanice', '', NULL);
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
+
+DROP TABLE IF EXISTS `debt_items`;
+CREATE TABLE IF NOT EXISTS `debt_items` (
+  `debt_items_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `article_id` int NOT NULL,
+  `user_id` int unsigned NOT NULL,
+  `value` int NOT NULL,
+  `comment` varchar(255) DEFAULT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`debt_items_id`),
+  UNIQUE KEY `article_id_user_id_timestamp` (`article_id`,`user_id`,`timestamp`),
+  KEY `fk_debt_items_user_id` (`user_id`),
+  CONSTRAINT `fk_debt_items_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DELETE FROM `debt_items`;
+/*!40000 ALTER TABLE `debt_items` DISABLE KEYS */;
+/*!40000 ALTER TABLE `debt_items` ENABLE KEYS */;
 
 DROP TABLE IF EXISTS `destroyed`;
 CREATE TABLE IF NOT EXISTS `destroyed` (
@@ -92,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `destroyed` (
   KEY `fk_destroyed_user_id` (`user_id`),
   CONSTRAINT `fk_destroyed_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_destroyed_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DELETE FROM `destroyed`;
 /*!40000 ALTER TABLE `destroyed` DISABLE KEYS */;
@@ -110,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `feature` (
   UNIQUE KEY `uq_feature_category_id_name` (`category_id`,`name`),
   KEY `fk_feature_category_id` (`category_id`) USING BTREE,
   CONSTRAINT `fk_feature_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DELETE FROM `feature`;
 /*!40000 ALTER TABLE `feature` DISABLE KEYS */;
@@ -131,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `stock` (
   PRIMARY KEY (`stock_id`),
   KEY `fk_stock_article_id` (`article_id`),
   CONSTRAINT `fk_stock_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DELETE FROM `stock`;
 /*!40000 ALTER TABLE `stock` DISABLE KEYS */;
@@ -150,15 +168,16 @@ CREATE TABLE IF NOT EXISTS `user` (
   `job_title` varchar(45) CHARACTER SET utf32 COLLATE utf32_unicode_ci DEFAULT NULL,
   `department` varchar(45) CHARACTER SET utf32 COLLATE utf32_unicode_ci DEFAULT NULL,
   `location` varchar(45) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL DEFAULT '0',
+  `email` varchar(255) NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DELETE FROM `user`;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` (`user_id`, `surname`, `forname`, `job_title`, `department`, `location`) VALUES
-	(1, 'Mudzahid', 'Ceric', 'Tehničar za IKT', 'Služba za IKT', 'Direkcija Zenica'),
-	(2, 'Goran ', 'Karović', 'Stručni saradnik', 'Sektor za IKT', 'Direkcija'),
-	(6, 'Emir', 'Hedzic', 'neradnik', 'Sektor za IKT', 'PJD Žepče');
+INSERT INTO `user` (`user_id`, `surname`, `forname`, `job_title`, `department`, `location`, `email`) VALUES
+	(1, 'Mudzahid', 'Ceric', 'Tehničar za IKT', 'Služba za IKT', 'Direkcija Zenica', ''),
+	(2, 'Goran ', 'Karović', 'Stručni saradnik', 'Sektor za IKT', 'Direkcija', ''),
+	(6, 'Emir', 'Hedzic', 'neradnik', 'Sektor za IKT', 'PJD Žepče', '');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
 DROP TABLE IF EXISTS `user_article`;
@@ -175,7 +194,7 @@ CREATE TABLE IF NOT EXISTS `user_article` (
   KEY `FK_92` (`user_id`),
   CONSTRAINT `fk_user_article_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_user_article_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DELETE FROM `user_article`;
 /*!40000 ALTER TABLE `user_article` DISABLE KEYS */;
