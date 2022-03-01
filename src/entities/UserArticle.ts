@@ -9,6 +9,13 @@ import {
 import { Article } from './Article';
 import { User } from './User';
 
+@Index(
+  'user_id_article_id_serial_number',
+  ['articleId', 'userId', 'serialNumber'],
+  {
+    unique: true,
+  },
+)
 @Index('FK_104', ['articleId'], {})
 @Index('FK_92', ['userId'], {})
 @Entity('user_article', { schema: 'inventory' })
@@ -42,6 +49,9 @@ export class UserArticle {
     default: () => 'CURRENT_TIMESTAMP',
   })
   timestamp: Date;
+
+  @Column('varchar', { name: 'serial_number', length: 255 })
+  serialNumber: string;
 
   @ManyToOne(() => Article, (article) => article.userArticles, {
     onDelete: 'RESTRICT',

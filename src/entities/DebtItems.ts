@@ -9,9 +9,13 @@ import {
 import { Article } from './Article';
 import { User } from './User';
 
-@Index('article_id_user_id_timestamp', ['articleId', 'userId', 'timestamp'], {
-  unique: true,
-})
+@Index(
+  'article_id_user_id_timestamp_serial_number',
+  ['articleId', 'userId', 'timestamp', 'serialNumber'],
+  {
+    unique: true,
+  },
+)
 @Index('fk_debt_items_user_id', ['userId'], {})
 @Entity('debt_items', { schema: 'inventory' })
 export class DebtItems {
@@ -33,6 +37,9 @@ export class DebtItems {
 
   @Column('varchar', { name: 'comment', nullable: true, length: 255 })
   comment: string | null;
+
+  @Column('varchar', { name: 'serial_number', length: 255 })
+  serialNumber: string;
 
   @Column('timestamp', {
     name: 'timestamp',

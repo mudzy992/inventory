@@ -11,7 +11,7 @@ import { UserArticleService } from 'src/services/userArticle/user.article.servic
   },
   params: {
     id: {
-      field: 'userId',
+      field: 'userArticleId',
       type: 'number',
       primary: true,
     },

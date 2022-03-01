@@ -43,6 +43,7 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       userId: userId,
       articleId: data.articleId,
       status: data.status,
+      serialNumber: data.serialNumber,
     });
 
     /* Neispravni podaci */
@@ -56,11 +57,38 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
 
     if (data.status === 'zaduženo') {
       /* Provjera ako je već artikal zadužen za trenutnog radnika */
-      if (existingArticleOnUser) {
+      const existingArticleUser: UserArticle = await this.findOne({
+        serialNumber: data.serialNumber,
+      });
+      if (existingArticleUser) {
         return new ApiResponse(
           'error',
           -2002,
-          'Radnik je već zadužen za traženi artikal',
+          'Artikal sa traženim serijskim brojem je već zadužen.',
+        );
+      }
+
+      const existinArticleDebt: DebtItems = await this.debtItems.findOne({
+        serialNumber: data.serialNumber,
+      });
+
+      if (existinArticleDebt) {
+        return new ApiResponse(
+          'error',
+          -2008,
+          'Artikal sa traženim serijskim brojem je već razdužen.',
+        );
+      }
+
+      const existinArticleDestroyed: Destroyed = await this.destroyed.findOne({
+        serialNumber: data.serialNumber,
+      });
+
+      if (existinArticleDestroyed) {
+        return new ApiResponse(
+          'error',
+          -2007,
+          'Artikal sa traženim serijskim brojem je već uništen.',
         );
       }
 
@@ -69,6 +97,7 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       newArticleOnUser.articleId = data.articleId;
       newArticleOnUser.value = data.value;
       newArticleOnUser.status = data.status;
+      newArticleOnUser.serialNumber = data.serialNumber;
 
       const savedUserArticle = await this.userArticle.save(newArticleOnUser);
 
@@ -116,6 +145,7 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
           userId: userId,
           articleId: data.articleId,
           status: 'zaduženo',
+          serialNumber: data.serialNumber,
         });
 
       if (!existingResponsibilityArticleOnUser) {
@@ -125,6 +155,17 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
           'Artikal je već razdužen s radnika',
         );
       }
+      const existinArticleDebt: DebtItems = await this.debtItems.findOne({
+        serialNumber: data.serialNumber,
+      });
+
+      if (existinArticleDebt) {
+        return new ApiResponse(
+          'error',
+          -2008,
+          'Artikal sa traženim serijskim brojem je već razdužen.',
+        );
+      }
 
       await this.userArticle.remove(existingResponsibilityArticleOnUser);
 
@@ -132,6 +173,8 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       newDebtArticle.userId = userId;
       newDebtArticle.articleId = existingResponsibilityArticleOnUser.articleId;
       newDebtArticle.value = existingResponsibilityArticleOnUser.value;
+      newDebtArticle.serialNumber =
+        existingResponsibilityArticleOnUser.serialNumber;
       newDebtArticle.comment = data.comment;
 
       const savedArticleInDebtItems = await this.debtItems.save(newDebtArticle);
@@ -168,6 +211,7 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
           userId: userId,
           articleId: data.articleId,
           status: 'zaduženo',
+          serialNumber: data.serialNumber,
         });
 
       if (!existingResponsibilityArticleOnUser) {
@@ -177,12 +221,27 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
           'Artikal nije zadužen na radnika',
         );
       }
+
+      const existinArticleDestroyed: Destroyed = await this.destroyed.findOne({
+        serialNumber: data.serialNumber,
+      });
+
+      if (existinArticleDestroyed) {
+        return new ApiResponse(
+          'error',
+          -2007,
+          'Artikal sa traženim serijskim brojem je već uništen.',
+        );
+      }
+
       await this.userArticle.remove(existingResponsibilityArticleOnUser);
 
       const destroyedArticle: Destroyed = new Destroyed();
       destroyedArticle.userId = userId;
       destroyedArticle.articleId = data.articleId;
       destroyedArticle.value = existingResponsibilityArticleOnUser.value;
+      destroyedArticle.serialNumber =
+        existingResponsibilityArticleOnUser.serialNumber;
       destroyedArticle.comment = data.comment;
 
       const saveDestroyedArticle = await this.destroyed.save(destroyedArticle);
