@@ -92,14 +92,15 @@ CREATE TABLE IF NOT EXISTS `debt_items` (
   UNIQUE KEY `article_id_user_id_timestamp_serial_number` (`article_id`,`user_id`,`timestamp`,`serial_number`),
   KEY `fk_debt_items_user_id` (`user_id`),
   CONSTRAINT `fk_debt_items_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DELETE FROM `debt_items`;
 /*!40000 ALTER TABLE `debt_items` DISABLE KEYS */;
 INSERT INTO `debt_items` (`debt_items_id`, `article_id`, `user_id`, `value`, `comment`, `timestamp`, `serial_number`) VALUES
-	(1, 90, 6, 1, 'Korisnik zadužio drugi artikal', '2022-02-28 20:14:47', '5'),
 	(2, 90, 1, 1, 'Zamjenjen računar zbog potrebe rada', '2022-03-01 22:30:55', '2'),
-	(3, 90, 1, 1, 'Zamjenjen računar zbog potrebe rada 2', '2022-03-01 22:32:03', '87');
+	(3, 90, 1, 1, 'Zamjenjen računar zbog potrebe rada 2', '2022-03-01 22:32:03', '87'),
+	(4, 85, 2, 1, 'HDD CRKAO', '2022-03-02 23:26:44', 'JHSKDS8890'),
+	(5, 85, 1, 1, 'Crkao', '2022-03-02 23:52:25', '525D6F82F');
 /*!40000 ALTER TABLE `debt_items` ENABLE KEYS */;
 
 DROP TABLE IF EXISTS `destroyed`;
@@ -116,14 +117,12 @@ CREATE TABLE IF NOT EXISTS `destroyed` (
   KEY `fk_destroyed_user_id` (`user_id`),
   CONSTRAINT `fk_destroyed_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_destroyed_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DELETE FROM `destroyed`;
 /*!40000 ALTER TABLE `destroyed` DISABLE KEYS */;
 INSERT INTO `destroyed` (`destroyed_id`, `article_id`, `value`, `comment`, `timestamp`, `user_id`, `serial_number`) VALUES
-	(2, 90, 1, NULL, '2022-02-18 11:13:02', 6, '4'),
-	(3, 84, 1, NULL, '2022-02-18 11:13:31', 6, '7'),
-	(6, 90, 1, 'Otpisuje se zbog neisplativosti popravke 3', '2022-03-01 22:48:10', 6, '12');
+	(7, 83, 1, 'Nije upotrebljivo više', '2022-03-03 00:03:01', 1, '584SD5SD5');
 /*!40000 ALTER TABLE `destroyed` ENABLE KEYS */;
 
 DROP TABLE IF EXISTS `feature`;
@@ -156,15 +155,15 @@ CREATE TABLE IF NOT EXISTS `stock` (
   PRIMARY KEY (`stock_id`),
   KEY `fk_stock_article_id` (`article_id`),
   CONSTRAINT `fk_stock_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=157 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=159 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DELETE FROM `stock`;
 /*!40000 ALTER TABLE `stock` DISABLE KEYS */;
 INSERT INTO `stock` (`stock_id`, `article_id`, `value_on_concract`, `value_available`, `timestamp`, `sap_number`) VALUES
 	(87, 84, 50, 0, '2022-02-14 20:34:26', '1300-200201'),
-	(127, 85, 15, 20, '2022-02-17 21:10:43', '1300-200202'),
 	(144, 83, 50, 37, '2022-03-01 00:23:30', '1300-200200'),
-	(156, 90, 50, 38, '2022-03-01 23:14:18', '1300-100200');
+	(156, 90, 50, 38, '2022-03-01 23:14:18', '1300-100200'),
+	(158, 85, 15, 20, '2022-03-02 23:26:44', '1300-200202');
 /*!40000 ALTER TABLE `stock` ENABLE KEYS */;
 
 DROP TABLE IF EXISTS `user`;
@@ -202,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `user_article` (
   KEY `FK_92` (`user_id`),
   CONSTRAINT `fk_user_article_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_user_article_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DELETE FROM `user_article`;
 /*!40000 ALTER TABLE `user_article` DISABLE KEYS */;
