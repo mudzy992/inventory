@@ -23,6 +23,9 @@ import { UserArticleController } from './controllers/api/user.article.controller
 import { UserArticleService } from './services/userArticle/user.article.service';
 import { DebtItems } from './entities/DebtItems';
 import { DebtItemsService } from './services/debtItems/debt.items.service';
+import { DebtItemsController } from './controllers/api/debt.controller';
+import { DestroyedArticlesService } from './services/destroyedArticles/destroyed.articles.service';
+import { DestroyedArticlesController } from './controllers/api/destroyed.controller';
 
 @Module({
   imports: [
@@ -63,6 +66,8 @@ import { DebtItemsService } from './services/debtItems/debt.items.service';
     StockController,
     FeatureController,
     UserArticleController,
+    DebtItemsController,
+    DestroyedArticlesController,
   ],
   providers: [
     ArticleService,
@@ -72,6 +77,7 @@ import { DebtItemsService } from './services/debtItems/debt.items.service';
     FeatureService,
     UserArticleService,
     DebtItemsService,
+    DestroyedArticlesService,
   ],
 })
 export class AppModule {}

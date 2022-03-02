@@ -44,7 +44,7 @@ export class Destroyed {
   @Column('varchar', { name: 'serial_number' })
   serialNumber: string;
 
-  @OneToOne(() => Article, (article) => article.destroyed, {
+  @ManyToOne(() => Article, (article) => article.destroyed, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',
   })
