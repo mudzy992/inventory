@@ -87,6 +87,6 @@ export class Article {
   })
   features: Feature[];
 
-  @OneToOne(() => Destroyed, (destroyed) => destroyed.article)
-  destroyed: Destroyed;
+  @OneToMany(() => Destroyed, (destroyed) => destroyed.article)
+  destroyed: Destroyed[];
 }
