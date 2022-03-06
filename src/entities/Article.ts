@@ -7,12 +7,11 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Category } from './Category';
 import { ArticleFeature } from './ArticleFeature';
-import { UserArticle } from './UserArticle';
+import { Responsibility } from './Responsibility';
 import { Feature } from './Feature';
 import { User } from './User';
 import { Stock } from './Stock';
@@ -56,8 +55,8 @@ export class Article {
   @OneToMany(() => ArticleFeature, (articleFeature) => articleFeature.article)
   articleFeature: ArticleFeature[];
 
-  @OneToMany(() => UserArticle, (userArticle) => userArticle.article)
-  userArticles: UserArticle[];
+  @OneToMany(() => Responsibility, (responsibility) => responsibility.article)
+  responsibility: Responsibility[];
 
   @OneToMany(() => Stock, (stock) => stock.articles)
   articlesInStock: Article[];
@@ -65,9 +64,12 @@ export class Article {
   @OneToMany(() => DebtItems, (debtItems) => debtItems.article)
   debtItems: DebtItems[];
 
+  @OneToMany(() => Destroyed, (destroyed) => destroyed.article)
+  destroyed: Destroyed[];
+
   @ManyToMany(() => User, (user) => user.articles)
   @JoinTable({
-    name: 'user_article',
+    name: 'responsibility',
     joinColumn: { name: 'article_id', referencedColumnName: 'articleId' },
     inverseJoinColumn: {
       name: 'user_id',
@@ -86,7 +88,4 @@ export class Article {
     },
   })
   features: Feature[];
-
-  @OneToMany(() => Destroyed, (destroyed) => destroyed.article)
-  destroyed: Destroyed[];
 }

@@ -10,6 +10,7 @@ import {
 import { Article } from './Article';
 import { DebtItems } from './DebtItems';
 import { Destroyed } from './Destroyed';
+import { Responsibility } from './Responsibility';
 import { UserArticle } from './UserArticle';
 
 @Index('email', ['email'], { unique: true })
@@ -36,9 +37,6 @@ export class User {
   @Column('varchar', { name: 'location', length: 255 })
   location: string;
 
-  @OneToMany(() => UserArticle, (userArticle) => userArticle.user)
-  responsibilityArticles: UserArticle[];
-
   @ManyToMany((type) => Article, (article) => article.userDetails)
   @JoinTable({
     name: 'user_article',
@@ -50,9 +48,15 @@ export class User {
   })
   articles: Article[];
 
+  @OneToMany(() => Responsibility, (responsibility) => responsibility.user)
+  responsibilityArticles: Responsibility[];
+
   @OneToMany(() => Destroyed, (destroyed) => destroyed.user)
   destroyeds: Destroyed[];
 
   @OneToMany(() => DebtItems, (debtItems) => debtItems.user)
   debtItems: DebtItems[];
+
+  @OneToMany(() => UserArticle, (userArticle) => userArticle.user)
+  userArticle: UserArticle[];
 }

@@ -9,7 +9,7 @@ import { Destroyed } from 'src/entities/Destroyed';
 import { Feature } from 'src/entities/Feature';
 import { Stock } from 'src/entities/Stock';
 import { User } from 'src/entities/User';
-import { UserArticle } from 'src/entities/UserArticle';
+import { Responsibility } from 'src/entities/Responsibility';
 import { ArticleController } from './controllers/api/article.controller';
 import { UserService } from './services/user/user.service';
 import { UserController } from './controllers/api/user.controller';
@@ -19,13 +19,16 @@ import { StockService } from './services/stock/stock.service';
 import { StockController } from './controllers/api/stock.controller';
 import { FeatureService } from './services/feature/feature.service';
 import { FeatureController } from './controllers/api/feature.controller';
-import { UserArticleController } from './controllers/api/user.article.controller';
-import { UserArticleService } from './services/userArticle/user.article.service';
+import { ResponsibilityController } from './controllers/api/responsibility.controller';
+import { ResponsibilityService } from './services/responsibility/responsibility.service';
 import { DebtItems } from './entities/DebtItems';
 import { DebtItemsService } from './services/debtItems/debt.items.service';
 import { DebtItemsController } from './controllers/api/debt.controller';
 import { DestroyedArticlesService } from './services/destroyedArticles/destroyed.articles.service';
 import { DestroyedArticlesController } from './controllers/api/destroyed.controller';
+import { UserArticleController } from './controllers/api/user.article.controller';
+import { UserArticleService } from './services/userArticle/user.article.service';
+import { UserArticle } from './entities/UserArticle';
 
 @Module({
   imports: [
@@ -43,8 +46,9 @@ import { DestroyedArticlesController } from './controllers/api/destroyed.control
         Feature,
         Stock,
         User,
-        UserArticle,
+        Responsibility,
         DebtItems,
+        UserArticle,
       ],
     }),
     TypeOrmModule.forFeature([
@@ -55,8 +59,9 @@ import { DestroyedArticlesController } from './controllers/api/destroyed.control
       Feature,
       Stock,
       User,
-      UserArticle,
+      Responsibility,
       DebtItems,
+      UserArticle,
     ]),
   ],
   controllers: [
@@ -65,9 +70,10 @@ import { DestroyedArticlesController } from './controllers/api/destroyed.control
     CategoryController,
     StockController,
     FeatureController,
-    UserArticleController,
+    ResponsibilityController,
     DebtItemsController,
     DestroyedArticlesController,
+    UserArticleController,
   ],
   providers: [
     ArticleService,
@@ -75,9 +81,10 @@ import { DestroyedArticlesController } from './controllers/api/destroyed.control
     CategoryService,
     StockService,
     FeatureService,
-    UserArticleService,
+    ResponsibilityService,
     DebtItemsService,
     DestroyedArticlesService,
+    UserArticleService,
   ],
 })
 export class AppModule {}

@@ -1,17 +1,17 @@
 import { Body, Controller, Param, Post } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
 import { AddEmployeArticleDto } from 'src/dtos/user/add.employe.article.dto';
-import { DebtItems } from 'src/entities/DebtItems';
-import { DebtItemsService } from 'src/services/debtItems/debt.items.service';
+import { Responsibility } from 'src/entities/Responsibility';
+import { ResponsibilityService } from 'src/services/responsibility/responsibility.service';
 
-@Controller('api/debt')
+@Controller('api/responsibility')
 @Crud({
   model: {
-    type: DebtItems,
+    type: Responsibility,
   },
   params: {
     id: {
-      field: 'debtItemsId',
+      field: 'responsibilityId',
       type: 'number',
       primary: true,
     },
@@ -27,8 +27,8 @@ import { DebtItemsService } from 'src/services/debtItems/debt.items.service';
     },
   },
 })
-export class DebtItemsController {
-  constructor(public service: DebtItemsService) {}
+export class ResponsibilityController {
+  constructor(public service: ResponsibilityService) {}
   @Post('/add/:id')
   async addArticleToUser(
     @Param('id') id: number,
@@ -36,4 +36,4 @@ export class DebtItemsController {
   ) {
     return await this.service.addArticleToEmploye(id, data);
   }
-}
+} /* Kraj koda */

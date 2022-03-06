@@ -1,6 +1,5 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
-import { AddEmployeArticleDto } from 'src/dtos/user/add.employe.article.dto';
 import { UserArticle } from 'src/entities/UserArticle';
 import { UserArticleService } from 'src/services/userArticle/user.article.service';
 
@@ -18,22 +17,21 @@ import { UserArticleService } from 'src/services/userArticle/user.article.servic
   },
   query: {
     join: {
-      article: {
+      debt: {
+        eager: true,
+      },
+      destroy: {
+        eager: true,
+      },
+      responsibility: {
         eager: true,
       },
       user: {
         eager: true,
-      },
+      }
     },
   },
 })
 export class UserArticleController {
   constructor(public service: UserArticleService) {}
-  @Post('/add/:id')
-  async addArticleToUser(
-    @Param('id') id: number,
-    @Body() data: AddEmployeArticleDto,
-  ) {
-    return await this.service.addArticleToEmploye(id, data);
-  }
-} /* Kraj koda */
+}

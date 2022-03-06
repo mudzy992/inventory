@@ -6,19 +6,16 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Article } from './Article';
+import { DebtItems } from './DebtItems';
+import { Destroyed } from './Destroyed';
+import { Responsibility } from './Responsibility';
 import { User } from './User';
 
-@Index(
-  'user_id_article_id_serial_number',
-  ['articleId', 'userId', 'serialNumber'],
-  {
-    unique: true,
-  },
-)
-@Index('FK_104', ['articleId'], {})
-@Index('FK_92', ['userId'], {})
-@Entity('user_article', { schema: 'inventory' })
+@Index('fk_user_article_debt_id', ['debtId'], {})
+@Index('fk_user_article_destroy_id', ['destroyId'], {})
+@Index('fk_user_article_reponsibility_id', ['responsibilityId'], {})
+@Index('fk_user_article_user_id', ['userId'], {})
+@Entity('user_article')
 export class UserArticle {
   @PrimaryGeneratedColumn({
     type: 'int',
@@ -27,40 +24,48 @@ export class UserArticle {
   })
   userArticleId: number;
 
-  @Column('int', { name: 'user_id', unsigned: true })
+  @Column('int', {
+    name: 'responsibility_id',
+    unsigned: true,
+  })
+  responsibilityId: number;
+
+  @Column('int', { name: 'debt_id', unsigned: true, nullable: true })
+  debtId: number;
+
+  @Column('int', { name: 'destroy_id', unsigned: true, nullable: true })
+  destroyId: number;
+
+  @Column('int', { name: 'user_id', unsigned: true, nullable: true })
   userId: number;
 
-  @Column('int', { name: 'article_id', unsigned: true })
-  articleId: number;
-
-  @Column('int', { name: 'value' })
-  value: number;
-
-  @Column('enum', {
-    name: 'status',
-    enum: ['zaduženo', 'razduženo', 'otpisano'],
-    default: () => "'zaduženo'",
-  })
-  status: 'zaduženo' | 'razduženo' | 'otpisano';
-
-  @Column('timestamp', {
-    name: 'timestamp',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  timestamp: Date;
-
-  @Column('varchar', { name: 'serial_number', length: 255 })
+  @Column('varchar', { name: 'serial_number' })
   serialNumber: string;
 
-  @ManyToOne(() => Article, (article) => article.userArticles, {
+  @ManyToOne(() => DebtItems, (debtItems) => debtItems.userArticle, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',
   })
-  @JoinColumn([{ name: 'article_id', referencedColumnName: 'articleId' }])
-  article: Article;
+  @JoinColumn([{ name: 'debt_id', referencedColumnName: 'debtItemsId' }])
+  debt: DebtItems;
 
-  @ManyToOne(() => User, (user) => user.responsibilityArticles, {
+  @ManyToOne(() => Destroyed, (destroyed) => destroyed.userArticle, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'destroy_id', referencedColumnName: 'destroyedId' }])
+  destroy: Destroyed;
+
+  @ManyToOne(() => Responsibility, (response) => response.userArticle, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([
+    { name: 'responsibility_id', referencedColumnName: 'responsibilityId' },
+  ])
+  responsibility: Responsibility;
+
+  @ManyToOne(() => User, (user) => user.userArticle, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',
   })

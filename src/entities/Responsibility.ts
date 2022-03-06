@@ -12,16 +12,25 @@ import { User } from './User';
 import { UserArticle } from './UserArticle';
 
 @Index(
-  'article_id_user_id_serial_number',
+  'user_id_article_id_serial_number',
   ['articleId', 'userId', 'serialNumber'],
   {
     unique: true,
   },
 )
-@Entity('destroyed')
-export class Destroyed {
-  @PrimaryGeneratedColumn({ type: 'int', name: 'destroyed_id', unsigned: true })
-  destroyedId: number;
+@Index('FK_104', ['articleId'], {})
+@Index('FK_92', ['userId'], {})
+@Entity('responsibility')
+export class Responsibility {
+  @PrimaryGeneratedColumn({
+    type: 'int',
+    name: 'responsibility_id',
+    unsigned: true,
+  })
+  responsibilityId: number;
+
+  @Column('int', { name: 'user_id', unsigned: true })
+  userId: number;
 
   @Column('int', { name: 'article_id', unsigned: true })
   articleId: number;
@@ -29,8 +38,12 @@ export class Destroyed {
   @Column('int', { name: 'value' })
   value: number;
 
-  @Column('varchar', { name: 'comment' })
-  comment: string;
+  @Column('enum', {
+    name: 'status',
+    enum: ['zaduženo', 'razduženo', 'otpisano'],
+    default: () => "'zaduženo'",
+  })
+  status: 'zaduženo' | 'razduženo' | 'otpisano';
 
   @Column('timestamp', {
     name: 'timestamp',
@@ -39,29 +52,23 @@ export class Destroyed {
   })
   timestamp: Date;
 
-  @Column('int', { name: 'user_id', unsigned: true })
-  userId: number;
-
-  @Column('varchar', { name: 'serial_number' })
+  @Column('varchar', { name: 'serial_number', length: 255 })
   serialNumber: string;
 
-  @Column('varchar', { name: 'status', length: 50, default: () => 'otpisano' })
-  status: string;
-
-  @ManyToOne(() => Article, (article) => article.destroyed, {
+  @ManyToOne(() => Article, (article) => article.responsibility, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'article_id', referencedColumnName: 'articleId' }])
   article: Article;
 
-  @ManyToOne(() => User, (user) => user.destroyeds, {
+  @ManyToOne(() => User, (user) => user.responsibilityArticles, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'userId' }])
   user: User;
 
-  @OneToMany(() => UserArticle, (userArticle) => userArticle.destroy)
+  @OneToMany(() => UserArticle, (userArticle) => userArticle.responsibility)
   userArticle: UserArticle[];
 }

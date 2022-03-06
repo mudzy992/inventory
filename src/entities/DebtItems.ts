@@ -4,10 +4,12 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Article } from './Article';
 import { User } from './User';
+import { UserArticle } from './UserArticle';
 
 @Index(
   'article_id_user_id_timestamp_serial_number',
@@ -47,6 +49,9 @@ export class DebtItems {
   })
   timestamp: Date;
 
+  @Column('varchar', { name: 'status', length: 50, default: () => 'razduženo' })
+  status: string;
+
   @ManyToOne(() => Article, (article) => article.debtItems, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',
@@ -60,4 +65,7 @@ export class DebtItems {
   })
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'userId' }])
   user: User;
+
+  @OneToMany(() => UserArticle, (userArticle) => userArticle.debt)
+  userArticle: UserArticle[];
 }
