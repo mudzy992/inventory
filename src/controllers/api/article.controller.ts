@@ -29,7 +29,7 @@ import { ArticleService } from 'src/services/article/article.service';
       features: {
         eager: true,
       },
-      userArticles: {
+      userArticle: {
         eager: true,
       },
       userDetails: {

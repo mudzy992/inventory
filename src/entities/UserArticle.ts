@@ -6,6 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Article } from './Article';
 import { DebtItems } from './DebtItems';
 import { Destroyed } from './Destroyed';
 import { Responsibility } from './Responsibility';
@@ -13,8 +14,13 @@ import { User } from './User';
 
 @Index('fk_user_article_debt_id', ['debtId'], {})
 @Index('fk_user_article_destroy_id', ['destroyId'], {})
-@Index('fk_user_article_reponsibility_id', ['responsibilityId'], {})
+@Index('fk_user_article_responsibility_id', ['responsibilityId'], {})
 @Index('fk_user_article_user_id', ['userId'], {})
+@Index(
+  'serial_number_status_timestamp',
+  ['serialNumber', 'status', 'timestamp'],
+  { unique: true },
+)
 @Entity('user_article')
 export class UserArticle {
   @PrimaryGeneratedColumn({
@@ -39,11 +45,28 @@ export class UserArticle {
   @Column('int', { name: 'user_id', unsigned: true, nullable: true })
   userId: number;
 
+  @Column('int', { name: 'article_id', unsigned: true, nullable: false })
+  articleId: number;
+
+  @Column('enum', {
+    name: 'status',
+    enum: ['zaduženo', 'razduženo', 'otpisano'],
+    default: () => "'zaduženo'",
+  })
+  status: 'zaduženo' | 'razduženo' | 'otpisano';
+
+  @Column('timestamp', {
+    name: 'timestamp',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  timestamp: Date;
+
   @Column('varchar', { name: 'serial_number' })
   serialNumber: string;
 
   @ManyToOne(() => DebtItems, (debtItems) => debtItems.userArticle, {
-    onDelete: 'RESTRICT',
+    onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'debt_id', referencedColumnName: 'debtItemsId' }])
@@ -57,7 +80,7 @@ export class UserArticle {
   destroy: Destroyed;
 
   @ManyToOne(() => Responsibility, (response) => response.userArticle, {
-    onDelete: 'RESTRICT',
+    onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })
   @JoinColumn([
@@ -71,4 +94,11 @@ export class UserArticle {
   })
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'userId' }])
   user: User;
+
+  @ManyToOne(() => Article, (article) => article.userArticle, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'article_id', referencedColumnName: 'articleId' }])
+  article: Article;
 }

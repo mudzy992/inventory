@@ -41,65 +41,65 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     te ga brisati iz stockArticles u stock koji ce imati za taj article status na stanju ili nema na stanju (promjeniti if statement za nema na stanju na osnov statusa) */
     /* vrsiti historija zaduzenja i razduzenja sa timestamp DONE */
     /*  */
-    const existinArticleDebt: DebtItems = await this.debtItems.findOne({
+
+    const existingDebtArticle: UserArticle = await this.userArticle.findOne({
       serialNumber: data.serialNumber,
     });
 
-    if (existinArticleDebt) {
+    if (!existingDebtArticle) {
+      return new ApiResponse(
+        'error',
+        -2011,
+        'Artikal sa traženim serijskim brojem ne postoji.',
+      );
+    }
+
+    if (
+      existingDebtArticle.serialNumber === data.serialNumber &&
+      existingDebtArticle.status === 'razduženo'
+    ) {
       return new ApiResponse(
         'error',
         -2008,
         'Artikal sa traženim serijskim brojem je već razdužen.',
       );
-    }
-
-    const existinArticleDestroyed: Destroyed = await this.destroyed.findOne({
-      serialNumber: data.serialNumber,
-    });
-
-    if (existinArticleDestroyed) {
+    } else if (
+      existingDebtArticle.serialNumber === data.serialNumber &&
+      existingDebtArticle.status === 'zaduženo'
+    ) {
+      return this.addDebtArticle(userId, data);
+    } else if (
+      existingDebtArticle.serialNumber === data.serialNumber &&
+      existingDebtArticle.status === 'otpisano'
+    ) {
       return new ApiResponse(
         'error',
         -2007,
         'Artikal sa traženim serijskim brojem je već uništen.',
       );
     }
+    return this.addDebtArticle(userId, data);
+  } /* FUNKCIJE */
 
-    const existingResponsibilityArticleOnUser: Responsibility =
-      await this.responsibility.findOne({
-        userId: userId,
-        articleId: data.articleId,
-        status:'zaduženo',
-        serialNumber: data.serialNumber,
-      });
+  private async addDebtArticle(user: number, data: AddEmployeArticleDto) {
+    /* Izvlačimo artikal iz responsibilitiy koji odgovara našem dto, te isti
+    brišemo iz responsibility tabele, jer nije više zadužen, razdužuje se
+    await koristim da bi izvukao value stanje */
+    const resArticle: Responsibility = await this.responsibility.findOne({
+      userId: user,
+      serialNumber: data.serialNumber,
+      articleId: data.articleId,
+    });
+    const value = resArticle.value;
+    await this.responsibility.remove(resArticle);
 
-    if (existingResponsibilityArticleOnUser) {
-      return new ApiResponse(
-        'error',
-        -2006,
-        'Artikal je već razdužen s radnika',
-      );
-    }
-
-    
-
-    const existingArticleInUserArticle: UserArticle =
-      await this.userArticle.findOne({
-        serialNumber: data.serialNumber,
-      });
-
-    if (existingArticleInUserArticle) {
-      await this.userArticle.remove(existingArticleInUserArticle);
-    }
-
-    await this.responsibility.remove(existingResponsibilityArticleOnUser);
-
+    /* Kreiramo novi artikal u debt items i snimamo ga, kako bi dobili
+    debtId */
     const newDebtArticle: DebtItems = new DebtItems();
-    newDebtArticle.userId = userId;
-    newDebtArticle.articleId = existingResponsibilityArticleOnUser.articleId;
-    newDebtArticle.value = existingResponsibilityArticleOnUser.value;
-    newDebtArticle.serialNumber =
-      existingResponsibilityArticleOnUser.serialNumber;
+    newDebtArticle.userId = user;
+    newDebtArticle.articleId = data.articleId;
+    newDebtArticle.value = value;
+    newDebtArticle.serialNumber = data.serialNumber;
     newDebtArticle.comment = data.comment;
     newDebtArticle.status = 'razduženo';
 
@@ -108,12 +108,15 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     if (!savedArticleInDebtItems) {
       return new ApiResponse('error', -2006, 'Artikal nije zadužen na radnika');
     }
-    
-    const newUserArticleData: UserArticle = new UserArticle();
 
+    /* Sada kada imam kreiran artikal u debt tabeli, posjedujem debtId,
+    vršim evidenciju artikla u UserArticle */
+    const newUserArticleData: UserArticle = new UserArticle();
+    newUserArticleData.articleId = data.articleId;
     newUserArticleData.debtId = savedArticleInDebtItems.debtItemsId;
-    newUserArticleData.userId = userId;
+    newUserArticleData.userId = user;
     newUserArticleData.serialNumber = data.serialNumber;
+    newUserArticleData.status = 'razduženo';
 
     const savedUserArticle = await this.userArticle.save(newUserArticleData);
 
@@ -121,6 +124,9 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
       return new ApiResponse('error', -2006, 'Artikal nije zadužen na radnika');
     }
 
+    /* Nakon evidencije artikla u UserArticle potrebno uraditi izmjenu i u 
+    tabeli skladišta, gdje nakon razduženja artikla, artikal treba biti 
+    ponovo na stanju */
     const articleInStock: Stock = await this.stock.findOne({
       articleId: data.articleId,
     });
@@ -128,17 +134,19 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     const newArticleStock: Stock = await new Stock();
     newArticleStock.articleId = data.articleId;
     newArticleStock.valueOnConcract = articleInStock.valueOnConcract;
-    newArticleStock.valueAvailable =
-      articleInStock.valueAvailable + existingResponsibilityArticleOnUser.value;
+    newArticleStock.valueAvailable = articleInStock.valueAvailable + value;
     newArticleStock.sapNumber = articleInStock.sapNumber;
     /* Potrebno dodati hvatanje greške */
-    await this.stock.save(newArticleStock);
+    const savedStockArticle = await this.stock.save(newArticleStock);
+    if (!savedStockArticle) {
+      return new ApiResponse('error', -2010, 'Artikal nije spašen u skladište');
+    }
 
     return await this.debtItems.findOne({
-      where: {articleId : data.articleId},
-      relations: ['article', 'user'],
+      where: { articleId: data.articleId },
+      relations: ['article', 'user', 'userArticle'],
     });
-  } /* FUNKCIJE */
+  }
 } /* KRAJ KODA */
 
 /* Iz razloga što ne brišem iz userArticle stanje zaduženog artikla, dolazi do zabune u aplikaciji, gdje se dešava da sam artikal koji je bio

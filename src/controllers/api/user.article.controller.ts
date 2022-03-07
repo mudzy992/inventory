@@ -28,7 +28,10 @@ import { UserArticleService } from 'src/services/userArticle/user.article.servic
       },
       user: {
         eager: true,
-      }
+      },
+      article: {
+        eager: true,
+      },
     },
   },
 })

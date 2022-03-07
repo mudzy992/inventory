@@ -41,51 +41,70 @@ export class DestroyedArticlesService extends TypeOrmCrudService<Destroyed> {
     te ga brisati iz stockArticles u stock koji ce imati za taj article status na stanju ili nema na stanju (promjeniti if statement za nema na stanju na osnov statusa) */
     /* vrsiti historija zaduzenja i razduzenja sa timestamp DONE */
     /*  */
-    let value = 0;
-    const existinArticleDestroyed: Destroyed = await this.findOne({
-      serialNumber: data.serialNumber,
-    });
 
-    if (existinArticleDestroyed) {
+    const existinArticleDestroyed: UserArticle = await this.userArticle.findOne(
+      {
+        serialNumber: data.serialNumber,
+      },
+    );
+
+    if (!existinArticleDestroyed) {
       return new ApiResponse(
         'error',
-        -2006,
-        'Artikal sa traženim serijskim brojem je već uništen.',
+        -2011,
+        'Artikal sa traženim serijskim brojem ne postoji.',
       );
     }
-    
+    if (
+      existinArticleDestroyed.serialNumber === data.serialNumber &&
+      existinArticleDestroyed.status === 'otpisano'
+    ) {
+      return new ApiResponse(
+        'error',
+        -2002,
+        'Artikal sa traženim serijskim brojem je već otpisan.',
+      );
+    } else if (
+      existinArticleDestroyed.serialNumber === data.serialNumber &&
+      existinArticleDestroyed.status === 'zaduženo'
+    ) {
+      return this.destroyArticle(userId, data);
+    } else if (
+      existinArticleDestroyed.serialNumber === data.serialNumber &&
+      existinArticleDestroyed.status === 'razduženo'
+    ) {
+      return this.destroyArticle(userId, data);
+    }
+    return this.destroyArticle(userId, data);
+  }
+  /* FUNKCIJE */
+
+  private async destroyArticle(user: number, data: AddEmployeArticleDto) {
+    let value = 0;
     const existingResponsibilityArticleOnUser: Responsibility =
       await this.responsibility.findOne({
-        userId: userId,
+        userId: user,
         status: 'zaduženo',
         articleId: data.articleId,
         serialNumber: data.serialNumber,
       });
 
-      if (existingResponsibilityArticleOnUser) {
-        value = existingResponsibilityArticleOnUser.value
-        await this.responsibility.remove(existingResponsibilityArticleOnUser);
-      } 
-    
-    const existingArticleInUserArticle: UserArticle =
-          await this.userArticle.findOne({
-            serialNumber: data.serialNumber,
-          });
-    if (existingArticleInUserArticle) {
-      await this.userArticle.remove(existingArticleInUserArticle);
-    } 
+    if (existingResponsibilityArticleOnUser) {
+      value = existingResponsibilityArticleOnUser.value;
+      await this.responsibility.remove(existingResponsibilityArticleOnUser);
+    }
 
     const existinArticleDebt: DebtItems = await this.debtItems.findOne({
       serialNumber: data.serialNumber,
     });
 
-    if(existinArticleDebt) {
-      value = existinArticleDebt.value
+    if (existinArticleDebt) {
+      value = existinArticleDebt.value;
       await this.debtItems.remove(existinArticleDebt);
     }
 
     const destroyedArticle: Destroyed = new Destroyed();
-    destroyedArticle.userId = userId;
+    destroyedArticle.userId = user;
     destroyedArticle.articleId = data.articleId;
     destroyedArticle.value = value;
     destroyedArticle.serialNumber = data.serialNumber;
@@ -103,10 +122,11 @@ export class DestroyedArticlesService extends TypeOrmCrudService<Destroyed> {
     }
 
     const newUserArticleData: UserArticle = new UserArticle();
-
+    newUserArticleData.articleId = data.articleId;
     newUserArticleData.destroyId = saveDestroyedArticle.destroyedId;
-    newUserArticleData.userId = userId;
+    newUserArticleData.userId = user;
     newUserArticleData.serialNumber = data.serialNumber;
+    newUserArticleData.status = 'otpisano';
 
     const savedUserArticle = await this.userArticle.save(newUserArticleData);
 
@@ -114,9 +134,8 @@ export class DestroyedArticlesService extends TypeOrmCrudService<Destroyed> {
       return new ApiResponse('error', -2006, 'Artikal nije zadužen na radnika');
     }
     return await this.destroyed.findOne({
-      where: {articleId : data.articleId},
-      relations: ['article', 'user'],
+      where: { articleId: data.articleId },
+      relations: ['article', 'user', 'userArticle'],
     });
   }
-  /* FUNKCIJE */
 }

@@ -40,56 +40,61 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     promjeniti u bazi na stockArticles i stock postaviti status, te ako je u dto status razduzeno izvrsiti + onoliko koliko je zaduzeno bilo 
     te ga brisati iz stockArticles u stock koji ce imati za taj article status na stanju ili nema na stanju (promjeniti if statement za nema na stanju na osnov statusa) */
     /* vrsiti historija zaduzenja i razduzenja sa timestamp DONE */
-    /*  */
 
-    const existingArticleOnUser: Responsibility = await this.findOne({
-      userId: userId,
-      articleId: data.articleId,
-      status: 'zaduženo',
-      serialNumber: data.serialNumber,
-    });
+    /* Provjera da li je artikal zadužen */
+    const existingUserArticleResponsibility: UserArticle =
+      await this.userArticle.findOne({
+        serialNumber: data.serialNumber,
+      });
 
-    /* Neispravni podaci */
-    if (!existingArticleOnUser === undefined) {
+    if (!existingUserArticleResponsibility) {
+      return new ApiResponse(
+        'error',
+        -2011,
+        'Artikal sa traženim serijskim brojem ne postoji.',
+      );
+    }
+    if (
+      existingUserArticleResponsibility.serialNumber === data.serialNumber &&
+      existingUserArticleResponsibility.status === 'zaduženo'
+    ) {
       return new ApiResponse(
         'error',
         -2002,
         'Artikal sa traženim serijskim brojem je već zadužen.',
       );
-    }
-
-    const existinArticleDebt: DebtItems = await this.debtItems.findOne({
-      serialNumber: data.serialNumber,
-    });
-
-    if (existinArticleDebt) {
-      return new ApiResponse(
-        'error',
-        -2008,
-        'Artikal sa traženim serijskim brojem je već razdužen.',
-      );
-    }
-
-    const existinArticleDestroyed: Destroyed = await this.destroyed.findOne({
-      serialNumber: data.serialNumber,
-    });
-
-    if (existinArticleDestroyed) {
+    } else if (
+      existingUserArticleResponsibility.serialNumber === data.serialNumber &&
+      existingUserArticleResponsibility.status === 'razduženo'
+    ) {
+      return this.addArticleInResponsibility(userId, data);
+    } else if (
+      existingUserArticleResponsibility.serialNumber === data.serialNumber &&
+      existingUserArticleResponsibility.status === 'otpisano'
+    ) {
       return new ApiResponse(
         'error',
         -2007,
         'Artikal sa traženim serijskim brojem je već uništen.',
       );
     }
+    return this.addArticleInResponsibility(userId, data);
+  }
 
+  private async addArticleInResponsibility(
+    user: number,
+    data: AddEmployeArticleDto,
+  ) {
     const newArticleOnUser: Responsibility = new Responsibility();
-    newArticleOnUser.userId = userId;
+    newArticleOnUser.userId = user;
     newArticleOnUser.articleId = data.articleId;
     newArticleOnUser.value = data.value;
     newArticleOnUser.status = 'zaduženo';
     newArticleOnUser.serialNumber = data.serialNumber;
 
-    const savedNewResponsibility = await this.responsibility.save(newArticleOnUser);
+    const savedNewResponsibility = await this.responsibility.save(
+      newArticleOnUser,
+    );
 
     if (!savedNewResponsibility) {
       return new ApiResponse(
@@ -101,12 +106,15 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
 
     const newUserArticleData: UserArticle = new UserArticle();
 
-    newUserArticleData.responsibilityId = savedNewResponsibility.responsibilityId;
-    newUserArticleData.userId = userId;
+    newUserArticleData.responsibilityId =
+      savedNewResponsibility.responsibilityId;
+    newUserArticleData.userId = user;
     newUserArticleData.serialNumber = data.serialNumber;
+    newUserArticleData.articleId = data.articleId;
+    newUserArticleData.status = 'zaduženo';
 
     await this.userArticle.save(newUserArticleData);
-    
+
     /* Provjera ako artikla nema na stanju više na skladištu da se zaduži, i ako ima skini određeni broj */
     const articleInStock: Stock = await this.stock.findOne({
       articleId: data.articleId,
@@ -136,9 +144,9 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
         relations: ['article', 'user', 'userArticle'],
       });
     }
-  /* FUNKCIJE */
+    /* FUNKCIJE */
+  }
 } /* KRAJ KODA */
-}
 /* Iz razloga što ne brišem iz userArticle stanje zaduženog artikla, dolazi do zabune u aplikaciji, gdje se dešava da sam artikal koji je bio
 zadužen na radnik, razdužio ga, ali ostao je u evidenciji userArticle sa statusom zadužen, i samim tim funkciju otpisivanja ne radi kako treba, 
 jer u tom trenutku trenutni artikal nije ustvari zadužen (otpisan je već ranije ali stoji u evidenciji), i kada se pokrene fukncija otpisivanja,
