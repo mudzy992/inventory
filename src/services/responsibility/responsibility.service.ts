@@ -9,6 +9,7 @@ import { User } from 'src/entities/User';
 import { Responsibility } from 'src/entities/Responsibility';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository } from 'typeorm';
+import { UserArticle } from 'src/entities/UserArticle';
 
 @Injectable()
 export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
@@ -23,6 +24,8 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     private readonly debtItems: Repository<DebtItems>,
     @InjectRepository(User)
     private readonly user: Repository<User>,
+    @InjectRepository(UserArticle)
+    private readonly userArticle: Repository<UserArticle>,
   ) {
     super(responsibility);
   }
@@ -42,7 +45,7 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     const existingArticleOnUser: Responsibility = await this.findOne({
       userId: userId,
       articleId: data.articleId,
-      status: data.status,
+      status: 'zaduženo',
       serialNumber: data.serialNumber,
     });
 
@@ -50,155 +53,95 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     if (!existingArticleOnUser === undefined) {
       return new ApiResponse(
         'error',
-        -2004,
-        'Artikal ne može biti dodan za tog radnika, provjeri podatke i pokušaj ponovo',
+        -2002,
+        'Artikal sa traženim serijskim brojem je već zadužen.',
       );
     }
 
-    if (data.status === 'zaduženo') {
-      /* Provjera ako je već artikal zadužen za trenutnog radnika */
-      const existingArticleUser: Responsibility = await this.findOne({
-        serialNumber: data.serialNumber,
-      });
-      if (existingArticleUser) {
-        return new ApiResponse(
-          'error',
-          -2002,
-          'Artikal sa traženim serijskim brojem je već zadužen.',
-        );
-      }
+    const existinArticleDebt: DebtItems = await this.debtItems.findOne({
+      serialNumber: data.serialNumber,
+    });
 
-      const existinArticleDebt: DebtItems = await this.debtItems.findOne({
-        serialNumber: data.serialNumber,
-      });
-
-      if (existinArticleDebt) {
-        return new ApiResponse(
-          'error',
-          -2008,
-          'Artikal sa traženim serijskim brojem je već razdužen.',
-        );
-      }
-
-      const existinArticleDestroyed: Destroyed = await this.destroyed.findOne({
-        serialNumber: data.serialNumber,
-      });
-
-      if (existinArticleDestroyed) {
-        return new ApiResponse(
-          'error',
-          -2007,
-          'Artikal sa traženim serijskim brojem je već uništen.',
-        );
-      }
-
-      const newArticleOnUser: Responsibility = new Responsibility();
-      newArticleOnUser.userId = userId;
-      newArticleOnUser.articleId = data.articleId;
-      newArticleOnUser.value = data.value;
-      newArticleOnUser.status = data.status;
-      newArticleOnUser.serialNumber = data.serialNumber;
-
-      const savedUserArticle = await this.responsibility.save(newArticleOnUser);
-
-      if (!savedUserArticle) {
-        return new ApiResponse(
-          'error',
-          -2003,
-          'Artikal ne može biti zadužen za tog radnika',
-        );
-      }
-      /* Provjera ako artikla nema na stanju više na skladištu da se zaduži, i ako ima skini određeni broj */
-      const articleInStock: Stock = await this.stock.findOne({
-        articleId: data.articleId,
-      });
-
-      if (articleInStock) {
-        if (articleInStock.valueAvailable === 0) {
-          return new ApiResponse(
-            'error',
-            -2005,
-            'Na stanju više nema traženog artikla',
-          );
-        }
-
-        await this.stock.remove(articleInStock); /* Brisati red */
-        const newArticleStock: Stock =
-          await new Stock(); /* Primjer novog skladišta */
-        newArticleStock.articleId = data.articleId;
-        newArticleStock.valueOnConcract = articleInStock.valueOnConcract;
-        newArticleStock.valueAvailable =
-          articleInStock.valueAvailable - savedUserArticle.value;
-        newArticleStock.sapNumber = articleInStock.sapNumber;
-        await this.stock.save(newArticleStock);
-
-        return await this.responsibility.findOne({
-          where: { articleId: data.articleId },
-          relations: ['article', 'user'],
-        });
-      }
+    if (existinArticleDebt) {
+      return new ApiResponse(
+        'error',
+        -2008,
+        'Artikal sa traženim serijskim brojem je već razdužen.',
+      );
     }
 
-    if (data.status === 'otpisano') {
-      const existingResponsibilityArticleOnUser: Responsibility =
-        await this.responsibility.findOne({
-          userId: userId,
-          articleId: data.articleId,
-          status: 'zaduženo',
-          serialNumber: data.serialNumber,
-        });
+    const existinArticleDestroyed: Destroyed = await this.destroyed.findOne({
+      serialNumber: data.serialNumber,
+    });
 
-      if (!existingResponsibilityArticleOnUser) {
+    if (existinArticleDestroyed) {
+      return new ApiResponse(
+        'error',
+        -2007,
+        'Artikal sa traženim serijskim brojem je već uništen.',
+      );
+    }
+
+    const newArticleOnUser: Responsibility = new Responsibility();
+    newArticleOnUser.userId = userId;
+    newArticleOnUser.articleId = data.articleId;
+    newArticleOnUser.value = data.value;
+    newArticleOnUser.status = 'zaduženo';
+    newArticleOnUser.serialNumber = data.serialNumber;
+
+    const savedNewResponsibility = await this.responsibility.save(newArticleOnUser);
+
+    if (!savedNewResponsibility) {
+      return new ApiResponse(
+        'error',
+        -2003,
+        'Artikal ne može biti zadužen za tog radnika',
+      );
+    }
+
+    const newUserArticleData: UserArticle = new UserArticle();
+
+    newUserArticleData.responsibilityId = savedNewResponsibility.responsibilityId;
+    newUserArticleData.userId = userId;
+    newUserArticleData.serialNumber = data.serialNumber;
+
+    await this.userArticle.save(newUserArticleData);
+    
+    /* Provjera ako artikla nema na stanju više na skladištu da se zaduži, i ako ima skini određeni broj */
+    const articleInStock: Stock = await this.stock.findOne({
+      articleId: data.articleId,
+    });
+
+    if (articleInStock) {
+      if (articleInStock.valueAvailable === 0) {
         return new ApiResponse(
           'error',
-          -2006,
-          'Artikal nije zadužen na radnika',
+          -2005,
+          'Na stanju više nema traženog artikla',
         );
       }
 
-      const existinArticleDestroyed: Destroyed = await this.destroyed.findOne({
-        serialNumber: data.serialNumber,
-      });
+      await this.stock.remove(articleInStock); /* Brisati red */
+      const newArticleStock: Stock =
+        await new Stock(); /* Primjer novog skladišta */
+      newArticleStock.articleId = data.articleId;
+      newArticleStock.valueOnConcract = articleInStock.valueOnConcract;
+      newArticleStock.valueAvailable =
+        articleInStock.valueAvailable - savedNewResponsibility.value;
+      newArticleStock.sapNumber = articleInStock.sapNumber;
+      await this.stock.save(newArticleStock);
 
-      if (existinArticleDestroyed) {
-        return new ApiResponse(
-          'error',
-          -2007,
-          'Artikal sa traženim serijskim brojem je već uništen.',
-        );
-      }
-
-      await this.responsibility.remove(existingResponsibilityArticleOnUser);
-
-      const destroyedArticle: Destroyed = new Destroyed();
-      destroyedArticle.userId = userId;
-      destroyedArticle.articleId = data.articleId;
-      destroyedArticle.value = existingResponsibilityArticleOnUser.value;
-      destroyedArticle.serialNumber =
-        existingResponsibilityArticleOnUser.serialNumber;
-      destroyedArticle.comment = data.comment;
-      destroyedArticle.status = data.status;
-
-      const saveDestroyedArticle = await this.destroyed.save(destroyedArticle);
-
-      if (!saveDestroyedArticle) {
-        return new ApiResponse(
-          'error',
-          -2003,
-          'Artikal ne može biti zadužen za tog radnika',
-        );
-      }
-      return await this.user.findOne(userId, {
-        relations: ['destroyeds', 'destroyeds.article'],
+      return await this.responsibility.findOne({
+        where: { articleId: data.articleId },
+        relations: ['article', 'user', 'userArticle'],
       });
     }
-  }
   /* FUNKCIJE */
 } /* KRAJ KODA */
-
+}
 /* Iz razloga što ne brišem iz userArticle stanje zaduženog artikla, dolazi do zabune u aplikaciji, gdje se dešava da sam artikal koji je bio
 zadužen na radnik, razdužio ga, ali ostao je u evidenciji userArticle sa statusom zadužen, i samim tim funkciju otpisivanja ne radi kako treba, 
 jer u tom trenutku trenutni artikal nije ustvari zadužen (otpisan je već ranije ali stoji u evidenciji), i kada se pokrene fukncija otpisivanja,
-ona ustvari otpiše, već razduženi artikal sa korisnika. Da bi se sve to izbjeglo, potrebno je ipak izvršiti evidenciju razdužena i otpisivanja u posebnim tabelama DONE */
+ona ustvari otpiše, već razduženi artikal sa korisnika. Da bi se sve to izbjeglo, potrebno je ipak izvršiti evidenciju razdužena i otpisivanja u posebnim tabelama DONE
 
-/* Uraditi funkcije da se rastereti kod, i malo reorganizuje jer ima kodova koji se ponavljaju */
+Uraditi funkcije da se rastereti kod, i malo reorganizuje jer ima kodova koji se ponavljaju */

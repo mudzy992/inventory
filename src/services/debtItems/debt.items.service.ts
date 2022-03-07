@@ -32,7 +32,7 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
   async addArticleToEmploye(
     userId: number,
     data: AddEmployeArticleDto,
-  ): Promise<User | Stock | Responsibility | ApiResponse> {
+  ): Promise<DebtItems | Stock | Responsibility | ApiResponse> {
     /* Provjera ako korisnik već ima zadužen artikal pod articleId i userId i userArticle DONE*/
     /* Provjera da li na stanju više ima artikala da se zaduži DONE */
     /* Implementacija mehanizma za automacko umanjenje količine na skladištu DONE*/
@@ -41,40 +41,6 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     te ga brisati iz stockArticles u stock koji ce imati za taj article status na stanju ili nema na stanju (promjeniti if statement za nema na stanju na osnov statusa) */
     /* vrsiti historija zaduzenja i razduzenja sa timestamp DONE */
     /*  */
-
-    const existingArticleOnUser: Responsibility =
-      await this.responsibility.findOne({
-        userId: userId,
-        articleId: data.articleId,
-        status: 'razduženo',
-        serialNumber: data.serialNumber,
-      });
-
-    /* Neispravni podaci */
-    if (!existingArticleOnUser === undefined) {
-      return new ApiResponse(
-        'error',
-        -2004,
-        'Artikal ne može biti dodan za tog radnika, provjeri podatke i pokušaj ponovo',
-      );
-    }
-
-    const existingResponsibilityArticleOnUser: Responsibility =
-      await this.responsibility.findOne({
-        userId: userId,
-        articleId: data.articleId,
-        status: 'zaduženo',
-        serialNumber: data.serialNumber,
-      });
-
-    if (!existingResponsibilityArticleOnUser) {
-      return new ApiResponse(
-        'error',
-        -2006,
-        'Artikal je već razdužen s radnika',
-      );
-    }
-
     const existinArticleDebt: DebtItems = await this.debtItems.findOne({
       serialNumber: data.serialNumber,
     });
@@ -99,6 +65,24 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
       );
     }
 
+    const existingResponsibilityArticleOnUser: Responsibility =
+      await this.responsibility.findOne({
+        userId: userId,
+        articleId: data.articleId,
+        status:'zaduženo',
+        serialNumber: data.serialNumber,
+      });
+
+    if (existingResponsibilityArticleOnUser) {
+      return new ApiResponse(
+        'error',
+        -2006,
+        'Artikal je već razdužen s radnika',
+      );
+    }
+
+    
+
     const existingArticleInUserArticle: UserArticle =
       await this.userArticle.findOne({
         serialNumber: data.serialNumber,
@@ -117,7 +101,7 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     newDebtArticle.serialNumber =
       existingResponsibilityArticleOnUser.serialNumber;
     newDebtArticle.comment = data.comment;
-    newDebtArticle.status = data.status;
+    newDebtArticle.status = 'razduženo';
 
     const savedArticleInDebtItems = await this.debtItems.save(newDebtArticle);
 
@@ -150,8 +134,9 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     /* Potrebno dodati hvatanje greške */
     await this.stock.save(newArticleStock);
 
-    return await this.user.findOne(userId, {
-      relations: ['debtItems', 'debtItems.article'],
+    return await this.debtItems.findOne({
+      where: {articleId : data.articleId},
+      relations: ['article', 'user'],
     });
   } /* FUNKCIJE */
 } /* KRAJ KODA */
