@@ -47,7 +47,7 @@ export class DestroyedArticlesService extends TypeOrmCrudService<Destroyed> {
         serialNumber: data.serialNumber,
       },
     );
-
+    /* Ako bi imao ikada potrebu da otpišem nešto što je na skladištu, ta provjera će ići ovdje, nešto slično kao što je u responsibility */
     if (!existinArticleDestroyed) {
       return new ApiResponse(
         'error',

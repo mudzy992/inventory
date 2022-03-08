@@ -48,11 +48,17 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
       });
 
     if (!existingUserArticleResponsibility) {
-      return new ApiResponse(
-        'error',
-        -2011,
-        'Artikal sa traženim serijskim brojem ne postoji.',
-      );
+      const checkArticleInStock: Stock = await this.stock.findOne({
+        articleId: data.articleId,
+      });
+      if (!checkArticleInStock) {
+        return new ApiResponse(
+          'error',
+          -2011,
+          'Traženi artikal ne postoji u bazi podataka',
+        );
+      }
+      return this.addArticleInResponsibility(userId, data);
     }
     if (
       existingUserArticleResponsibility.serialNumber === data.serialNumber &&
@@ -78,7 +84,6 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
         'Artikal sa traženim serijskim brojem je već uništen.',
       );
     }
-    return this.addArticleInResponsibility(userId, data);
   }
 
   private async addArticleInResponsibility(
