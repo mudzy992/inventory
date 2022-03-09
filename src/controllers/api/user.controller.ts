@@ -22,6 +22,9 @@ import { UserService } from 'src/services/user/user.service';
       articles: {
         eager: true,
       },
+      userArticle: {
+        eager: true,
+      },
       responsibilityArticles: {
         eager: true,
       },
