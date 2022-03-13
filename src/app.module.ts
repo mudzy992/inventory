@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseConfiguration } from 'config/database.configuration';
 import { Article } from 'src/entities/Article';
@@ -29,6 +29,13 @@ import { DestroyedArticlesController } from './controllers/api/destroyed.control
 import { UserArticleController } from './controllers/api/user.article.controller';
 import { UserArticleService } from './services/userArticle/user.article.service';
 import { UserArticle } from './entities/UserArticle';
+import { AdministratorService } from './services/administrator/administrator.service';
+import { Administrator } from './entities/Administrator';
+import { AdministratorController } from './controllers/api/administrator.controller';
+import { AuthMiddleware } from './middlewares/auth.middleware';
+import { UserToken } from './entities/UserToken';
+import { AdministratorToken } from './entities/AdministratorToken';
+import { AuthController } from './controllers/api/auth.controller';
 
 @Module({
   imports: [
@@ -49,6 +56,9 @@ import { UserArticle } from './entities/UserArticle';
         Responsibility,
         DebtItems,
         UserArticle,
+        Administrator,
+        UserToken,
+        AdministratorToken,
       ],
     }),
     TypeOrmModule.forFeature([
@@ -62,6 +72,9 @@ import { UserArticle } from './entities/UserArticle';
       Responsibility,
       DebtItems,
       UserArticle,
+      Administrator,
+      UserToken,
+      AdministratorToken,
     ]),
   ],
   controllers: [
@@ -74,6 +87,8 @@ import { UserArticle } from './entities/UserArticle';
     DebtItemsController,
     DestroyedArticlesController,
     UserArticleController,
+    AdministratorController,
+    AuthController,
   ],
   providers: [
     ArticleService,
@@ -85,6 +100,25 @@ import { UserArticle } from './entities/UserArticle';
     DebtItemsService,
     DestroyedArticlesService,
     UserArticleService,
+    AdministratorService,
+    UserService,
+  ],
+  exports: [
+    // zbog middleware potrebno je exportovati servis
+    // da bi svi ostali elementi koji se nalaze van okvira modula
+    AdministratorService,
+    UserService,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    // Nema throw već mi treba da odredimo šta treba da radi
+    // a mi želimo da on primjeni određeni middleware
+    consumer
+      .apply(AuthMiddleware)
+      // kada kažemo koji middleware naš konzumer treba da primjenjuje
+      // moramo da damo nekoliko izuzetaka, i spisak ruta za koje će važiti
+      .exclude('auth/*') // Izbjegni sve što počinje sa auth/*, 'assets/*', 'uploads/*'itd.
+      .forRoutes('api/*'); // Ali primjeni se na sve što počinje sa api/
+  }
+}

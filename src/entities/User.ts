@@ -37,9 +37,12 @@ export class User {
   @Column('varchar', { name: 'location', length: 255 })
   location: string;
 
+  @Column('varchar', { name: 'password_hash', length: 255 })
+  passwordHash: string;
+
   @ManyToMany((type) => Article, (article) => article.userDetails)
   @JoinTable({
-    name: 'user_article',
+    name: 'responsibility',
     joinColumn: { name: 'user_id', referencedColumnName: 'userId' },
     inverseJoinColumn: {
       name: 'article_id',

@@ -12,4 +12,13 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
   ) {
     super(userArticle);
   }
+  async getBySerialNumber(serialNumber: string): Promise<UserArticle | null> {
+    const article = await this.userArticle.findOne({
+      serialNumber: serialNumber,
+    });
+    if (article) {
+      return article;
+    }
+    return null;
+  }
 }

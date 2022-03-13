@@ -32,7 +32,7 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
   async addArticleToEmploye(
     userId: number,
     data: AddEmployeArticleDto,
-  ): Promise<User | Stock | Responsibility | ApiResponse> {
+  ): Promise<User | Stock | Responsibility | UserArticle | ApiResponse> {
     /* Provjera ako korisnik već ima zadužen artikal pod articleId i userId i userArticle DONE*/
     /* Provjera da li na stanju više ima artikala da se zaduži DONE */
     /* Implementacija mehanizma za automacko umanjenje količine na skladištu DONE*/
@@ -42,48 +42,53 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     /* vrsiti historija zaduzenja i razduzenja sa timestamp DONE */
 
     /* Provjera da li je artikal zadužen */
-    const existingUserArticleResponsibility: UserArticle =
-      await this.userArticle.findOne({
-        serialNumber: data.serialNumber,
-      });
+    const exResponsibility: Responsibility = await this.responsibility.findOne({
+      serialNumber: data.serialNumber,
+    });
 
-    if (!existingUserArticleResponsibility) {
-      const checkArticleInStock: Stock = await this.stock.findOne({
-        articleId: data.articleId,
-      });
-      if (!checkArticleInStock) {
-        return new ApiResponse(
-          'error',
-          -2011,
-          'Traženi artikal ne postoji u bazi podataka',
-        );
-      }
-      return this.addArticleInResponsibility(userId, data);
-    }
-    if (
-      existingUserArticleResponsibility.serialNumber === data.serialNumber &&
-      existingUserArticleResponsibility.status === 'zaduženo'
-    ) {
+    const exDebt: DebtItems = await this.debtItems.findOne({
+      serialNumber: data.serialNumber,
+    });
+
+    const exDestroyed: Destroyed = await this.destroyed.findOne({
+      serialNumber: data.serialNumber,
+    });
+
+    if (exResponsibility) {
       return new ApiResponse(
         'error',
         -2002,
         'Artikal sa traženim serijskim brojem je već zadužen.',
       );
-    } else if (
-      existingUserArticleResponsibility.serialNumber === data.serialNumber &&
-      existingUserArticleResponsibility.status === 'razduženo'
-    ) {
+    } else if (exDebt) {
+      await this.debtItems.remove(exDebt);
       return this.addArticleInResponsibility(userId, data);
-    } else if (
-      existingUserArticleResponsibility.serialNumber === data.serialNumber &&
-      existingUserArticleResponsibility.status === 'otpisano'
-    ) {
+    } else if (exDestroyed) {
       return new ApiResponse(
         'error',
         -2007,
         'Artikal sa traženim serijskim brojem je već uništen.',
       );
     }
+
+    const checkArticleInStock: Stock = await this.stock.findOne({
+      articleId: data.articleId,
+    });
+    if (!checkArticleInStock) {
+      return new ApiResponse(
+        'error',
+        -2011,
+        'Traženi artikal ne postoji u bazi podataka',
+      );
+    }
+    if (checkArticleInStock.valueAvailable === 0) {
+      return new ApiResponse(
+        'error',
+        -2005,
+        'Na stanju više nema traženog artikla',
+      );
+    }
+    this.addArticleInResponsibility(userId, data);
   }
 
   private async addArticleInResponsibility(
@@ -125,30 +130,21 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
       articleId: data.articleId,
     });
 
-    if (articleInStock) {
-      if (articleInStock.valueAvailable === 0) {
-        return new ApiResponse(
-          'error',
-          -2005,
-          'Na stanju više nema traženog artikla',
-        );
-      }
+    await this.stock.remove(articleInStock); /* Brisati red */
+    const newArticleStock: Stock =
+      await new Stock(); /* Primjer novog skladišta */
+    newArticleStock.articleId = data.articleId;
+    newArticleStock.valueOnConcract = articleInStock.valueOnConcract;
+    newArticleStock.valueAvailable =
+      articleInStock.valueAvailable - savedNewResponsibility.value;
+    newArticleStock.sapNumber = articleInStock.sapNumber;
+    await this.stock.save(newArticleStock);
 
-      await this.stock.remove(articleInStock); /* Brisati red */
-      const newArticleStock: Stock =
-        await new Stock(); /* Primjer novog skladišta */
-      newArticleStock.articleId = data.articleId;
-      newArticleStock.valueOnConcract = articleInStock.valueOnConcract;
-      newArticleStock.valueAvailable =
-        articleInStock.valueAvailable - savedNewResponsibility.value;
-      newArticleStock.sapNumber = articleInStock.sapNumber;
-      await this.stock.save(newArticleStock);
+    return await this.responsibility.findOne({
+      where: { articleId: data.articleId },
+      relations: ['article', 'user', 'userArticle'],
+    });
 
-      return await this.responsibility.findOne({
-        where: { articleId: data.articleId },
-        relations: ['article', 'user', 'userArticle'],
-      });
-    }
     /* FUNKCIJE */
   }
 } /* KRAJ KODA */
