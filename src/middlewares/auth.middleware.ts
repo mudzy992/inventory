@@ -8,8 +8,8 @@ import { NextFunction, Request, Response } from 'express';
 import { AdministratorService } from 'src/services/administrator/administrator.service';
 import * as jwt from 'jsonwebtoken';
 import { jwtSecret } from 'config/jwt.secret';
-import { JWTDataDto } from 'src/dtos/auth/jwt.data.dto';
 import { UserService } from 'src/services/user/user.service';
+import { JWTDataDto } from 'src/dtos/auth/jwt.data.dto';
 
 @Injectable() // Ni pod razno ovo zaboraviti
 export class AuthMiddleware implements NestMiddleware {

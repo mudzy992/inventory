@@ -65,6 +65,9 @@ export class UserArticle {
   @Column('varchar', { name: 'serial_number' })
   serialNumber: string;
 
+  @Column('varchar', { name: 'comment', nullable: true, length: 255 })
+  comment: string | null;
+
   @ManyToOne(() => DebtItems, (debtItems) => debtItems.userArticle, {
     onDelete: 'SET NULL',
     onUpdate: 'CASCADE',

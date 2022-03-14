@@ -121,6 +121,7 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     newUserArticleData.userId = user;
     newUserArticleData.serialNumber = data.serialNumber;
     newUserArticleData.articleId = data.articleId;
+    newUserArticleData.comment = data.comment;
     newUserArticleData.status = 'zaduženo';
 
     await this.userArticle.save(newUserArticleData);

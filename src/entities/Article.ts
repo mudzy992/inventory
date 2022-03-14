@@ -73,7 +73,7 @@ export class Article {
 
   @ManyToMany(() => User, (user) => user.articles)
   @JoinTable({
-    name: 'responsibility',
+    name: 'user_article',
     joinColumn: { name: 'article_id', referencedColumnName: 'articleId' },
     inverseJoinColumn: {
       name: 'user_id',

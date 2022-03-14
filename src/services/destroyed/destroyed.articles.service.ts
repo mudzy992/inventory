@@ -126,6 +126,7 @@ export class DestroyedArticlesService extends TypeOrmCrudService<Destroyed> {
     newUserArticleData.destroyId = saveDestroyedArticle.destroyedId;
     newUserArticleData.userId = user;
     newUserArticleData.serialNumber = data.serialNumber;
+    newUserArticleData.comment = data.comment;
     newUserArticleData.status = 'otpisano';
 
     const savedUserArticle = await this.userArticle.save(newUserArticleData);

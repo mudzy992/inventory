@@ -116,6 +116,7 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     newUserArticleData.debtId = savedArticleInDebtItems.debtItemsId;
     newUserArticleData.userId = user;
     newUserArticleData.serialNumber = data.serialNumber;
+    newUserArticleData.comment = data.comment;
     newUserArticleData.status = 'razduženo';
 
     const savedUserArticle = await this.userArticle.save(newUserArticleData);

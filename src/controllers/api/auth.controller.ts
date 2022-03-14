@@ -7,20 +7,20 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { LoginInfoDto } from 'src/dtos/auth/login.info.dto';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { AdministratorService } from 'src/services/administrator/administrator.service';
 import { LoginAdministratorDto } from 'src/services/administrator/login.administrator.dto';
 import { UserService } from 'src/services/user/user.service';
 import * as crypto from 'crypto';
 import * as jwt from 'jsonwebtoken';
-import { JWTDataDto } from 'src/dtos/auth/jwt.data.dto';
 import { jwtSecret } from 'config/jwt.secret';
 import { JwtRefreshDataDto } from 'src/dtos/auth/jwt.refresh.dto';
 import { AdministratorRefreshTokenDto } from 'src/dtos/auth/administrator.refresh.token.dto';
 import { AddNewEmployeDto } from 'src/dtos/user/add.new.employe.dto';
 import { LoginUserDto } from 'src/dtos/user/login.user.dto';
 import { UserRefreshTokenDto } from 'src/dtos/auth/user.refresh.token.dto';
+import { LoginInfoDto } from 'src/dtos/auth/login.info.dto';
+import { JWTDataDto } from 'src/dtos/auth/jwt.data.dto';
 
 @Controller('auth')
 export class AuthController {
