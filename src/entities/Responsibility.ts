@@ -3,11 +3,15 @@ import {
   Entity,
   Index,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Article } from './Article';
+import { ArticleFeature } from './ArticleFeature';
+import { Feature } from './Feature';
 import { User } from './User';
 import { UserArticle } from './UserArticle';
 
@@ -71,4 +75,18 @@ export class Responsibility {
 
   @OneToMany(() => UserArticle, (userArticle) => userArticle.responsibility)
   userArticle: UserArticle[];
+
+ /*  @ManyToMany((type) => Feature, (feature) => feature.articles)
+  @JoinTable({
+    name: 'article_feature',
+    joinColumn: { name: 'article_id', referencedColumnName: 'articleId' },
+    inverseJoinColumn: {
+      name: 'feature_id',
+      referencedColumnName: 'featureId',
+    },
+  })
+  features: Feature[];
+
+  @OneToMany(() => ArticleFeature, (articleFeature) => articleFeature.article)
+  articleFeature: ArticleFeature[]; */
 }

@@ -18,10 +18,16 @@ import { ResponsibilityService } from 'src/services/responsibility/responsibilit
   },
   query: {
     join: {
+      user: {
+        eager: true,
+      },
       article: {
         eager: true,
       },
-      user: {
+      features: {
+        eager: true,
+      },
+      articleFeature: {
         eager: true,
       },
     },
