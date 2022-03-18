@@ -38,7 +38,7 @@ export class AuthController {
     );
     if (!administrator) {
       return new Promise<ApiResponse>((resolve) =>
-        resolve(new ApiResponse('error', -3001, 'neispravno korisničko ime')),
+        resolve(new ApiResponse('error', -3001, 'Neispravno korisničko ime')),
       );
     }
     const passwordHash = crypto.createHash('sha512');
@@ -47,7 +47,7 @@ export class AuthController {
 
     if (administrator.passwordHash !== passwordHashString) {
       return new Promise<ApiResponse>((resolve) =>
-        resolve(new ApiResponse('error', -3002, 'neispravna lozinka')),
+        resolve(new ApiResponse('error', -3002, 'Neispravna lozinka')),
       );
     }
     const jwtData = new JWTDataDto();
@@ -78,6 +78,12 @@ export class AuthController {
       refreshToken,
       this.getIsoDate(jwtRefreshData.exp),
     );
+
+    await this.administratorService.addToken(
+      administrator.administratorId,
+      refreshToken,
+      this.getDatabaseDateFormat(this.getIsoDate(jwtRefreshData.exp))
+    )
     return new Promise((resolve) => resolve(responseObject));
   }
 
@@ -153,7 +159,7 @@ export class AuthController {
     const user = await this.userService.getByEmail(data.email);
     if (!user) {
       return new Promise<ApiResponse>((resolve) =>
-        resolve(new ApiResponse('error', -3001, 'ne valja username')),
+        resolve(new ApiResponse('error', -3001, 'Neispravan email')),
       );
     }
 
@@ -163,7 +169,7 @@ export class AuthController {
 
     if (user.passwordHash !== passwordHashString) {
       return new Promise<ApiResponse>((resolve) =>
-        resolve(new ApiResponse('error', -3002, 'ne valja password')),
+        resolve(new ApiResponse('error', -3002, 'Neispravna lozinka')),
       );
     }
     const jwtData = new JWTDataDto();

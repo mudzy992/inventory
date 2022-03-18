@@ -1,8 +1,8 @@
 export const DatabaseConfiguration = {
   hostname: 'localhost',
   database: 'inventory',
-  username: 'mudzy',
-  password: 'Nije,kikiriki1',
+  username: 'root',
+  password: 'root',
 };
 
 // mudzy - Nije,kikiriki1
