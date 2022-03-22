@@ -3,90 +3,78 @@ import {
   Entity,
   Index,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Article } from './Article';
-import { ArticleFeature } from './ArticleFeature';
-import { Feature } from './Feature';
-import { User } from './User';
-import { UserArticle } from './UserArticle';
+} from "typeorm";
+import { Article } from "./Article";
+import { User } from "./User";
+import { UserArticle } from "./UserArticle";
 
 @Index(
-  'user_id_article_id_serial_number',
-  ['articleId', 'userId', 'serialNumber'],
-  {
-    unique: true,
-  },
+  "user_id_article_id_serial_number",
+  ["userId", "articleId", "serialNumber"],
+  { unique: true }
 )
-@Index('FK_104', ['articleId'], {})
-@Index('FK_92', ['userId'], {})
-@Entity('responsibility')
+@Index("FK_104", ["articleId"], {})
+@Index("FK_92", ["userId"], {})
+@Index("fk_responsibility_user_article_id", ["userArticleId"], {})
+@Entity("responsibility", { schema: "inventory" })
 export class Responsibility {
   @PrimaryGeneratedColumn({
-    type: 'int',
-    name: 'responsibility_id',
+    type: "int",
+    name: "responsibility_id",
     unsigned: true,
   })
   responsibilityId: number;
 
-  @Column('int', { name: 'user_id', unsigned: true })
+  @Column("int", { name: "user_article_id", unsigned: true })
+  userArticleId: number;
+
+  @Column("int", { name: "user_id", unsigned: true, default: () => "'0'" })
   userId: number;
 
-  @Column('int', { name: 'article_id', unsigned: true })
+  @Column("int", { name: "article_id", unsigned: true, default: () => "'0'" })
   articleId: number;
 
-  @Column('int', { name: 'value' })
+  @Column("int", { name: "value", default: () => "'0'" })
   value: number;
 
-  @Column('enum', {
-    name: 'status',
-    enum: ['zaduženo', 'razduženo', 'otpisano'],
+  @Column("enum", {
+    name: "status",
+    enum: ["zaduženo", "razduženo", "otpisano"],
     default: () => "'zaduženo'",
   })
-  status: 'zaduženo' | 'razduženo' | 'otpisano';
+  status: "zaduženo" | "razduženo" | "otpisano";
 
-  @Column('timestamp', {
-    name: 'timestamp',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
+  @Column("timestamp", {
+    name: "timestamp",
+    default: () => "CURRENT_TIMESTAMP",
   })
   timestamp: Date;
 
-  @Column('varchar', { name: 'serial_number', length: 255 })
+  @Column("varchar", { name: "serial_number", length: 255 })
   serialNumber: string;
 
-  @ManyToOne(() => Article, (article) => article.responsibility, {
-    onDelete: 'RESTRICT',
-    onUpdate: 'CASCADE',
+  @ManyToOne(() => Article, (article) => article.responsibilities, {
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
   })
-  @JoinColumn([{ name: 'article_id', referencedColumnName: 'articleId' }])
+  @JoinColumn([{ name: "article_id", referencedColumnName: "articleId" }])
   article: Article;
 
-  @ManyToOne(() => User, (user) => user.responsibilityArticles, {
-    onDelete: 'RESTRICT',
-    onUpdate: 'CASCADE',
+  @ManyToOne(() => User, (user) => user.responsibilities, {
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
   })
-  @JoinColumn([{ name: 'user_id', referencedColumnName: 'userId' }])
+  @JoinColumn([{ name: "user_id", referencedColumnName: "userId" }])
   user: User;
 
-  @OneToMany(() => UserArticle, (userArticle) => userArticle.responsibility)
-  userArticle: UserArticle[];
-
- /*  @ManyToMany((type) => Feature, (feature) => feature.articles)
-  @JoinTable({
-    name: 'article_feature',
-    joinColumn: { name: 'article_id', referencedColumnName: 'articleId' },
-    inverseJoinColumn: {
-      name: 'feature_id',
-      referencedColumnName: 'featureId',
-    },
+  @ManyToOne(() => UserArticle, (userArticle) => userArticle.responsibilities, {
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
   })
-  features: Feature[];
-
-  @OneToMany(() => ArticleFeature, (articleFeature) => articleFeature.article)
-  articleFeature: ArticleFeature[]; */
+  @JoinColumn([
+    { name: "user_article_id", referencedColumnName: "userArticleId" },
+  ])
+  userArticle: UserArticle;
 }

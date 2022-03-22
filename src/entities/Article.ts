@@ -57,7 +57,7 @@ export class Article {
   articleFeature: ArticleFeature[];
 
   @OneToMany(() => Responsibility, (responsibility) => responsibility.article)
-  responsibility: Responsibility[];
+  responsibilities: Responsibility[];
 
   @OneToMany(() => Stock, (stock) => stock.articles)
   articlesInStock: Article[];
@@ -66,10 +66,10 @@ export class Article {
   debtItems: DebtItems[];
 
   @OneToMany(() => Destroyed, (destroyed) => destroyed.article)
-  destroyed: Destroyed[];
+  destroyeds: Destroyed[];
 
   @OneToMany(() => UserArticle, (userArticle) => userArticle.article)
-  userArticle: UserArticle[];
+  userArticles: UserArticle[];
 
   @ManyToMany(() => User, (user) => user.articles)
   @JoinTable({

@@ -52,7 +52,7 @@ export class User {
   articles: Article[];
 
   @OneToMany(() => Responsibility, (responsibility) => responsibility.user)
-  responsibilityArticles: Responsibility[];
+  responsibilities: Responsibility[];
 
   @OneToMany(() => Destroyed, (destroyed) => destroyed.user)
   destroyeds: Destroyed[];
@@ -61,5 +61,5 @@ export class User {
   debtItems: DebtItems[];
 
   @OneToMany(() => UserArticle, (userArticle) => userArticle.user)
-  userArticle: UserArticle[];
+  userArticles: UserArticle[];
 }

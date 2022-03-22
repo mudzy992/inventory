@@ -36,6 +36,7 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
 import { UserToken } from './entities/UserToken';
 import { AdministratorToken } from './entities/AdministratorToken';
 import { AuthController } from './controllers/api/auth.controller';
+import { Documents } from './entities/Documents';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { AuthController } from './controllers/api/auth.controller';
         Administrator,
         UserToken,
         AdministratorToken,
+        Documents,
       ],
     }),
     TypeOrmModule.forFeature([
@@ -75,6 +77,7 @@ import { AuthController } from './controllers/api/auth.controller';
       Administrator,
       UserToken,
       AdministratorToken,
+      Documents,
     ]),
   ],
   controllers: [

@@ -10,6 +10,7 @@ import { User } from 'src/entities/User';
 import { UserArticle } from 'src/entities/UserArticle';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository } from 'typeorm';
+import { Documents } from 'src/entities/Documents';
 
 @Injectable()
 export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
@@ -26,6 +27,8 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     private readonly user: Repository<User>,
     @InjectRepository(UserArticle)
     private readonly userArticle: Repository<UserArticle>,
+    @InjectRepository(Documents)
+    private readonly document: Repository<Documents>,
   ) {
     super(debtItems);
   }
@@ -82,6 +85,18 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
   } /* FUNKCIJE */
 
   private async addDebtArticle(user: number, data: AddEmployeArticleDto) {
+    const newDocument: Documents = new Documents();
+    newDocument.path ="/prenosnica.docx"
+
+    const savedDocument = await this.document.save(newDocument);
+    if (!savedDocument) {
+      return new ApiResponse(
+        'error',
+        -2020,
+        'Prenosnica nije kreirana',
+      );
+    }
+
     /* Izvlačimo artikal iz responsibilitiy koji odgovara našem dto, te isti
     brišemo iz responsibility tabele, jer nije više zadužen, razdužuje se
     await koristim da bi izvukao value stanje */
@@ -90,12 +105,29 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
       serialNumber: data.serialNumber,
       articleId: data.articleId,
     });
-    const value = resArticle.value;
+    const value = await resArticle.value;
     await this.responsibility.remove(resArticle);
+
+    /* Sada kada imam kreiran artikal u debt tabeli, posjedujem debtId,
+    vršim evidenciju artikla u UserArticle */
+    const newUserArticleData: UserArticle = new UserArticle();
+    newUserArticleData.documentId = savedDocument.documentsId;
+    newUserArticleData.articleId = data.articleId;
+    newUserArticleData.userId = user;
+    newUserArticleData.serialNumber = data.serialNumber;
+    newUserArticleData.comment = data.comment;
+    newUserArticleData.status = 'razduženo';
+
+    const savedUserArticle = await this.userArticle.save(newUserArticleData);
+
+    if (!savedUserArticle) {
+      return new ApiResponse('error', -2006, 'Artikal nije zadužen na radnika');
+    }
 
     /* Kreiramo novi artikal u debt items i snimamo ga, kako bi dobili
     debtId */
     const newDebtArticle: DebtItems = new DebtItems();
+    newDebtArticle.userArticleId = savedUserArticle.userArticleId;
     newDebtArticle.userId = user;
     newDebtArticle.articleId = data.articleId;
     newDebtArticle.value = value;
@@ -106,22 +138,6 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     const savedArticleInDebtItems = await this.debtItems.save(newDebtArticle);
 
     if (!savedArticleInDebtItems) {
-      return new ApiResponse('error', -2006, 'Artikal nije zadužen na radnika');
-    }
-
-    /* Sada kada imam kreiran artikal u debt tabeli, posjedujem debtId,
-    vršim evidenciju artikla u UserArticle */
-    const newUserArticleData: UserArticle = new UserArticle();
-    newUserArticleData.articleId = data.articleId;
-    newUserArticleData.debtId = savedArticleInDebtItems.debtItemsId;
-    newUserArticleData.userId = user;
-    newUserArticleData.serialNumber = data.serialNumber;
-    newUserArticleData.comment = data.comment;
-    newUserArticleData.status = 'razduženo';
-
-    const savedUserArticle = await this.userArticle.save(newUserArticleData);
-
-    if (!savedUserArticle) {
       return new ApiResponse('error', -2006, 'Artikal nije zadužen na radnika');
     }
 

@@ -10,6 +10,9 @@ import { Responsibility } from 'src/entities/Responsibility';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository } from 'typeorm';
 import { UserArticle } from 'src/entities/UserArticle';
+import { Documents } from 'src/entities/Documents';
+import { Docxtemplater } from 'docxtemplater'
+
 
 @Injectable()
 export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
@@ -26,6 +29,8 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     private readonly user: Repository<User>,
     @InjectRepository(UserArticle)
     private readonly userArticle: Repository<UserArticle>,
+    @InjectRepository(Documents)
+    private readonly document: Repository<Documents>,
   ) {
     super(responsibility);
   }
@@ -95,7 +100,69 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     user: number,
     data: AddEmployeArticleDto,
   ) {
+    const generateDocument = () => {
+      loadFile(
+          prenosnica,
+          function (error: any, content: PizZip.LoadData) {
+              if (error) {
+                  throw error;
+              }
+              const zip = new PizZip(content);
+              const doc = new Docxtemplater(zip, {
+                  paragraphLoop: true,
+                  linebreaks: true,
+              });
+
+              // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
+              doc.render({
+                  id_prenosnice: 2514549,
+                  predao_korisnik: "Skladište",
+                  preuzeo_korisnik: korisnik_preuzeo,
+                  inventurni_broj: serialNumber,
+                  naziv_opreme: article_name,
+                  komentar: komentar,
+              });
+              const out = doc.getZip().generate({
+                  type: "blob",
+                  mimeType:
+                      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              }); //Output the document using Data-URI
+              saveAs(out, "output" + "15" +  ".docx");
+          }
+      );
+  }
+
+    const newDocument: Documents = new Documents();
+    newDocument.path ="/prenosnica.docx"
+
+    const savedDocument = await this.document.save(newDocument);
+    if (!savedDocument) {
+      return new ApiResponse(
+        'error',
+        -2020,
+        'Prenosnica nije kreirana',
+      );
+    }
+
+    const newUserArticleData: UserArticle = new UserArticle();
+    newUserArticleData.documentId = savedDocument.documentsId;
+    newUserArticleData.userId = user;
+    newUserArticleData.serialNumber = data.serialNumber;
+    newUserArticleData.articleId = data.articleId;
+    newUserArticleData.comment = data.comment;
+    newUserArticleData.status = 'zaduženo';
+
+    const savedUserArticle = await this.userArticle.save(newUserArticleData);
+    if (!savedUserArticle) {
+      return new ApiResponse(
+        'error',
+        -2021,
+        'User Article ne može biti kreiran', /* Iako do ove greške teško da će doći */
+      );
+    }
+
     const newArticleOnUser: Responsibility = new Responsibility();
+    newArticleOnUser.userArticleId = savedUserArticle.userArticleId;
     newArticleOnUser.userId = user;
     newArticleOnUser.articleId = data.articleId;
     newArticleOnUser.value = data.value;
@@ -113,18 +180,6 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
         'Artikal ne može biti zadužen za tog radnika',
       );
     }
-
-    const newUserArticleData: UserArticle = new UserArticle();
-
-    newUserArticleData.responsibilityId =
-      savedNewResponsibility.responsibilityId;
-    newUserArticleData.userId = user;
-    newUserArticleData.serialNumber = data.serialNumber;
-    newUserArticleData.articleId = data.articleId;
-    newUserArticleData.comment = data.comment;
-    newUserArticleData.status = 'zaduženo';
-
-    await this.userArticle.save(newUserArticleData);
 
     /* Provjera ako artikla nema na stanju više na skladištu da se zaduži, i ako ima skini određeni broj */
     const articleInStock: Stock = await this.stock.findOne({

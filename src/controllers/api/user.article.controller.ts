@@ -36,6 +36,9 @@ import { UserArticleService } from 'src/services/userArticle/user.article.servic
       article: {
         eager: true,
       },
+      document: {
+        eager: true,
+      },
     },
   },
 })
