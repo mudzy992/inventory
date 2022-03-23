@@ -17,8 +17,8 @@ import { UserArticle } from './UserArticle';
     unique: true,
   },
 )
-@Index("FK_debt_items_user_article", ["userId"], {})
-@Index("fk_debt_items_user_article_id", ["userArticleId"], {})
+@Index('FK_debt_items_user_article', ['userId'], {})
+@Index('fk_debt_items_user_article_id', ['userArticleId'], {})
 @Entity('debt_items', { schema: 'inventory' })
 export class DebtItems {
   @PrimaryGeneratedColumn({
@@ -28,57 +28,57 @@ export class DebtItems {
   })
   debtItemsId: number;
 
-  @Column("int", { name: "user_article_id", unsigned: true })
+  @Column('int', { name: 'user_article_id', unsigned: true })
   userArticleId: number;
 
-  @Column("int", { name: "article_id", unsigned: true })
+  @Column('int', { name: 'article_id', unsigned: true })
   articleId: number;
 
-  @Column("int", { name: "user_id", unsigned: true })
+  @Column('int', { name: 'user_id', unsigned: true })
   userId: number;
 
-  @Column("int", { name: "value" })
+  @Column('int', { name: 'value' })
   value: number;
 
-  @Column("timestamp", {
-    name: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
+  @Column('timestamp', {
+    name: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
   })
   timestamp: Date;
 
-  @Column("varchar", { name: "serial_number", nullable: true, length: 255 })
+  @Column('varchar', { name: 'serial_number', nullable: true, length: 255 })
   serialNumber: string | null;
 
-  @Column("varchar", {
-    name: "status",
+  @Column('varchar', {
+    name: 'status',
     length: 50,
     default: () => "'razduženo'",
   })
   status: string;
 
-  @Column("varchar", { name: "comment", nullable: true, length: 255 })
+  @Column('varchar', { name: 'comment', nullable: true, length: 255 })
   comment: string | null;
 
   @ManyToOne(() => Article, (article) => article.debtItems, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
   })
-  @JoinColumn([{ name: "article_id", referencedColumnName: "articleId" }])
+  @JoinColumn([{ name: 'article_id', referencedColumnName: 'articleId' }])
   article: Article;
 
   @ManyToOne(() => UserArticle, (userArticle) => userArticle.debtItems, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
   })
   @JoinColumn([
-    { name: "user_article_id", referencedColumnName: "userArticleId" },
+    { name: 'user_article_id', referencedColumnName: 'userArticleId' },
   ])
   userArticle: UserArticle;
 
   @ManyToOne(() => User, (user) => user.debtItems, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
   })
-  @JoinColumn([{ name: "user_id", referencedColumnName: "userId" }])
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'userId' }])
   user: User;
 }

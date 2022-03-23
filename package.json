@@ -1,8 +1,8 @@
 {
   "name": "inventory",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "<p align=\"center\">   <a href=\"http://nestjs.com/\" target=\"blank\"><img src=\"https://nestjs.com/img/logo_text.svg\" width=\"320\" alt=\"Nest Logo\" /></a> </p>",
+  "author": "Mudzahid Ceric",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -30,9 +30,13 @@
     "@nestjsx/crud-typeorm": "^5.0.0-alpha.3",
     "class-validator": "^0.13.2",
     "crypto": "^1.0.1",
+    "docx-templates": "^4.9.1",
+    "docxtemplater": "^3.29.0",
+    "file-saver": "^2.0.5",
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "npm": "^8.5.5",
+    "pizzip": "^3.1.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
@@ -44,8 +48,10 @@
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
     "@types/express": "^4.17.13",
+    "@types/file-saver": "^2.0.5",
     "@types/jest": "27.0.2",
     "@types/node": "^16.0.0",
+    "@types/pizzip": "^3.0.2",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
@@ -78,5 +84,17 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "main": ".eslintrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mudzy992/inventory.git"
+  },
+  "keywords": [
+    "inventory"
+  ],
+  "bugs": {
+    "url": "https://github.com/mudzy992/inventory/issues"
+  },
+  "homepage": "https://github.com/mudzy992/inventory#readme"
 }

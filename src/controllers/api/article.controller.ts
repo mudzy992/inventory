@@ -23,28 +23,28 @@ import { ArticleService } from 'src/services/article/article.service';
       category: {
         eager: true,
       },
+      userDetails: {
+        eager: true,
+      },
       articleFeature: {
         eager: true,
       },
       features: {
         eager: true,
       },
-      userArticle: {
-        eager: true,
-      },
-      userDetails: {
-        eager: true,
-      },
       articlesInStock: {
         eager: true,
       },
-      destroyed: {
+      userArticles: {
+        eager: true,
+      },
+      responsibilities: {
         eager: true,
       },
       debtItems: {
         eager: true,
       },
-      responsibility: {
+      destroyeds: {
         eager: true,
       },
     },

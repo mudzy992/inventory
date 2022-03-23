@@ -4,6 +4,7 @@ import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { AddEmployeArticleDto } from 'src/dtos/user/add.employe.article.dto';
 import { DebtItems } from 'src/entities/DebtItems';
 import { Destroyed } from 'src/entities/Destroyed';
+import { Documents } from 'src/entities/Documents';
 import { Responsibility } from 'src/entities/Responsibility';
 import { Stock } from 'src/entities/Stock';
 import { User } from 'src/entities/User';
@@ -26,6 +27,8 @@ export class DestroyedArticlesService extends TypeOrmCrudService<Destroyed> {
     private readonly user: Repository<User>,
     @InjectRepository(UserArticle)
     private readonly userArticle: Repository<UserArticle>,
+    @InjectRepository(Documents)
+    private readonly document: Repository<Documents>,
   ) {
     super(destroyed);
   }
@@ -103,7 +106,30 @@ export class DestroyedArticlesService extends TypeOrmCrudService<Destroyed> {
       await this.debtItems.remove(existinArticleDebt);
     }
 
+    const newDocument: Documents = new Documents();
+    newDocument.path = '/prenosnica.docx';
+
+    const savedDocument = await this.document.save(newDocument);
+    if (!savedDocument) {
+      return new ApiResponse('error', -2020, 'Prenosnica nije kreirana');
+    }
+
+    const newUserArticleData: UserArticle = new UserArticle();
+    newUserArticleData.documentId = savedDocument.documentsId;
+    newUserArticleData.articleId = data.articleId;
+    newUserArticleData.userId = user;
+    newUserArticleData.serialNumber = data.serialNumber;
+    newUserArticleData.comment = data.comment;
+    newUserArticleData.status = 'otpisano';
+
+    const savedUserArticle = await this.userArticle.save(newUserArticleData);
+
+    if (!savedUserArticle) {
+      return new ApiResponse('error', -2006, 'Artikal nije zadužen na radnika');
+    }
+
     const destroyedArticle: Destroyed = new Destroyed();
+    destroyedArticle.userArticleId = savedUserArticle.userArticleId;
     destroyedArticle.userId = user;
     destroyedArticle.articleId = data.articleId;
     destroyedArticle.value = value;
@@ -121,18 +147,7 @@ export class DestroyedArticlesService extends TypeOrmCrudService<Destroyed> {
       );
     }
 
-    const newUserArticleData: UserArticle = new UserArticle();
-    newUserArticleData.articleId = data.articleId;
-    newUserArticleData.userId = user;
-    newUserArticleData.serialNumber = data.serialNumber;
-    newUserArticleData.comment = data.comment;
-    newUserArticleData.status = 'otpisano';
-
-    const savedUserArticle = await this.userArticle.save(newUserArticleData);
-
-    if (!savedUserArticle) {
-      return new ApiResponse('error', -2006, 'Artikal nije zadužen na radnika');
-    }
+    
     return await this.destroyed.findOne({
       where: { articleId: data.articleId },
       relations: ['article', 'user', 'userArticle'],

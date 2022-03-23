@@ -21,13 +21,13 @@ import { UserArticleService } from 'src/services/userArticle/user.article.servic
   },
   query: {
     join: {
-      debt: {
+      debtItems: {
         eager: true,
       },
-      destroy: {
+      destroyeds: {
         eager: true,
       },
-      responsibility: {
+      responsibilities: {
         eager: true,
       },
       user: {

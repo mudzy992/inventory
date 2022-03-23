@@ -11,8 +11,10 @@ import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository } from 'typeorm';
 import { UserArticle } from 'src/entities/UserArticle';
 import { Documents } from 'src/entities/Documents';
-import { Docxtemplater } from 'docxtemplater'
-
+import { StorageConfig } from 'config/storage.config';
+import { writeFileSync, readFileSync } from 'fs';
+import createReport from 'docx-templates';
+import { Article } from 'src/entities/Article';
 
 @Injectable()
 export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
@@ -31,6 +33,8 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     private readonly userArticle: Repository<UserArticle>,
     @InjectRepository(Documents)
     private readonly document: Repository<Documents>,
+    @InjectRepository(Article)
+    private readonly article: Repository<Article>,
   ) {
     super(responsibility);
   }
@@ -60,11 +64,23 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     });
 
     if (exResponsibility) {
-      return new ApiResponse(
-        'error',
-        -2002,
-        'Artikal sa traženim serijskim brojem je već zadužen.',
-      );
+      if (exResponsibility.userId === userId) {
+        return new ApiResponse(
+          'error',
+          -2002,
+          'Artikal sa traženim serijskim brojem je već zadužen na korisnika',
+        );
+      } else if (exResponsibility.userId !== userId) {
+        const ua: UserArticle = await this.userArticle.findOne({
+          userArticleId: exResponsibility.userArticleId,
+        });
+        this.userArticle.update(ua, {
+          status: 'razduženo',
+        });
+        await this.createDocument(1, '', '', '', '', '', userId, data);
+        await this.responsibility.remove(exResponsibility);
+        return this.addArticleInResponsibility(userId, data);
+      }
     } else if (exDebt) {
       await this.debtItems.remove(exDebt);
       return this.addArticleInResponsibility(userId, data);
@@ -93,55 +109,86 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
         'Na stanju više nema traženog artikla',
       );
     }
-    this.addArticleInResponsibility(userId, data);
+    await this.createDocument(1, '', '', '', '', '', userId, data);
+    return this.addArticleInResponsibility(userId, data);
+  }
+
+  private async createDocument(
+    id: number,
+    predao: string,
+    preuzeo: string,
+    inv: string,
+    naziv: string,
+    komentar: string,
+    userId,
+    data,
+  ) {
+    const builder = await this.document.createQueryBuilder(
+      `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
+    );
+    const dokumenti = await builder.getMany();
+    console.log(dokumenti.length);
+    id = Number(dokumenti.length) + 1;
+    console.log(id + 'povećan');
+    const exRes: Responsibility = await this.responsibility.findOne({
+      serialNumber: data.serialNumber,
+    });
+    const predaoKorisnik: User = await this.user.findOne({
+      userId: exRes.userId,
+    });
+    predao = predaoKorisnik.forname + ' ' + predaoKorisnik.surname;
+    const preuzeoKorisnik: User = await this.user.findOne({
+      userId: userId,
+    });
+    preuzeo = preuzeoKorisnik.forname + ' ' + preuzeoKorisnik.surname;
+    const articleName: Article = await this.article.findOne({
+      articleId: data.articleId,
+    });
+    naziv = articleName.name;
+    inv = data.serialNumber;
+    komentar = data.comment;
+    try {
+      const template = readFileSync(
+        StorageConfig.prenosnica.fullPath + 'templates/prenosnica.docx',
+      );
+      const buffer = await createReport({
+        template,
+        data: {
+          broj_prenosnice: id,
+          predao_korisnik: predao,
+          preuzeo_korisnik: preuzeo,
+          inv_broj: inv,
+          naziv: naziv,
+          komentar: komentar,
+        },
+      });
+      writeFileSync(
+        '/home/mudzahid/Documents/GitHub/storage/report' +
+          Number(dokumenti.length + 1) +
+          '.docx',
+        buffer,
+      );
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   private async addArticleInResponsibility(
     user: number,
     data: AddEmployeArticleDto,
   ) {
-    const generateDocument = () => {
-      loadFile(
-          prenosnica,
-          function (error: any, content: PizZip.LoadData) {
-              if (error) {
-                  throw error;
-              }
-              const zip = new PizZip(content);
-              const doc = new Docxtemplater(zip, {
-                  paragraphLoop: true,
-                  linebreaks: true,
-              });
-
-              // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
-              doc.render({
-                  id_prenosnice: 2514549,
-                  predao_korisnik: "Skladište",
-                  preuzeo_korisnik: korisnik_preuzeo,
-                  inventurni_broj: serialNumber,
-                  naziv_opreme: article_name,
-                  komentar: komentar,
-              });
-              const out = doc.getZip().generate({
-                  type: "blob",
-                  mimeType:
-                      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-              }); //Output the document using Data-URI
-              saveAs(out, "output" + "15" +  ".docx");
-          }
-      );
-  }
+    const builder = await this.document.createQueryBuilder(
+      `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
+    );
+    const dokumenti = await builder.getMany();
 
     const newDocument: Documents = new Documents();
-    newDocument.path ="/prenosnica.docx"
+    newDocument.path = '/prenosnica' + Number(dokumenti.length + 1) + '.docx';
+    newDocument.documentNumber = dokumenti.length + 1;
 
     const savedDocument = await this.document.save(newDocument);
     if (!savedDocument) {
-      return new ApiResponse(
-        'error',
-        -2020,
-        'Prenosnica nije kreirana',
-      );
+      return new ApiResponse('error', -2020, 'Prenosnica nije kreirana');
     }
 
     const newUserArticleData: UserArticle = new UserArticle();
@@ -157,20 +204,20 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
       return new ApiResponse(
         'error',
         -2021,
-        'User Article ne može biti kreiran', /* Iako do ove greške teško da će doći */
+        'User Article ne može biti kreiran' /* Iako do ove greške teško da će doći */,
       );
     }
 
-    const newArticleOnUser: Responsibility = new Responsibility();
-    newArticleOnUser.userArticleId = savedUserArticle.userArticleId;
-    newArticleOnUser.userId = user;
-    newArticleOnUser.articleId = data.articleId;
-    newArticleOnUser.value = data.value;
-    newArticleOnUser.status = 'zaduženo';
-    newArticleOnUser.serialNumber = data.serialNumber;
+    const newResponsibility: Responsibility = new Responsibility();
+    newResponsibility.userArticleId = savedUserArticle.userArticleId;
+    newResponsibility.userId = user;
+    newResponsibility.articleId = data.articleId;
+    newResponsibility.value = data.value;
+    newResponsibility.status = 'zaduženo';
+    newResponsibility.serialNumber = data.serialNumber;
 
     const savedNewResponsibility = await this.responsibility.save(
-      newArticleOnUser,
+      newResponsibility,
     );
 
     if (!savedNewResponsibility) {

@@ -21,6 +21,9 @@ import { DestroyedArticlesService } from 'src/services/destroyed/destroyed.artic
       article: {
         eager: true,
       },
+      userArticle: {
+        eager: true,
+      },
       user: {
         eager: true,
       },

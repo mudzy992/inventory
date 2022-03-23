@@ -24,10 +24,7 @@ import { ResponsibilityService } from 'src/services/responsibility/responsibilit
       article: {
         eager: true,
       },
-      features: {
-        eager: true,
-      },
-      articleFeature: {
+      userArticle: {
         eager: true,
       },
     },
