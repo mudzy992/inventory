@@ -55,7 +55,32 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
       - Prvo kreirati prenosnicu, jer nam trebaju podaci u njoj iz debta
       - Nakon toga brišemo artikal iz debta
       - i posljednji korak, logika zaduženja
-
+    - Napraviti mehanizam provjere da li artikal postoji u bazi podataka tj. u skladištu
+      - Ako ne postoji, povući grešku
+      - Ako postoji provjeriti da li ima u skladištu više artikala
+    - Mehanizam kreiranja dokumenta/prenosnice
+      - Prema template povlači podatke i ubacuje ih
+      - Mehanizam countera napravljen na princip da se izvlači sum redova u tabeli
+        i dodaje se jedan +1. 
+        OVAJ MEHANIZAM ĆE SE MODIFIKOVATI DA SE NAPRAVI NEKI COUNTER KOJI ĆE IMATI RESET
+      - Provjerava se da li artikal sa serijskim brojem postoji u responsibility,
+        te ako ne postoji artikal se provjerava da li postoji u debt, ako postoji u debt
+        uzima se userId iz debt i izvlači se taj korisnik iz users kao korisnik koji je 
+        predao opremu. Ako artikal ne postoji niti u debt, onda se kao korisnik koji je predao
+        opremu postavlja skladište, ili ako i ta provjera nije tačna, postavlja se opet skladište.
+        Ako se artikal nalazi u responsibility, traži se userId pod tim artiklom, izvlači se korisnik
+        te se postavlja kao korisnik koji je predao opremu
+      - korisnik koji preuzima oprema, je onaj iz rute :userId
+      - naziv artikla vadimo iz Article, definišem u data.dto
+      - inventurni broj, TREBA DODATI KAO OBAVEZNI FEATURES, te ga izvlačiti deafultno
+      - komentar - data.dto
+    - Mehanizam kreiranja responsibility
+      - Mehanizam pravljenja countera isti kao u slučaju prenosnice
+      - Prvo kreiramo Documents polje u bazi, jer nam treba taj ID i spašavao kao await
+      - sljedeće što kreiramo je userarticle jer imam polje documets_id await save
+      - nakon toga kreiram responsibility jer imam userArticle_id await save
+      - u posljednjem koraku, skidam artikal sa skladišta
+      MODIFIKOVATI DA KADA SE ZADUŽENJE NA ZADUŽENJE RADI DA SE NE SKIDA SA SKLADIŠTA
     OPIS LOGIKE KADA SE ARTIKAL VUČE IZ STACKA
     */
 
@@ -72,12 +97,12 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
       serialNumber: data.serialNumber,
     });
 
-    if(!exResponsibility) {
-        const checkArticleInStock: Stock = await this.stock.findOne({
+    if (!exResponsibility) {
+      const checkArticleInStock: Stock = await this.stock.findOne({
         articleId: data.articleId,
       });
       if (!checkArticleInStock) {
-        return new ApiResponse( 
+        return new ApiResponse(
           'error',
           -2011,
           'Traženi artikal ne postoji u bazi podataka',
@@ -91,7 +116,7 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
         );
       }
     }
-    
+
     if (exResponsibility) {
       if (exResponsibility.userId === userId) {
         return new ApiResponse(
@@ -106,6 +131,12 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
         this.userArticle.update(ua, {
           status: 'razduženo',
           comment: data.comment,
+        });
+        const artStock: Stock = await this.stock.findOne({
+          articleId: data.articleId,
+        });
+        this.stock.update(artStock, {
+          valueAvailable: artStock.valueAvailable + 1,
         });
         await this.createDocument(1, '', '', '', '', '', userId, data);
         await this.responsibility.remove(exResponsibility);
@@ -149,27 +180,26 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
 
     if (!exRes) {
       const exDebt: DebtItems = await this.debtItems.findOne({
-        serialNumber: data.serialNumber
-      })
+        serialNumber: data.serialNumber,
+      });
 
       if (exDebt) {
         const predaoKorisnik: User = await this.user.findOne({
           userId: exDebt.userId,
         });
         predao = predaoKorisnik.forname + ' ' + predaoKorisnik.surname;
-        console.log("undefined");
+        console.log('undefined');
       } else {
-        predao = 'Skladište'
+        predao = 'Skladište';
       }
-      predao = 'Skladište'
+      predao = 'Skladište';
     }
-    if (exRes){
+    if (exRes) {
       const predaoKorisnik: User = await this.user.findOne({
         userId: exRes.userId,
       });
       predao = predaoKorisnik.forname + ' ' + predaoKorisnik.surname;
-      console.log('defined')
-    } 
+    }
 
     const preuzeoKorisnik: User = await this.user.findOne({
       userId: userId,
@@ -198,7 +228,8 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
         },
       });
       writeFileSync(
-        StorageConfig.prenosnica.fullPath + 'report' +
+        StorageConfig.prenosnica.fullPath +
+          'report' +
           Number(dokumenti.length + 1) +
           '.docx',
         buffer,
@@ -231,7 +262,7 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     newUserArticleData.userId = user;
     newUserArticleData.serialNumber = data.serialNumber;
     newUserArticleData.articleId = data.articleId;
-    newUserArticleData.comment = "Zaduženje nove opreme";
+    newUserArticleData.comment = 'Zaduženje nove opreme';
     newUserArticleData.status = 'zaduženo';
 
     const savedUserArticle = await this.userArticle.save(newUserArticleData);
