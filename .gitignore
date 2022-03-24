@@ -38,3 +38,5 @@ config/database.configuration.ts
 config/database.configuration.ts
 config/database.configuration.ts
 config/database.configuration.ts
+config/database.configuration.ts
+config/storage.config.ts

@@ -42,13 +42,22 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     userId: number,
     data: AddEmployeArticleDto,
   ): Promise<User | Stock | Responsibility | UserArticle | ApiResponse> {
-    /* Provjera ako korisnik već ima zadužen artikal pod articleId i userId i userArticle DONE*/
-    /* Provjera da li na stanju više ima artikala da se zaduži DONE */
-    /* Implementacija mehanizma za automacko umanjenje količine na skladištu DONE*/
-    /* Implementacija vraćanja artikla iz zaduženo u na skladištu, uvećavanje (pogledati bazu, podataka zaduženja u userArticles) 
-    promjeniti u bazi na stockArticles i stock postaviti status, te ako je u dto status razduzeno izvrsiti + onoliko koliko je zaduzeno bilo 
-    te ga brisati iz stockArticles u stock koji ce imati za taj article status na stanju ili nema na stanju (promjeniti if statement za nema na stanju na osnov statusa) */
-    /* vrsiti historija zaduzenja i razduzenja sa timestamp DONE */
+    /* 
+    U privim tražim artikal po SB u responsibility, debt i destroy
+    - Ako se artikal nalazi u responsibility i želim ga zadužiti ponovo na novog korisnika
+      - Izvširiti provjeru ako je već artikal sa SB zadužen na traženog korisnika
+        - Ako jeste, pronaći red u userArticle za tog korisnika
+          izvršiti update polja statusa u userArticle na "razduženo", pod tim korisnikom
+        - Nakon toga izvšriti prvo logiku kreiranja prenosnice, jer nam trebaju podaci o korisniku za nju
+        - Izvširi logiku brisanja polja iz responsibility tabele
+        - Izvšiti logiku zaduženja korisnika
+    - Ako se artikal nalazi u debt, i želimo ga zadužiti
+      - Prvo kreirati prenosnicu, jer nam trebaju podaci u njoj iz debta
+      - Nakon toga brišemo artikal iz debta
+      - i posljednji korak, logika zaduženja
+
+    OPIS LOGIKE KADA SE ARTIKAL VUČE IZ STACKA
+    */
 
     /* Provjera da li je artikal zadužen */
     const exResponsibility: Responsibility = await this.responsibility.findOne({
@@ -63,6 +72,26 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
       serialNumber: data.serialNumber,
     });
 
+    if(!exResponsibility) {
+        const checkArticleInStock: Stock = await this.stock.findOne({
+        articleId: data.articleId,
+      });
+      if (!checkArticleInStock) {
+        return new ApiResponse( 
+          'error',
+          -2011,
+          'Traženi artikal ne postoji u bazi podataka',
+        );
+      }
+      if (checkArticleInStock.valueAvailable === 0) {
+        return new ApiResponse(
+          'error',
+          -2005,
+          'Na stanju više nema traženog artikla',
+        );
+      }
+    }
+    
     if (exResponsibility) {
       if (exResponsibility.userId === userId) {
         return new ApiResponse(
@@ -76,12 +105,14 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
         });
         this.userArticle.update(ua, {
           status: 'razduženo',
+          comment: data.comment,
         });
         await this.createDocument(1, '', '', '', '', '', userId, data);
         await this.responsibility.remove(exResponsibility);
         return this.addArticleInResponsibility(userId, data);
       }
     } else if (exDebt) {
+      await this.createDocument(1, '', '', '', '', '', userId, data);
       await this.debtItems.remove(exDebt);
       return this.addArticleInResponsibility(userId, data);
     } else if (exDestroyed) {
@@ -92,23 +123,6 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
       );
     }
 
-    const checkArticleInStock: Stock = await this.stock.findOne({
-      articleId: data.articleId,
-    });
-    if (!checkArticleInStock) {
-      return new ApiResponse(
-        'error',
-        -2011,
-        'Traženi artikal ne postoji u bazi podataka',
-      );
-    }
-    if (checkArticleInStock.valueAvailable === 0) {
-      return new ApiResponse(
-        'error',
-        -2005,
-        'Na stanju više nema traženog artikla',
-      );
-    }
     await this.createDocument(1, '', '', '', '', '', userId, data);
     return this.addArticleInResponsibility(userId, data);
   }
@@ -127,20 +141,41 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
       `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
     );
     const dokumenti = await builder.getMany();
-    console.log(dokumenti.length);
     id = Number(dokumenti.length) + 1;
-    console.log(id + 'povećan');
+
     const exRes: Responsibility = await this.responsibility.findOne({
       serialNumber: data.serialNumber,
     });
-    const predaoKorisnik: User = await this.user.findOne({
-      userId: exRes.userId,
-    });
-    predao = predaoKorisnik.forname + ' ' + predaoKorisnik.surname;
+
+    if (!exRes) {
+      const exDebt: DebtItems = await this.debtItems.findOne({
+        serialNumber: data.serialNumber
+      })
+
+      if (exDebt) {
+        const predaoKorisnik: User = await this.user.findOne({
+          userId: exDebt.userId,
+        });
+        predao = predaoKorisnik.forname + ' ' + predaoKorisnik.surname;
+        console.log("undefined");
+      } else {
+        predao = 'Skladište'
+      }
+      predao = 'Skladište'
+    }
+    if (exRes){
+      const predaoKorisnik: User = await this.user.findOne({
+        userId: exRes.userId,
+      });
+      predao = predaoKorisnik.forname + ' ' + predaoKorisnik.surname;
+      console.log('defined')
+    } 
+
     const preuzeoKorisnik: User = await this.user.findOne({
       userId: userId,
     });
     preuzeo = preuzeoKorisnik.forname + ' ' + preuzeoKorisnik.surname;
+
     const articleName: Article = await this.article.findOne({
       articleId: data.articleId,
     });
@@ -163,7 +198,7 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
         },
       });
       writeFileSync(
-        '/home/mudzahid/Documents/GitHub/storage/report' +
+        StorageConfig.prenosnica.fullPath + 'report' +
           Number(dokumenti.length + 1) +
           '.docx',
         buffer,
@@ -196,7 +231,7 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     newUserArticleData.userId = user;
     newUserArticleData.serialNumber = data.serialNumber;
     newUserArticleData.articleId = data.articleId;
-    newUserArticleData.comment = data.comment;
+    newUserArticleData.comment = "Zaduženje nove opreme";
     newUserArticleData.status = 'zaduženo';
 
     const savedUserArticle = await this.userArticle.save(newUserArticleData);

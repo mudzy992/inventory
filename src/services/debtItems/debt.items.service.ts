@@ -36,14 +36,12 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     userId: number,
     data: AddEmployeArticleDto,
   ): Promise<DebtItems | Stock | Responsibility | ApiResponse> {
-    /* Provjera ako korisnik već ima zadužen artikal pod articleId i userId i userArticle DONE*/
-    /* Provjera da li na stanju više ima artikala da se zaduži DONE */
-    /* Implementacija mehanizma za automacko umanjenje količine na skladištu DONE*/
-    /* Implementacija vraćanja artikla iz zaduženo u na skladištu, uvećavanje (pogledati bazu, podataka zaduženja u userArticles) 
-    promjeniti u bazi na stockArticles i stock postaviti status, te ako je u dto status razduzeno izvrsiti + onoliko koliko je zaduzeno bilo 
-    te ga brisati iz stockArticles u stock koji ce imati za taj article status na stanju ili nema na stanju (promjeniti if statement za nema na stanju na osnov statusa) */
-    /* vrsiti historija zaduzenja i razduzenja sa timestamp DONE */
-    /*  */
+    /* NOVI MEHANIZAM - nije još implementirano
+    - Provjera da li je artikal već razdužen sa korisnika sa tim SB, ako jeste izbaciti grešku
+      - Ako artikal nije razdužen, izvršiti provjeru da li se artikal nalazi u responsibility
+        pod tim korisnikom i SB, ako jeste izvršiti logiku koda za razduživanje
+      - Ako se artikal ne nalazi ni u responsibility, povući grešku da artikal ne postoji
+    */
 
     const existingDebtArticle: UserArticle = await this.userArticle.findOne({
       serialNumber: data.serialNumber,
@@ -85,8 +83,14 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
   } /* FUNKCIJE */
 
   private async addDebtArticle(user: number, data: AddEmployeArticleDto) {
+    const builder = await this.document.createQueryBuilder(
+      `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
+    );
+    const dokumenti = await builder.getMany();
+
     const newDocument: Documents = new Documents();
-    newDocument.path ="/prenosnica.docx"
+    newDocument.path = '/prenosnica' + Number(dokumenti.length + 1) + '.docx';
+    newDocument.documentNumber = dokumenti.length + 1;
 
     const savedDocument = await this.document.save(newDocument);
     if (!savedDocument) {
@@ -101,7 +105,7 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     brišemo iz responsibility tabele, jer nije više zadužen, razdužuje se
     await koristim da bi izvukao value stanje */
     const resArticle: Responsibility = await this.responsibility.findOne({
-      userId: user,
+     /*  userId: user, */
       serialNumber: data.serialNumber,
       articleId: data.articleId,
     });
