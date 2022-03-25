@@ -188,7 +188,6 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
           userId: exDebt.userId,
         });
         predao = predaoKorisnik.forname + ' ' + predaoKorisnik.surname;
-        console.log('undefined');
       } else {
         predao = 'Skladište';
       }

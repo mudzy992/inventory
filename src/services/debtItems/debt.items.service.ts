@@ -11,6 +11,10 @@ import { UserArticle } from 'src/entities/UserArticle';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository } from 'typeorm';
 import { Documents } from 'src/entities/Documents';
+import { StorageConfig } from 'config/storage.config';
+import { writeFileSync, readFileSync } from 'fs';
+import createReport from 'docx-templates';
+import { Article } from 'src/entities/Article';
 
 @Injectable()
 export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
@@ -29,6 +33,8 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     private readonly userArticle: Repository<UserArticle>,
     @InjectRepository(Documents)
     private readonly document: Repository<Documents>,
+    @InjectRepository(Article)
+    private readonly article: Repository<Article>,
   ) {
     super(debtItems);
   }
@@ -43,45 +49,132 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
       - Ako se artikal ne nalazi ni u responsibility, povući grešku da artikal ne postoji
     */
 
-    const existingDebtArticle: UserArticle = await this.userArticle.findOne({
-      serialNumber: data.serialNumber,
-    });
+    const exDebt : DebtItems = await this.debtItems.findOne({ 
+      userId: userId,
+      serialNumber: data.serialNumber
+    })
 
-    if (!existingDebtArticle) {
+    if (exDebt) {
+      return new ApiResponse(
+        'error',
+        -2008,
+        'Artikal sa traženim serijskim brojem je već razdužen.',
+      );
+    }
+    if (!exDebt) {
+      const exRes : Responsibility = await this.responsibility.findOne({ 
+        serialNumber: data.serialNumber,
+      })
+      if (exRes) {
+        await this.createDocument(1, '', '', '', '', '', userId, data);
+        return this.addDebtArticle(userId, data)
+      }
+      if (!exRes) {
+        return new ApiResponse(
+          'error',
+          -2011,
+          'Oprema nema zaduženje, da bi se izvršilo razduženje',
+        );
+      }
+      const exDest : Destroyed = await this.destroyed.findOne({
+        userId: userId,
+        serialNumber: data.serialNumber
+      })
+      if (exDest) {
+        return new ApiResponse(
+          'error',
+          -2007,
+          'Artikal sa traženim serijskim brojem je već uništen.',
+        );
+      }
+
       return new ApiResponse(
         'error',
         -2011,
         'Artikal sa traženim serijskim brojem ne postoji.',
       );
     }
-
-    if (
-      existingDebtArticle.serialNumber === data.serialNumber &&
-      existingDebtArticle.status === 'razduženo'
-    ) {
-      return new ApiResponse(
-        'error',
-        -2008,
-        'Artikal sa traženim serijskim brojem je već razdužen.',
-      );
-    } else if (
-      existingDebtArticle.serialNumber === data.serialNumber &&
-      existingDebtArticle.status === 'zaduženo'
-    ) {
-      return this.addDebtArticle(userId, data);
-    } else if (
-      existingDebtArticle.serialNumber === data.serialNumber &&
-      existingDebtArticle.status === 'otpisano'
-    ) {
-      return new ApiResponse(
-        'error',
-        -2007,
-        'Artikal sa traženim serijskim brojem je već uništen.',
-      );
-    }
-    return this.addDebtArticle(userId, data);
   } /* FUNKCIJE */
+  
+  private async createDocument(
+    id: number,
+    predao: string,
+    preuzeo: string,
+    inv: string,
+    naziv: string,
+    komentar: string,
+    userId,
+    data,
+  ) {
+    const builder = await this.document.createQueryBuilder(
+      `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
+    );
+    const dokumenti = await builder.getMany();
+    id = Number(dokumenti.length) + 1;
 
+    const exRes: Responsibility = await this.responsibility.findOne({
+      serialNumber: data.serialNumber,
+    });
+
+    if (!exRes) {
+      const exDebt: DebtItems = await this.debtItems.findOne({
+        serialNumber: data.serialNumber,
+      });
+
+      if (exDebt) {
+        const predaoKorisnik: User = await this.user.findOne({
+          userId: exDebt.userId,
+        });
+        predao = predaoKorisnik.forname + ' ' + predaoKorisnik.surname;
+      } else {
+        predao = 'Skladište';
+      }
+      predao = 'Skladište';
+    }
+    if (exRes) {
+      const predaoKorisnik: User = await this.user.findOne({
+        userId: exRes.userId,
+      });
+      predao = predaoKorisnik.forname + ' ' + predaoKorisnik.surname;
+    }
+
+    const preuzeoKorisnik: User = await this.user.findOne({
+      userId: userId,
+    });
+    preuzeo = preuzeoKorisnik.forname + ' ' + preuzeoKorisnik.surname;
+
+    const articleName: Article = await this.article.findOne({
+      articleId: data.articleId,
+    });
+    naziv = articleName.name;
+    inv = data.serialNumber;
+    komentar = data.comment;
+    try {
+      const template = readFileSync(
+        StorageConfig.prenosnica.fullPath + 'templates/prenosnica.docx',
+      );
+      const buffer = await createReport({
+        template,
+        data: {
+          broj_prenosnice: id,
+          predao_korisnik: predao,
+          preuzeo_korisnik: preuzeo,
+          inv_broj: inv,
+          naziv: naziv,
+          komentar: komentar,
+        },
+      });
+      writeFileSync(
+        StorageConfig.prenosnica.fullPath +
+          'report' +
+          Number(dokumenti.length + 1) +
+          '.docx',
+        buffer,
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  }
   private async addDebtArticle(user: number, data: AddEmployeArticleDto) {
     const builder = await this.document.createQueryBuilder(
       `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
