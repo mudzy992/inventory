@@ -5,9 +5,9 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.useStaticAssets(StorageConfig.templates.destination, {
-    prefix: StorageConfig.templates.urlPrefix,
-    maxAge: StorageConfig.templates.maxAge,
+  app.useStaticAssets(StorageConfig.prenosnicaPrefix.destination, {
+    prefix: StorageConfig.prenosnicaPrefix.urlPrefix,
+    maxAge: StorageConfig.prenosnicaPrefix.maxAge,
     index: false,
   });
   app.enableCors();

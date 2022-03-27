@@ -59,6 +59,9 @@ export class DebtItems {
   @Column('varchar', { name: 'comment', nullable: true, length: 255 })
   comment: string | null;
 
+  @Column('varchar', { name: 'inv_broj', length: 50 })
+  invBroj: string;
+
   @ManyToOne(() => Article, (article) => article.debtItems, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',

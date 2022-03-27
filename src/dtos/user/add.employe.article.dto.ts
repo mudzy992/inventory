@@ -4,5 +4,6 @@ export class AddEmployeArticleDto {
   value: number | null;
   comment: string | null;
   serialNumber: string;
+  invBroj: string;
   status: 'zaduženo' | 'razduženo' | 'otpisano';
 }

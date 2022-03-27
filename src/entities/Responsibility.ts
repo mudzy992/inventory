@@ -55,6 +55,9 @@ export class Responsibility {
   @Column('varchar', { name: 'serial_number', length: 255 })
   serialNumber: string;
 
+  @Column('varchar', { name: 'inv_broj', length: 50 })
+  invBroj: string;
+
   @ManyToOne(() => Article, (article) => article.responsibilities, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',

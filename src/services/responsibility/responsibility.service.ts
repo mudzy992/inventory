@@ -205,11 +205,11 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     });
     preuzeo = preuzeoKorisnik.forname + ' ' + preuzeoKorisnik.surname;
 
-    const articleName: Article = await this.article.findOne({
+    const article: Article = await this.article.findOne({
       articleId: data.articleId,
     });
-    naziv = articleName.name;
-    inv = data.serialNumber;
+    inv = data.invBroj;
+    naziv = article.name;
     komentar = data.comment;
     try {
       const template = readFileSync(
@@ -260,6 +260,7 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     newUserArticleData.documentId = savedDocument.documentsId;
     newUserArticleData.userId = user;
     newUserArticleData.serialNumber = data.serialNumber;
+    newUserArticleData.invBroj = data.invBroj;
     newUserArticleData.articleId = data.articleId;
     newUserArticleData.comment = 'Zaduženje nove opreme';
     newUserArticleData.status = 'zaduženo';
@@ -278,6 +279,7 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     newResponsibility.userId = user;
     newResponsibility.articleId = data.articleId;
     newResponsibility.value = data.value;
+    newResponsibility.invBroj = data.invBroj;
     newResponsibility.status = 'zaduženo';
     newResponsibility.serialNumber = data.serialNumber;
 

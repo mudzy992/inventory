@@ -37,6 +37,8 @@ import { UserToken } from './entities/UserToken';
 import { AdministratorToken } from './entities/AdministratorToken';
 import { AuthController } from './controllers/api/auth.controller';
 import { Documents } from './entities/Documents';
+import { DocumentService } from './services/document/document.service';
+import { DocumentController } from './controllers/api/document.controller';
 
 @Module({
   imports: [
@@ -92,6 +94,7 @@ import { Documents } from './entities/Documents';
     UserArticleController,
     AdministratorController,
     AuthController,
+    DocumentController,
   ],
   providers: [
     ArticleService,
@@ -105,6 +108,7 @@ import { Documents } from './entities/Documents';
     UserArticleService,
     AdministratorService,
     UserService,
+    DocumentService,
   ],
   exports: [
     // zbog middleware potrebno je exportovati servis
