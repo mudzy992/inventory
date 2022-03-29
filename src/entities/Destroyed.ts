@@ -9,12 +9,14 @@ import {
 import { Article } from './Article';
 import { User } from './User';
 import { UserArticle } from './UserArticle';
+import { Documents } from "./Documents";
 
 @Index(
   'article_id_user_id_serial_number',
   ['articleId', 'userId', 'serialNumber'],
   { unique: true },
 )
+@Index("fk_destroyed_document_id", ["documentId"], {})
 @Index('fk_destroyed_user_id', ['userId'], {})
 @Index('fk_destroyed_user_article_id', ['userArticleId'], {})
 @Entity('destroyed', { schema: 'inventory' })
@@ -30,6 +32,9 @@ export class Destroyed {
 
   @Column('int', { name: 'user_id', unsigned: true, default: () => "'0'" })
   userId: number;
+
+  @Column("int", { name: "document_id", unsigned: true })
+  documentId: number;
 
   @Column('int', { name: 'value', default: () => "'0'" })
   value: number;
@@ -62,6 +67,13 @@ export class Destroyed {
   })
   @JoinColumn([{ name: 'article_id', referencedColumnName: 'articleId' }])
   article: Article;
+
+  @ManyToOne(() => Documents, (documents) => documents.destroyeds, {
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
+  })
+  @JoinColumn([{ name: "document_id", referencedColumnName: "documentsId" }])
+  document: Documents;
 
   @ManyToOne(() => User, (user) => user.destroyeds, {
     onDelete: 'RESTRICT',

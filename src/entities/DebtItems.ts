@@ -9,6 +9,7 @@ import {
 import { Article } from './Article';
 import { User } from './User';
 import { UserArticle } from './UserArticle';
+import { Documents } from "./Documents";
 
 @Index(
   'article_id_user_id_timestamp_serial_number',
@@ -17,6 +18,7 @@ import { UserArticle } from './UserArticle';
     unique: true,
   },
 )
+@Index("fk_debt_items_document_id", ["documentId"], {})
 @Index('FK_debt_items_user_article', ['userId'], {})
 @Index('fk_debt_items_user_article_id', ['userArticleId'], {})
 @Entity('debt_items', { schema: 'inventory' })
@@ -36,6 +38,9 @@ export class DebtItems {
 
   @Column('int', { name: 'user_id', unsigned: true })
   userId: number;
+
+  @Column("int", { name: "document_id", unsigned: true })
+  documentId: number;
 
   @Column('int', { name: 'value' })
   value: number;
@@ -68,6 +73,13 @@ export class DebtItems {
   })
   @JoinColumn([{ name: 'article_id', referencedColumnName: 'articleId' }])
   article: Article;
+
+  @ManyToOne(() => Documents, (documents) => documents.debtItems, {
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
+  })
+  @JoinColumn([{ name: "document_id", referencedColumnName: "documentsId" }])
+  document: Documents;
 
   @ManyToOne(() => UserArticle, (userArticle) => userArticle.debtItems, {
     onDelete: 'RESTRICT',

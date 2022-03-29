@@ -27,6 +27,9 @@ import { DebtItemsService } from 'src/services/debtItems/debt.items.service';
       user: {
         eager: true,
       },
+      document: {
+        eager: true,
+      }
     },
   },
 })

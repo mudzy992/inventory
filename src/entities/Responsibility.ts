@@ -9,6 +9,7 @@ import {
 import { Article } from './Article';
 import { User } from './User';
 import { UserArticle } from './UserArticle';
+import { Documents } from "./Documents";
 
 @Index(
   'user_id_article_id_serial_number',
@@ -17,6 +18,7 @@ import { UserArticle } from './UserArticle';
 )
 @Index('FK_104', ['articleId'], {})
 @Index('FK_92', ['userId'], {})
+@Index("fk_responsibility_document_id", ["documentId"], {})
 @Index('fk_responsibility_user_article_id', ['userArticleId'], {})
 @Entity('responsibility', { schema: 'inventory' })
 export class Responsibility {
@@ -35,6 +37,9 @@ export class Responsibility {
 
   @Column('int', { name: 'article_id', unsigned: true, default: () => "'0'" })
   articleId: number;
+
+  @Column("int", { name: "document_id", unsigned: true })
+  documentId: number;
 
   @Column('int', { name: 'value', default: () => "'0'" })
   value: number;
@@ -64,6 +69,13 @@ export class Responsibility {
   })
   @JoinColumn([{ name: 'article_id', referencedColumnName: 'articleId' }])
   article: Article;
+
+  @ManyToOne(() => Documents, (documents) => documents.responsibilities, {
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
+  })
+  @JoinColumn([{ name: "document_id", referencedColumnName: "documentsId" }])
+  document: Documents;
 
   @ManyToOne(() => User, (user) => user.responsibilities, {
     onDelete: 'RESTRICT',

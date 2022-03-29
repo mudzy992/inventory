@@ -213,7 +213,8 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     komentar = data.comment;
     try {
       const template = readFileSync(
-        StorageConfig.prenosnica.fullPath + 'templates/prenosnica.docx',
+        StorageConfig.prenosnica.template,
+        /* StorageConfig.prenosnica.fullPath + 'templates/prenosnica.docx', */
       );
       const buffer = await createReport({
         template,
@@ -227,8 +228,8 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
         },
       });
       writeFileSync(
-        StorageConfig.prenosnica.fullPath +
-          'report' +
+        StorageConfig.prenosnica.destination +
+          'prenosnica' +
           Number(dokumenti.length + 1) +
           '.docx',
         buffer,
@@ -248,8 +249,9 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     const dokumenti = await builder.getMany();
 
     const newDocument: Documents = new Documents();
-    newDocument.path = '/prenosnica' + Number(dokumenti.length + 1) + '.docx';
+    newDocument.path = 'prenosnica' + Number(dokumenti.length + 1) + '.docx';
     newDocument.documentNumber = dokumenti.length + 1;
+    newDocument.articleId = data.articleId;
 
     const savedDocument = await this.document.save(newDocument);
     if (!savedDocument) {
@@ -282,6 +284,7 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     newResponsibility.invBroj = data.invBroj;
     newResponsibility.status = 'zaduženo';
     newResponsibility.serialNumber = data.serialNumber;
+    newResponsibility.documentId = savedDocument.documentsId;
 
     const savedNewResponsibility = await this.responsibility.save(
       newResponsibility,

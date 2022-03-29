@@ -27,6 +27,9 @@ import { ResponsibilityService } from 'src/services/responsibility/responsibilit
       userArticle: {
         eager: true,
       },
+      document: {
+        eager: true,
+      }
     },
   },
 })

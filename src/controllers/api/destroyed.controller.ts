@@ -27,6 +27,9 @@ import { DestroyedArticlesService } from 'src/services/destroyed/destroyed.artic
       user: {
         eager: true,
       },
+      document: {
+        eager: true,
+      }
     },
   },
 })

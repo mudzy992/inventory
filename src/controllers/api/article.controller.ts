@@ -47,6 +47,9 @@ import { ArticleService } from 'src/services/article/article.service';
       destroyeds: {
         eager: true,
       },
+      documents: {
+        eager: true,
+      },
     },
   },
   routes: { exclude: ['updateOneBase'] },

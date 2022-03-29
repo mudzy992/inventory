@@ -151,7 +151,7 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     komentar = data.comment;
     try {
       const template = readFileSync(
-        StorageConfig.prenosnica.fullPath + 'templates/prenosnica.docx',
+        StorageConfig.prenosnica.template,
       );
       const buffer = await createReport({
         template,
@@ -165,8 +165,8 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
         },
       });
       writeFileSync(
-        StorageConfig.prenosnica.fullPath +
-          'report' +
+        StorageConfig.prenosnica.destination +
+          'prenosnica' +
           Number(dokumenti.length + 1) +
           '.docx',
         buffer,
@@ -182,8 +182,9 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     const dokumenti = await builder.getMany();
 
     const newDocument: Documents = new Documents();
-    newDocument.path = '/prenosnica' + Number(dokumenti.length + 1) + '.docx';
+    newDocument.path = 'prenosnica' + Number(dokumenti.length + 1) + '.docx';
     newDocument.documentNumber = dokumenti.length + 1;
+    newDocument.articleId = data.articleId;
 
     const savedDocument = await this.document.save(newDocument);
     if (!savedDocument) {
@@ -214,6 +215,7 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     newUserArticleData.serialNumber = data.serialNumber;
     newUserArticleData.comment = data.comment;
     newUserArticleData.status = 'razduženo';
+    newUserArticleData.invBroj = data.invBroj;
 
     const savedUserArticle = await this.userArticle.save(newUserArticleData);
 
@@ -231,6 +233,8 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     newDebtArticle.serialNumber = data.serialNumber;
     newDebtArticle.comment = data.comment;
     newDebtArticle.status = 'razduženo';
+    newDebtArticle.documentId = savedDocument.documentsId;
+    newDebtArticle.invBroj = data.invBroj;
 
     const savedArticleInDebtItems = await this.debtItems.save(newDebtArticle);
 

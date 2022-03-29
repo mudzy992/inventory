@@ -20,6 +20,17 @@ import { DocumentService } from 'src/services/document/document.service';
       userArticles: {
         eager: true,
       },
+      debtItems: {
+        eager: true,
+      }
+      ,
+      responsibilities: {
+        eager: true,
+      }
+      ,
+      document: {
+        eager: true,
+      }
     },
   },
 })

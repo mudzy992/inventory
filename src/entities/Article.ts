@@ -17,6 +17,7 @@ import { User } from './User';
 import { Stock } from './Stock';
 import { Destroyed } from './Destroyed';
 import { DebtItems } from './DebtItems';
+import { Documents } from "./Documents";
 import { UserArticle } from './UserArticle';
 
 @Index('fk_article_category_id', ['categoryId'], {})
@@ -55,6 +56,9 @@ export class Article {
 
   @OneToMany(() => ArticleFeature, (articleFeature) => articleFeature.article)
   articleFeature: ArticleFeature[];
+
+  @OneToMany(() => Documents, (documents) => documents.article)
+  documents: Documents[];
 
   @OneToMany(() => Responsibility, (responsibility) => responsibility.article)
   responsibilities: Responsibility[];

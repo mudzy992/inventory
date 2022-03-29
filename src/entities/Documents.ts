@@ -1,17 +1,41 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { DebtItems } from "./DebtItems";
+import { Destroyed } from "./Destroyed";
+import { Responsibility } from "./Responsibility";
 import { UserArticle } from './UserArticle';
+import { Article } from "./Article";
 
-@Entity('documents', { schema: 'inventory' })
+@Index("fk_documents_article_id", ["articleId"], {})
+@Entity("documents", { schema: "inventory" })
 export class Documents {
-  @PrimaryGeneratedColumn({ type: 'int', name: 'documents_id', unsigned: true })
+  @PrimaryGeneratedColumn({ type: "int", name: "documents_id", unsigned: true })
   documentsId: number;
 
-  @Column('varchar', { name: 'path', length: 255 })
+  @Column("int", { name: "article_id", unsigned: true })
+  articleId: number;
+
+  @Column("varchar", { name: "path", length: 255 })
   path: string;
 
-  @Column('int', { name: 'document_number', default: () => "'0'" })
+  @Column("int", { name: "document_number", default: () => "'0'" })
   documentNumber: number;
+
+  @OneToMany(() => DebtItems, (debtItems) => debtItems.document)
+  debtItems: DebtItems[];
+
+  @OneToMany(() => Destroyed, (destroyed) => destroyed.document)
+  destroyeds: Destroyed[];
+
+  @OneToMany(() => Responsibility, (responsibility) => responsibility.document)
+  responsibilities: Responsibility[];
 
   @OneToMany(() => UserArticle, (userArticle) => userArticle.document)
   userArticles: UserArticle[];
+  
+  @ManyToOne(() => Article, (article) => article.documents, {
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
+  })
+  @JoinColumn([{ name: "article_id", referencedColumnName: "articleId" }])
+  article: Article;
 }

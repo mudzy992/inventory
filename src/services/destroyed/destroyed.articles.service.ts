@@ -106,8 +106,15 @@ export class DestroyedArticlesService extends TypeOrmCrudService<Destroyed> {
       await this.debtItems.remove(existinArticleDebt);
     }
 
+    const builder = await this.document.createQueryBuilder(
+      `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
+    );
+    const dokumenti = await builder.getMany();
+
     const newDocument: Documents = new Documents();
-    newDocument.path = '/prenosnica.docx';
+    newDocument.path = 'prenosnica.docx';
+    newDocument.documentNumber = dokumenti.length + 1;
+    newDocument.articleId = data.articleId;
 
     const savedDocument = await this.document.save(newDocument);
     if (!savedDocument) {
@@ -121,6 +128,7 @@ export class DestroyedArticlesService extends TypeOrmCrudService<Destroyed> {
     newUserArticleData.serialNumber = data.serialNumber;
     newUserArticleData.comment = data.comment;
     newUserArticleData.status = 'otpisano';
+    newUserArticleData.invBroj = data.invBroj;
 
     const savedUserArticle = await this.userArticle.save(newUserArticleData);
 
@@ -136,6 +144,8 @@ export class DestroyedArticlesService extends TypeOrmCrudService<Destroyed> {
     destroyedArticle.serialNumber = data.serialNumber;
     destroyedArticle.comment = data.comment;
     destroyedArticle.status = 'otpisano';
+    destroyedArticle.documentId = savedDocument.documentsId;
+    destroyedArticle.invBroj = data.invBroj;
 
     const saveDestroyedArticle = await this.destroyed.save(destroyedArticle);
 
