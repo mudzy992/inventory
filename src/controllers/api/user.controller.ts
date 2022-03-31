@@ -22,10 +22,10 @@ import { UserService } from 'src/services/user/user.service';
       articles: {
         eager: true,
       },
-      userArticle: {
+      userArticles: {
         eager: true,
       },
-      responsibilityArticles: {
+      responsibilities: {
         eager: true,
       },
       debtItems: {

@@ -75,7 +75,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         'articleFeature',
         'features',
         'articlesInStock',
-        'destroyed',
+        'destroyeds',
       ],
     });
   } /* Kraj metoda za kreiranje novog artikla */
@@ -142,7 +142,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         'articleFeature',
         'features',
         'articlesInStock',
-        'destroyed',
+        'destroyeds',
       ],
     });
   }

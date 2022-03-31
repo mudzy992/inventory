@@ -29,10 +29,10 @@ export class Article {
   @Column('varchar', { name: 'name', length: 45 })
   name: string;
 
-  @Column('varchar', { name: 'excerpt', length: 45 })
+  @Column('varchar', { name: 'excerpt', length: 255 })
   excerpt: string;
 
-  @Column('varchar', { name: 'description', length: 45 })
+  @Column('varchar', { name: 'description', length: 450 })
   description: string;
 
   @Column('varchar', { name: 'comment', nullable: true })
