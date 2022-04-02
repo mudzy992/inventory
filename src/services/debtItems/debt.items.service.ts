@@ -138,9 +138,9 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
       predao = predaoKorisnik.forname + ' ' + predaoKorisnik.surname;
     }
 
-    const preuzeoKorisnik: User = await this.user.findOne({
+/*     const preuzeoKorisnik: User = await this.user.findOne({
       userId: userId,
-    });
+    }); */
   
     const articleName: Article = await this.article.findOne({
       articleId: data.articleId,
@@ -148,6 +148,7 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     naziv = articleName.name;
     inv = data.serialNumber;
     komentar = data.comment;
+    preuzeo = 'Skladište'
     try {
       const template = readFileSync(
         StorageConfig.prenosnica.template,
