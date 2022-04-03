@@ -137,10 +137,6 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
       });
       predao = predaoKorisnik.forname + ' ' + predaoKorisnik.surname;
     }
-
-/*     const preuzeoKorisnik: User = await this.user.findOne({
-      userId: userId,
-    }); */
   
     const articleName: Article = await this.article.findOne({
       articleId: data.articleId,
