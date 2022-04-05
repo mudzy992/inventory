@@ -94,7 +94,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     data: EditFullArticleDto,
   ): Promise<Article | ApiResponse> {
     const existingArticle: Article = await this.article.findOne(articleId, {
-      relations: ['articlesInStock', 'articleFeature'],
+      relations: ['articlesInStock', 'articleFeature', 'features'],
     });
 
     if (!existingArticle) {

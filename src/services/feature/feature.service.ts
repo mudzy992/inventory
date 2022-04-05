@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { AddNewFeatureDto } from 'src/dtos/features/add.new.feature.dto';
+import { EditFeatureDto } from 'src/dtos/features/edit.feature.dto';
 import { Feature } from 'src/entities/Feature';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository } from 'typeorm';
@@ -28,6 +29,15 @@ export class FeatureService extends TypeOrmCrudService<Feature> {
 
     return await this.findOne(savedFeature.featureId, { 
       relations: ['articleFeature', 'category', 'articles'],
+    })
+  }
+
+  async editFeatures(data: EditFeatureDto): Promise<Feature | ApiResponse> {
+    const newFeature: Feature = new Feature();
+
+
+    return await this.findOne( ,{
+      relations: ['articleFeature',' category',]
     })
   }
 }

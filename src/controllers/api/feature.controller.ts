@@ -1,9 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Patch, Post } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
 import { Feature } from 'src/entities/Feature';
 import { FeatureService } from 'src/services/feature/feature.service';
 import { AddNewFeatureDto } from 'src/dtos/features/add.new.feature.dto';
 import { ApiResponse } from 'src/misc/api.response.class';
+import { EditFeatureDto } from 'src/dtos/features/edit.feature.dto';
 
 @Controller('api/feature')
 @Crud({
@@ -38,5 +39,11 @@ export class FeatureController {
     @Body() data: AddNewFeatureDto,
   ): Promise<Feature | ApiResponse> {
     return await this.service.createNewFeature(data);
+  }
+  @Patch()
+  async editFeatures(
+    @Body() data: EditFeatureDto,
+  ): Promise<Feature | ApiResponse> {
+    return await this.service.editFeatures(data)
   }
 }
