@@ -75,7 +75,6 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         'articleFeature',
         'features',
         'articlesInStock',
-        'destroyeds',
       ],
     });
   } /* Kraj metoda za kreiranje novog artikla */
@@ -93,21 +92,42 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     articleId: number,
     data: EditFullArticleDto,
   ): Promise<Article | ApiResponse> {
-    const existingArticle: Article = await this.article.findOne(articleId, {
-      relations: ['articlesInStock', 'articleFeature', 'features'],
-    });
-
+    const existingArticle: Article = await this.article.findOne({articleId: articleId})
     if (!existingArticle) {
       return new ApiResponse('error', -1001, 'Artikal ne postoji u skladištu');
     }
-    existingArticle.name = data.name;
-    existingArticle.categoryId = data.categoryId;
-    existingArticle.excerpt = data.excerpt;
-    existingArticle.description = data.description;
-    existingArticle.concract = data.concract;
-    existingArticle.comment = data.comment;
 
-    const savedArticle = await this.article.save(existingArticle);
+    this.article.update(existingArticle, {
+      name : data.name,
+      categoryId : data.categoryId,
+      excerpt : data.excerpt,
+      description : data.description,
+      concract : data.concract,
+      comment : data.comment,
+    })
+
+    const existingStock: Stock = await this.stock.findOne({ articleId: articleId });
+    this.stock.update(existingStock, {
+      valueAvailable : data.stock.valueAvailable,
+      valueOnConcract : data.stock.valueOnConcract,
+      sapNumber : data.stock.sap_number
+    })
+
+    const existingFeatures: ArticleFeature = await this.articleFeature.findOne({articleId: articleId });
+    for(const feature of data.features) {
+      if (existingFeatures.featureId === feature.featureId){
+      this.articleFeature.update(existingFeatures, 
+        {value: feature.value});
+}
+    }
+/*       for(const feature of data.features){
+        if(existingFeatures.featureId === feature.featureId) {
+          this.articleFeature.update(existingFeatures, {
+          value : feature.value
+        })
+        } */
+
+    /* const savedArticle = await this.article.save(existingArticle);
 
     if (!savedArticle) {
       return new ApiResponse('error', -1002, 'Artikal nije moguće spasiti');
@@ -134,7 +154,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         newArticleFeature.value = feature.value;
         await this.articleFeature.save(newArticleFeature);
       }
-    }
+    } */
 
     return await this.findOne(articleId, {
       relations: [
@@ -142,7 +162,6 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         'articleFeature',
         'features',
         'articlesInStock',
-        'destroyeds',
       ],
     });
   }

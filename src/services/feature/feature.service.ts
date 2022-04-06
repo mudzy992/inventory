@@ -36,7 +36,7 @@ export class FeatureService extends TypeOrmCrudService<Feature> {
     const newFeature: Feature = new Feature();
 
 
-    return await this.findOne( ,{
+    return await this.findOne( {
       relations: ['articleFeature',' category',]
     })
   }
