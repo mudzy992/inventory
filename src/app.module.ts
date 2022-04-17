@@ -39,6 +39,9 @@ import { AuthController } from './controllers/api/auth.controller';
 import { Documents } from './entities/Documents';
 import { DocumentService } from './services/document/document.service';
 import { DocumentController } from './controllers/api/document.controller';
+import { UpgradeFeature } from './entities/UpgradeFeature';
+import { UpgradeFeatureService } from './services/upgradeFeature/upgrade.features.service';
+import { UpgradeFeatureController } from './controllers/api/upgrade.feature.controller';
 
 @Module({
   imports: [
@@ -63,6 +66,7 @@ import { DocumentController } from './controllers/api/document.controller';
         UserToken,
         AdministratorToken,
         Documents,
+        UpgradeFeature,
       ],
     }),
     TypeOrmModule.forFeature([
@@ -80,6 +84,7 @@ import { DocumentController } from './controllers/api/document.controller';
       UserToken,
       AdministratorToken,
       Documents,
+      UpgradeFeature,
     ]),
   ],
   controllers: [
@@ -95,6 +100,7 @@ import { DocumentController } from './controllers/api/document.controller';
     AdministratorController,
     AuthController,
     DocumentController,
+    UpgradeFeatureController,
   ],
   providers: [
     ArticleService,
@@ -109,6 +115,7 @@ import { DocumentController } from './controllers/api/document.controller';
     AdministratorService,
     UserService,
     DocumentService,
+    UpgradeFeatureService,
   ],
   exports: [
     // zbog middleware potrebno je exportovati servis

@@ -13,6 +13,7 @@ import { Responsibility } from './Responsibility';
 import { Article } from './Article';
 import { Documents } from './Documents';
 import { User } from './User';
+import { UpgradeFeature } from "./UpgradeFeature";
 
 @Index('fk_user_article_user_id', ['userId'], {})
 @Index('fk_user_article_article_id', ['articleId'], {})
@@ -69,6 +70,12 @@ export class UserArticle {
 
   @OneToMany(() => Destroyed, (destroyed) => destroyed.userArticle)
   destroyeds: Destroyed[];
+
+  @OneToMany(
+    () => UpgradeFeature,
+    (upgradeFeature) => upgradeFeature.serialNumber2
+  )
+  upgradeFeatures: UpgradeFeature[];
 
   @OneToMany(
     () => Responsibility,
