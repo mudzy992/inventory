@@ -96,65 +96,41 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     if (!existingArticle) {
       return new ApiResponse('error', -1001, 'Artikal ne postoji u skladištu');
     }
-
-    this.article.update(existingArticle, {
-      name : data.name,
-      categoryId : data.categoryId,
-      excerpt : data.excerpt,
-      description : data.description,
-      concract : data.concract,
-      comment : data.comment,
-    })
-
-    const existingStock: Stock = await this.stock.findOne({ articleId: articleId });
-    this.stock.update(existingStock, {
-      valueAvailable : data.stock.valueAvailable,
-      valueOnConcract : data.stock.valueOnConcract,
-      sapNumber : data.stock.sap_number
-    })
-
-    const existingFeatures: ArticleFeature = await this.articleFeature.findOne({articleId: articleId });
-    for(const feature of data.features) {
-      if (existingFeatures.featureId === feature.featureId){
-      this.articleFeature.update(existingFeatures, 
-        {value: feature.value});
-}
-    }
-/*       for(const feature of data.features){
-        if(existingFeatures.featureId === feature.featureId) {
-          this.articleFeature.update(existingFeatures, {
-          value : feature.value
+    if (data.details !== null) {
+      this.article.update(existingArticle, {
+          name : data.details.name,
+          categoryId : data.categoryId,
+          excerpt : data.details.excerpt,
+          description : data.details.description,
+          concract : data.details.concract,
+          comment : data.details.comment,
         })
-        } */
+        const savedArticle = await this.article.save(existingArticle);
 
-    /* const savedArticle = await this.article.save(existingArticle);
-
-    if (!savedArticle) {
-      return new ApiResponse('error', -1002, 'Artikal nije moguće spasiti');
+        if (!savedArticle) {
+          return new ApiResponse('error', -1002, 'Artikal nije moguće spasiti');
+        }
     }
-
+    
     if (data.stock !== null) {
-      await this.stock.remove(
-        await this.stock.findOne({ articleId: articleId }),
-      );
-      const newArticleStock: Stock = new Stock();
-      newArticleStock.articleId = articleId;
-      newArticleStock.valueOnConcract = data.stock.valueOnConcract;
-      newArticleStock.valueAvailable = data.stock.valueAvailable;
-      newArticleStock.sapNumber = data.stock.sap_number;
-      await this.stock.save(newArticleStock);
+      const existingArticleInStock = await this.stock.findOne({articleId : articleId})
+      this.stock.update(existingArticleInStock, {
+        valueOnConcract : data.stock.valueOnConcract,
+        valueAvailable : data.stock.valueAvailable,
+        sapNumber : data.stock.sap_number,
+      })
     }
 
-    if (data.features !== null) {
-      await this.articleFeature.remove(existingArticle.articleFeature);
+     if (data.features !== null) {
+       await this.articleFeature.remove(await this.articleFeature.find({articleId : articleId}));
       for (const feature of data.features) {
         const newArticleFeature: ArticleFeature = new ArticleFeature();
         newArticleFeature.articleId = articleId;
         newArticleFeature.featureId = feature.featureId;
         newArticleFeature.value = feature.value;
         await this.articleFeature.save(newArticleFeature);
-      }
-    } */
+      } 
+    }
 
     return await this.findOne(articleId, {
       relations: [
@@ -164,8 +140,9 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         'articlesInStock',
       ],
     });
+  
   }
-  async changeStockExistArticle(
+ async changeStockExistArticle(
     articleId: number,
     data: AddArticleDto,
   ): Promise<Stock> {

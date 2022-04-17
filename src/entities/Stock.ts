@@ -34,13 +34,16 @@ export class Stock {
   @Column('varchar', { name: 'sap_number', nullable: false })
   sapNumber: string;
 
-  @OneToMany(() => Stock, (stock) => stock.articles)
-  articlesInStock: Article[];
+  /* @OneToMany(() => Stock, (stock) => stock.articles)
+  articlesInStock: Article[]; */
 
-  @ManyToOne(() => Article, (article) => article.articlesInStock, {
+  /* @ManyToOne(() => Article, (article) => article.articlesInStock, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',
   })
   @JoinColumn([{ name: 'article_id', referencedColumnName: 'articleId' }])
-  articles: Article;
+  articles: Article; */
+
+  @OneToMany(() => Article, (article) => article.articlesInStock)
+  stockArticle: Article[];
 }

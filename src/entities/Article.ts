@@ -63,8 +63,15 @@ export class Article {
   @OneToMany(() => Responsibility, (responsibility) => responsibility.article)
   responsibilities: Responsibility[];
 
-  @OneToMany(() => Stock, (stock) => stock.articles)
-  articlesInStock: Article[];
+  /* @OneToMany(() => Stock, (stock) => stock.articles)
+  articlesInStock: Article; */
+
+  @ManyToOne(() => Stock, (stock) => stock.stockArticle, {
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'article_id', referencedColumnName: 'articleId' }])
+  articlesInStock: Stock;
 
   @OneToMany(() => DebtItems, (debtItems) => debtItems.article)
   debtItems: DebtItems[];

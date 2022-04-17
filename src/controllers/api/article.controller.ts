@@ -70,7 +70,7 @@ export class ArticleController {
   }
 
   @Patch(':id')
-  async editArticleDataInStock(
+  async editFullArticleController(
     @Param('id') id: number,
     @Body() data: EditFullArticleDto,
   ) {
