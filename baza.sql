@@ -45,9 +45,9 @@ CREATE TABLE IF NOT EXISTS `administrator_token` (
   `expire_at` datetime NOT NULL,
   `is_valid` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`administrator_token_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table inventory.administrator_token: ~18 rows (approximately)
+-- Dumping data for table inventory.administrator_token: ~23 rows (approximately)
 DELETE FROM `administrator_token`;
 /*!40000 ALTER TABLE `administrator_token` DISABLE KEYS */;
 INSERT INTO `administrator_token` (`administrator_token_id`, `administrator_id`, `created_at`, `token`, `expire_at`, `is_valid`) VALUES
@@ -70,7 +70,11 @@ INSERT INTO `administrator_token` (`administrator_token_id`, `administrator_id`,
 	(18, 1, '2022-03-31 18:20:15', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjUxNDIyMDE1LjQ2OSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjI3IiwidWEiOiJNb3ppbGxhLzUuMCAoTWFjaW50b3NoOyBJbnRlbCBNYWMgT1MgWCAxMF8xNV82KSBBcHBsZVdlYktpdC82MDUuMS4xNSAoS0hUTUwsIGxpa2UgR2Vja28pIFZlcnNpb24vMTUuNCBTYWZhcmkvNjA1LjEuMTUiLCJpYXQiOjE2NDg3NDM2MTV9.tQFBfhupBhPr0KMHCid8L8ppkoa9km4du0k0Ck6yAck', '2022-05-01 16:20:15', 1),
 	(19, 1, '2022-03-31 19:07:29', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjUxNDI0ODQ5Ljk1MywiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoWDExOyBMaW51eCB4ODZfNjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDAuMC40ODk2LjYwIFNhZmFyaS81MzcuMzYiLCJpYXQiOjE2NDg3NDY0NDl9.02aBI7TaEqXnIT8zLHCfqxBCtHqGBSCuQmw0tAOEFzw', '2022-05-01 17:07:29', 1),
 	(20, 1, '2022-04-02 18:17:10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjUxNTk0NjMwLjE5MSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjI5IiwidWEiOiJNb3ppbGxhLzUuMCAoTWFjaW50b3NoOyBJbnRlbCBNYWMgT1MgWCAxMF8xNV82KSBBcHBsZVdlYktpdC82MDUuMS4xNSAoS0hUTUwsIGxpa2UgR2Vja28pIFZlcnNpb24vMTUuNCBTYWZhcmkvNjA1LjEuMTUiLCJpYXQiOjE2NDg5MTYyMzB9.CHRgntmMwgmpKO6_0Y2bCwTQk-acfgK4VR2Hh0BSTSk', '2022-05-03 16:17:10', 1),
-	(21, 1, '2022-04-02 18:18:42', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjUxNTk0NzIyLjc4LCJpcCI6Ijo6ZmZmZjoxOTIuMTY4LjAuMTMiLCJ1YSI6Ik1vemlsbGEvNS4wIChYMTE7IExpbnV4IHg4Nl82NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwMC4wLjQ4OTYuNjAgU2FmYXJpLzUzNy4zNiIsImlhdCI6MTY0ODkxNjMyMn0.Zd4aTD-QJS48X2h5FOtkrhhanufUFrtC1-xd8hgtB0k', '2022-05-03 16:18:42', 1);
+	(21, 1, '2022-04-02 18:18:42', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjUxNTk0NzIyLjc4LCJpcCI6Ijo6ZmZmZjoxOTIuMTY4LjAuMTMiLCJ1YSI6Ik1vemlsbGEvNS4wIChYMTE7IExpbnV4IHg4Nl82NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwMC4wLjQ4OTYuNjAgU2FmYXJpLzUzNy4zNiIsImlhdCI6MTY0ODkxNjMyMn0.Zd4aTD-QJS48X2h5FOtkrhhanufUFrtC1-xd8hgtB0k', '2022-05-03 16:18:42', 1),
+	(22, 1, '2022-04-06 19:08:57', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjUxOTQzMzM3Ljg2NiwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChYMTE7IExpbnV4IHg4Nl82NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwMC4wLjQ4OTYuNjAgU2FmYXJpLzUzNy4zNiIsImlhdCI6MTY0OTI2NDkzN30.6mVENiapwQXs7LeNKufgXvHHmLF8oQyiFFge922RxLk', '2022-05-07 17:08:57', 1),
+	(23, 1, '2022-04-10 14:05:20', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjUyMjcwNzIwLjk2OSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoWDExOyBMaW51eCB4ODZfNjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDAuMC40ODk2Ljc1IFNhZmFyaS81MzcuMzYiLCJpYXQiOjE2NDk1OTIzMjB9.ouPpAiiDbGIkQUftCsayVaVYJHyrixq4pR8lTqgnpqs', '2022-05-11 12:05:20', 1),
+	(24, 1, '2022-04-10 14:54:09', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjUyMjczNjQ5LjIwMywiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoWDExOyBMaW51eCB4ODZfNjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDAuMC40ODk2Ljc1IFNhZmFyaS81MzcuMzYiLCJpYXQiOjE2NDk1OTUyNDl9.8b7z3uAQ2i-1zz7KesVM1wRN8aoRdy29QHwHvVshAwM', '2022-05-11 12:54:09', 1),
+	(25, 1, '2022-04-17 04:16:27', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjUyODQwMTg3LjQ2LCJpcCI6Ijo6ZmZmZjoxOTIuMTY4LjAuMjciLCJ1YSI6Ik1vemlsbGEvNS4wIChNYWNpbnRvc2g7IEludGVsIE1hYyBPUyBYIDEwXzE1XzYpIEFwcGxlV2ViS2l0LzYwNS4xLjE1IChLSFRNTCwgbGlrZSBHZWNrbykgVmVyc2lvbi8xNS41IFNhZmFyaS82MDUuMS4xNSIsImlhdCI6MTY1MDE2MTc4N30.GjiulYo33QmiOyB7nXG47d3XzY7L2r4aWfOcj3UN9kw', '2022-05-18 02:16:27', 1);
 /*!40000 ALTER TABLE `administrator_token` ENABLE KEYS */;
 
 -- Dumping structure for table inventory.article
@@ -87,16 +91,16 @@ CREATE TABLE IF NOT EXISTS `article` (
   PRIMARY KEY (`article_id`),
   KEY `fk_article_category_id` (`category_id`),
   CONSTRAINT `fk_article_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table inventory.article: ~10 rows (approximately)
+-- Dumping data for table inventory.article: ~9 rows (approximately)
 DELETE FROM `article`;
 /*!40000 ALTER TABLE `article` DISABLE KEYS */;
 INSERT INTO `article` (`article_id`, `name`, `excerpt`, `description`, `concract`, `category_id`, `comment`, `sap_number`) VALUES
 	(83, 'ACME SSD HD11 1TB', 'Kratki opis 1', 'Detaljan opis', 'EPU-25154/2022', 8, '', '1300-200200'),
 	(84, 'ACME SSD HD11 1024GB', 'Kratki opis', 'Detaljan opis', 'EPU-25154/2022', 8, 'Komentar 1024GB', '1300-200201'),
 	(85, 'ACME SSD HD11 1024MB', 'Kratki opis', 'Detaljan opis', 'EPU-25154/2022', 8, 'Komentar 1024MB serverski', '1300-200202'),
-	(90, 'ThinkCentre 720S', 'Računar 720S', 'Detaljan opis računara', 'EPU-25158/2022', 9, '', '1300-100200'),
+	(90, 'ThinkCentre 720S', 'Računar 720S', 'Detaljan opis računara', 'EPU-25158/2022', 9, 'Komentarcic', '1300-100200'),
 	(91, 'HP ProDesk 600 G6', 'Small Form Factor PC', 'Opis računara', 'EPU-232158/2022', 9, '', '1300-1005254'),
 	(92, 'ThinkCentre M93', 'Small Form Factor PC', 'Opis računara', 'EPU-233248/2022', 9, '', '1300-1325254'),
 	(93, 'HP E24 G4 FHD Monitor', 'HP E24 G4 FHD Monitor', 'Opis monitor', 'EPU-232558/2022', 10, '', 'ZE0687922'),
@@ -104,7 +108,8 @@ INSERT INTO `article` (`article_id`, `name`, `excerpt`, `description`, `concract
 	(96, 'ThinkCentre M83 SFF Pro Desktop', 'The new small form factor (SFF) pro design features the compactness of the SFF with the expansion ability of a tower. The SFF desktops weigh in at 16.5 lbs / 7.8 kg and support both horizontal and vertical orientations.', 'The new small form factor (SFF) pro design features the compactness of the SFF with the expansion ability of a tower. The SFF desktops weigh in at 16.5 lbs / 7.8 kg and support both horizontal and vertical orientations.', 'EZE-254584/2022', 9, 'Komentare će trebati ukinuti', '1300-005254'),
 	(97, 'ThinkCentre M92/M92p Tiny, Small, Tower', 'This Tiny desktop packs a powerful enterprise performance and Intel® vPro manageability into an ultra-compact form factor that’s energy-efficient and easy to manage.', 'This Tiny desktop packs a powerful enterprise performance and Intel® vPro manageability into an ultra-compact form factor that’s energy-efficient and easy to manage.', 'EZE-58479/2022', 9, 'Komentare brišemo', '1300-005248'),
 	(98, 'ASUS VW199T-P 19”', '19 inča monitor', '19 inča monitor kocka', 'ABA-162819-272/2022', 10, 'Komentare brisemo', '1300-183994'),
-	(99, 'Testna oprema - monitor', 'Ovu opremu ću zadužiti na Mudzahida', 'Nakon zaduženja Vratit ću je na skladište, a nakon toga će ići na Gorana, pa sa Gorana će ići na Evela.\nPogledati prenosnice nakon toga', 'UGO-638294/22', 10, 'Valjda će uspjeti', '1400-1538199');
+	(99, 'Test', 'HP E24 G4 FHD Monitor', 'Opis monitor', 'EPU-232558/2022', 10, '', '1400-1538199'),
+	(102, 'HP E23 G43 FHD Monitor', 'HP E24 G4 FHD Monitor ffff', 'Monitor je u idealnom stanju', 'EPU-232558/2023', 10, 'Nema komentara', 'ZE06879222');
 /*!40000 ALTER TABLE `article` ENABLE KEYS */;
 
 -- Dumping structure for table inventory.article_feature
@@ -119,9 +124,9 @@ CREATE TABLE IF NOT EXISTS `article_feature` (
   KEY `fk_article_feature_feature_id` (`feature_id`) USING BTREE,
   CONSTRAINT `fk_article_feature_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_article_feature_feature_id` FOREIGN KEY (`feature_id`) REFERENCES `feature` (`feature_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=130 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=365 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table inventory.article_feature: ~49 rows (approximately)
+-- Dumping data for table inventory.article_feature: ~46 rows (approximately)
 DELETE FROM `article_feature`;
 /*!40000 ALTER TABLE `article_feature` DISABLE KEYS */;
 INSERT INTO `article_feature` (`article_feature_id`, `article_id`, `feature_id`, `value`) VALUES
@@ -131,7 +136,6 @@ INSERT INTO `article_feature` (`article_feature_id`, `article_id`, `feature_id`,
 	(65, 84, 9, 'SSD'),
 	(68, 85, 8, '1024MB'),
 	(69, 85, 9, 'SSD Server'),
-	(75, 90, 10, 'SFF radna stanica'),
 	(76, 91, 10, 'Small Form Factor PC'),
 	(77, 91, 11, 'Intel Core i5-10500 @ 3,1GHz'),
 	(78, 91, 13, '8 GB'),
@@ -165,10 +169,16 @@ INSERT INTO `article_feature` (`article_feature_id`, `article_id`, `feature_id`,
 	(122, 98, 20, '1000000:1'),
 	(123, 98, 19, '19”'),
 	(124, 98, 24, '1440x900'),
-	(126, 99, 23, 'Vga'),
-	(127, 99, 20, '1:4000'),
-	(128, 99, 19, '1920/1080'),
-	(129, 99, 24, '32');
+	(355, 102, 23, 'VGA/HDMI/DVI/DP'),
+	(356, 102, 20, '1:10000'),
+	(357, 102, 19, '24"'),
+	(358, 102, 24, '1920:1080'),
+	(359, 102, 21, 'nesto'),
+	(360, 102, 17, 'FULL HD'),
+	(361, 90, 11, 'Intel I7 7000'),
+	(362, 90, 14, '1TB HDD'),
+	(363, 90, 13, '16GB'),
+	(364, 90, 10, 'SFF radna stanica');
 /*!40000 ALTER TABLE `article_feature` ENABLE KEYS */;
 
 -- Dumping structure for table inventory.category
@@ -185,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `category` (
   CONSTRAINT `FK_category_category` FOREIGN KEY (`parent__category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table inventory.category: ~4 rows (approximately)
+-- Dumping data for table inventory.category: ~8 rows (approximately)
 DELETE FROM `category`;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
 INSERT INTO `category` (`category_id`, `name`, `image_path`, `parent__category_id`) VALUES
@@ -224,7 +234,7 @@ CREATE TABLE IF NOT EXISTS `debt_items` (
   CONSTRAINT `fk_debt_items_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table inventory.debt_items: ~4 rows (approximately)
+-- Dumping data for table inventory.debt_items: ~5 rows (approximately)
 DELETE FROM `debt_items`;
 /*!40000 ALTER TABLE `debt_items` DISABLE KEYS */;
 INSERT INTO `debt_items` (`debt_items_id`, `user_article_id`, `article_id`, `user_id`, `document_id`, `value`, `timestamp`, `serial_number`, `status`, `comment`, `inv_broj`) VALUES
@@ -276,9 +286,9 @@ CREATE TABLE IF NOT EXISTS `documents` (
   PRIMARY KEY (`documents_id`),
   KEY `fk_documents_article_id` (`article_id`),
   CONSTRAINT `fk_documents_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=157 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=158 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table inventory.documents: ~26 rows (approximately)
+-- Dumping data for table inventory.documents: ~23 rows (approximately)
 DELETE FROM `documents`;
 /*!40000 ALTER TABLE `documents` DISABLE KEYS */;
 INSERT INTO `documents` (`documents_id`, `article_id`, `path`, `document_number`) VALUES
@@ -307,7 +317,8 @@ INSERT INTO `documents` (`documents_id`, `article_id`, `path`, `document_number`
 	(153, 99, 'prenosnica23.docx', 23),
 	(154, 99, 'prenosnica24.docx', 24),
 	(155, 99, 'prenosnica25.docx', 25),
-	(156, 99, 'prenosnica26.docx', 26);
+	(156, 99, 'prenosnica26.docx', 26),
+	(157, 102, 'prenosnica27.docx', 27);
 /*!40000 ALTER TABLE `documents` ENABLE KEYS */;
 
 -- Dumping structure for table inventory.feature
@@ -322,7 +333,7 @@ CREATE TABLE IF NOT EXISTS `feature` (
   CONSTRAINT `fk_feature_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table inventory.feature: ~14 rows (approximately)
+-- Dumping data for table inventory.feature: ~17 rows (approximately)
 DELETE FROM `feature`;
 /*!40000 ALTER TABLE `feature` DISABLE KEYS */;
 INSERT INTO `feature` (`feature_id`, `name`, `category_id`) VALUES
@@ -369,7 +380,7 @@ CREATE TABLE IF NOT EXISTS `responsibility` (
   CONSTRAINT `fk_responsibility_document_id` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `FK_responsibility_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_responsibility_user_article_id` FOREIGN KEY (`user_article_id`) REFERENCES `user_article` (`user_article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=105 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table inventory.responsibility: ~3 rows (approximately)
 DELETE FROM `responsibility`;
@@ -377,7 +388,8 @@ DELETE FROM `responsibility`;
 INSERT INTO `responsibility` (`responsibility_id`, `user_article_id`, `user_id`, `article_id`, `document_id`, `value`, `status`, `timestamp`, `serial_number`, `inv_broj`) VALUES
 	(91, 224, 6, 93, 135, 1, 'zaduženo', '2022-03-29 18:52:50', 'FSSAR5AS3', 'ZE0689878'),
 	(98, 236, 7, 90, 147, 1, 'zaduženo', '2022-03-31 19:58:01', 'BELAJ', 'ZE0687290'),
-	(103, 245, 7, 99, 156, 1, 'zaduženo', '2022-04-02 18:53:00', 'HDJDBAI63', 'M53837');
+	(103, 245, 7, 99, 156, 1, 'zaduženo', '2022-04-02 18:53:00', 'HDJDBAI63', 'M53837'),
+	(104, 246, 1, 102, 157, 1, 'zaduženo', '2022-04-17 03:27:05', '374FS5DS45', 'ZE06898745');
 /*!40000 ALTER TABLE `responsibility` ENABLE KEYS */;
 
 -- Dumping structure for table inventory.stock
@@ -392,9 +404,9 @@ CREATE TABLE IF NOT EXISTS `stock` (
   PRIMARY KEY (`stock_id`),
   KEY `fk_stock_article_id` (`article_id`),
   CONSTRAINT `fk_stock_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=376 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=412 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table inventory.stock: ~12 rows (approximately)
+-- Dumping data for table inventory.stock: ~13 rows (approximately)
 DELETE FROM `stock`;
 /*!40000 ALTER TABLE `stock` DISABLE KEYS */;
 INSERT INTO `stock` (`stock_id`, `article_id`, `value_on_concract`, `value_available`, `timestamp`, `sap_number`) VALUES
@@ -408,7 +420,8 @@ INSERT INTO `stock` (`stock_id`, `article_id`, `value_on_concract`, `value_avail
 	(361, 98, 5, 5, '2022-03-31 18:26:03', '1300-183994'),
 	(365, 96, 1, 1, '2022-03-31 19:55:39', '1300-005254'),
 	(367, 85, 15, 17, '2022-03-31 19:58:45', '1300-200202'),
-	(375, 99, 2, 1, '2022-04-02 18:53:00', '1400-1538199');
+	(376, 90, 5, 5, '2022-04-10 14:06:17', '1300-100200'),
+	(411, 102, 131, 2, '2022-04-17 03:27:05', 'ZE06879222');
 /*!40000 ALTER TABLE `stock` ENABLE KEYS */;
 
 -- Dumping structure for table inventory.user
@@ -425,7 +438,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table inventory.user: ~3 rows (approximately)
+-- Dumping data for table inventory.user: ~4 rows (approximately)
 DELETE FROM `user`;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT INTO `user` (`user_id`, `surname`, `forname`, `job_title`, `department`, `location`, `email`, `password_hash`) VALUES
@@ -455,7 +468,7 @@ CREATE TABLE IF NOT EXISTS `user_article` (
   CONSTRAINT `fk_user_article_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON UPDATE CASCADE,
   CONSTRAINT `fk_user_article_document_id` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON UPDATE CASCADE,
   CONSTRAINT `fk_user_article_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=246 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=247 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table inventory.user_article: ~26 rows (approximately)
 DELETE FROM `user_article`;
@@ -486,7 +499,8 @@ INSERT INTO `user_article` (`user_article_id`, `article_id`, `document_id`, `use
 	(242, 99, 153, 1, 'HDJDBAI63', 'zaduženo', '2022-04-02 18:51:18', 'Zaduženje nove opreme', 'M53837'),
 	(243, 99, 154, 1, 'HDJDBAI63', 'razduženo', '2022-04-02 18:52:01', 'Razdužuje na skladište, treba biti 2/2 šta je', 'M53837'),
 	(244, 99, 155, 2, 'HDJDBAI63', 'razduženo', '2022-04-02 18:52:35', 'A onda sa Gorana na Evela', 'M53837'),
-	(245, 99, 156, 7, 'HDJDBAI63', 'zaduženo', '2022-04-02 18:53:00', 'Zaduženje nove opreme', 'M53837');
+	(245, 99, 156, 7, 'HDJDBAI63', 'zaduženo', '2022-04-02 18:53:00', 'Zaduženje nove opreme', 'M53837'),
+	(246, 102, 157, 1, '374FS5DS45', 'zaduženo', '2022-04-17 03:27:05', 'Zaduženje nove opreme', 'ZE06898745');
 /*!40000 ALTER TABLE `user_article` ENABLE KEYS */;
 
 -- Dumping structure for table inventory.user_token
