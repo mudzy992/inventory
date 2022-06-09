@@ -19,6 +19,7 @@ import { Destroyed } from './Destroyed';
 import { DebtItems } from './DebtItems';
 import { Documents } from "./Documents";
 import { UserArticle } from './UserArticle';
+import { UpgradeFeature } from "./UpgradeFeature";
 
 @Index('fk_article_category_id', ['categoryId'], {})
 @Entity('article')
@@ -63,8 +64,8 @@ export class Article {
   @OneToMany(() => Responsibility, (responsibility) => responsibility.article)
   responsibilities: Responsibility[];
 
-  /* @OneToMany(() => Stock, (stock) => stock.articles)
-  articlesInStock: Article; */
+  @OneToMany(() => UpgradeFeature, (upgradeFeature) => upgradeFeature.article)
+  upgradeFeatures: UpgradeFeature[];
 
   @ManyToOne(() => Stock, (stock) => stock.stockArticle, {
     onDelete: 'RESTRICT',

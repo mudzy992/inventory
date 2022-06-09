@@ -6,13 +6,9 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { UserArticle } from "./UserArticle";
+import { Article } from "./Article";
 
-@Index(
-  "fk_upgrade_feature_serial_number_user_article_serial_number",
-  ["serialNumber"],
-  {}
-)
+@Index("upgrade_feature_article_id_article_article_id", ["articleId"], {})
 @Entity("upgrade_feature", { schema: "inventory" })
 export class UpgradeFeature {
   @PrimaryGeneratedColumn({
@@ -40,10 +36,13 @@ export class UpgradeFeature {
   @Column("varchar", { name: "serial_number", length: 50 })
   serialNumber: string;
 
-  @ManyToOne(() => UserArticle, (userArticle) => userArticle.upgradeFeatures, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
+  @Column("int", { name: "article_id", unsigned: true })
+  articleId: number;
+
+  @ManyToOne(() => Article, (article) => article.upgradeFeatures, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
   })
-  @JoinColumn([{ name: "serial_number", referencedColumnName: "serialNumber" }])
-  serialNumber2: UserArticle;
+  @JoinColumn([{ name: "article_id", referencedColumnName: "articleId" }])
+  article: Article;
 }

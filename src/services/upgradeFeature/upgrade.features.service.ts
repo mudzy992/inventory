@@ -24,21 +24,12 @@ export class UpgradeFeatureService extends TypeOrmCrudService<UpgradeFeature> {
     newFeature.value = data.value;
     newFeature.serialNumber = serialNumber;
     newFeature.comment = data.comment;
+    newFeature.articleId = data.articleId;
 
     const savedFeature = await this.upgradeFeature.save(newFeature);
 
     if (!savedFeature) {
       return new ApiResponse('error', -9000, 'Došlo je do greške, nadogradnja nije sačuvana')
     }
-  }
-
-  async getFeatureBySb(sb: string): Promise<UpgradeFeature | null> {
-    const serialNumber = await this.upgradeFeature.findOne({serialNumber : sb});
-
-    if(serialNumber) {
-      return serialNumber
-    }
-
-    return null
   }
 }

@@ -72,12 +72,6 @@ export class UserArticle {
   destroyeds: Destroyed[];
 
   @OneToMany(
-    () => UpgradeFeature,
-    (upgradeFeature) => upgradeFeature.serialNumber2
-  )
-  upgradeFeatures: UpgradeFeature[];
-
-  @OneToMany(
     () => Responsibility,
     (responsibility) => responsibility.userArticle,
   )

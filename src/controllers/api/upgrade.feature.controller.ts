@@ -18,7 +18,7 @@ import { UpgradeFeatureService } from 'src/services/upgradeFeature/upgrade.featu
   },
   query: {
     join: {
-      serialNumber2: {
+      article: {
         eager: true,
       },
     },
@@ -26,20 +26,13 @@ import { UpgradeFeatureService } from 'src/services/upgradeFeature/upgrade.featu
 })
 export class UpgradeFeatureController {
   constructor(
-    public upgradeFeatureService: UpgradeFeatureService,
+    public service: UpgradeFeatureService,
   ) {}
   @Post('/add/:sb')
   async doChangeStatus(
     @Body() data: UpgradeFeatureDto,
     @Param('sb') sb: string,
   ) {
-    return this.upgradeFeatureService.newUpgradeFeature(sb, data)
-  }
-
-  @Get('/get/:sb')
-  async getAllUpgrades(
-    @Param('sb') sb: string,
-  ) {
-    return this.upgradeFeatureService.getFeatureBySb(sb)
+    return this.service.newUpgradeFeature(sb, data)
   }
 }
