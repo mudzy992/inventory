@@ -38,7 +38,6 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     newArticle.excerpt = data.excerpt;
     newArticle.description = data.description;
     newArticle.concract = data.concract;
-    newArticle.comment = data.comment;
     newArticle.sapNumber = data.sap_number;
     /* Sada kada smo kreirali artikal, njega je potrebno snimiti u neku konstantu i čuvati ga na await 
       to radimo u ovom trenutku jer ćemo tako dobiti articleId, već ovdje artikal ide u bazu podataka (na returnu)*/
@@ -103,7 +102,6 @@ export class ArticleService extends TypeOrmCrudService<Article> {
           excerpt : data.details.excerpt,
           description : data.details.description,
           concract : data.details.concract,
-          comment : data.details.comment,
         })
         const savedArticle = await this.article.save(existingArticle);
 

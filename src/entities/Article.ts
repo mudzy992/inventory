@@ -36,9 +36,6 @@ export class Article {
   @Column('varchar', { name: 'description', length: 450 })
   description: string;
 
-  @Column('varchar', { name: 'comment', nullable: true })
-  comment: string | null;
-
   @Column('varchar', { name: 'concract' })
   concract: string;
 
