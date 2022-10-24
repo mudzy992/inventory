@@ -4,13 +4,17 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Department } from "./Department";
 import { Job } from "./Job";
+import { Location } from "./Location";
+import { User } from "./User";
 
 @Index("department_job_department_id", ["departmentId"], {})
 @Index("department_job_job_id", ["jobId"], {})
+@Index("location_id", ["locationId"], {})
 @Entity("department_job", { schema: "inventory" })
 export class DepartmentJob {
   @PrimaryGeneratedColumn({
@@ -30,6 +34,9 @@ export class DepartmentJob {
   @Column("int", { name: "job_id", unsigned: true, default: () => "'0'" })
   jobId: number;
 
+  @Column("int", { name: "location_id", unsigned: true, default: () => "'0'" })
+  locationId: number;
+
   @ManyToOne(() => Department, (department) => department.departmentJobs, {
     onDelete: "RESTRICT",
     onUpdate: "CASCADE",
@@ -43,4 +50,14 @@ export class DepartmentJob {
   })
   @JoinColumn([{ name: "job_id", referencedColumnName: "jobId" }])
   job: Job;
+
+  @ManyToOne(() => Location, (location) => location.departmentJobs, {
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
+  })
+  @JoinColumn([{ name: "location_id", referencedColumnName: "locationId" }])
+  location: Location;
+
+  @OneToMany(() => User, (user) => user.departmentJob)
+  users: User[];
 }

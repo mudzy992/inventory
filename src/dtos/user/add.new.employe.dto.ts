@@ -21,18 +21,17 @@ export class AddNewEmployeDto {
 
   @Validator.IsString()
   @Validator.Length(2, 64)
-  job: string;
+  localNumber: string;
 
   @Validator.IsString()
   @Validator.Length(2, 64)
-  department: string;
+  telephone: string;
 
-  @Validator.IsString()
-  @Validator.Length(2, 255)
-  location: string;
+  @Validator.IsNumber()
+  departmentJobId: number;
 
   @Validator.IsNotEmpty()
   @Validator.IsString()
-  @Validator.Length(6, 128)
+  @Validator.Length(6, 12)
   password: string;
 }

@@ -1,6 +1,15 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { DepartmentJob } from "./DepartmentJob";
 
+@Index("FK_department_department", ["parentDepartmentId"], {})
 @Entity("department", { schema: "inventory" })
 export class Department {
   @PrimaryGeneratedColumn({
@@ -26,6 +35,25 @@ export class Department {
     default: () => "'undefined'",
   })
   departmendCode: string;
+
+  @Column("int", {
+    name: "parent_department_id",
+    nullable: true,
+    unsigned: true,
+  })
+  parentDepartmentId: number | null;
+
+  @ManyToOne(() => Department, (department) => department.departments, {
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
+  })
+  @JoinColumn([
+    { name: "parent_department_id", referencedColumnName: "departmentId" },
+  ])
+  parentDepartment: Department;
+
+  @OneToMany(() => Department, (department) => department.parentDepartment)
+  departments: Department[];
 
   @OneToMany(() => DepartmentJob, (departmentJob) => departmentJob.department)
   departmentJobs: DepartmentJob[];

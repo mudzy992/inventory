@@ -42,6 +42,18 @@ import { DocumentController } from './controllers/api/document.controller';
 import { UpgradeFeature } from './entities/UpgradeFeature';
 import { UpgradeFeatureService } from './services/upgradeFeature/upgrade.features.service';
 import { UpgradeFeatureController } from './controllers/api/upgrade.feature.controller';
+import { Department } from './entities/Department';
+import { DepartmentJob } from './entities/DepartmentJob';
+import { Job } from './entities/Job';
+import { Location } from './entities/Location';
+import { DepartmentController } from './controllers/api/department.controller';
+import { DepartmentService } from './services/department/department.service';
+import { JobController } from './controllers/api/job.controller';
+import { JobService } from './services/job/job.service';
+import { LocationController } from './controllers/api/location.controller';
+import { LocationService } from './services/location/location.service';
+import { DepartmentJobController } from './controllers/api/department.controller.job';
+import { DepartmentJobService } from './services/departmentJob/department.job.service';
 
 @Module({
   imports: [
@@ -67,6 +79,10 @@ import { UpgradeFeatureController } from './controllers/api/upgrade.feature.cont
         AdministratorToken,
         Documents,
         UpgradeFeature,
+        Department,
+        DepartmentJob,
+        Job,
+        Location,
       ],
     }),
     TypeOrmModule.forFeature([
@@ -85,6 +101,10 @@ import { UpgradeFeatureController } from './controllers/api/upgrade.feature.cont
       AdministratorToken,
       Documents,
       UpgradeFeature,
+      Department,
+      DepartmentJob,
+      Job,
+      Location,
     ]),
   ],
   controllers: [
@@ -101,6 +121,10 @@ import { UpgradeFeatureController } from './controllers/api/upgrade.feature.cont
     AuthController,
     DocumentController,
     UpgradeFeatureController,
+    DepartmentController,
+    JobController,
+    LocationController,
+    DepartmentJobController,
   ],
   providers: [
     ArticleService,
@@ -116,6 +140,10 @@ import { UpgradeFeatureController } from './controllers/api/upgrade.feature.cont
     UserService,
     DocumentService,
     UpgradeFeatureService,
+    DepartmentService,
+    JobService,
+    LocationService,
+    DepartmentJobService,
   ],
   exports: [
     // zbog middleware potrebno je exportovati servis

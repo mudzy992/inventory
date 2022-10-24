@@ -7,19 +7,19 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Article } from './Article';
+import { Documents } from "./Documents";
 import { User } from './User';
 import { UserArticle } from './UserArticle';
-import { Documents } from "./Documents";
 
+@Index('FK_104', ['articleId'], {})
+@Index('FK_92', ['userId'], {})
+@Index('fk_responsibility_document_id', ['documentId'], {})
+@Index('fk_responsibility_user_article_id', ['userArticleId'], {})
 @Index(
   'user_id_article_id_serial_number',
   ['userId', 'articleId', 'serialNumber'],
-  { unique: true },
+  { unique: true }
 )
-@Index('FK_104', ['articleId'], {})
-@Index('FK_92', ['userId'], {})
-@Index("fk_responsibility_document_id", ["documentId"], {})
-@Index('fk_responsibility_user_article_id', ['userArticleId'], {})
 @Entity('responsibility', { schema: 'inventory' })
 export class Responsibility {
   @PrimaryGeneratedColumn({
