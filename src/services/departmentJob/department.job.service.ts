@@ -23,7 +23,7 @@ export class DepartmentJobService extends TypeOrmCrudService<DepartmentJob> {
     const savedDepartmentJob = await this.departmentJob.save(newDepartmentJob);
 
     if (!savedDepartmentJob) {
-      return new ApiResponse('error', -4002, 'Veza sektor, radno mjesto i lokacije nije sačuvana')
+      return new ApiResponse('error', -12002, 'Veza sektor, radno mjesto i lokacije nije sačuvana')
     }
 
     return await this.findOne(savedDepartmentJob.departmentJobId, {

@@ -22,6 +22,9 @@ import { UserService } from 'src/services/user/user.service';
       departmentJob: {
         eager: true,
       },
+      detalji: {
+        eager: true,
+      },
       articles: {
         eager: true,
       },

@@ -2,15 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { AddNewJobDto } from 'src/dtos/job/add.new.job.dto';
+import { EditJobDto } from 'src/dtos/job/edit.job.dto';
+import { DepartmentJob } from 'src/entities/DepartmentJob';
 import { Job } from 'src/entities/Job';
 import { ApiResponse } from 'src/misc/api.response.class';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 
 @Injectable()
 export class JobService extends TypeOrmCrudService<Job> {
   constructor(
     @InjectRepository(Job)
-    private readonly job: Repository<Job>, //Čim spomenenom neki repozitorijum moramo da taj repozitoriju evidentiramo u našem osnovnom modulu (app.module.ts)
+    private readonly job: Repository<Job>,
+    @InjectRepository(DepartmentJob)
+    private readonly departmentJob: Repository<DepartmentJob>
   ) {
     super(job);
   }
@@ -23,11 +27,62 @@ export class JobService extends TypeOrmCrudService<Job> {
     const savedJob = await this.job.save(newJob);
 
     if (!savedJob) {
-      return new ApiResponse('error', -4002, 'Radno mjesto nije sačuvano')
+      return new ApiResponse('error', -10001, 'Radno mjesto nije sačuvano')
+    }
+
+    const newDepartmentJob: DepartmentJob = new DepartmentJob();
+    newDepartmentJob.departmentId = data.departmentId;
+    newDepartmentJob.locationId = data.locationId;
+    newDepartmentJob.jobId = savedJob.jobId;
+
+    const savedDepartmentJob = await this.departmentJob.save(newDepartmentJob);
+    if (!savedDepartmentJob) {
+      return new ApiResponse('error', -12002, 'Veza sektor, radno mjesto i lokacije nije sačuvana')
     }
 
     return await this.findOne(savedJob.jobId, {
       relations: ['departmentJobs'],
     })
   }
+
+  async editJob(jobId: number, data: EditJobDto): Promise<Job | ApiResponse> {
+    const existingJob: Job = await this.job.findOne({jobId: jobId})
+    if (!existingJob) {
+      return new ApiResponse('error', -10002, 'Radno mjesto nije pronađeno')
+    }
+    existingJob.title = data.title;
+    existingJob.description = data.description;
+    existingJob.jobCode = data.jobCode;
+
+    const savedJob = await this.job.save(existingJob)
+    if(!savedJob) {
+      return new ApiResponse('error', -10001, 'Radno mjesto nije sačuvano')
+    }
+
+    return await this.findOne(savedJob.jobId, {
+      relations: ['departmentJobs'],
+    })
+  }
+
+  async deleteJob(jobId: number): Promise<ApiResponse> {
+    const existingJob: Job = await this.job.findOne({jobId: jobId})
+    if (!existingJob) {
+      return new ApiResponse('error', -10002, 'Radno mjesto nije pronađeno')
+    }
+
+    if(existingJob) {
+    const deleteDepartmentJob = await this.departmentJob.delete({jobId: jobId})
+    if(!deleteDepartmentJob) {
+      return new ApiResponse('error', -12003, 'Veze radnog mjesta sa sektorom ili odjeljenjem te lokacijom nisu obrisane')
+    } 
+    if (deleteDepartmentJob) {
+      const deleteJob = await this.job.delete(jobId)
+      if (!deleteJob) {
+        return new ApiResponse('error', -10003, 'Radno mjesto nije obrisano')
+      } 
+      return new ApiResponse('ok', -10004, 'Radno mjesto kao i sve veze istog sa sektorom ili odjeljenjem te lokacijom uspješno obrisano')
+    }
+  }
+  }
 }
+
