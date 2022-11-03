@@ -26,6 +26,7 @@ import { DestroyedArticlesService } from 'src/services/destroyed/destroyed.artic
       },
       user: {
         eager: true,
+        exclude:['passwordHash']
       },
       document: {
         eager: true,

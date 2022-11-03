@@ -28,7 +28,13 @@ export class AddNewEmployeDto {
   telephone: string;
 
   @Validator.IsNumber()
-  departmentJobId: number;
+  departmentId: number;
+
+  @Validator.IsNumber()
+  jobId: number;
+
+  @Validator.IsNumber()
+  locationId: number;
 
   @Validator.IsNotEmpty()
   @Validator.IsString()

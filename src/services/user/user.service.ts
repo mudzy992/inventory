@@ -7,6 +7,7 @@ import { UserToken } from 'src/entities/UserToken';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository } from 'typeorm';
 import * as crypto from 'crypto';
+import { DepartmentJob } from 'src/entities/DepartmentJob';
 
 @Injectable()
 export class UserService extends TypeOrmCrudService<User> {
@@ -15,6 +16,8 @@ export class UserService extends TypeOrmCrudService<User> {
     private readonly user: Repository<User>,
     @InjectRepository(UserToken)
     private readonly userToken: Repository<UserToken>,
+    @InjectRepository(DepartmentJob)
+    private readonly departmentJob: Repository<DepartmentJob>,
   ) {
     super(user);
   }
@@ -30,9 +33,16 @@ export class UserService extends TypeOrmCrudService<User> {
     newUser.email = data.email;
     newUser.localNumber = data.localNumber;
     newUser.telephone = data.telephone;
-    newUser.departmentJobId = data.departmentJobId;
     newUser.passwordHash = passwordHashString;
 
+    const newDepartmentJob: DepartmentJob = new DepartmentJob();
+    newDepartmentJob.departmentId = data.departmentId;
+    newDepartmentJob.jobId = data.jobId;
+    newDepartmentJob.locationId = data.locationId;
+
+    const savedDepartmentJob = await this.departmentJob.save(newDepartmentJob)
+
+    newUser.departmentJobId = savedDepartmentJob.departmentJobId;
     try {
       const savedUser = await this.user.save(newUser);
       if (!savedUser) {
