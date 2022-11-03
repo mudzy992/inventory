@@ -52,7 +52,7 @@ import { JobController } from './controllers/api/job.controller';
 import { JobService } from './services/job/job.service';
 import { LocationController } from './controllers/api/location.controller';
 import { LocationService } from './services/location/location.service';
-import { DepartmentJobController } from './controllers/api/department.controller.job';
+import { DepartmentJobController } from './controllers/api/department.job.controller';
 import { DepartmentJobService } from './services/departmentJob/department.job.service';
 
 @Module({

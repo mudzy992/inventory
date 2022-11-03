@@ -30,6 +30,7 @@ import { DepartmentJobService } from 'src/services/departmentJob/department.job.
       },
         users: {
         eager: true,
+        exclude:['passwordHash'],
       },
     },
   },
