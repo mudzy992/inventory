@@ -10,7 +10,6 @@ import {
 import { Department } from "./Department";
 import { Job } from "./Job";
 import { Location } from "./Location";
-import { User } from "./User";
 
 @Index("department_job_department_id", ["departmentId"], {})
 @Index("department_job_job_id", ["jobId"], {})
@@ -58,6 +57,4 @@ export class DepartmentJob {
   @JoinColumn([{ name: "location_id", referencedColumnName: "locationId" }])
   location: Location;
 
-  @OneToMany(() => User, (user) => user.departmentJob)
-  users: User[];
 }

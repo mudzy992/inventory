@@ -29,6 +29,9 @@ import { DepartmentService } from 'src/services/department/department.service';
         departmentJobs: {
         eager: true,
       },
+        users: {
+        eager: true,
+      },      
     },
   },
 })

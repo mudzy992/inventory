@@ -10,14 +10,15 @@ import { Repository } from 'typeorm';
 export class DepartmentJobService extends TypeOrmCrudService<DepartmentJob> {
   constructor(
     @InjectRepository(DepartmentJob)
-    private readonly departmentJob: Repository<DepartmentJob>, //Čim spomenenom neki repozitorijum moramo da taj repozitoriju evidentiramo u našem osnovnom modulu (app.module.ts)
+    private readonly departmentJob: Repository<DepartmentJob>,
   ) {
     super(departmentJob);
   }
   async createNewDepartmentJob(data: AddNewDepartmentJobDto): Promise<DepartmentJob | ApiResponse> {
+    
     const newDepartmentJob: DepartmentJob = new DepartmentJob();
-    newDepartmentJob.departmentId = data.departmnetId;
-    newDepartmentJob.jobId = data.jobId;;
+    newDepartmentJob.departmentId = data.departmentId;
+    newDepartmentJob.jobId = data.jobId;
     newDepartmentJob.locationId = data.locationId;
 
     const savedDepartmentJob = await this.departmentJob.save(newDepartmentJob);
@@ -27,7 +28,7 @@ export class DepartmentJobService extends TypeOrmCrudService<DepartmentJob> {
     }
 
     return await this.findOne(savedDepartmentJob.departmentJobId, {
-      relations: ['department', 'job', 'location', 'users'],
+      relations: ['department', 'job', 'location'],
     })
   }
 }

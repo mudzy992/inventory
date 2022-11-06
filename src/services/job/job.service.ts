@@ -6,7 +6,7 @@ import { EditJobDto } from 'src/dtos/job/edit.job.dto';
 import { DepartmentJob } from 'src/entities/DepartmentJob';
 import { Job } from 'src/entities/Job';
 import { ApiResponse } from 'src/misc/api.response.class';
-import { DeleteResult, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class JobService extends TypeOrmCrudService<Job> {
@@ -14,7 +14,7 @@ export class JobService extends TypeOrmCrudService<Job> {
     @InjectRepository(Job)
     private readonly job: Repository<Job>,
     @InjectRepository(DepartmentJob)
-    private readonly departmentJob: Repository<DepartmentJob>
+    private readonly departmentJob: Repository<DepartmentJob>,
   ) {
     super(job);
   }
@@ -25,19 +25,8 @@ export class JobService extends TypeOrmCrudService<Job> {
     newJob.jobCode = data.jobCode;
 
     const savedJob = await this.job.save(newJob);
-
     if (!savedJob) {
       return new ApiResponse('error', -10001, 'Radno mjesto nije sačuvano')
-    }
-
-    const newDepartmentJob: DepartmentJob = new DepartmentJob();
-    newDepartmentJob.departmentId = data.departmentId;
-    newDepartmentJob.locationId = data.locationId;
-    newDepartmentJob.jobId = savedJob.jobId;
-
-    const savedDepartmentJob = await this.departmentJob.save(newDepartmentJob);
-    if (!savedDepartmentJob) {
-      return new ApiResponse('error', -12002, 'Veza sektor, radno mjesto i lokacije nije sačuvana')
     }
 
     return await this.findOne(savedJob.jobId, {

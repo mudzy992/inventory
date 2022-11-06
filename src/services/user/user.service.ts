@@ -34,15 +34,17 @@ export class UserService extends TypeOrmCrudService<User> {
     newUser.localNumber = data.localNumber;
     newUser.telephone = data.telephone;
     newUser.passwordHash = passwordHashString;
+    newUser.departmentId = data.departmentId;
+    newUser.jobId = data.jobId;
+    newUser.locationId = data.locationId;
 
     const newDepartmentJob: DepartmentJob = new DepartmentJob();
     newDepartmentJob.departmentId = data.departmentId;
     newDepartmentJob.jobId = data.jobId;
     newDepartmentJob.locationId = data.locationId;
 
-    const savedDepartmentJob = await this.departmentJob.save(newDepartmentJob)
+    await this.departmentJob.save(newDepartmentJob)
 
-    newUser.departmentJobId = savedDepartmentJob.departmentJobId;
     try {
       const savedUser = await this.user.save(newUser);
       if (!savedUser) {

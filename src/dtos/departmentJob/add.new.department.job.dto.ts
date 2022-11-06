@@ -1,5 +1,5 @@
 export class AddNewDepartmentJobDto {
-    departmnetId: number;
+    departmentId: number;
     jobId: number;
     locationId: number;
 }

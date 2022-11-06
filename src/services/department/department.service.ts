@@ -11,7 +11,7 @@ import { Repository } from 'typeorm';
 export class DepartmentService extends TypeOrmCrudService<Department> {
   constructor(
     @InjectRepository(Department)
-    private readonly department: Repository<Department>, //Čim spomenenom neki repozitorijum moramo da taj repozitoriju evidentiramo u našem osnovnom modulu (app.module.ts)
+    private readonly department: Repository<Department>, 
   ) {
     super(department);
   }

@@ -25,6 +25,9 @@ import { LocationService } from 'src/services/location/location.service';
         locations: {
         eager: true,
       },
+        users: {
+        eager: true,
+     },
     },
   },
 })

@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 export class LocationService extends TypeOrmCrudService<Location> {
   constructor(
     @InjectRepository(Location)
-    private readonly location: Repository<Location>, //Čim spomenenom neki repozitorijum moramo da taj repozitoriju evidentiramo u našem osnovnom modulu (app.module.ts)
+    private readonly location: Repository<Location>,
   ) {
     super(location);
   }

@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { DepartmentJob } from "./DepartmentJob";
+import { User } from "./User";
 
 @Index("FK_department_department", ["parentDepartmentId"], {})
 @Entity("department", { schema: "inventory" })
@@ -57,4 +58,7 @@ export class Department {
 
   @OneToMany(() => DepartmentJob, (departmentJob) => departmentJob.department)
   departmentJobs: DepartmentJob[];
+
+  @OneToMany(() => User, (user) => user.department)
+  users: User[];
 }
