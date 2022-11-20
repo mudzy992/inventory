@@ -1,34 +1,46 @@
 version: 2.1
+orbs:
+  node: circleci/node@5.0.2
+  heroku: circleci/heroku@1.2.6
+
 jobs:
-  build:
-    working_directory: ~/project
-    docker:
-      - image: cimg/node:18.12.1
+  build_and_test:
+    executor: node/default
     steps:
       - checkout
+      - node/install-packages:
+          pkg-manager: yarn
       - run:
-          name: Update NPM
-          command: "sudo npm install -g npm"
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
+          command: yarn test
+          name: Run tests
       - run:
-          name: Install Dependencies
-          command: npm install
-      - run: npm install --save-dev firebase-tools    
-      - save_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
+          command: yarn build
+          name: Build app
+
+      - persist_to_workspace:
+          root: ~/project
           paths:
-            - ./node_modules
-      - run:
-          name: Build application for production
-          command: npm run build 
+            - .
       - run:
           name: Deploy app to Firebase
           command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN
-      - run:
-          name: Start server
-          command: npm run start
+
+
+  deploy: # this can be any name you choose
+    executor: heroku/default
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - heroku/deploy-via-git:
+          force: true # force push when pushing to the heroku remote, see: https://devcenter.heroku.com/articles/git
+
 workflows:
-  build-and-deploy:
+  test_my_app:
     jobs:
-      - build
+      - build_and_test
+      - deploy:
+          requires:
+            - build_and_test # only deploy if the build_and_test job has completed
+          filters:
+            branches:
+              only: main # only deploy when on main
