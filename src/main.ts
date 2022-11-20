@@ -11,6 +11,9 @@ async function bootstrap() {
     index: false,
   });
   app.enableCors();
-  /* await app.listen(3005); */
+  const PORT = 3005;
+  await app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
+  });
 }
 bootstrap();
