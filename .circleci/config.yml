@@ -14,7 +14,7 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run:
-          command: nest start
+          command: npm start
           name: Start app
       - persist_to_workspace:
           root: ~/project
