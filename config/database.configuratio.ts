@@ -1,6 +1,6 @@
 export const DatabaseConfiguration = {
-    hostname: 'localhost',
-    username: 'root',
-    password: 'Nije,kikiriki1',
-    database: 'inventory',
+    hostname: 'sql7.freemysqlhosting.net',
+    username: 'sql7579268',
+    password: '2pEUiVWZdF',
+    database: 'sql7579268',
   };
