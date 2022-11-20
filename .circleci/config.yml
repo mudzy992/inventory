@@ -14,9 +14,6 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run:
-          command: npm test
-          name: Run tests
-      - run:
           command: npm build
           name: Build app
       - persist_to_workspace:
