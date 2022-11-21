@@ -5,8 +5,6 @@ jobs:
   deploy:
     executor: heroku/default
     steps:
-      - checkout
-      - heroku/install
       - run:
           command: >
             echo "The command above installs Heroku, the command below deploys.
