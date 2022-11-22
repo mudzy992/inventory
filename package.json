@@ -80,7 +80,7 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   },
-  "main": "main.js",
+  "main": ".eslintrc.js",
   "engines": {
     "node": "18.x"
   },
