@@ -1,6 +1,6 @@
 {
     "installCommand": "npm install",
-    "buildCommand": "nest build",
+    "buildCommand": "npm build",
     "outputDirectory": "./dist",
     "public": true
 }
