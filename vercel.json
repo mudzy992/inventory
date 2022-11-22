@@ -15,5 +15,6 @@
     "installCommand": "pnpm install",
     "buildCommand": "nest build",
     "framework": "nodejs",
-    "outputDirectory": "dist"
+    "outputDirectory": "dist",
+    "public": true
 }
