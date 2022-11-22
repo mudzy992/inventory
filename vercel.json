@@ -1,4 +1,6 @@
 {
     "installCommand": "pnpm install",
-    "buildCommand": "nest build"
+    "buildCommand": "nest build",
+    "outputDirectory": "public",
+    "public": true
 }
