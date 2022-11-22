@@ -11,5 +11,8 @@
             "src": "/(.*)",
             "dest": "/"
         }
-    ]
+    ],
+    "buildCommand": "nest build",
+    "outputDirectory": "dist",
+    "public": true
 }
