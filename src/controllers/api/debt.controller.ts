@@ -26,6 +26,7 @@ import { DebtItemsService } from 'src/services/debtItems/debt.items.service';
       },
       user: {
         eager: true,
+        exclude:['passwordHash']
       },
       document: {
         eager: true,

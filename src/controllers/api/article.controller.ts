@@ -25,6 +25,7 @@ import { ArticleService } from 'src/services/article/article.service';
       },
       userDetails: {
         eager: true,
+        exclude:['passwordHash']
       },
       articleFeature: {
         eager: true,

@@ -19,6 +19,15 @@ import { UserService } from 'src/services/user/user.service';
   },
   query: {
     join: {
+      department: {
+        eager: true,
+      },
+      job: {
+        eager: true,
+      },
+      location: {
+        eager: true,
+      },
       articles: {
         eager: true,
       },

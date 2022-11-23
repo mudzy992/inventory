@@ -22,13 +22,13 @@ USE `inventory`;
 -- Dumping structure for table inventory.administrator
 CREATE TABLE IF NOT EXISTS `administrator` (
   `administrator_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `password_hash` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `password_hash` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   PRIMARY KEY (`administrator_id`),
   UNIQUE KEY `administrator_username` (`username`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.administrator: ~1 rows (approximately)
+-- Dumping data for table inventory.administrator: ~0 rows (approximately)
 DELETE FROM `administrator`;
 INSERT INTO `administrator` (`administrator_id`, `username`, `password_hash`) VALUES
 	(1, 'admin', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE');
@@ -38,13 +38,13 @@ CREATE TABLE IF NOT EXISTS `administrator_token` (
   `administrator_token_id` int unsigned NOT NULL AUTO_INCREMENT,
   `administrator_id` int unsigned NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `token` varchar(2550) NOT NULL,
+  `token` varchar(2550) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   `expire_at` datetime NOT NULL,
   `is_valid` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`administrator_token_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.administrator_token: ~29 rows (approximately)
+-- Dumping data for table inventory.administrator_token: ~44 rows (approximately)
 DELETE FROM `administrator_token`;
 INSERT INTO `administrator_token` (`administrator_token_id`, `administrator_id`, `created_at`, `token`, `expire_at`, `is_valid`) VALUES
 	(2, 1, '2022-03-18 14:07:16', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjUwMjkwODM2LjA5OCwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS85OC4wLjQ3NTguMTA5IFNhZmFyaS81MzcuMzYgT1BSLzg0LjAuNDMxNi4zNiIsImlhdCI6MTY0NzYxMjQzNn0.wVS1NEISf6X2n2HZqgmwu095Kupd6hsrximwyrGEV4o', '2022-04-18 14:07:16', 1),
@@ -80,22 +80,38 @@ INSERT INTO `administrator_token` (`administrator_token_id`, `administrator_id`,
 	(36, 1, '2022-10-21 18:01:27', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjY5MDUzNjg3Ljc2NSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA2LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNi4wLjEzNzAuNDciLCJpYXQiOjE2NjYzNzUyODd9.ZMUIDmXUt-bZ8IzalqjnIzIdD7RDzc25UsrgenQvsnw', '2022-11-21 18:01:27', 1),
 	(37, 1, '2022-10-21 18:02:08', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjY5MDUzNzI4LjMxNCwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjMwIiwidWEiOiJNb3ppbGxhLzUuMCAoTGludXg7IEFuZHJvaWQgMTI7IDIxMDgxMTExUkcgQnVpbGQvU1AxQS4yMTA4MTIuMDE2KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA2LjAuNTI0OS4xMjYgTW9iaWxlIFNhZmFyaS81MzcuMzYgT1BYLzEuNiIsImlhdCI6MTY2NjM3NTMyOH0.q7lU6-Hs07PaLIbVGfFO_gqNRi2Lhqcd5pisxQNhY7s', '2022-11-21 18:02:08', 1),
 	(38, 1, '2022-10-22 17:26:10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjY5MTM3OTcwLjk3NCwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoTGludXg7IEFuZHJvaWQgNi4wOyBOZXh1cyA1IEJ1aWxkL01SQTU4TikgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNi4wLjAuMCBNb2JpbGUgU2FmYXJpLzUzNy4zNiBFZGcvMTA2LjAuMTM3MC40NyIsImlhdCI6MTY2NjQ1OTU3MH0.b5NeKGbPFDMR-N4ffa94noRCrgGmTg1w5PVKsJOiAIM', '2022-11-22 17:26:10', 1),
-	(39, 1, '2022-10-22 17:29:36', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjY5MTM4MTc2LjkwMSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA2LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNi4wLjEzNzAuNDciLCJpYXQiOjE2NjY0NTk3NzZ9.aBQOAcLwAKSJ-zyomkY5Etxk1UXj-4EDeR6hdc8aAuI', '2022-11-22 17:29:36', 1);
+	(39, 1, '2022-10-22 17:29:36', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjY5MTM4MTc2LjkwMSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA2LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNi4wLjEzNzAuNDciLCJpYXQiOjE2NjY0NTk3NzZ9.aBQOAcLwAKSJ-zyomkY5Etxk1UXj-4EDeR6hdc8aAuI', '2022-11-22 17:29:36', 1),
+	(40, 1, '2022-10-24 22:07:01', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjY5MzI3NjIxLjgxNSwiaXAiOiI6OjEiLCJ1YSI6IlBvc3RtYW5SdW50aW1lLzcuMjkuMiIsImlhdCI6MTY2NjY0OTIyMX0.DwFgdd9x6WMd1zZ0UboZIK6wTxNp-MgXC0uUmvaLZzg', '2022-11-24 22:07:01', 1),
+	(41, 1, '2022-10-24 22:12:36', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjY5MzI3OTU2LjkxOSwiaXAiOiI6OjEiLCJ1YSI6IlBvc3RtYW5SdW50aW1lLzcuMjkuMiIsImlhdCI6MTY2NjY0OTU1Nn0.kPtydxDAGnHO2dDybfLk08Y0DhhT1hUa674lO8LIilw', '2022-11-24 22:12:36', 1),
+	(42, 1, '2022-11-03 16:46:28', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcwMTcyMzg4LjcxMywiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDYuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA2LjAuMTM3MC40NyIsImlhdCI6MTY2NzQ5Mzk4OH0.E6tpivlJkK4RSwOG68VWduppBMNmVru_CoTpgEn992g', '2022-12-04 16:46:28', 1),
+	(43, 1, '2022-11-03 22:39:52', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcwMTkzNTkyLjM2NSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjI3IiwidWEiOiJNb3ppbGxhLzUuMCAoTGludXg7IEFuZHJvaWQgMTI7IDIxMDgxMTExUkcgQnVpbGQvU1AxQS4yMTA4MTIuMDE2KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA2LjAuNTI0OS4xMjYgTW9iaWxlIFNhZmFyaS81MzcuMzYgT1BYLzEuNyIsImlhdCI6MTY2NzUxNTE5Mn0.Ia22Zh_nE5N4BJnYna-kQLd8-mIr87T1Lg51ZRL-lZQ', '2022-12-04 22:39:52', 1),
+	(44, 1, '2022-11-03 22:40:57', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcwMTkzNjU3LjA1NCwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA2LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNi4wLjEzNzAuNDciLCJpYXQiOjE2Njc1MTUyNTd9.Wa_4Iu2a6JJNr0eNawV8-o1cX6I8LhReN7udZz3LpKE', '2022-12-04 22:40:57', 1),
+	(45, 1, '2022-11-04 22:52:19', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcwMjgwNzM5LjkyOSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA2LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNi4wLjEzNzAuNDciLCJpYXQiOjE2Njc2MDIzMzl9.DR3ck923cOGNcdv0v0ZCDi9pTJ8--jhb02bA6MATmo0', '2022-12-05 22:52:19', 1),
+	(46, 1, '2022-11-04 22:53:12', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcwMjgwNzkyLjMzNywiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA2LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNi4wLjEzNzAuNDciLCJpYXQiOjE2Njc2MDIzOTJ9.VjosbKN72iIaqOL9-dX9SiSmKw7bzezDul7-JmsH6TY', '2022-12-05 22:53:12', 1),
+	(47, 1, '2022-11-04 22:55:10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcwMjgwOTEwLjgxOSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA2LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNi4wLjEzNzAuNDciLCJpYXQiOjE2Njc2MDI1MTB9.Z5K3PaF2b4a_FUov3gcCrXXPpA-N-qFGvpkr60hOrV4', '2022-12-05 22:55:10', 1),
+	(48, 1, '2022-11-04 23:14:32', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcwMjgyMDcyLjIwMywiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA2LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNi4wLjEzNzAuNDciLCJpYXQiOjE2Njc2MDM2NzJ9.mc5V5iBN1jHtMXHWc4lFT53SXOut-lTihyeO9cbZ17w', '2022-12-05 23:14:32', 1),
+	(49, 1, '2022-11-04 23:19:48', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcwMjgyMzg4LjU4MiwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA2LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNi4wLjEzNzAuNDciLCJpYXQiOjE2Njc2MDM5ODh9.e43zoWqWHIEtEGCIGHv3k6hra8gkSmO69MF_zAjas6A', '2022-12-05 23:19:48', 1),
+	(50, 1, '2022-11-06 23:50:48', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcwNDU3MDQ4LjY4NywiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjI3IiwidWEiOiJNb3ppbGxhLzUuMCAoTGludXg7IEFuZHJvaWQgMTI7IDIxMDgxMTExUkcgQnVpbGQvU1AxQS4yMTA4MTIuMDE2KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuNTMwNC45MSBNb2JpbGUgU2FmYXJpLzUzNy4zNiBPUFgvMS43IiwiaWF0IjoxNjY3Nzc4NjQ4fQ.FNmVpEgWx55RYa340xuF0Qj-zvz8wT-OgfpUuKI7SCI', '2022-12-07 23:50:48', 1),
+	(51, 1, '2022-11-11 22:55:53', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcwODg1NzUzLjUzNywiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguMzUiLCJpYXQiOjE2NjgyMDczNTN9.1c6oQLuOptJMK1Dm15Re1csEdnLF3Fuo6YCSh_Lm0e0', '2022-12-12 22:55:53', 1),
+	(52, 1, '2022-11-12 02:20:10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcwODk4MDEwLjc3OSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjI5IiwidWEiOiJNb3ppbGxhLzUuMCAoTGludXg7IEFuZHJvaWQgMTI7IDIxMDgxMTExUkcgQnVpbGQvU1AxQS4yMTA4MTIuMDE2KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuNTMwNC45MSBNb2JpbGUgU2FmYXJpLzUzNy4zNiBPUFgvMS43IiwiaWF0IjoxNjY4MjE5NjEwfQ.e1BG2399OJLqBHuuG7zM4YLPLvQgrEK9FhYz6kBRpWU', '2022-12-13 02:20:10', 1),
+	(53, 1, '2022-11-12 17:23:33', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcwOTUyMjEzLjQ5NCwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguMzUiLCJpYXQiOjE2NjgyNzM4MTN9.1r_3I7T_UvcXBrvPxU-Zg1HiTqqRkzoRWnYrWj75FF4', '2022-12-13 17:23:33', 1),
+	(54, 1, '2022-11-13 17:39:39', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxMDM5NTc5LjkwMywiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjI5IiwidWEiOiJNb3ppbGxhLzUuMCAoTGludXg7IEFuZHJvaWQgMTI7IDIxMDgxMTExUkcpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgTW9iaWxlIFNhZmFyaS81MzcuMzYiLCJpYXQiOjE2NjgzNjExNzl9.nRKl-Jpe25kn99YiyCWdVxouPna6IFBhmM9x4lIzNr0', '2022-12-14 17:39:39', 1),
+	(55, 1, '2022-11-13 17:40:11', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxMDM5NjExLjAwMSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNDIiLCJpYXQiOjE2NjgzNjEyMTF9.D9qC-S12ZabZcppYiNOd68Ss38StxGFpZ4ZEVRTHBAQ', '2022-12-14 17:40:11', 1);
 
 -- Dumping structure for table inventory.article
 CREATE TABLE IF NOT EXISTS `article` (
   `article_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL DEFAULT '0',
-  `excerpt` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL DEFAULT '0',
-  `description` varchar(450) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL DEFAULT '0',
-  `concract` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL DEFAULT '0',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
+  `excerpt` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
+  `description` varchar(450) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
+  `concract` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
   `category_id` int unsigned NOT NULL DEFAULT '0',
-  `comment` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci DEFAULT NULL,
-  `sap_number` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '0',
+  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `sap_number` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
   PRIMARY KEY (`article_id`),
   KEY `fk_article_category_id` (`category_id`),
   CONSTRAINT `fk_article_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
 -- Dumping data for table inventory.article: ~11 rows (approximately)
 DELETE FROM `article`;
@@ -117,13 +133,13 @@ CREATE TABLE IF NOT EXISTS `article_feature` (
   `article_feature_id` int unsigned NOT NULL AUTO_INCREMENT,
   `article_id` int unsigned NOT NULL DEFAULT '0',
   `feature_id` int unsigned NOT NULL DEFAULT '0',
-  `value` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL DEFAULT '',
+  `value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`article_feature_id`),
   UNIQUE KEY `uq_article_feature_article_id_feature_id` (`article_id`,`feature_id`) USING BTREE,
   KEY `fk_article_feature_feature_id` (`feature_id`) USING BTREE,
   CONSTRAINT `fk_article_feature_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_article_feature_feature_id` FOREIGN KEY (`feature_id`) REFERENCES `feature` (`feature_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=383 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=387 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
 -- Dumping data for table inventory.article_feature: ~49 rows (approximately)
 DELETE FROM `article_feature`;
@@ -159,10 +175,6 @@ INSERT INTO `article_feature` (`article_feature_id`, `article_id`, `feature_id`,
 	(112, 96, 14, '500GB'),
 	(113, 96, 13, '8GB'),
 	(114, 96, 10, 'SFF'),
-	(115, 97, 11, 'Intel Core i7-3770'),
-	(117, 97, 14, '500GB'),
-	(118, 97, 13, '4GB'),
-	(119, 97, 10, 'SFF'),
 	(355, 102, 23, 'VGA/HDMI/DVI/DP'),
 	(356, 102, 20, '1:10000'),
 	(357, 102, 19, '24"'),
@@ -176,25 +188,29 @@ INSERT INTO `article_feature` (`article_feature_id`, `article_id`, `feature_id`,
 	(374, 98, 23, 'VGA/DVI x2'),
 	(375, 98, 20, '1000000:1'),
 	(376, 98, 19, '19"'),
-	(377, 98, 24, '1440x900');
+	(377, 98, 24, '1440x900'),
+	(383, 97, 11, 'Intel Core i7-3770'),
+	(384, 97, 14, '500GB'),
+	(385, 97, 13, '4GB'),
+	(386, 97, 10, 'SFF');
 
 -- Dumping structure for table inventory.category
 CREATE TABLE IF NOT EXISTS `category` (
   `category_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL DEFAULT '0',
-  `image_path` varchar(128) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL DEFAULT '',
+  `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
+  `image_path` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '',
   `parent__category_id` int unsigned DEFAULT NULL,
   PRIMARY KEY (`category_id`),
   UNIQUE KEY `uq_category_name` (`name`),
   UNIQUE KEY `uq_category_image_path` (`image_path`),
   KEY `fk_category_parent__category_id` (`parent__category_id`) USING BTREE,
   CONSTRAINT `FK_category_category` FOREIGN KEY (`parent__category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
 -- Dumping data for table inventory.category: ~8 rows (approximately)
 DELETE FROM `category`;
 INSERT INTO `category` (`category_id`, `name`, `image_path`, `parent__category_id`) VALUES
-	(7, 'Računarska oprema', 'bi bi-pc-display', NULL),
+	(7, 'Rač. oprema', 'bi bi-pc-display', NULL),
 	(8, 'Memorija pohrane', 'bi bi-hdd', 9),
 	(9, 'Radne stanice', 'bi bi-pc-display-horizontal', 7),
 	(10, 'Monitor', 'bi bi-display', 7),
@@ -212,50 +228,105 @@ CREATE TABLE IF NOT EXISTS `debt_items` (
   `document_id` int unsigned NOT NULL,
   `value` int NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `serial_number` varchar(255) DEFAULT NULL,
-  `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'razduženo',
-  `comment` varchar(255) DEFAULT NULL,
-  `inv_broj` varchar(50) DEFAULT NULL,
+  `serial_number` varchar(255) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'razduženo',
+  `comment` varchar(255) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `inv_broj` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`debt_items_id`),
-  UNIQUE KEY `article_id_user_id_timestamp_serial_number` (`article_id`,`user_id`,`timestamp`,`serial_number`),
-  KEY `FK_debt_items_user_article` (`user_id`),
-  KEY `fk_debt_items_user_article_id` (`user_article_id`),
+  UNIQUE KEY `article_id_user_id_timestamp_serial_number` (`article_id`,`user_id`,`timestamp`,`serial_number`) USING BTREE,
   KEY `fk_debt_items_document_id` (`document_id`),
+  KEY `FK_debt_items_user_article` (`user_id`) USING BTREE,
+  KEY `fk_debt_items_user_article_id` (`user_article_id`) USING BTREE,
   CONSTRAINT `fk_debt_items_article_di` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_debt_items_document_id` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `fk_debt_items_user_article_id` FOREIGN KEY (`user_article_id`) REFERENCES `user_article` (`user_article_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `fk_debt_items_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `FK_debt_items_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_debt_items_user_article_id` FOREIGN KEY (`user_article_id`) REFERENCES `user_article` (`user_article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
 -- Dumping data for table inventory.debt_items: ~0 rows (approximately)
 DELETE FROM `debt_items`;
+INSERT INTO `debt_items` (`debt_items_id`, `user_article_id`, `article_id`, `user_id`, `document_id`, `value`, `timestamp`, `serial_number`, `status`, `comment`, `inv_broj`) VALUES
+	(82, 275, 96, 152, 211, 1, '2022-11-13 23:36:20', '51738FEN', 'razduženo', '', 'ZE0621548');
 
 -- Dumping structure for table inventory.department
 CREATE TABLE IF NOT EXISTS `department` (
   `department_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'undefined',
-  `description` varchar(250) DEFAULT NULL,
-  `departmend_code` varchar(50) NOT NULL DEFAULT 'undefined',
-  PRIMARY KEY (`department_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `title` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
+  `description` varchar(250) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `departmend_code` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
+  `parent_department_id` int unsigned DEFAULT NULL,
+  PRIMARY KEY (`department_id`) USING BTREE,
+  KEY `FK_department_department` (`parent_department_id`),
+  CONSTRAINT `FK_department_department` FOREIGN KEY (`parent_department_id`) REFERENCES `department` (`department_id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.department: ~0 rows (approximately)
+-- Dumping data for table inventory.department: ~26 rows (approximately)
 DELETE FROM `department`;
+INSERT INTO `department` (`department_id`, `title`, `description`, `departmend_code`, `parent_department_id`) VALUES
+	(2, 'Sektor za IKT', 'Sektor za informacione i komunikacione tehnologije IKT', '1302516462', NULL),
+	(3, 'Služba za IKT Zenica', 'Sektor za informacione i komunikacione tehnologije IKT Zenica', '13025164621', 2),
+	(5, 'Sektor za investicije', 'Sektor za investicije', '1030802', NULL),
+	(6, 'Služba za pripremu investicija', 'Služba za pripremu investicija', '103080201', 5),
+	(7, 'Služba za realizaciju investicija', 'Služba za realizaciju investicija', '103080202', 5),
+	(8, 'Služba za imovinsko-pravne odnose', 'Služba za imovinsko-pravne odnose', '103080203', 5),
+	(9, 'Odjeljenje za nova prava', 'Odjeljenje za nova prava', '10308020301', 8),
+	(10, 'Odjeljenje za postojeću imovinu', 'Odjeljenje za postojeću imovinu', '10308020302', 8),
+	(11, 'Sektor za pristup mreži i upravljanje', 'Sektor za pristup mreži i upravljanje', '1030803', NULL),
+	(12, 'Služba za pristup mreži', 'Služba za pristup mreži', '103080301', 11),
+	(13, 'Služba za upravljanje i operativne analize', '', '103080302', 11),
+	(14, 'Odjeljenje za dispečiranje', '', '10308030201', 13),
+	(15, 'Odjeljenje za zaštitu i kvalitet električne energije', '', '10308030202', 13),
+	(19, 'Ured Direktora', '', '1030801', NULL),
+	(20, 'Služba za internu kontrole', '', '103080101', 19),
+	(21, 'Služba za odnose s javnošću i informisanje kupaca', '', '103080102', 19),
+	(22, 'Sektor obračunskih mjerenja i očitanja', '', '1030805', NULL),
+	(23, 'Sektor za ekonomske poslove', '', '1030807', NULL),
+	(24, 'Služba za finansije i računovodstvo', '', '103080701', 23),
+	(25, 'Služba za komercijalne poslove', '', '103080702', 23),
+	(26, 'Sektor za pravne, kadrovske i opće poslove', '', '1030808', NULL),
+	(27, 'Služba za pravne i kadrovske poslove', '', '103080801', 26),
+	(28, 'Služba za opće poslove', '', '103080802', 26),
+	(29, 'Područje snabdjevanja', '', '1040206', NULL),
+	(30, 'Služba za obračun', '', '104020601', 29),
+	(31, 'Služba za naplatu i utuženja', '', '104020602', 29);
 
 -- Dumping structure for table inventory.department_job
 CREATE TABLE IF NOT EXISTS `department_job` (
   `department_job_id` int unsigned NOT NULL AUTO_INCREMENT,
   `department_id` int unsigned NOT NULL DEFAULT '0',
   `job_id` int unsigned NOT NULL DEFAULT '0',
+  `location_id` int unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`department_job_id`),
   KEY `department_job_department_id` (`department_id`),
   KEY `department_job_job_id` (`job_id`),
+  KEY `location_id` (`location_id`),
   CONSTRAINT `department_job_department_id` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT `department_job_job_id` FOREIGN KEY (`job_id`) REFERENCES `job` (`job_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `department_job_job_id` FOREIGN KEY (`job_id`) REFERENCES `job` (`job_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `FK_department_job_location` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.department_job: ~0 rows (approximately)
+-- Dumping data for table inventory.department_job: ~19 rows (approximately)
 DELETE FROM `department_job`;
+INSERT INTO `department_job` (`department_job_id`, `department_id`, `job_id`, `location_id`) VALUES
+	(2, 3, 2, 2),
+	(13, 5, 7, 2),
+	(14, 5, 6, 2),
+	(15, 5, 8, 2),
+	(16, 2, 9, 2),
+	(17, 11, 8, 2),
+	(18, 22, 8, 3),
+	(19, 23, 8, 2),
+	(20, 24, 9, 2),
+	(21, 25, 9, 2),
+	(22, 6, 9, 2),
+	(23, 26, 8, 2),
+	(24, 27, 9, 2),
+	(27, 28, 9, 2),
+	(29, 31, 9, 2),
+	(30, 30, 9, 2),
+	(31, 29, 8, 2),
+	(32, 6, 10, 2),
+	(33, 6, 11, 2);
 
 -- Dumping structure for table inventory.destroyed
 CREATE TABLE IF NOT EXISTS `destroyed` (
@@ -266,20 +337,20 @@ CREATE TABLE IF NOT EXISTS `destroyed` (
   `document_id` int unsigned NOT NULL,
   `value` int NOT NULL DEFAULT '0',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `serial_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'otpisano',
-  `comment` varchar(255) DEFAULT NULL,
-  `inv_broj` varchar(50) DEFAULT NULL,
+  `serial_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'otpisano',
+  `comment` varchar(255) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `inv_broj` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`destroyed_id`),
-  UNIQUE KEY `article_id_user_id_serial_number` (`article_id`,`user_id`,`serial_number`),
-  KEY `fk_destroyed_user_id` (`user_id`),
-  KEY `fk_destroyed_user_article_id` (`user_article_id`),
+  UNIQUE KEY `article_id_user_id_serial_number` (`article_id`,`user_id`,`serial_number`) USING BTREE,
   KEY `fk_destroyed_document_id` (`document_id`),
+  KEY `fk_destroyed_user_id` (`user_id`) USING BTREE,
+  KEY `fk_destroyed_user_article_id` (`user_article_id`) USING BTREE,
   CONSTRAINT `fk_destroyed_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_destroyed_document_id` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `FK_destroyed_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_destroyed_user_article_id` FOREIGN KEY (`user_article_id`) REFERENCES `user_article` (`user_article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
 -- Dumping data for table inventory.destroyed: ~0 rows (approximately)
 DELETE FROM `destroyed`;
@@ -288,28 +359,35 @@ DELETE FROM `destroyed`;
 CREATE TABLE IF NOT EXISTS `documents` (
   `documents_id` int unsigned NOT NULL AUTO_INCREMENT,
   `article_id` int unsigned NOT NULL,
-  `path` varchar(255) NOT NULL,
+  `path` varchar(255) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   `document_number` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`documents_id`),
   KEY `fk_documents_article_id` (`article_id`),
   CONSTRAINT `fk_documents_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=205 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=212 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.documents: ~0 rows (approximately)
+-- Dumping data for table inventory.documents: ~5 rows (approximately)
 DELETE FROM `documents`;
 INSERT INTO `documents` (`documents_id`, `article_id`, `path`, `document_number`) VALUES
-	(204, 93, 'prenosnica1.docx', 1);
+	(204, 93, 'prenosnica1.docx', 1),
+	(205, 93, 'prenosnica2.docx', 2),
+	(206, 90, 'prenosnica3.docx', 3),
+	(207, 93, 'prenosnica4.docx', 4),
+	(208, 95, 'prenosnica5.docx', 5),
+	(209, 96, 'prenosnica6.docx', 6),
+	(210, 96, 'prenosnica7.docx', 7),
+	(211, 96, 'prenosnica8.docx', 8);
 
 -- Dumping structure for table inventory.feature
 CREATE TABLE IF NOT EXISTS `feature` (
   `feature_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL DEFAULT '0',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
   `category_id` int unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`feature_id`),
   UNIQUE KEY `uq_feature_category_id_name` (`category_id`,`name`),
   KEY `fk_feature_category_id` (`category_id`) USING BTREE,
   CONSTRAINT `fk_feature_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
 -- Dumping data for table inventory.feature: ~19 rows (approximately)
 DELETE FROM `feature`;
@@ -337,14 +415,41 @@ INSERT INTO `feature` (`feature_id`, `name`, `category_id`) VALUES
 -- Dumping structure for table inventory.job
 CREATE TABLE IF NOT EXISTS `job` (
   `job_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(250) NOT NULL DEFAULT 'undefined',
-  `description` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `job_code` varchar(50) NOT NULL DEFAULT 'undefined',
+  `title` varchar(250) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
+  `description` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `job_code` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
   PRIMARY KEY (`job_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.job: ~0 rows (approximately)
+-- Dumping data for table inventory.job: ~7 rows (approximately)
 DELETE FROM `job`;
+INSERT INTO `job` (`job_id`, `title`, `description`, `job_code`) VALUES
+	(2, 'Tehničar za IKT **', 'Tehničar za IKT ** Zenica', '936545'),
+	(6, 'Koordinator za GIS', 'Koordinator za GIS', 'undefined'),
+	(7, 'Projekt menadžer', 'Projekt menadžer', 'undefined'),
+	(8, 'Rukovodilac sektora', 'Rukovodilac sektora', 'undefined'),
+	(9, 'Rukovodilac službe', 'Rukovodilac službe', 'undefined'),
+	(10, 'Referent za pripremu investicija', '', ''),
+	(11, 'Stručni saradnik za pripremu investicija', '', '');
+
+-- Dumping structure for table inventory.location
+CREATE TABLE IF NOT EXISTS `location` (
+  `location_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `parent_location_id` int unsigned DEFAULT NULL,
+  PRIMARY KEY (`location_id`),
+  KEY `FK_location_location` (`parent_location_id`),
+  CONSTRAINT `FK_location_location` FOREIGN KEY (`parent_location_id`) REFERENCES `location` (`location_id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+
+-- Dumping data for table inventory.location: ~4 rows (approximately)
+DELETE FROM `location`;
+INSERT INTO `location` (`location_id`, `name`, `code`, `parent_location_id`) VALUES
+	(1, 'ED Zenica', '101', NULL),
+	(2, 'Direkcija Zenica', '103', 1),
+	(3, 'PJD Zenica', '10303', 1),
+	(34, 'PJD Visoko', '105', 1);
 
 -- Dumping structure for table inventory.responsibility
 CREATE TABLE IF NOT EXISTS `responsibility` (
@@ -354,26 +459,28 @@ CREATE TABLE IF NOT EXISTS `responsibility` (
   `article_id` int unsigned NOT NULL DEFAULT '0',
   `document_id` int unsigned NOT NULL,
   `value` int NOT NULL DEFAULT '0',
-  `status` enum('zaduženo','razduženo','otpisano') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'zaduženo',
+  `status` enum('zaduženo','razduženo','otpisano') CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'zaduženo',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `serial_number` varchar(255) NOT NULL,
-  `inv_broj` varchar(50) DEFAULT NULL,
+  `serial_number` varchar(255) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `inv_broj` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`responsibility_id`) USING BTREE,
-  UNIQUE KEY `user_id_article_id_serial_number` (`user_id`,`article_id`,`serial_number`),
+  UNIQUE KEY `user_id_article_id_serial_number` (`user_id`,`article_id`,`serial_number`) USING BTREE,
   KEY `FK_104` (`article_id`),
-  KEY `FK_92` (`user_id`),
-  KEY `fk_responsibility_user_article_id` (`user_article_id`),
   KEY `fk_responsibility_document_id` (`document_id`),
+  KEY `FK_92` (`user_id`) USING BTREE,
+  KEY `fk_responsibility_user_article_id` (`user_article_id`) USING BTREE,
   CONSTRAINT `fk_responsibility_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_responsibility_document_id` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `FK_responsibility_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_responsibility_user_article_id` FOREIGN KEY (`user_article_id`) REFERENCES `user_article` (`user_article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=133 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.responsibility: ~0 rows (approximately)
+-- Dumping data for table inventory.responsibility: ~4 rows (approximately)
 DELETE FROM `responsibility`;
 INSERT INTO `responsibility` (`responsibility_id`, `user_article_id`, `user_id`, `article_id`, `document_id`, `value`, `status`, `timestamp`, `serial_number`, `inv_broj`) VALUES
-	(126, 267, 1, 93, 204, 1, 'zaduženo', '2022-10-23 21:11:36', 'ASDASD', 'ASDA4343');
+	(128, 269, 148, 90, 206, 1, 'zaduženo', '2022-11-02 21:46:35', 'KJKSZPJ', 'ZE0621548'),
+	(129, 270, 148, 93, 207, 1, 'zaduženo', '2022-11-13 18:31:51', 'HDIS63839', 'ZE0685862'),
+	(130, 271, 148, 95, 208, 1, 'zaduženo', '2022-11-13 18:32:47', 'Bsjfhkakd', 'ZE06858778');
 
 -- Dumping structure for table inventory.stock
 CREATE TABLE IF NOT EXISTS `stock` (
@@ -382,204 +489,83 @@ CREATE TABLE IF NOT EXISTS `stock` (
   `value_on_concract` int NOT NULL DEFAULT '0',
   `value_available` int NOT NULL DEFAULT '0',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `sap_number` varchar(50) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL DEFAULT '0',
+  `sap_number` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
   PRIMARY KEY (`stock_id`),
   KEY `fk_stock_article_id` (`article_id`),
   CONSTRAINT `fk_stock_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=439 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=446 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
 -- Dumping data for table inventory.stock: ~12 rows (approximately)
 DELETE FROM `stock`;
 INSERT INTO `stock` (`stock_id`, `article_id`, `value_on_concract`, `value_available`, `timestamp`, `sap_number`) VALUES
 	(192, 91, 1, 0, '2022-03-14 22:45:34', '1300-100525'),
 	(217, 84, 50, 38, '2022-03-18 14:42:55', '1300-200201'),
-	(358, 95, 30, 30, '2022-03-31 15:48:24', '1300-551455'),
 	(360, 97, 30, 30, '2022-03-31 16:05:38', '1300-005248'),
 	(361, 98, 5, 5, '2022-03-31 16:26:03', '1300-183994'),
 	(367, 85, 15, 17, '2022-03-31 17:58:45', '1300-200202'),
 	(413, 92, 5, 0, '2022-04-30 03:48:59', '1300-132525'),
-	(415, 96, 1, 0, '2022-04-30 04:04:08', '1300-005254'),
-	(422, 90, 5, 3, '2022-10-21 18:04:06', '1300-100200'),
 	(434, 102, 131, 2, '2022-10-22 17:26:31', 'ZE06879222'),
 	(437, 83, 50, 29, '2022-10-22 17:41:16', '1300-200205'),
-	(438, 93, 1, 3, '2022-10-23 21:11:36', 'ZE0687922');
+	(440, 90, 5, 2, '2022-11-02 21:46:35', '1300-100200'),
+	(441, 93, 1, 2, '2022-11-13 18:31:51', 'ZE0687922'),
+	(442, 95, 30, 29, '2022-11-13 18:32:47', '1300-551455'),
+	(445, 96, 1, 1, '2022-11-13 23:36:20', '1300-005254');
 
 -- Dumping structure for table inventory.upgrade_feature
 CREATE TABLE IF NOT EXISTS `upgrade_feature` (
   `upgrade_feature_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `value` varchar(50) NOT NULL,
+  `name` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `value` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `comment` varchar(255) NOT NULL,
-  `serial_number` varchar(50) NOT NULL,
+  `comment` varchar(255) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `serial_number` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   `article_id` int unsigned NOT NULL,
   PRIMARY KEY (`upgrade_feature_id`),
   KEY `fk_upgrade_feature_serial_number_user_article_serial_number` (`serial_number`),
   KEY `upgrade_feature_article_id_article_article_id` (`article_id`),
   CONSTRAINT `upgrade_feature_article_id_article_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.upgrade_feature: ~1 rows (approximately)
+-- Dumping data for table inventory.upgrade_feature: ~3 rows (approximately)
 DELETE FROM `upgrade_feature`;
 INSERT INTO `upgrade_feature` (`upgrade_feature_id`, `name`, `value`, `timestamp`, `comment`, `serial_number`, `article_id`) VALUES
 	(3, 'SSD', '256GB', '2022-07-14 10:08:32', 'Ugrađen SSD 256GB, ostavljen HDD 500GB zbog podataka. Urađeno detaljno čišćenje radne stanice.', 'KJKSZPJJJ', 92),
-	(4, 'HDD', '500GB', '2022-10-21 18:05:27', 'Ugrađen HDD iz starog računara zbog podataka.', '51738FEN', 90);
+	(4, 'HDD', '500GB', '2022-10-21 18:05:27', 'Ugrađen HDD iz starog računara zbog podataka.', '51738FEN', 90),
+	(5, 'SSD', '256 GB', '2022-11-13 22:53:30', 'Izvađen stari HDD od 500GB te umjesto njega ugrađen SDD 256GB', 'KJKSZPJ', 90);
 
 -- Dumping structure for table inventory.user
 CREATE TABLE IF NOT EXISTS `user` (
   `user_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `surname` varchar(64) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL DEFAULT '0',
-  `forname` varchar(64) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL DEFAULT '0',
-  `job_title` varchar(64) CHARACTER SET utf32 COLLATE utf32_unicode_ci DEFAULT NULL,
-  `department` varchar(64) CHARACTER SET utf32 COLLATE utf32_unicode_ci DEFAULT NULL,
-  `location` varchar(64) CHARACTER SET utf32 COLLATE utf32_unicode_ci DEFAULT '0',
-  `email` varchar(255) NOT NULL,
-  `password_hash` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=148 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `surname` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
+  `forname` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
+  `fullname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `local_number` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `telephone` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `password_hash` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `job_id` int unsigned NOT NULL,
+  `department_id` int unsigned NOT NULL,
+  `location_id` int unsigned NOT NULL,
+  PRIMARY KEY (`user_id`),
+  KEY `fk_user_job_id` (`job_id`),
+  KEY `fk_user_department_id` (`department_id`),
+  KEY `fk_user_location_id` (`location_id`),
+  CONSTRAINT `fk_user_department_id` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_user_job_id` FOREIGN KEY (`job_id`) REFERENCES `job` (`job_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `fk_user_location_id` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=156 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.user: ~0 rows (approximately)
+-- Dumping data for table inventory.user: ~8 rows (approximately)
 DELETE FROM `user`;
-INSERT INTO `user` (`user_id`, `surname`, `forname`, `job_title`, `department`, `location`, `email`, `password_hash`) VALUES
-	(1, 'Mudžahid', 'Cerić', 'Tehničar za IKT', 'Služba za IKT', 'Direkcija Zenica', 'm.ceric@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE'),
-	(2, 'Goran ', 'Karović', 'Stručni saradnik', 'Sektor za IKT', 'Direkcija', 'g.karovic@epbih.ba', 'AD27CCAFBB4429CEE9F60CEAA26F213E27037107434AC50F70314AC83D1D7CCBC73966453BE06B01ECEC83B0915C27DD2A8901A292B2D55C1D6E53B779471ADC'),
-	(6, 'Emir', 'Hedzic', 'Stručni saradnik za IKT', 'Sektor za IKT', 'Direkcija Zenica', '', '3'),
-	(7, 'Evel', 'Subasic', 'Vodeci strucni saradnik za IKT', 'Sektor za IKT', 'Direkcija Zenica', 'evica@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE'),
-	(9, 'Adis', 'Redžepović', 'Inženjer za građevinski nadzor', 'Služba za realizaciju investicija', 'Direkcija Zenica', 'a.redzepovic@epbih.ba', '1C5AACD4CA5406D8C96D1084DF911ADADBD5BD1A9EAC5278C4A6F3565AB1599A36B6EBA5DBB28CB8BFD2336E205645707C16F49CF609A733F9ED3D5BAC282806'),
-	(10, 'Admir', 'Nizamić', 'Tehničar za ispitivanja **', 'Odjeljenje za zaštitu i kvalitet električne energije', 'PJ Zenica - Radakovo', 'a.nizamic@epbih.ba', '1C5AACD4CA5406D8C96D1084DF911ADADBD5BD1A9EAC5278C4A6F3565AB1599A36B6EBA5DBB28CB8BFD2336E205645707C16F49CF609A733F9ED3D5BAC282806'),
-	(11, 'Adnan', 'Begagić', 'Elektromonter **', 'Odjeljenje obračunskih mjerenja i očitanja', 'PJ Zenica - Radakovo', 'a.begagic@epbih.ba', '1C5AACD4CA5406D8C96D1084DF911ADADBD5BD1A9EAC5278C4A6F3565AB1599A36B6EBA5DBB28CB8BFD2336E205645707C16F49CF609A733F9ED3D5BAC282806'),
-	(12, 'Adnan', 'Ibreljić', 'Služba za sigurnost i zaštitu', 'Stručni saradnik za sigurnost', 'PJ Zenica - Radakovo', 'ad.ibreljic@epbih.ba', '1C5AACD4CA5406D8C96D1084DF911ADADBD5BD1A9EAC5278C4A6F3565AB1599A36B6EBA5DBB28CB8BFD2336E205645707C16F49CF609A733F9ED3D5BAC282806'),
-	(13, 'Adnan', 'Mlinarić', 'Vodeći elektromonter **', 'Odjeljenje upravljanja i održavanja mreže i postrojenja', 'PJ Zenica - Radakovo', 'a.mlinaric@epbih.ba', '1C5AACD4CA5406D8C96D1084DF911ADADBD5BD1A9EAC5278C4A6F3565AB1599A36B6EBA5DBB28CB8BFD2336E205645707C16F49CF609A733F9ED3D5BAC282806'),
-	(14, 'Ahmed', 'Mutapčić', 'Tehnički direktor', 'Ured Direktora', 'Direkcija Zenica', 'a.mutapcic@epbih.ba', '1C5AACD4CA5406D8C96D1084DF911ADADBD5BD1A9EAC5278C4A6F3565AB1599A36B6EBA5DBB28CB8BFD2336E205645707C16F49CF609A733F9ED3D5BAC282806'),
-	(15, 'Aida', 'Ajanović', 'Samostalni referent za obračun *', 'Služba za obračun', 'Direkcija Zenica', 'ai.ajanovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(16, 'Aidin', 'Pripoljac', 'Rukovodilac PJD', 'Poslovna jedinica distribucije Zenica', 'PJ Zenica - Radakovo', 'a.pripoljac@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(17, 'Alen', 'Zečić', 'Rukovodilac Službe za analitičke evidencije', 'Služba za analitičke evidencije', 'Direkcija Zenica', 'a.zecic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(18, 'Alma', 'Kišija', 'Stručni saradnik za pravne i kadrovske poslove', 'Služba za pravne i kadrovske poslove', 'Direkcija Zenica', 'a.kisija@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(19, 'Alma', 'Secerovic', 'Strucni saradnik za finansijske i racuno', 'Služba za finansije i racunovodstvo', 'Direkcija Zenica', 'a.secerovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(20, 'Amar', 'Kasap', 'Rukovodilac službe', 'Služba za komercijalne poslove', 'Direkcija Zenica', 'a.kasap@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(21, 'Amel', 'Cajdric', 'Rukovodilac Službe', 'Služba za održavanje mreža i postrojenja Zenica', 'Direkcija Zenica', 'a.cajdric@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(22, 'Amel', 'Zejnirovic', 'Referent za investicije', 'Služba za realizaciju investicija', 'Direkcija Zenica', 'a.zejnirovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(23, 'Amela', 'Serdarevic', 'Samostalni referent za naplatu i utuž*', 'Služba za naplatu i utuženja', 'Direkcija Zenica', 'a.serdarevic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(24, 'Amina', 'Alibasic', 'Strucni saradnik za planiranje', 'Služba za plan .analizu i izvještavanje', 'Direkcija Zenica', 'a.alibasic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(25, 'Amina', 'Kavazovic', 'Strucni saradnik za prikljucenja **', 'Služba za realizaciju investicija', 'Direkcija Zenica', 'am.kavazovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(26, 'Amina', 'Patkovic', 'Referent za analiticke evidencije**', 'Služba za analiticke evidencije', 'Direkcija Zenica', 'a.patkovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(27, 'Amir', 'Buzo', 'Tehnicar za pripremu', 'Služba za održavanje mreža i postrojenja Zenica', 'Direkcija Zenica', 'am.buzo@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(28, 'Amir', 'Hasagic', 'Inženjer za mreže i postrojenja', 'Služba za održavanje mreža i postrojenja Zenica', 'Direkcija Zenica', 'am.hasagic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(29, 'Amira', 'Pracic', 'Referent za analiticke evidencije**', 'Služba za analiticke evidencije', 'Direkcija Zenica', 'a.pracic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(30, 'Amra', 'Imamovic', 'Rukovodilac službe', 'Služba za imovinsko-pravne odnose', 'Direkcija Zenica', 'am.imamovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(31, 'Amra', 'Pojskic', 'Rukovodilac podrucja', 'Podrucje snabdijevanja Zenica', 'Direkcija Zenica', 'a.pojskic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(32, 'Armin', 'Basic', 'Projektant', 'Služba za pripremu investicija', 'Direkcija Zenica', 'ar.basic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(33, 'Armin', 'Malicbegovic', 'Strucni saradnik za realizaciju investic', 'Služba za realizaciju investicija', 'Direkcija Zenica', 'a.malicbegovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(34, 'Armin', 'Miskic', 'Strucni saradnik za  prikupljanje i obra', 'Odjeljenje za prikupljanje i obradu mjernih podataka', 'Direkcija Zenica', 'ar.miskic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(35, 'Arzija', 'Hrustic', 'Referent za prikupljanje i obradu mjerni', 'Odjeljenje za prikupljanje i obradu mjernih podataka', 'Direkcija Zenica', 'ar.hrustic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(36, 'Asaf', 'Kajmakovic', 'Samostalni referent za kontrolu**', 'Služba za internu kontrolu', 'Direkcija Zenica', 'a.kajmakovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(37, 'Asima', 'Mulasmajic', 'Referent za analiticke evidencije**', 'Služba za analiticke evidencije', 'Direkcija Zenica', 'as.mulasmajic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(38, 'Asmir', 'Dzidic', 'Inženjer za pristup mreži', 'Služba za pristup mreži', 'Direkcija Zenica', 'a.dzidic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(39, 'Azra', 'Talic', 'Tehnicki sekretar', 'Ured Direktora', 'Direkcija Zenica', 'a.talic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(40, 'Benaris', 'Kahriman', 'Referent za racunovodstvo**', 'Služba za finansije i racunovodstvo', 'Direkcija Zenica', 'be.kahriman@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(41, 'Benjamin', 'Kovacevic', 'Rukovodilac službe', 'Služba za pristup mreži', 'Direkcija Zenica', 'b.kovacevic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(42, 'Damir', 'Caus', 'Rukovodilac službe', 'Služba za opce poslove', 'Direkcija Zenica', 'd.caus@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(43, 'Denis', 'Spahic', 'Referent za transport', 'Služba za transport', 'Direkcija Zenica', 'd.spahic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(44, 'Dervisa', 'Kalco', 'Strucni saradnik za finansijske i racuno', 'Služba za finansije i racunovodstvo', 'Direkcija Zenica', 'd.kalco@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(45, 'Dispeceri', 'Zenica', ' ', 'Djelatnost distribucije', 'Direkcija Zenica', 'ze.dispecer@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(46, 'Dzanan', 'Frndic', 'Strucni saradnik za finansijske i racuno', 'Služba za finansije i racunovodstvo', 'Direkcija Zenica', 'dz.frndic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(47, 'Dzenana', 'Skomorac', 'Rukovodilac službe', 'Služba za internu kontrolu', 'Direkcija Zenica', 'dz.skomorac@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(48, 'Edib', 'Vrazalic', 'Tehnicar za pripremu **', 'Odjeljenje za planiranje i održavanje mjernih mjesta', 'Direkcija Zenica', 'e.vrazalic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(49, 'Edin', 'Arnaut', 'Direktor', 'Podružnica "Elektrodistribucija" Zenica', 'Direkcija Zenica', 'e.arnaut@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(50, 'Edin', 'Heremic', 'Vodeci skladištar**', 'Služba za komercijalne poslove', 'Direkcija Zenica', 'e.heremic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(51, 'Edin', 'Kovac', 'Strucni saradnik za okolinsko upravljanj', 'Služba za sigurnost i zaštitu', 'Direkcija Zenica', 'ed.kovac@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(52, 'Edin', 'Omerovic', 'Referent za pripremu', 'Odjeljenje upravljanja i održavanja mreža i postrojenja (ZE)', 'Direkcija Zenica', 'e.omerovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(53, 'Edin', 'Opardija', 'Inženjer za zaštitu i kvalitet elektricn', 'Odjeljenje za zaštitu i kvalitet elektricne energije', 'Direkcija Zenica', 'e.opardija@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(54, 'Edina', 'Kubat', 'Referent za kadrovske poslove', 'Služba za pravne i kadrovske poslove', 'Direkcija Zenica', 'e.kubat@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(55, 'Edisej', 'Sjerotanovic', 'Rukovodilac sektora', 'Sektor obracunskih mjerenja i ocitanja', 'Direkcija Zenica', 'e.sjerotanovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(56, 'Edmir', 'Vranic', 'Vodeci skladištar**', 'Služba za komercijalne poslove', 'Direkcija Zenica', 'e.vranic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(57, 'Ehlimana', 'Sivac', 'Strucni saradnik za stvarna prava na pos', 'Odjeljenje za postojecu imovinu', 'Direkcija Zenica', 'eh.sivac@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(58, 'Elma', 'Frkatovic', 'Referent za finansija', 'Služba za finansije i racunovodstvo', 'Direkcija Zenica', 'e.frkatovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(59, 'Elvedina', 'Subasic', 'Referent za analiticke evidencije**', 'Služba za analiticke evidencije', 'Direkcija Zenica', 'elv.subasic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(60, 'Elvedina', 'Vejzagic', 'Samostalni referent za naplatu i utuž*', 'Služba za naplatu i utuženja', 'Direkcija Zenica', 'e.vejzagic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(61, 'Emina', 'Hasic', 'Koordinator za GIS', 'Sektor za investicije', 'Direkcija Zenica', 'e.hasic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(62, 'Emina', 'Serdarevic', 'Arhivar *', 'Služba za opce poslove', 'Direkcija Zenica', 'e.serdarevic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(63, 'Emir', 'Dzafic', 'Referent za pripremu', 'Poslovna jedinica distribucije Breza', 'Direkcija Zenica', 'em.dzafic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(65, 'Emir', 'Smajic', 'Strucni saradnik za analiticke evidencij', 'Služba za analiticke evidencije', 'Direkcija Zenica', 'e.smajic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(66, 'Emira', 'Brajlovic', 'Vodeci referent za naplatu i utuženja*', 'Služba za naplatu i utuženja', 'Direkcija Zenica', 'em.brajlovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(67, 'Enes', 'Krdzalic', 'Strucni saradnik za zaštitu zdravlja i s', 'Služba za sigurnost i zaštitu', 'Direkcija Zenica', 'en.krdzalic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(68, 'Enes', 'Malkoc', 'Dispecer za srednji i niski napon*', 'Odjeljenje za dispeciranje', 'Direkcija Zenica', 'e.malkoc@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(69, 'Ermin', 'Husagic', 'Vodeci elektromehanicar *', 'Odjeljenje za zaštitu i kvalitet elektricne energije', 'Direkcija Zenica', 'e.husagic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(70, 'Ernes', 'Bedak', 'Rukovodilac službe', 'Služba za pripremu investicija', 'Direkcija Zenica', 'e.bedak@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(72, 'Fata', 'Bajtarevic', 'Referent za racunovodstvo**', 'Služba za finansije i racunovodstvo', 'Direkcija Zenica', 'fa.bajtarevic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(74, 'Goran', 'Skocilic', 'Referent za odnose sa javnošcu i komunik', 'Služba za odnose s javnošcu i informisanje kupaca', 'Direkcija Zenica', 'g.skocilic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(75, 'Hadis', 'Zukic', 'Referent za racunovodstvo**', 'Služba za finansije i racunovodstvo', 'Direkcija Zenica', 'ha.zukic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(76, 'Halid', 'Zukic', 'Rukovodilac službe', 'Služba za odnose s javnošcu i informisanje kupaca', 'Direkcija Zenica', 'h.zukic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(77, 'Haris', 'Buric', 'Elektromonter**', 'Odjeljenje upravljanja i održavanja mreža i postrojenja (ZE)', 'Direkcija Zenica', 'h.buric@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(78, 'Haris', 'Imamovic', 'Strucni saradnik za tržišne operacije', 'Sektor za tržišno snabdijevanje', 'Direkcija Zenica', 'ha.imamovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(79, 'Haris', 'Kulic', 'Tehnicar za pristup mreži', 'Odjeljenje za pristup mreži (ZE)', 'Direkcija Zenica', 'h.kulic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(80, 'Hedina', 'Causevic', 'Samostalni referent nabavke*', 'Služba za komercijalne poslove', 'Direkcija Zenica', 'he.causevic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(81, 'Ibrahim', 'Mucic', 'Rukovodilac Službe za naplatu i utuženja', 'Služba za naplatu i utuženja', 'Direkcija Zenica', 'i.mucic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(82, 'Igor', 'Primorac', 'Rukovodilac službe', 'Služba za upravljanje i operativne analize', 'Direkcija Zenica', 'i.primorac@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(83, 'Ilma', 'Kopic', 'Strucni saradnik za finansijske i racuno', 'Služba za finansije i racunovodstvo', 'Direkcija Zenica', 'i.kopic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(84, 'Jasmin', 'Catic', 'Samostalni referent za kontrolu**', 'Služba za internu kontrolu', 'Direkcija Zenica', 'j.catic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(85, 'Jasmina', 'Cucukovic', 'Strucni saradnik za prikljucenja **', 'Služba za realizaciju investicija', 'Direkcija Zenica', 'j.cucukovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(86, 'Kemal', 'Dautbegovic', 'Strucni saradnik za nabavku i ugovaranje', 'Služba za komercijalne poslove', 'Direkcija Zenica', 'k.dautbegovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(87, 'Kenan', 'Dzelo', 'Inženjer za pristup mreži', 'Služba za pristup mreži', 'Direkcija Zenica', 'k.dzelo@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(88, 'Kenan', 'Hadzimejlic', 'Strucni saradnik za obracun i realizacij', 'Služba za obracun', 'Direkcija Zenica', 'k.hadzimejlic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(89, 'Kenan', 'Prguda', 'Vodeci referent opcih poslova*', 'Služba za opce poslove', 'Direkcija Zenica', 'k.prguda@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(90, 'Kenan', 'Serdarevic', 'Rukovodilac sektora', 'Sektor za pristup mreži i upravljanje', 'Direkcija Zenica', 'k.serdarevic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(91, 'Laris', 'Maglic', 'Rukovodilac službe', 'Služba za transport', 'Direkcija Zenica', 'l.maglic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(92, 'Lejla', 'Buza', 'Rukovodilac službe', 'Služba za pravne i kadrovske poslove', 'Direkcija Zenica', 'le.buza@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(93, 'Lejla', 'Carsimamovic', 'Rukovodilac službe', 'Služba za IKT Zenica', 'Direkcija Zenica', 'l.carsimamovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(94, 'Lejla', 'Rizvic', ' ', 'Odjeljenje obracuna', 'Direkcija Zenica', 'l.rizvic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(95, 'Mahir', 'Avdic', 'Vozac *', 'Služba za transport', 'Direkcija Zenica', 'ma.avdic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(96, 'Mahir', 'Mesic', 'Mašinbravar za mašinsku opremu II', 'Pogon održavanje', 'Direkcija Zenica', 'm.mesic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(97, 'Medina', 'Dizdarevic', ' ', ' ', 'Direkcija Zenica', 'm.dizdarevic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(98, 'Mekrema', 'Pušcul', ' ', ' ', 'Direkcija Zenica', 'm.puscul@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(99, 'Meliha', 'Becic', 'Referent za racunovodstvo**', 'Služba za finansije i racunovodstvo', 'Direkcija Zenica', 'me.becic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(100, 'Melita', 'Burkic', 'Vodeci referent za racunovodstvo *', 'Služba za finansije i racunovodstvo', 'Direkcija Zenica', 'm.burkic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(101, 'Mensud', 'Durmic', 'Rukovodilac sektora', 'Sektor za ekonomske poslove', 'Direkcija Zenica', 'm.durmic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(102, 'Mirha', 'Bašic', 'Strucni saradnik za pripremu investicija', 'Služba za pripremu investicija', 'Direkcija Zenica', 'mirha.basic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(103, 'Mirha', 'Catic', 'Referent za pripremu investicija', 'Služba za pripremu investicija', 'Direkcija Zenica', 'm.catic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(104, 'Mirhat', 'Djuheric', 'Referent za investicije', 'Služba za realizaciju investicija', 'Direkcija Zenica', 'm.dzuheric@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(105, 'Mirsad', 'Becic', 'Rukovodilac službe', 'Služba za realizaciju investicija', 'Direkcija Zenica', 'm.becic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(106, 'Mirsada', 'Sarajlic', 'Strucni saradnik za pravne i kadrovske p', 'Služba za pravne i kadrovske poslove', 'Direkcija Zenica', 'mi.sarajlic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(107, 'Mirza', 'Alic', 'Inženjer za nadzor i investicije', 'Služba za realizaciju investicija', 'Direkcija Zenica', 'm.alic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(108, 'Mirza', 'Serdarevic', 'Glavni dispecer', 'Odjeljenje za dispeciranje', 'Direkcija Zenica', 'm.serdarevic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(110, 'Muhamed', 'Druzic', 'Elektromonter', 'Odjeljenje za planiranje i održavanje mjernih mjesta', 'Direkcija Zenica', 'm.druzic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(111, 'Muris', 'Isakovic', 'Voditelj protokola', 'Služba za opce poslove', 'Direkcija Zenica', 'mu.isakovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(112, 'Muris', 'Pasalic', 'Elektromonter', 'Odjeljenje za planiranje i održavanje mjernih mjesta', 'Direkcija Zenica', 'mu.pasalic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(113, 'Mustafa', 'Pašalic', 'Elektromonter**', 'Odjeljenje obracunskih mjerenja i ocitanja (ZE)', 'Direkcija Zenica', 'm.pasalic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(114, 'Nadira', 'Mehicic', ' ', 'Odjeljenje obracuna i naplate elektricne energije Zenica', 'Direkcija Zenica', 'n.mehicic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(115, 'Nedim', 'Alic', 'Strucni saradnik za planiranje i održava', 'Odjeljenje za planiranje i održavanje mjernih mjesta', 'Direkcija Zenica', 'ne.alic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(116, 'Nedim', 'Islambegovic', 'Rukovodilac službe', 'Služba za finansije i racunovodstvo', 'Direkcija Zenica', 'n.islambegovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(117, 'Nedzad', 'Osmanovic', 'Pomocnik direktora', 'Ured Direktora', 'Direkcija Zenica', 'ne.osmanovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(118, 'Nermin', 'Skenderovic', ' ', ' ', 'Direkcija Zenica', 'n.skenderovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(119, 'Nermina', 'Pesto', ' ', 'Odjeljenje obracuna i naplate elektricne energije Zenica', 'Direkcija Zenica', 'n.pesto@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(120, 'Nihad', 'Kesic', 'Referent za odnose sa javnošcu i komunik', 'Služba za odnose s javnošcu i informisanje kupaca', 'Direkcija Zenica', 'n.kesic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(121, 'Nisveta', 'Skaljo', 'Referent za upravno-administrativne posl', 'Služba za pravne i kadrovske poslove', 'Direkcija Zenica', 'n.skaljo@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(122, 'Ranko', 'Lazic', 'Elektromonter**', 'Odjeljenje obracunskih mjerenja i ocitanja (ZE)', 'Direkcija Zenica', 'r.lazic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(123, 'Rizah', 'Kos', 'Vodeci elektromonter', 'Odjeljenje za planiranje i održavanje mjernih mjesta', 'Direkcija Zenica', 'r.kos@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(124, 'Rukija', 'Huseinspahic', 'Referent za prikljucenja', 'Služba za realizaciju investicija', 'Direkcija Zenica', 'r.huseinspahic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(125, 'Sabit', 'Alic', 'Projekt menadžer', 'Sektor za investicije', 'Direkcija Zenica', 'sabit.alic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(126, 'Saliha', 'Cabro', ' ', 'Služba ugovaranja i prodaje elektricne energije', 'Direkcija Zenica', 's.cabro@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(127, 'Samir', 'Imamovic', ' ', 'Odjeljenje obracuna i naplate elektricne energije Kakanj', 'Direkcija Zenica', 'sam.imamovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(128, 'Samir', 'Kadic', 'Dispecer za srednji i niski napon*', 'Odjeljenje za dispeciranje', 'Direkcija Zenica', 'sam.kadic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(129, 'Samra', 'Buric', 'Voda smjene', 'Pogon Hidroelektrana Jablanica', 'Direkcija Zenica', 's.buric@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(130, 'Samra', 'Grahic', ' ', 'Odjeljenje obracuna i naplate elektricne energije Zenica', 'Direkcija Zenica', 's.grahic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(131, 'Samra', 'Verlasevic', 'Referent za finansije', 'Služba za finansije i racunovodstvo', 'Direkcija Zenica', 's.verlasevic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(132, 'Sanel', 'Golic', 'Vodeci automehanicar-kontrolor *', 'Služba za transport', 'Direkcija Zenica', 's.golic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(133, 'Sanja', 'Toromanovic', ' ', ' ', 'Direkcija Zenica', 's.toromanovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(134, 'Sead', 'Kratina', 'Strucni saradnik za rješavanje imovinsko', 'Odjeljenje za nova prava', 'Direkcija Zenica', 's.kratina@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(135, 'Selma', 'Becic', 'Referent za prikupljanje i obradu mjerni', 'Odjeljenje za prikupljanje i obradu mjernih podataka', 'Direkcija Zenica', 's.becic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(136, 'Senada', 'Dervisaj', 'Tehnicar za pripremu **', 'Odjeljenje za planiranje i održavanje mjernih mjesta', 'Direkcija Zenica', 's.dervisaj@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(137, 'Senada', 'Fazlic', ' ', 'Odjeljenje obracuna i naplate elektricne energije Visoko', 'Direkcija Zenica', 's.fazlic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(138, 'Senada', 'Hrvic', 'Referent opcih poslova **', 'Služba za opce poslove', 'Direkcija Zenica', 's.hrvic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(139, 'Slobodan', 'Vasiljevic', 'Vodeci elektromonter**', 'Odjeljenje upravljanja i održavanja mreža i postrojenja (ZE)', 'Direkcija Zenica', 's.vasiljevic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(140, 'Smaragda', 'Imamovic', 'Strucni saradnik za rješavanje imovinsko', 'Odjeljenje za nova prava', 'Direkcija Zenica', 'sm.imamovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(141, 'Suad', 'Jaran', 'Elektromonter**', 'Odjeljenje upravljanja i održavanja mreža i postrojenja (ZE)', 'Direkcija Zenica', 'su.jaran@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(142, 'Subhija', 'Muharemovic', 'Strucni saradnik za nabavku i ugovaranje', 'Služba za komercijalne poslove', 'Direkcija Zenica', 's.muharemovic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(143, 'Tarik', 'Cerim', 'Vodeci elektromonter', 'Odjeljenje obracunskih mjerenja i ocitanja (ZE)', 'Direkcija Zenica', 'ta.cerim@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(144, 'Vikica', 'Vujica', 'Strucni saradnik za finansijske i racuno', 'Služba za finansije i racunovodstvo', 'Direkcija Zenica', 'v.vujica@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(145, 'Zahid', 'Softic', 'Rukovodilac sektora', 'Sektor za investicije', 'Direkcija Zenica', 'z.softic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(146, 'Zlatan', 'Hadzic', 'Rukovodilac sektora', 'Sektor za pravne kadrovske i opce poslove', 'Direkcija Zenica', 'z.hadzic@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58'),
-	(147, 'Zumra', 'Okan', ' ', 'Odjeljenje obracuna i naplate elektricne energije Zenica', 'Direkcija Zenica', 'z.okan@epbih.ba', '5E2AD17212BEFA047B476FDC6E5F35450E483B6018797FFEF5C032BBDC45658D1C7CC05E4EB7782664CB65E8FDF8DCF5B848FBE6BC219863CADA1E9AC4545F58');
+INSERT INTO `user` (`user_id`, `surname`, `forname`, `fullname`, `local_number`, `telephone`, `email`, `password_hash`, `job_id`, `department_id`, `location_id`) VALUES
+	(148, 'Mudžahid', 'Cerić', 'Cerić Mudžahid', '1696', '032/449-696', 'm.ceric@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 2, 3, 2),
+	(149, 'Sabit', 'Alić', 'Alić Sabit', '1608', '032/449-608', 's.alic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 7, 5, 2),
+	(150, 'Emina', 'Hasić', 'Hasić Emina', '1613', '032/449-613', 'e.hasic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 6, 5, 2),
+	(151, 'Zahid', 'Softić', 'Softić Zahid', '1682', '032/449-682', 'z.softic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 8, 5, 2),
+	(152, 'Lejla', 'Čaršimamović', 'Čaršimamović Lejla', '1618', '032/449-618', 'l.carsimamovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 2, 2),
+	(153, 'Kenan', 'Serdarević', 'Serdarević Kenan', '1617', '032/449-617', 'k.serdarevic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 8, 11, 2),
+	(154, 'Lejla', 'Buza', 'Buza Lejla', '1651', '032/449-651', 'le.buza@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 27, 2),
+	(155, 'Damir', 'Čauš', 'Čauš Damir', '1673', '032/449-673', 'd.caus@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 28, 2);
 
 -- Dumping structure for table inventory.user_article
 CREATE TABLE IF NOT EXISTS `user_article` (
@@ -587,38 +573,44 @@ CREATE TABLE IF NOT EXISTS `user_article` (
   `article_id` int unsigned NOT NULL,
   `document_id` int unsigned NOT NULL,
   `user_id` int unsigned DEFAULT NULL,
-  `serial_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `status` enum('zaduženo','razduženo','otpisano') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'zaduženo',
+  `serial_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `status` enum('zaduženo','razduženo','otpisano') CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT 'zaduženo',
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `comment` varchar(255) DEFAULT NULL,
-  `inv_broj` varchar(50) DEFAULT NULL,
+  `comment` varchar(255) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `inv_broj` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`user_article_id`) USING BTREE,
   UNIQUE KEY `serial_number_status_timestamp` (`serial_number`,`status`,`timestamp`),
-  KEY `fk_user_article_user_id` (`user_id`),
   KEY `fk_user_article_article_id` (`article_id`),
   KEY `fk_user_article_document_id` (`document_id`),
+  KEY `fk_user_article_user_id` (`user_id`) USING BTREE,
   CONSTRAINT `fk_user_article_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON UPDATE CASCADE,
   CONSTRAINT `fk_user_article_document_id` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_user_article_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=268 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `FK_user_article_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=276 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.user_article: ~0 rows (approximately)
+-- Dumping data for table inventory.user_article: ~4 rows (approximately)
 DELETE FROM `user_article`;
 INSERT INTO `user_article` (`user_article_id`, `article_id`, `document_id`, `user_id`, `serial_number`, `status`, `timestamp`, `comment`, `inv_broj`) VALUES
-	(267, 93, 204, 1, 'ASDASD', 'zaduženo', '2022-10-23 21:11:36', 'Zaduženje nove opreme', 'ASDA4343');
+	(269, 90, 206, 148, 'KJKSZPJ', 'zaduženo', '2022-11-02 21:46:35', 'Zaduženje nove opreme', 'ZE0621548'),
+	(270, 93, 207, 148, 'HDIS63839', 'zaduženo', '2022-11-13 18:31:51', 'Zaduženje nove opreme', 'ZE0685862'),
+	(271, 95, 208, 148, 'Bsjfhkakd', 'zaduženo', '2022-11-13 18:32:47', 'Zaduženje nove opreme', 'ZE06858778'),
+	(272, 96, 208, 148, '51738FEN', 'zaduženo', '2022-11-13 23:29:22', 'Zaduženje opreme', 'ZE0621548'),
+	(273, 96, 209, 148, '51738FEN', 'razduženo', '2022-11-13 23:30:54', '', 'ZE0621548'),
+	(274, 96, 210, 152, '51738FEN', 'zaduženo', '2022-11-13 23:32:51', 'Zaduženje nove opreme', 'ZE0621548'),
+	(275, 96, 211, 152, '51738FEN', 'razduženo', '2022-11-13 23:36:20', '', 'ZE0621548');
 
 -- Dumping structure for table inventory.user_token
 CREATE TABLE IF NOT EXISTS `user_token` (
   `user_token_id` int unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int unsigned NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `token` varchar(2550) NOT NULL,
+  `token` varchar(2550) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   `expire_at` datetime NOT NULL,
   `is_valid` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`user_token_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.user_token: ~43 rows (approximately)
+-- Dumping data for table inventory.user_token: ~44 rows (approximately)
 DELETE FROM `user_token`;
 INSERT INTO `user_token` (`user_token_id`, `user_id`, `created_at`, `token`, `expire_at`, `is_valid`) VALUES
 	(4, 1, '2022-03-12 23:44:18', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxLCJpZGVudGl0eSI6Im0uY2VyaWNAZXBiaWguYmEiLCJleHAiOjE2NDk4MDcwNTguNjU2LCJpcCI6Ijo6MSIsInVhIjoiUG9zdG1hblJ1bnRpbWUvNy4yOC40IiwiaWF0IjoxNjQ3MTI4NjU4fQ.xunJeYa9nsAj7pDRMYKTSb28CdCxDxeO7F9SYu34yZk', '2022-04-12 23:44:18', 1),
@@ -663,7 +655,30 @@ INSERT INTO `user_token` (`user_token_id`, `user_id`, `created_at`, `token`, `ex
 	(43, 1, '2022-03-18 14:43:52', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxLCJpZGVudGl0eSI6Im0uY2VyaWNAZXBiaWguYmEiLCJleHAiOjE2NTAyOTMwMzIuNzQ0LCJpcCI6Ijo6MSIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzk4LjAuNDc1OC4xMDkgU2FmYXJpLzUzNy4zNiBPUFIvODQuMC40MzE2LjM2IiwiaWF0IjoxNjQ3NjE0NjMyfQ.cxiFXvqF6ccpQhUPxKyz7QYQ5TFpyco--JYzxw8qzeg', '2022-04-18 14:43:52', 1),
 	(44, 1, '2022-03-18 14:48:24', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxLCJpZGVudGl0eSI6Im0uY2VyaWNAZXBiaWguYmEiLCJleHAiOjE2NTAyOTMzMDQuNDQ3LCJpcCI6Ijo6MSIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzk4LjAuNDc1OC4xMDkgU2FmYXJpLzUzNy4zNiBPUFIvODQuMC40MzE2LjM2IiwiaWF0IjoxNjQ3NjE0OTA0fQ.7SqhUh5G8Zqv54lA2eP1C970eis6YuqWR2QQaICB4oI', '2022-04-18 14:48:24', 1),
 	(45, 7, '2022-03-31 18:00:38', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjo3LCJpZGVudGl0eSI6ImV2aWNhQGVwYmloLmJhIiwiZXhwIjoxNjUxNDI4MDM4LjY0LCJpcCI6Ijo6ZmZmZjoxOTIuMTY4LjAuMTMiLCJ1YSI6Ik1vemlsbGEvNS4wIChYMTE7IExpbnV4IHg4Nl82NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwMC4wLjQ4OTYuNjAgU2FmYXJpLzUzNy4zNiIsImlhdCI6MTY0ODc0OTYzOH0.fYz9cIe8QB-t7XqFlXQ-6VnwKuB7PKKMtADTBme-ngI', '2022-05-01 18:00:38', 1),
-	(46, 7, '2022-03-31 18:05:01', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjo3LCJpZGVudGl0eSI6ImV2aWNhQGVwYmloLmJhIiwiZXhwIjoxNjUxNDI4MzAxLjE0NCwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoWDExOyBMaW51eCB4ODZfNjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDAuMC40ODk2LjYwIFNhZmFyaS81MzcuMzYiLCJpYXQiOjE2NDg3NDk5MDF9.jO069O3c-MoCIlQ9clNPpUxSaFVPKuQP82wVRC2iQtY', '2022-05-01 18:05:01', 1);
+	(46, 7, '2022-03-31 18:05:01', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjo3LCJpZGVudGl0eSI6ImV2aWNhQGVwYmloLmJhIiwiZXhwIjoxNjUxNDI4MzAxLjE0NCwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoWDExOyBMaW51eCB4ODZfNjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDAuMC40ODk2LjYwIFNhZmFyaS81MzcuMzYiLCJpYXQiOjE2NDg3NDk5MDF9.jO069O3c-MoCIlQ9clNPpUxSaFVPKuQP82wVRC2iQtY', '2022-05-01 18:05:01', 1),
+	(47, 148, '2022-11-04 23:34:46', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MDI4MzI4Ni44NzksImlwIjoiOjpmZmZmOjE5Mi4xNjguMC4xMyIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNi4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMDYuMC4xMzcwLjQ3IiwiaWF0IjoxNjY3NjA0ODg2fQ.C76YeIGH1NQugyb3ut-ndX398pJmuuu8Mdregk5f-HM', '2022-12-05 23:34:46', 1),
+	(48, 148, '2022-11-13 21:42:04', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MTA1NDEyNC45OSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNDIiLCJpYXQiOjE2NjgzNzU3MjR9.5yCEhStxY6REsFH8e9dngRHtqIl6ONPxMNm53q6BWKU', '2022-12-14 21:42:04', 1),
+	(49, 152, '2022-11-13 21:43:01', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNTIsImlkZW50aXR5IjoibC5jYXJzaW1hbW92aWNAZXBiaWguYmEiLCJleHAiOjE2NzEwNTQxODEuODIzLCJpcCI6Ijo6ZmZmZjoxOTIuMTY4LjAuMTMiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC40MiIsImlhdCI6MTY2ODM3NTc4MX0.3lTdl2beEnuBUmhbAE11xIegCJtorwbN89voymmVhBA', '2022-12-14 21:43:01', 1),
+	(50, 148, '2022-11-13 21:51:38', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MTA1NDY5OC40NjksImlwIjoiOjpmZmZmOjE5Mi4xNjguMC4xMyIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMDcuMC4xNDE4LjQyIiwiaWF0IjoxNjY4Mzc2Mjk4fQ.mba2tTq1uIa9t0JJVWrBCJcuxV25za2KFKwHA-YDDEw', '2022-12-14 21:51:38', 1),
+	(51, 148, '2022-11-13 23:22:08', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MTA2MDEyOC4yNjUsImlwIjoiOjpmZmZmOjE5Mi4xNjguMC4xMyIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMDcuMC4xNDE4LjQyIiwiaWF0IjoxNjY4MzgxNzI4fQ.SYkGvPZYsk2jia3hB7zU9tm4rWsjyN7QYwI_KyHJNw8', '2022-12-14 23:22:08', 1);
+
+-- Dumping structure for trigger inventory.user_before_insert
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
+DELIMITER //
+CREATE TRIGGER `user_before_insert` BEFORE INSERT ON `user` FOR EACH ROW BEGIN
+SET NEW.fullname = (CONCAT(NEW.forname, ' ', NEW.surname));
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
+
+-- Dumping structure for trigger inventory.user_before_update
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
+DELIMITER //
+CREATE TRIGGER `user_before_update` BEFORE UPDATE ON `user` FOR EACH ROW BEGIN
+SET NEW.fullname = (CONCAT(NEW.forname, ' ', NEW.surname));
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

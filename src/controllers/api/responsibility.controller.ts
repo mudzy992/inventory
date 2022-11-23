@@ -20,6 +20,7 @@ import { ResponsibilityService } from 'src/services/responsibility/responsibilit
     join: {
       user: {
         eager: true,
+        exclude:['passwordHash']
       },
       article: {
         eager: true,

@@ -1,14 +1,11 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { DepartmentJob } from "./DepartmentJob";
+import { User } from "./User";
 
-@Entity("department", { schema: "inventory" })
-export class Department {
-  @PrimaryGeneratedColumn({
-    type: "int",
-    name: "department_id",
-    unsigned: true,
-  })
-  departmentId: number;
+@Entity("job", { schema: "inventory" })
+export class Job {
+  @PrimaryGeneratedColumn({ type: "int", name: "job_id", unsigned: true })
+  jobId: number;
 
   @Column("varchar", {
     name: "title",
@@ -21,12 +18,15 @@ export class Department {
   description: string | null;
 
   @Column("varchar", {
-    name: "departmend_code",
+    name: "job_code",
     length: 50,
     default: () => "'undefined'",
   })
-  departmendCode: string;
+  jobCode: string;
 
-  @OneToMany(() => DepartmentJob, (departmentJob) => departmentJob.department)
+  @OneToMany(() => DepartmentJob, (departmentJob) => departmentJob.job)
   departmentJobs: DepartmentJob[];
+
+  @OneToMany(() => User, (user) => user.job)
+  users: User[];
 }
