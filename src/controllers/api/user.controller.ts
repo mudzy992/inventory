@@ -1,6 +1,7 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
 import { AddNewEmployeDto } from 'src/dtos/user/add.new.employe.dto';
+import { EditEmployeeDto } from 'src/dtos/user/edit.employee.dto';
 import { User } from 'src/entities/User';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { UserService } from 'src/services/user/user.service';
@@ -48,6 +49,7 @@ import { UserService } from 'src/services/user/user.service';
 })
 export class UserController {
   constructor(public service: UserService) {}
+
   @Post('/add/')
   async createNewUser(
     @Body() data: AddNewEmployeDto,
@@ -61,5 +63,13 @@ export class UserController {
       );
     }
     return await this.service.createNewUser(data);
+  }
+
+  @Patch('/edit/:id')
+  async editUser(
+    @Param('id') id: number,
+    @Body() data: EditEmployeeDto,
+  ) {
+    return await this.service.editUser(id, data);
   }
 } /* Kraj koda */

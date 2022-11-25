@@ -7,7 +7,8 @@ import { UserToken } from 'src/entities/UserToken';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository } from 'typeorm';
 import * as crypto from 'crypto';
-import { DepartmentJob } from 'src/entities/DepartmentJob';
+import { EditEmployeeDto } from 'src/dtos/user/edit.employee.dto';
+/* import { DepartmentJob } from 'src/entities/DepartmentJob'; */
 
 @Injectable()
 export class UserService extends TypeOrmCrudService<User> {
@@ -16,8 +17,8 @@ export class UserService extends TypeOrmCrudService<User> {
     private readonly user: Repository<User>,
     @InjectRepository(UserToken)
     private readonly userToken: Repository<UserToken>,
-    @InjectRepository(DepartmentJob)
-    private readonly departmentJob: Repository<DepartmentJob>,
+/*     @InjectRepository(DepartmentJob)
+    private readonly departmentJob: Repository<DepartmentJob>, */
   ) {
     super(user);
   }
@@ -38,12 +39,12 @@ export class UserService extends TypeOrmCrudService<User> {
     newUser.jobId = data.jobId;
     newUser.locationId = data.locationId;
 
-    const newDepartmentJob: DepartmentJob = new DepartmentJob();
+ /*    const newDepartmentJob: DepartmentJob = new DepartmentJob();
     newDepartmentJob.departmentId = data.departmentId;
     newDepartmentJob.jobId = data.jobId;
     newDepartmentJob.locationId = data.locationId;
 
-    await this.departmentJob.save(newDepartmentJob)
+    await this.departmentJob.save(newDepartmentJob) */
 
     try {
       const savedUser = await this.user.save(newUser);
@@ -59,6 +60,30 @@ export class UserService extends TypeOrmCrudService<User> {
       );
     }
   }
+
+  async editUser(userId: number, data: EditEmployeeDto) {
+    const passwordHash = crypto.createHash('sha512');
+    passwordHash.update(data.password);
+    const passwordHashString = passwordHash.digest('hex').toUpperCase();
+
+    const existingUser = await this.user.findOne({ userId : userId })
+
+    existingUser.forname = data.forname;
+    existingUser.surname = data.surename;
+    existingUser.email = data.email;
+    existingUser.passwordHash = passwordHashString;
+    existingUser.localNumber = data.localNumber;
+    existingUser.telephone = data.telephone;
+    existingUser.jobId = data.jobId;
+    existingUser.departmentId = data.departmentId;
+    existingUser.locationId = data.locationId;
+
+    const saveEditedUser = await this.user.save(existingUser)
+    if(!saveEditedUser){
+      return new ApiResponse('error', -6002, 'User cannot be edited. Please try again later.')
+    }
+    }
+
   async getById(id) {
     return await this.user.findOne(id);
   }

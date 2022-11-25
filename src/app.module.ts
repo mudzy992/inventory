@@ -60,9 +60,11 @@ import { DepartmentJobService } from './services/departmentJob/department.job.se
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: DatabaseConfiguration.hostname,
+      port: DatabaseConfiguration.port,
       username: DatabaseConfiguration.username,
       password: DatabaseConfiguration.password,
       database: DatabaseConfiguration.database,
+      
       entities: [
         Article,
         ArticleFeature,
