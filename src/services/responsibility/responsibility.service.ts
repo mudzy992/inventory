@@ -43,7 +43,7 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     data: AddEmployeArticleDto,
   ): Promise<User | Stock | Responsibility | UserArticle | ApiResponse> {
     /* 
-    U privim tražim artikal po SB u responsibility, debt i destroy
+    U prvom tražim artikal po SB u responsibility, debt i destroy
     - Ako se artikal nalazi u responsibility i želim ga zadužiti ponovo na novog korisnika
       - Izvširiti provjeru ako je već artikal sa SB zadužen na traženog korisnika
         - Ako jeste, pronaći red u userArticle za tog korisnika

@@ -65,6 +65,9 @@ export class UserArticle {
   @Column('varchar', { name: 'inv_broj', length: 50 })
   invBroj: string;
 
+  @Column('int', { name: 'value', nullable: true})
+  value: number | null;
+
   @OneToMany(() => DebtItems, (debtItems) => debtItems.userArticle)
   debtItems: DebtItems[];
 

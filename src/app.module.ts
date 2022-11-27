@@ -54,6 +54,7 @@ import { LocationController } from './controllers/api/location.controller';
 import { LocationService } from './services/location/location.service';
 import { DepartmentJobController } from './controllers/api/department.job.controller';
 import { DepartmentJobService } from './services/departmentJob/department.job.service';
+import { ArticleTimeline } from './entities/ArticleTimeline';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { DepartmentJobService } from './services/departmentJob/department.job.se
       
       entities: [
         Article,
+        ArticleTimeline,
         ArticleFeature,
         Category,
         Destroyed,
@@ -90,6 +92,7 @@ import { DepartmentJobService } from './services/departmentJob/department.job.se
     TypeOrmModule.forFeature([
       Article,
       ArticleFeature,
+      ArticleTimeline,
       Category,
       Destroyed,
       Feature,

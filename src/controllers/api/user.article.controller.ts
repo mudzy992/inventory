@@ -55,14 +55,15 @@ export class UserArticleController {
     @Body() data: AddEmployeArticleDto,
     @Param('id') id: number,
   ) {
+    
     if (data.status === 'zaduženo') {
-      return this.responsibilityItemsService.addArticleToEmploye(id, data);
+      return this.service.addArticleToEmploye(id, data);
     }
     if (data.status === 'razduženo') {
-      return this.debtItemsService.addArticleToEmploye(id, data);
+      return this.service.debtArticleFromEmployee(id, data);
     }
-    if (data.status === 'otpisano') {
+    /* if (data.status === 'otpisano') {
       return this.destroyedItemsService.addArticleToEmploye(id, data);
-    }
+    } */
   }
 }
