@@ -30,7 +30,7 @@ export class ArticleFeature {
   @Column('varchar', { name: 'value', length: 255 })
   value: string;
 
-  @ManyToOne(() => Article, (article) => article.articleFeatures, {
+  @ManyToOne(() => Article, (article) => article.articleFeature, {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',
   })

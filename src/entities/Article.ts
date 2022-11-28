@@ -57,7 +57,7 @@ export class Article {
   category: Category;
 
   @OneToMany(() => ArticleFeature, (articleFeature) => articleFeature.article)
-  articleFeatures: ArticleFeature[];
+  articleFeature: ArticleFeature[];
 
   @OneToMany(
     () => ArticleTimeline,
