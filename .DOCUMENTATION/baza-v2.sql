@@ -1,7 +1,7 @@
 -- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               8.0.30 - MySQL Community Server - GPL
--- Server OS:                    Win64
+-- Host:                         containers-us-west-38.railway.app
+-- Server version:               8.0.31 - MySQL Community Server - GPL
+-- Server OS:                    Linux
 -- HeidiSQL Version:             12.1.0.6537
 -- --------------------------------------------------------
 
@@ -15,11 +15,11 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
--- Dumping database structure for inventory
-CREATE DATABASE IF NOT EXISTS `inventory` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `inventory`;
+-- Dumping database structure for railway
+CREATE DATABASE IF NOT EXISTS `railway` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `railway`;
 
--- Dumping structure for table inventory.administrator
+-- Dumping structure for table railway.administrator
 CREATE TABLE IF NOT EXISTS `administrator` (
   `administrator_id` int unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
@@ -28,23 +28,23 @@ CREATE TABLE IF NOT EXISTS `administrator` (
   UNIQUE KEY `administrator_username` (`username`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.administrator: ~0 rows (approximately)
+-- Dumping data for table railway.administrator: ~0 rows (approximately)
 DELETE FROM `administrator`;
 INSERT INTO `administrator` (`administrator_id`, `username`, `password_hash`) VALUES
 	(1, 'admin', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE');
 
--- Dumping structure for table inventory.administrator_token
+-- Dumping structure for table railway.administrator_token
 CREATE TABLE IF NOT EXISTS `administrator_token` (
   `administrator_token_id` int unsigned NOT NULL AUTO_INCREMENT,
   `administrator_id` int unsigned NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `token` varchar(2550) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `token` varchar(2550) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   `expire_at` datetime NOT NULL,
   `is_valid` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`administrator_token_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.administrator_token: ~44 rows (approximately)
+-- Dumping data for table railway.administrator_token: ~95 rows (approximately)
 DELETE FROM `administrator_token`;
 INSERT INTO `administrator_token` (`administrator_token_id`, `administrator_id`, `created_at`, `token`, `expire_at`, `is_valid`) VALUES
 	(2, 1, '2022-03-18 14:07:16', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjUwMjkwODM2LjA5OCwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS85OC4wLjQ3NTguMTA5IFNhZmFyaS81MzcuMzYgT1BSLzg0LjAuNDMxNi4zNiIsImlhdCI6MTY0NzYxMjQzNn0.wVS1NEISf6X2n2HZqgmwu095Kupd6hsrximwyrGEV4o', '2022-04-18 14:07:16', 1),
@@ -98,10 +98,56 @@ INSERT INTO `administrator_token` (`administrator_token_id`, `administrator_id`,
 	(54, 1, '2022-11-13 17:39:39', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxMDM5NTc5LjkwMywiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjI5IiwidWEiOiJNb3ppbGxhLzUuMCAoTGludXg7IEFuZHJvaWQgMTI7IDIxMDgxMTExUkcpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgTW9iaWxlIFNhZmFyaS81MzcuMzYiLCJpYXQiOjE2NjgzNjExNzl9.nRKl-Jpe25kn99YiyCWdVxouPna6IFBhmM9x4lIzNr0', '2022-12-14 17:39:39', 1),
 	(55, 1, '2022-11-13 17:40:11', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxMDM5NjExLjAwMSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNDIiLCJpYXQiOjE2NjgzNjEyMTF9.D9qC-S12ZabZcppYiNOd68Ss38StxGFpZ4ZEVRTHBAQ', '2022-12-14 17:40:11', 1),
 	(56, 1, '2022-11-15 23:09:35', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxMjMyMTc1Ljk4NiwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNDIiLCJpYXQiOjE2Njg1NTM3NzV9.MAPHJNd8yGIGgdzBpCQ8T7J228fncoAiIoJam2wD-U8', '2022-12-16 23:09:35', 1),
-	(57, 1, '2022-11-26 21:51:53', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyMTc3OTEzLjA2NSwiaXAiOiI6OjEiLCJ1YSI6IlBvc3RtYW5SdW50aW1lLzcuMjkuMiIsImlhdCI6MTY2OTQ5OTUxM30.4UlbDdwWfOI58h7KNQVRGE9-B1rWXe7p4K8EqeYeVos', '2022-12-27 21:51:53', 1),
-	(58, 1, '2022-11-27 00:29:17', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyMTg3MzU3LjU3NCwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNTIiLCJpYXQiOjE2Njk1MDg5NTd9.vgYnHDC7NIS_wDcuHiirn2jMwkuWzkMU_BB3iB0ew_U', '2022-12-28 00:29:17', 1);
+	(57, 1, '2022-11-20 22:04:13', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjU5OTQ1LjM5MSwiaXAiOiI6OjEiLCJ1YSI6IlBvc3RtYW5SdW50aW1lLzcuMjkuMiIsImlhdCI6MTY2ODk4MTU0NX0.fUXu8wWg5GhAfNwSkiy3WncAjclQNJZPkM3bg2o072A', '2022-12-21 21:59:05', 1),
+	(58, 1, '2022-11-20 22:04:22', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjU5OTU1Ljk2MiwiaXAiOiI6OmZmZmY6MTAuMS4xLjk1IiwidWEiOiJQb3N0bWFuUnVudGltZS83LjI5LjIiLCJpYXQiOjE2Njg5ODE1NTV9.cShNYLle2t6tzepBwWE6L2B0r1Ypvr9LiIbrdfJEESA', '2022-12-21 21:59:15', 1),
+	(59, 1, '2022-11-20 22:05:30', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjYwMDI0LjE5MSwiaXAiOiI6OmZmZmY6MTAuMS4xNC40NiIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMDcuMC4xNDE4LjQyIiwiaWF0IjoxNjY4OTgxNjI0fQ.X6qXUFrbK9elD8gXF-g_ajr8gC2-Nb9k0KuiNteEefs', '2022-12-21 22:00:24', 1),
+	(60, 1, '2022-11-20 22:07:30', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjYwMTQ0LjAzNywiaXAiOiI6OmZmZmY6MTAuMS44NS4yMzciLCJ1YSI6IlBvc3RtYW5SdW50aW1lLzcuMjkuMiIsImlhdCI6MTY2ODk4MTc0NH0.hMkW2ibGNEPOE06XaeVIcym5GuX6NstJhs4E7S80EiU', '2022-12-21 22:02:24', 1),
+	(61, 1, '2022-11-20 22:09:09', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjYwMjQyLjkyOSwiaXAiOiI6OmZmZmY6MTAuMS42MC4zMCIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMDcuMC4xNDE4LjQyIiwiaWF0IjoxNjY4OTgxODQyfQ.5lHLlWU2QEAQm6D4x-scFziLIUfbHM_nihW8eVJFRu0', '2022-12-21 22:04:02', 1),
+	(62, 1, '2022-11-20 22:10:51', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjYwMzQ0LjkyMSwiaXAiOiI6OmZmZmY6MTAuMS41LjYiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC40MiIsImlhdCI6MTY2ODk4MTk0NH0.r8Vvw4ZueVjhTrfvUVOM5pg_18FZNIzVKxV-hLCv6Kw', '2022-12-21 22:05:44', 1),
+	(63, 1, '2022-11-20 22:13:49', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjYwNTIyLjQ2OSwiaXAiOiI6OmZmZmY6MTAuMS42MC42NSIsInVhIjoiTW96aWxsYS81LjAgKExpbnV4OyBBbmRyb2lkIDEyOyAyMTA4MTExMVJHIEJ1aWxkL1NQMUEuMjEwODEyLjAxNikgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjUzMDQuMTA1IE1vYmlsZSBTYWZhcmkvNTM3LjM2IE9QWC8xLjciLCJpYXQiOjE2Njg5ODIxMjJ9.0HG46oZ29chseb1JYH7_8UXbZum2DQzIwNcmuz_gRyw', '2022-12-21 22:08:42', 1),
+	(64, 1, '2022-11-20 22:15:49', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjYwNjQyLjkwNCwiaXAiOiI6OmZmZmY6MTAuMS4zLjI0NSIsInVhIjoiTW96aWxsYS81LjAgKExpbnV4OyBBbmRyb2lkIDEyOyAyMTA4MTExMVJHIEJ1aWxkL1NQMUEuMjEwODEyLjAxNikgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjUzMDQuMTA1IE1vYmlsZSBTYWZhcmkvNTM3LjM2IE9QWC8xLjciLCJpYXQiOjE2Njg5ODIyNDJ9.YmAwviqLOsqQmbTb-HBPkc-KHLevwo4jL05RxMOyHKc', '2022-12-21 22:10:42', 1),
+	(65, 1, '2022-11-20 22:21:47', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjYxMDAxLjIwOSwiaXAiOiI6OmZmZmY6MTAuMS4xMy4xNDEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC40MiIsImlhdCI6MTY2ODk4MjYwMX0.q1oRfR9EOaLm8E9Zlz67QFSX_lsX8dbieWN478Izm-U', '2022-12-21 22:16:41', 1),
+	(66, 1, '2022-11-20 22:32:29', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjYxNjQyLjg3OSwiaXAiOiI6OmZmZmY6MTAuMS44NS4yMzciLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC40MiIsImlhdCI6MTY2ODk4MzI0Mn0.f9xLZ4LtSiZeWqpiz_MXIuZelDdeWrXiqbf18DPziHM', '2022-12-21 22:27:22', 1),
+	(67, 1, '2022-11-20 22:33:38', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjYxNzExLjgzNiwiaXAiOiI6OmZmZmY6MTAuMS44NS4yMzciLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC40MiIsImlhdCI6MTY2ODk4MzMxMX0.XyXdZxMXlXEyI1bqruXMBpcHjTLe972LmyQzaZTDsDo', '2022-12-21 22:28:31', 1),
+	(68, 1, '2022-11-20 22:34:49', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjYxNzgzLjM3MSwiaXAiOiI6OmZmZmY6MTAuMS4zMS4xNjIiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC40MiIsImlhdCI6MTY2ODk4MzM4M30.KYqrQs-qbjDQOOUOri6MrFTE1Nn0rAehVmrjGqhqlsc', '2022-12-21 22:29:43', 1),
+	(69, 1, '2022-11-20 22:36:33', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjYxODg3LjIwNywiaXAiOiI6OmZmZmY6MTAuMS44OC4yNTUiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC40MiIsImlhdCI6MTY2ODk4MzQ4N30.5Xdz1WtYFH6RnhQcC371XXtXG0pS5FKju-pL781G8fY', '2022-12-21 22:31:27', 1),
+	(70, 1, '2022-11-20 22:46:42', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjYyNDk2LjA1LCJpcCI6Ijo6ZmZmZjoxMC4xLjE2LjEyMSIsInVhIjoiUG9zdG1hblJ1bnRpbWUvNy4yOS4yIiwiaWF0IjoxNjY4OTg0MDk2fQ.ALMw8_lQTKg7kgBGMC_vHQGRihdm-UxX_emEAnVfgaA', '2022-12-21 22:41:36', 1),
+	(71, 1, '2022-11-20 22:48:35', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjYyNjA4LjYwNiwiaXAiOiI6OmZmZmY6MTAuMS45NC4xMDAiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC40MiIsImlhdCI6MTY2ODk4NDIwOH0.NZP7B9nB3o0gntHzU9-hdSscmhjM4-20hmGwulpxVpE', '2022-12-21 22:43:28', 1),
+	(72, 1, '2022-11-20 22:51:06', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjYyNzYwLjE1MywiaXAiOiI6OmZmZmY6MTAuMS42Mi4yNCIsInVhIjoiTW96aWxsYS81LjAgKExpbnV4OyBBbmRyb2lkIDEyOyAyMTA4MTExMVJHIEJ1aWxkL1NQMUEuMjEwODEyLjAxNikgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjUzMDQuMTA1IE1vYmlsZSBTYWZhcmkvNTM3LjM2IE9QWC8xLjciLCJpYXQiOjE2Njg5ODQzNjB9.0roP2tqPACS7d00h5Dnedmc8_Dja0_E69WbUrn8mEDo', '2022-12-21 22:46:00', 1),
+	(73, 1, '2022-11-20 23:27:14', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjY0OTI3LjYyOCwiaXAiOiI6OmZmZmY6MTAuMS4yMi4xODYiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC40MiIsImlhdCI6MTY2ODk4NjUyN30.M1aqKx1YdUkkE1SdKkn7COY78Rd-EMrFTEw1YbcgQ80', '2022-12-21 23:22:07', 1),
+	(74, 1, '2022-11-20 23:33:09', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjY1MjgxLjc0NCwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNDIiLCJpYXQiOjE2Njg5ODY4ODF9.ECQ8xJU4XpNt5Cjo4-MqKy5zJ_g9qxlf7NWqBDxrm5M', '2022-12-21 23:28:01', 1),
+	(75, 1, '2022-11-20 23:43:25', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjY1ODk4LjczNCwiaXAiOiI6OmZmZmY6MTAuMS40OC4xMjIiLCJ1YSI6Ik1vemlsbGEvNS4wIChMaW51eDsgQW5kcm9pZCAxMjsgMjEwODExMTFSRyBCdWlsZC9TUDFBLjIxMDgxMi4wMTYpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC41MzA0LjEwNSBNb2JpbGUgU2FmYXJpLzUzNy4zNiBPUFgvMS43IiwiaWF0IjoxNjY4OTg3NDk4fQ.NWmoNiG6YRL-pykLHfgz2rpmEB7gE2noBEDcAhydBzc', '2022-12-21 23:38:18', 1),
+	(76, 1, '2022-11-20 23:45:11', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNjY2MDA0LjczOCwiaXAiOiI6OmZmZmY6MTAuMS4xOS41MSIsInVhIjoiTW96aWxsYS81LjAgKExpbnV4OyBBbmRyb2lkIDEyOyAyMTA4MTExMVJHKSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIE1vYmlsZSBTYWZhcmkvNTM3LjM2IiwiaWF0IjoxNjY4OTg3NjA0fQ.0ZPsr7rTxLimJdfX_tcGXXnadqv2jTQytJtzuJsrpjI', '2022-12-21 23:40:04', 1),
+	(77, 1, '2022-11-21 17:01:40', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNzI4MTkzLjU3MSwiaXAiOiI6OmZmZmY6MTAuMS40OC4xMjIiLCJ1YSI6Ik1vemlsbGEvNS4wIChMaW51eDsgQW5kcm9pZCAxMjsgMjEwODExMTFSRyBCdWlsZC9TUDFBLjIxMDgxMi4wMTYpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC41MzA0LjEwNSBNb2JpbGUgU2FmYXJpLzUzNy4zNiBPUFgvMS43IiwiaWF0IjoxNjY5MDQ5NzkzfQ.-X47fVeSq6p7luKmWSU9Y4EcoUO-K8z-JXZ7OTPCtxw', '2022-12-22 16:56:33', 1),
+	(78, 1, '2022-11-21 17:14:34', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNzI4OTY4LjIxMSwiaXAiOiI6OmZmZmY6MTAuMS40OC4xMjIiLCJ1YSI6Ik1vemlsbGEvNS4wIChMaW51eDsgQW5kcm9pZCAxMjsgMjEwODExMTFSRyBCdWlsZC9TUDFBLjIxMDgxMi4wMTYpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC41MzA0LjEwNSBNb2JpbGUgU2FmYXJpLzUzNy4zNiBPUFgvMS43IiwiaWF0IjoxNjY5MDUwNTY4fQ.-epFb1IViqiuCl-lGsiHB7dWeHMsB6IIZ-EUhYmMa0U', '2022-12-22 17:09:28', 1),
+	(79, 1, '2022-11-21 19:28:28', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNzM3MDAyLjQ5MiwiaXAiOiI6OmZmZmY6MTAuMS4zNS4xOTciLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC40MiIsImlhdCI6MTY2OTA1ODYwMn0.PypzUl0W7lRU6I9_h4DXscnwlZHsUufklFwu0RtWR0g', '2022-12-22 19:23:22', 1),
+	(80, 1, '2022-11-21 19:31:48', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNzM3MjAxLjgwMywiaXAiOiI6OmZmZmY6MTAuMS40NS4xOCIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMDcuMC4xNDE4LjQyIiwiaWF0IjoxNjY5MDU4ODAxfQ.hWAetEr0bOPMLdgRDVm2mzGCr2wyXDI4tTQQOKEJgJE', '2022-12-22 19:26:41', 1),
+	(81, 1, '2022-11-21 19:34:16', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNzM3MzQ5LjU5MSwiaXAiOiI6OmZmZmY6MTAuMS4zOC4xODQiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC40MiIsImlhdCI6MTY2OTA1ODk0OX0.EiQAEzAruoI_WejrpzB5wAtcFXDHebks9tPbwTPxrIY', '2022-12-22 19:29:09', 1),
+	(82, 1, '2022-11-21 21:07:31', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxNzQyOTQ1LjEwMSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNDIiLCJpYXQiOjE2NjkwNjQ1NDV9.QkN0t9rUMRjkiM5r9CUdbSB8jTjwKTOs9dkdhx5uui8', '2022-12-22 21:02:25', 1),
+	(83, 1, '2022-11-22 22:12:03', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxODMzMjE2LjUxMSwiaXAiOiI6OmZmZmY6MTAuMS44Ny4xMjIiLCJ1YSI6IlBvc3RtYW5SdW50aW1lLzcuMjkuMiIsImlhdCI6MTY2OTE1NDgxNn0.kEyEd6h2cstfxY7x_hyh39hOAV7GYIzae1FAKUVJioQ', '2022-12-23 22:06:56', 1),
+	(84, 1, '2022-11-22 22:16:28', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxODMzNDgxLjQyMywiaXAiOiI6OmZmZmY6MTAuMTAuMTAuNyIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMDcuMC4xNDE4LjUyIiwiaWF0IjoxNjY5MTU1MDgxfQ.PGqVhZO4SJ_TWijGVuyA7Gr4Az7Z5NoxhAKz7VdEkIU', '2022-12-23 22:11:21', 1),
+	(85, 1, '2022-11-22 22:16:47', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxODMzNTAwLjg5NiwiaXAiOiI6OmZmZmY6MTAuMTAuMTAuMTQiLCJ1YSI6Ik1vemlsbGEvNS4wIChMaW51eDsgQW5kcm9pZCAxMjsgMjEwODExMTFSRyBCdWlsZC9TUDFBLjIxMDgxMi4wMTYpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC41MzA0LjEwNSBNb2JpbGUgU2FmYXJpLzUzNy4zNiBPUFgvMS43IiwiaWF0IjoxNjY5MTU1MTAwfQ.g2yZzLu-ZcoCUZ90dm9e5EBRDg1oyi7pQsqpnR7G-3E', '2022-12-23 22:11:40', 1),
+	(86, 1, '2022-11-22 22:42:06', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxODM1MDE5Ljk0MiwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6IlBvc3RtYW5SdW50aW1lLzcuMjkuMiIsImlhdCI6MTY2OTE1NjYxOX0.ElNia1coJ93NtEsj_0mM3lR_jN7CZGLdcwBVNL_486Q', '2022-12-23 22:36:59', 1),
+	(87, 1, '2022-11-22 22:50:22', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxODM1NTE1LjYzNywiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChMaW51eDsgQW5kcm9pZCAxMjsgMjEwODExMTFSRyBCdWlsZC9TUDFBLjIxMDgxMi4wMTYpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC41MzA0LjEwNSBNb2JpbGUgU2FmYXJpLzUzNy4zNiBPUFgvMS43IiwiaWF0IjoxNjY5MTU3MTE1fQ.6--4-I_KXwXp-8WUum9WHwBEeM4xn33rYg7Pn5vHDpE', '2022-12-23 22:45:15', 1),
+	(88, 1, '2022-11-23 06:54:09', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxODY0NTQyLjk0NywiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC40MiIsImlhdCI6MTY2OTE4NjE0Mn0.ZrkYdurfeaLgYVkWaHZG6emgSRhcxlPEVaHhZ4d3k9w', '2022-12-24 06:49:02', 1),
+	(89, 1, '2022-11-23 19:45:52', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxOTEwODQ1LjY5NywiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChMaW51eDsgQW5kcm9pZCAxMjsgMjEwODExMTFSRyBCdWlsZC9TUDFBLjIxMDgxMi4wMTYpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC41MzA0LjEwNSBNb2JpbGUgU2FmYXJpLzUzNy4zNiBPUFgvMS43IiwiaWF0IjoxNjY5MjMyNDQ1fQ.TMusnUetPM-ts8Rh8OrZIZf6U2NoZCIclnUaedZHr1A', '2022-12-24 19:40:45', 1),
+	(90, 1, '2022-11-23 21:21:25', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcxOTE2NTc4LjczLCJpcCI6IjEyNy4wLjAuMSIsInVhIjoiTW96aWxsYS81LjAgKExpbnV4OyBVOyBBbmRyb2lkIDEyOyBoci1ocjsgWGlhb21pIDEyIEJ1aWxkL1NLUTEuMjExMDA2LjAwMSkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgVmVyc2lvbi80LjAgQ2hyb21lLzEwMC4wLjQ4OTYuMTI3IE1vYmlsZSBTYWZhcmkvNTM3LjM2IFhpYW9NaS9NaXVpQnJvd3Nlci8xMy42LjAuMy1nbiIsImlhdCI6MTY2OTIzODE3OH0.4fJE3GMGIIufs5MVJNvowsUHPl6Jzu-5hcRl3ZgKpr4', '2022-12-24 21:16:18', 1),
+	(91, 1, '2022-11-25 15:53:54', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyMDcwMDM0LjExNSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNTIiLCJpYXQiOjE2NjkzOTE2MzR9.Otaf8eRzyH4gW5xy8P6H-9wJb9G6lhg-l5c-mYsXhGk', '2022-12-26 15:53:54', 1),
+	(92, 1, '2022-11-25 19:03:15', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyMDgxMzk1LjIyNywiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNTIiLCJpYXQiOjE2Njk0MDI5OTV9.3pod31RkPRUmLi8DqJJfLn9BVaGKp-bMBPR_k_dt3cQ', '2022-12-26 19:03:15', 1),
+	(93, 1, '2022-11-25 20:02:49', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyMDg0OTY5LjY4NCwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChMaW51eDsgQW5kcm9pZCAxMjsgMjEwODExMTFSRyBCdWlsZC9TUDFBLjIxMDgxMi4wMTYpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC41MzA0LjEwNSBNb2JpbGUgU2FmYXJpLzUzNy4zNiBPUFgvMS43IiwiaWF0IjoxNjY5NDA2NTY5fQ.qr8E_GFVKMNRujWM8NXLcT7Qu6g4ERTMBjOSHLwsFhY', '2022-12-26 20:02:49', 1),
+	(94, 1, '2022-11-25 20:12:05', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyMDg1NTI1LjI4LCJpcCI6IjEyNy4wLjAuMSIsInVhIjoiTW96aWxsYS81LjAgKExpbnV4OyBBbmRyb2lkIDEyOyAyMTA4MTExMVJHKSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIE1vYmlsZSBTYWZhcmkvNTM3LjM2IiwiaWF0IjoxNjY5NDA3MTI1fQ.l6PStNzUdwh0SPTjcI6lmx0JP-APjkUlfSA9SgAH2uo', '2022-12-26 20:12:05', 1),
+	(95, 1, '2022-11-25 23:17:41', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyMDk2NjYwLjkzNywiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC41MiIsImlhdCI6MTY2OTQxODI2MH0.9WJLsWMORn-pHRSFDXg0e3tT1321Pyhyiw8P1Gmr0Wc', '2022-12-26 23:17:40', 1),
+	(96, 1, '2022-11-25 23:19:39', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyMDk2Nzc5Ljc0LCJpcCI6IjEyNy4wLjAuMSIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMDcuMC4xNDE4LjUyIiwiaWF0IjoxNjY5NDE4Mzc5fQ.tnVpJKGBHwrjG1QlqFLu393VKTz23o1ut-v6UBlA1tc', '2022-12-26 23:19:39', 1),
+	(97, 1, '2022-11-26 09:15:12', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyMTMyNTEyLjAwNCwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChMaW51eDsgQW5kcm9pZCAxMjsgMjEwODExMTFSRyBCdWlsZC9TUDFBLjIxMDgxMi4wMTYpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC41MzA0LjE0MSBNb2JpbGUgU2FmYXJpLzUzNy4zNiBPUFgvMS43IiwiaWF0IjoxNjY5NDU0MTEyfQ.3aiKUy2E6mmI_koQ_nLusy-kw2bkbgVkllp3fJJtY50', '2022-12-27 09:15:12', 1),
+	(98, 1, '2022-11-26 15:19:25', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyMTU0MzY1Ljg1NiwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC41MiIsImlhdCI6MTY2OTQ3NTk2NX0.giec6x0BuU7rSw0u7w0fjBKmGP8qMMbkg4AgLZ6_vdY', '2022-12-27 15:19:25', 1),
+	(99, 1, '2022-11-26 15:37:37', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyMTU1NDU3LjA3OSwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC41MiIsImlhdCI6MTY2OTQ3NzA1N30.VI_rmYO4fJiDGZXQnIzHkAzgrsBKqgN_4z0nkxpFYPs', '2022-12-27 15:37:37', 1),
+	(100, 1, '2022-11-29 07:26:33', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyMzg1MTkzLjgzMywiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC41NiIsImlhdCI6MTY2OTcwNjc5M30.JH0BOYCpLM0-93ixSiGMLbO2VWR4bdGUzRyaC-X3WaE', '2022-12-30 07:26:33', 1),
+	(101, 1, '2022-11-29 07:26:34', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyMzg1MTk0LjEzLCJpcCI6IjEyNy4wLjAuMSIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMDcuMC4xNDE4LjU2IiwiaWF0IjoxNjY5NzA2Nzk0fQ.nHdRoMU6_nXNTvJluXmA2rXAtXOAJFc_R7CQinKxy5A', '2022-12-30 07:26:34', 1),
+	(102, 1, '2022-11-29 16:15:39', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNDE2OTM2LjEzMSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNTIiLCJpYXQiOjE2Njk3Mzg1MzZ9.wkudmIvS0DF-RZX_D7xUgq7ITK3FwOHRSOZy9XOq_7Y', '2022-12-30 16:15:36', 1),
+	(103, 1, '2022-11-29 16:37:55', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNDE4MjcyLjE1MSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNTIiLCJpYXQiOjE2Njk3Mzk4NzJ9.0UY6w1Mk97NS_qqZQHAwN5erApE_66TT4Oxc8_XNy9o', '2022-12-30 16:37:52', 1),
+	(104, 1, '2022-11-30 06:50:51', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNDY5NDUxLjIwOSwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC41NiIsImlhdCI6MTY2OTc5MTA1MX0.M_lZE-3hBVB7Pkb8S9Ne7qpzJb5bPX7k1MuYhed9X_w', '2022-12-31 06:50:51', 1);
 
--- Dumping structure for table inventory.article
+-- Dumping structure for table railway.article
 CREATE TABLE IF NOT EXISTS `article` (
   `article_id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
@@ -116,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `article` (
   CONSTRAINT `fk_article_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.article: ~11 rows (approximately)
+-- Dumping data for table railway.article: ~12 rows (approximately)
 DELETE FROM `article`;
 INSERT INTO `article` (`article_id`, `name`, `excerpt`, `description`, `concract`, `category_id`, `comment`, `sap_number`) VALUES
 	(83, 'ACME SSD HD11 1TB', 'Kratki opis 1', 'Detaljan opis', 'EPU-25154/2022', 8, '', '1300-200200'),
@@ -129,9 +175,10 @@ INSERT INTO `article` (`article_id`, `name`, `excerpt`, `description`, `concract
 	(95, 'HP Compaq dc7900 Small Form Factor', 'HP Compaq dc7900 poslovno računalo', 'Energetski učinkovite tehnologije, vodeća rješenja za upravljanje na daljinu i tri fleksibilna faktora oblika dizajnirana da odgovaraju vašim specifičnim poslovnim potrebama -- HP Compaq dc7900 PC stabilna je platforma koja smanjuje troškove posjedovanja.', '0', 9, NULL, '0'),
 	(96, 'ThinkCentre M83 SFF Pro Desktop', 'The new small form factor (SFF) pro design features the compactness of the SFF with the expansion ability of a tower. The SFF desktops weigh in at 16.5 lbs / 7.8 kg and support both horizontal and vertical orientations.', 'The new small form factor (SFF) pro design features the compactness of the SFF with the expansion ability of a tower. The SFF desktops weigh in at 16.5 lbs / 7.8 kg and support both horizontal and vertical orientations.', 'EZE-254584/2022', 9, 'Komentare će trebati ukinuti', '1300-005254'),
 	(97, 'ThinkCentre M92/M92p Tiny, Small, Tower', 'This Tiny desktop packs a powerful enterprise performance and Intel Pro manageability into an ultra-compact form factor thats energy-efficient and easy to manage.', 'This Tiny desktop packs a powerful enterprise performance and Intel Pro manageability into an ultra-compact form factor thats energy-efficient and easy to manage.', 'EZE-58479/2022', 9, 'Komentare brišemo', '1300-005248'),
-	(98, 'ASUS VW199T-P 19"', '19 inča monitor', '19 inča monitor kocka', 'ABA-162819-272/2022', 10, 'Komentare brisemo', '1300-183994');
+	(98, 'ASUS VW199T-P 19"', '19 inča monitor', '19 inča monitor kocka', 'ABA-162819-272/2022', 10, 'Komentare brisemo', '1300-183994'),
+	(103, 'Računar Dell OptiPlex 3090 SFF', '', '', '639294 ne znam', 9, NULL, '');
 
--- Dumping structure for table inventory.article_feature
+-- Dumping structure for table railway.article_feature
 CREATE TABLE IF NOT EXISTS `article_feature` (
   `article_feature_id` int unsigned NOT NULL AUTO_INCREMENT,
   `article_id` int unsigned NOT NULL DEFAULT '0',
@@ -144,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `article_feature` (
   CONSTRAINT `fk_article_feature_feature_id` FOREIGN KEY (`feature_id`) REFERENCES `feature` (`feature_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.article_feature: ~49 rows (approximately)
+-- Dumping data for table railway.article_feature: ~53 rows (approximately)
 DELETE FROM `article_feature`;
 INSERT INTO `article_feature` (`article_feature_id`, `article_id`, `feature_id`, `value`) VALUES
 	(54, 83, 8, '1TB'),
@@ -192,12 +239,16 @@ INSERT INTO `article_feature` (`article_feature_id`, `article_id`, `feature_id`,
 	(384, 97, 14, '500GB'),
 	(385, 97, 13, '4GB'),
 	(386, 97, 10, 'SFF'),
-	(392, 90, 11, 'Intel I7 7000'),
-	(393, 90, 14, '1TB HDD'),
-	(394, 90, 13, '16GB'),
-	(395, 90, 10, 'SFF radna stanica');
+	(401, 90, 11, 'Intel I7 7000'),
+	(402, 90, 14, '1TB HDD'),
+	(403, 90, 13, '16GB'),
+	(404, 90, 10, 'SFF radna stanica'),
+	(405, 103, 11, 'I5 10500'),
+	(406, 103, 14, '256GB SSD'),
+	(407, 103, 13, '8GB'),
+	(408, 103, 10, 'SFF');
 
--- Dumping structure for table inventory.article_timeline
+-- Dumping structure for table railway.article_timeline
 CREATE TABLE IF NOT EXISTS `article_timeline` (
   `article_timeline_id` int unsigned NOT NULL AUTO_INCREMENT,
   `article_id` int unsigned NOT NULL,
@@ -218,100 +269,14 @@ CREATE TABLE IF NOT EXISTS `article_timeline` (
   CONSTRAINT `fk_article_timeline_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table inventory.article_timeline: ~89 rows (approximately)
+-- Dumping data for table railway.article_timeline: ~3 rows (approximately)
 DELETE FROM `article_timeline`;
 INSERT INTO `article_timeline` (`article_timeline_id`, `article_id`, `user_id`, `document_id`, `serial_number`, `status`, `timestamp`, `inv_broj`, `comment`) VALUES
 	(61, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-26 23:44:35', 'ZE065848232', ''),
 	(63, 84, 152, 204, 'TESTNEW', 'zaduženo', '2022-11-26 23:50:30', 'ZE065848232', ''),
-	(64, 84, 152, 204, 'TESTNEW', 'razduženo', '2022-11-26 23:51:09', 'ZE065848232', ''),
-	(65, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-26 23:51:56', 'ZE065848232', ''),
-	(66, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-26 23:55:45', 'ZE065848232', ''),
-	(67, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-26 23:56:31', 'ZE065848232', ''),
-	(68, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-26 23:57:30', 'ZE065848232', ''),
-	(69, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-26 23:59:02', 'ZE065848232', ''),
-	(70, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-26 23:59:23', 'ZE065848232', ''),
-	(71, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 00:10:34', 'ZE065848232', ''),
-	(72, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-27 00:12:48', 'ZE065848232', ''),
-	(73, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 00:13:03', 'ZE065848232', ''),
-	(74, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-27 00:13:18', 'ZE065848232', ''),
-	(75, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 00:13:47', 'ZE065848232', ''),
-	(76, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-27 00:14:03', 'ZE065848232', ''),
-	(77, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 00:14:46', 'ZE065848232', ''),
-	(78, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-27 00:15:00', 'ZE065848232', ''),
-	(79, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 00:19:56', 'ZE065848232', ''),
-	(80, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-27 00:20:10', 'ZE065848232', ''),
-	(81, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 00:22:31', 'ZE065848232', ''),
-	(82, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-27 00:22:44', 'ZE065848232', ''),
-	(83, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 00:23:56', 'ZE065848232', ''),
-	(84, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-27 00:24:08', 'ZE065848232', ''),
-	(85, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:11:54', 'ZE065848232', ''),
-	(86, 84, 152, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:12:41', 'ZE065848232', ''),
-	(87, 84, 152, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:13:05', 'ZE065848232', ''),
-	(88, 84, 152, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:13:15', 'ZE065848232', ''),
-	(89, 84, 152, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:13:22', 'ZE065848232', ''),
-	(90, 84, 152, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:14:43', 'ZE065848232', ''),
-	(91, 84, 152, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:15:35', 'ZE065848232', ''),
-	(92, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:15:35', 'ZE065848232', ''),
-	(93, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:16:58', 'ZE065848232', ''),
-	(94, 84, 152, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:16:58', 'ZE065848232', ''),
-	(95, 84, 152, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:18:48', 'ZE065848232', ''),
-	(96, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:18:48', 'ZE065848232', ''),
-	(97, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:19:11', 'ZE065848232', ''),
-	(98, 84, 152, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:19:11', 'ZE065848232', ''),
-	(99, 84, 152, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:19:29', 'ZE065848232', ''),
-	(100, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:19:29', 'ZE065848232', ''),
-	(101, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:21:03', 'ZE065848232', ''),
-	(102, 84, 152, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:21:04', 'ZE065848232', ''),
-	(103, 84, 152, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:22:44', 'ZE065848232', ''),
-	(104, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:22:44', 'ZE065848232', ''),
-	(105, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:22:56', 'ZE065848232', ''),
-	(106, 84, 152, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:22:56', 'ZE065848232', ''),
-	(107, 84, 152, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:23:16', 'ZE065848232', ''),
-	(108, 84, 152, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:23:54', 'ZE065848232', ''),
-	(109, 84, 152, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:24:05', 'ZE065848232', ''),
-	(110, 84, 152, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:26:07', 'ZE065848232', ''),
-	(111, 84, 152, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:26:20', 'ZE065848232', ''),
-	(112, 84, 152, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:27:01', 'ZE065848232', ''),
-	(113, 84, 152, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:27:12', 'ZE065848232', ''),
-	(114, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:27:12', 'ZE065848232', ''),
-	(115, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:27:32', 'ZE065848232', ''),
-	(116, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:28:54', 'ZE065848232', ''),
-	(117, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:29:08', 'ZE065848232', ''),
-	(118, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:29:47', 'ZE065848232', ''),
-	(119, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:30:00', 'ZE065848232', ''),
-	(120, 84, 152, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:30:15', 'ZE065848232', ''),
-	(121, 84, 152, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:30:27', 'ZE065848232', ''),
-	(122, 84, 152, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:35:17', 'ZE065848232', ''),
-	(123, 84, 152, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:35:27', 'ZE065848232', ''),
-	(124, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:35:27', 'ZE065848232', ''),
-	(125, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-27 13:35:40', 'ZE065848232', ''),
-	(126, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:36:04', 'ZE065848232', ''),
-	(127, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:37:27', 'ZE065848232', ''),
-	(128, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:38:48', 'ZE065848232', ''),
-	(129, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:40:49', 'ZE065848232', ''),
-	(130, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 13:41:36', 'ZE065848232', ''),
-	(131, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 15:00:21', 'ZE065848232', ''),
-	(132, 84, 148, 233, 'TESTNEW', 'razduženo', '2022-11-27 15:00:55', 'ZE065848232', ''),
-	(133, 84, 152, 233, 'TESTNEW', 'zaduženo', '2022-11-27 15:00:55', 'ZE065848232', ''),
-	(134, 84, 152, 234, 'TESTNEW', 'razduženo', '2022-11-27 15:01:26', 'ZE065848232', ''),
-	(135, 84, 148, 234, 'TESTNEW', 'zaduženo', '2022-11-27 15:01:26', 'ZE065848232', ''),
-	(136, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 15:06:53', 'ZE065848232', ''),
-	(137, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 15:08:57', 'ZE065848232', ''),
-	(138, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 15:09:58', 'ZE065848232', ''),
-	(139, 84, 148, 204, 'TESTNEW', 'zaduženo', '2022-11-27 15:11:23', 'ZE065848232', ''),
-	(140, 84, 148, 239, 'TESTNEW', 'razduženo', '2022-11-27 15:11:58', 'ZE065848232', ''),
-	(141, 84, 149, 239, 'TESTNEW', 'zaduženo', '2022-11-27 15:11:58', 'ZE065848232', ''),
-	(142, 84, 149, 240, 'TESTNEW', 'razduženo', '2022-11-27 15:12:13', 'ZE065848232', ''),
-	(143, 84, 149, 244, 'TESTNEW', 'zaduženo', '2022-11-27 15:14:41', 'ZE065848232', ''),
-	(144, 84, 149, 245, 'TESTNEW', 'razduženo', '2022-11-27 15:19:04', 'ZE065848232', ''),
-	(145, 84, 149, 245, 'TESTNEW', 'zaduženo', '2022-11-27 15:19:04', 'ZE065848232', ''),
-	(146, 93, 148, 246, 'HDIS63839', 'zaduženo', '2022-11-27 15:23:43', 'ZE0685862', ''),
-	(147, 84, 148, 247, 'KJKSZPJ', 'razduženo', '2022-11-27 15:28:15', 'ZE0621548', ''),
-	(148, 84, 148, 247, 'KJKSZPJ', 'zaduženo', '2022-11-27 15:28:15', 'ZE0621548', ''),
-	(149, 90, 148, 248, 'KJKSZPJ', 'razduženo', '2022-11-27 15:29:29', 'ZE0621548', ''),
-	(150, 90, 151, 248, 'KJKSZPJ', 'zaduženo', '2022-11-27 15:29:29', 'ZE0621548', '');
+	(64, 84, 152, 204, 'TESTNEW', 'razduženo', '2022-11-26 23:51:09', 'ZE065848232', '');
 
--- Dumping structure for table inventory.category
+-- Dumping structure for table railway.category
 CREATE TABLE IF NOT EXISTS `category` (
   `category_id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
@@ -324,7 +289,7 @@ CREATE TABLE IF NOT EXISTS `category` (
   CONSTRAINT `FK_category_category` FOREIGN KEY (`parent__category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.category: ~8 rows (approximately)
+-- Dumping data for table railway.category: ~8 rows (approximately)
 DELETE FROM `category`;
 INSERT INTO `category` (`category_id`, `name`, `image_path`, `parent__category_id`) VALUES
 	(7, 'Rač. oprema', 'bi bi-pc-display', NULL),
@@ -336,7 +301,7 @@ INSERT INTO `category` (`category_id`, `name`, `image_path`, `parent__category_i
 	(18, 'Žični telefon', 'bi bi-phone', 11),
 	(20, 'Miš', 'bi bi-mouse2-fill', 7);
 
--- Dumping structure for table inventory.debt_items
+-- Dumping structure for table railway.debt_items
 CREATE TABLE IF NOT EXISTS `debt_items` (
   `debt_items_id` int unsigned NOT NULL AUTO_INCREMENT,
   `user_article_id` int unsigned NOT NULL,
@@ -345,10 +310,10 @@ CREATE TABLE IF NOT EXISTS `debt_items` (
   `document_id` int unsigned NOT NULL,
   `value` int NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `serial_number` varchar(255) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `serial_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
   `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'razduženo',
-  `comment` varchar(255) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `inv_broj` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `inv_broj` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`debt_items_id`),
   UNIQUE KEY `article_id_user_id_timestamp_serial_number` (`article_id`,`user_id`,`timestamp`,`serial_number`) USING BTREE,
   KEY `fk_debt_items_document_id` (`document_id`),
@@ -360,28 +325,28 @@ CREATE TABLE IF NOT EXISTS `debt_items` (
   CONSTRAINT `fk_debt_items_user_article_id` FOREIGN KEY (`user_article_id`) REFERENCES `user_article` (`user_article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.debt_items: ~2 rows (approximately)
+-- Dumping data for table railway.debt_items: ~0 rows (approximately)
 DELETE FROM `debt_items`;
 INSERT INTO `debt_items` (`debt_items_id`, `user_article_id`, `article_id`, `user_id`, `document_id`, `value`, `timestamp`, `serial_number`, `status`, `comment`, `inv_broj`) VALUES
 	(82, 275, 96, 152, 211, 1, '2022-11-13 23:36:20', '51738FEN', 'razduženo', '', 'ZE0621548');
 
--- Dumping structure for table inventory.department
+-- Dumping structure for table railway.department
 CREATE TABLE IF NOT EXISTS `department` (
   `department_id` int unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
-  `description` varchar(250) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `departmend_code` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
+  `description` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `departmend_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
   `parent_department_id` int unsigned DEFAULT NULL,
   PRIMARY KEY (`department_id`) USING BTREE,
   KEY `FK_department_department` (`parent_department_id`),
   CONSTRAINT `FK_department_department` FOREIGN KEY (`parent_department_id`) REFERENCES `department` (`department_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.department: ~26 rows (approximately)
+-- Dumping data for table railway.department: ~32 rows (approximately)
 DELETE FROM `department`;
 INSERT INTO `department` (`department_id`, `title`, `description`, `departmend_code`, `parent_department_id`) VALUES
-	(2, 'Sektor za IKT', 'Sektor za informacione i komunikacione tehnologije IKT', '1302516462', NULL),
-	(3, 'Služba za IKT Zenica', 'Sektor za informacione i komunikacione tehnologije IKT Zenica', '13025164621', 2),
+	(2, 'Sektor za IKT', 'Sektor za informacione i komunikacione tehnologije IKT', '1010206', NULL),
+	(3, 'Služba za IKT Zenica', 'Sektor za informacione i komunikacione tehnologije IKT Zenica', '101020601', 2),
 	(5, 'Sektor za investicije', 'Sektor za investicije', '1030802', NULL),
 	(6, 'Služba za pripremu investicija', 'Služba za pripremu investicija', '103080201', 5),
 	(7, 'Služba za realizaciju investicija', 'Služba za realizaciju investicija', '103080202', 5),
@@ -405,9 +370,15 @@ INSERT INTO `department` (`department_id`, `title`, `description`, `departmend_c
 	(28, 'Služba za opće poslove', '', '103080802', 26),
 	(29, 'Područje snabdjevanja', '', '1040206', NULL),
 	(30, 'Služba za obračun', '', '104020601', 29),
-	(31, 'Služba za naplatu i utuženja', '', '104020602', 29);
+	(31, 'Služba za naplatu i utuženja', '', '104020602', 29),
+	(32, 'Služba za analitičke evidencije', '', '104020603', 29),
+	(33, 'Sektor za tržišno snabdijevanje', '', '10401', NULL),
+	(34, 'Služba za sigurnost i zaštitu', 'Služba za sigurnost i zaštitu', '103080103', 19),
+	(35, 'Sektor za održavanje mreža i postrojenja', '', '1030804', NULL),
+	(36, 'Služba za održavanje mreža i postrojenja', 'Služba za održavanje mreža i postrojenja', '103080401', 35),
+	(37, 'Služba za transport', 'Služba za transport', '103080402', 35);
 
--- Dumping structure for table inventory.department_job
+-- Dumping structure for table railway.department_job
 CREATE TABLE IF NOT EXISTS `department_job` (
   `department_job_id` int unsigned NOT NULL AUTO_INCREMENT,
   `department_id` int unsigned NOT NULL DEFAULT '0',
@@ -422,7 +393,7 @@ CREATE TABLE IF NOT EXISTS `department_job` (
   CONSTRAINT `FK_department_job_location` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.department_job: ~19 rows (approximately)
+-- Dumping data for table railway.department_job: ~69 rows (approximately)
 DELETE FROM `department_job`;
 INSERT INTO `department_job` (`department_job_id`, `department_id`, `job_id`, `location_id`) VALUES
 	(2, 3, 2, 2),
@@ -443,9 +414,59 @@ INSERT INTO `department_job` (`department_job_id`, `department_id`, `job_id`, `l
 	(30, 30, 9, 2),
 	(31, 29, 8, 2),
 	(32, 6, 10, 2),
-	(33, 6, 11, 2);
+	(33, 6, 11, 2),
+	(34, 19, 12, 2),
+	(36, 19, 13, 2),
+	(38, 19, 14, 2),
+	(40, 19, 15, 2),
+	(42, 20, 9, 2),
+	(44, 20, 16, 2),
+	(46, 20, 16, 2),
+	(48, 21, 9, 2),
+	(54, 21, 17, 2),
+	(55, 34, 18, 2),
+	(57, 34, 19, 2),
+	(59, 34, 20, 2),
+	(61, 6, 9, 2),
+	(62, 6, 21, 2),
+	(64, 6, 10, 2),
+	(65, 6, 11, 2),
+	(66, 7, 9, 2),
+	(67, 7, 22, 2),
+	(68, 7, 23, 2),
+	(69, 7, 24, 2),
+	(70, 7, 25, 2),
+	(71, 7, 26, 2),
+	(72, 7, 27, 2),
+	(73, 8, 9, 2),
+	(74, 9, 28, 2),
+	(75, 9, 29, 2),
+	(76, 10, 30, 2),
+	(77, 7, 9, 2),
+	(78, 7, 22, 2),
+	(79, 7, 23, 2),
+	(80, 7, 24, 2),
+	(81, 7, 25, 2),
+	(82, 7, 26, 2),
+	(83, 7, 27, 2),
+	(84, 8, 9, 2),
+	(85, 9, 28, 2),
+	(86, 9, 29, 2),
+	(87, 12, 9, 2),
+	(88, 12, 9, 2),
+	(90, 12, 32, 2),
+	(91, 12, 31, 2),
+	(93, 13, 9, 2),
+	(101, 13, 33, 2),
+	(102, 13, 34, 2),
+	(103, 15, 36, 2),
+	(104, 15, 37, 2),
+	(107, 15, 35, 2),
+	(109, 15, 38, 2),
+	(110, 35, 8, 2),
+	(111, 36, 9, 2);
 
--- Dumping structure for table inventory.destroyed
+-- Dumping structure for table railway.destroyed
 CREATE TABLE IF NOT EXISTS `destroyed` (
   `destroyed_id` int unsigned NOT NULL AUTO_INCREMENT,
   `user_article_id` int unsigned NOT NULL,
@@ -456,8 +477,8 @@ CREATE TABLE IF NOT EXISTS `destroyed` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `serial_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'otpisano',
-  `comment` varchar(255) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `inv_broj` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `inv_broj` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`destroyed_id`),
   UNIQUE KEY `article_id_user_id_serial_number` (`article_id`,`user_id`,`serial_number`) USING BTREE,
   KEY `fk_destroyed_document_id` (`document_id`),
@@ -469,21 +490,21 @@ CREATE TABLE IF NOT EXISTS `destroyed` (
   CONSTRAINT `fk_destroyed_user_article_id` FOREIGN KEY (`user_article_id`) REFERENCES `user_article` (`user_article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.destroyed: ~0 rows (approximately)
+-- Dumping data for table railway.destroyed: ~0 rows (approximately)
 DELETE FROM `destroyed`;
 
--- Dumping structure for table inventory.documents
+-- Dumping structure for table railway.documents
 CREATE TABLE IF NOT EXISTS `documents` (
   `documents_id` int unsigned NOT NULL AUTO_INCREMENT,
   `article_id` int unsigned NOT NULL,
-  `path` varchar(255) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   `document_number` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`documents_id`),
   KEY `fk_documents_article_id` (`article_id`),
   CONSTRAINT `fk_documents_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.documents: ~31 rows (approximately)
+-- Dumping data for table railway.documents: ~15 rows (approximately)
 DELETE FROM `documents`;
 INSERT INTO `documents` (`documents_id`, `article_id`, `path`, `document_number`) VALUES
 	(204, 93, 'prenosnica1.docx', 1),
@@ -499,40 +520,11 @@ INSERT INTO `documents` (`documents_id`, `article_id`, `path`, `document_number`
 	(214, 90, 'prenosnica11.docx', 11),
 	(215, 90, 'prenosnica12.docx', 12),
 	(216, 90, 'prenosnica13.docx', 13),
-	(217, 90, 'prenosnica14.docx', 14),
+	(217, 103, 'prenosnica14.docx', 14),
 	(218, 90, 'prenosnica15.docx', 15),
-	(219, 90, 'prenosnica16.docx', 16),
-	(220, 90, 'prenosnica17.docx', 17),
-	(221, 90, 'prenosnica18.docx', 18),
-	(222, 90, 'prenosnica19.docx', 19),
-	(223, 90, 'prenosnica20.docx', 20),
-	(224, 84, 'prenosnica21.docx', 21),
-	(225, 84, 'prenosnica22.docx', 22),
-	(226, 84, 'prenosnica23.docx', 23),
-	(227, 84, 'prenosnica24.docx', 24),
-	(228, 84, 'prenosnica25.docx', 25),
-	(229, 84, 'prenosnica26.docx', 26),
-	(230, 84, 'prenosnica27.docx', 27),
-	(231, 84, 'prenosnica28.docx', 28),
-	(232, 84, 'prenosnica29.docx', 29),
-	(233, 84, 'prenosnica30.docx', 30),
-	(234, 84, 'prenosnica31.docx', 31),
-	(235, 84, 'prenosnica32.docx', 32),
-	(236, 84, 'prenosnica33.docx', 33),
-	(237, 84, 'prenosnica34.docx', 34),
-	(238, 84, 'prenosnica35.docx', 35),
-	(239, 84, 'prenosnica36.docx', 36),
-	(240, 84, 'prenosnica37.docx', 37),
-	(241, 84, 'prenosnica38.docx', 38),
-	(242, 84, 'prenosnica39.docx', 39),
-	(243, 84, 'prenosnica40.docx', 40),
-	(244, 84, 'prenosnica41.docx', 41),
-	(245, 84, 'prenosnica42.docx', 42),
-	(246, 93, 'prenosnica43.docx', 43),
-	(247, 84, 'prenosnica44.docx', 44),
-	(248, 90, 'prenosnica45.docx', 45);
+	(219, 90, 'prenosnica16.docx', 16);
 
--- Dumping structure for table inventory.feature
+-- Dumping structure for table railway.feature
 CREATE TABLE IF NOT EXISTS `feature` (
   `feature_id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
@@ -543,7 +535,7 @@ CREATE TABLE IF NOT EXISTS `feature` (
   CONSTRAINT `fk_feature_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.feature: ~19 rows (approximately)
+-- Dumping data for table railway.feature: ~19 rows (approximately)
 DELETE FROM `feature`;
 INSERT INTO `feature` (`feature_id`, `name`, `category_id`) VALUES
 	(8, 'Kapacitet', 8),
@@ -561,21 +553,21 @@ INSERT INTO `feature` (`feature_id`, `name`, `category_id`) VALUES
 	(21, 'Svjetlina', 10),
 	(22, 'Visina piksela', 10),
 	(17, 'Vrsta prikaza', 10),
-	(48, 'Proizvođać', 12),
+	(48, 'Proizvo?a?', 12),
 	(47, 'Tip', 18),
 	(49, 'DPI', 20),
 	(50, 'Tip', 20);
 
--- Dumping structure for table inventory.job
+-- Dumping structure for table railway.job
 CREATE TABLE IF NOT EXISTS `job` (
   `job_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(250) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
+  `title` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
   `description` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `job_code` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
+  `job_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
   PRIMARY KEY (`job_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.job: ~7 rows (approximately)
+-- Dumping data for table railway.job: ~34 rows (approximately)
 DELETE FROM `job`;
 INSERT INTO `job` (`job_id`, `title`, `description`, `job_code`) VALUES
 	(2, 'Tehničar za IKT **', 'Tehničar za IKT ** Zenica', '936545'),
@@ -584,9 +576,36 @@ INSERT INTO `job` (`job_id`, `title`, `description`, `job_code`) VALUES
 	(8, 'Rukovodilac sektora', 'Rukovodilac sektora', 'undefined'),
 	(9, 'Rukovodilac službe', 'Rukovodilac službe', 'undefined'),
 	(10, 'Referent za pripremu investicija', '', ''),
-	(11, 'Stručni saradnik za pripremu investicija', '', '');
+	(11, 'Stručni saradnik za pripremu investicija', '', ''),
+	(12, 'Direktor', 'Direktor podružnice ED Zenica', ''),
+	(13, 'Tehnički direktor', 'Tehnički direktor podružnice ED Zenica', ''),
+	(14, 'Tehnički sekretar', 'Tehnički sekretar Ureda Direktora', ''),
+	(15, 'Pomoćnik direktora', 'Pomoćnik direktora ED Zenica', ''),
+	(16, 'Samostalni referent za kontrolu**', '', ''),
+	(17, 'Referent za odnose sa javnošću i informisanje kupaca', '', ''),
+	(18, 'Stručni saradnik za zaštitu zdravlja i sigurnost na radu', 'Stručni saradnik za zaštitu zdravlja i sigurnost na radu', ''),
+	(19, 'Stručni saradnik za okolinsko upravljanje', 'Stručni saradnik za okolinsko upravljanje', ''),
+	(20, 'Stručni saradnik za sigurnost, protivpožarnu zaštitu i spašavanje', 'Stručni saradnik za sigurnost, protivpožarnu zaštitu i spašavanje', ''),
+	(21, 'Projektant', '', ''),
+	(22, 'Inženjer za građevinski nadzor', 'Inženjer za građevinski nadzor', ''),
+	(23, 'Stručni saradnik za priključenja', 'Stručni saradnik za priključenja', ''),
+	(24, 'Stručni saradnik za priključenja - rang 1', 'Stručni saradnik za priključenja - rang 1', ''),
+	(25, 'Stručni saradnik za realizaciju investicija', 'Stručni saradnik za realizaciju investicija', ''),
+	(26, 'Referent za investicije', 'Referent za investicije', ''),
+	(27, 'Referent za priključenja', 'Referent za priključenja', ''),
+	(28, 'Stručni saradnik za rješavanje imovinsko-pravnih odnosa u procesu realizacije investicija,rang 3', 'Stručni saradnik za rješavanje imovinsko-pravnih odnosa u procesu realizacije investicija,rang 3', ''),
+	(29, 'Stručni sradanik za rješavanje imovinsko pravnih odnosa u procesu realizacije investicija', 'Stručni sradanik za rješavanje imovinsko pravnih odnosa u procesu realizacije investicija', ''),
+	(30, 'Stručni saradnik za stvarna  prava na postojećoj imovini, Rang 1', 'Stručni saradnik za stvarna  prava na postojećoj imovini, Rang 1', ''),
+	(31, 'Inženjer za pristup mreži, rang 2', 'Inženjer za pristup mreži, rang 2', ''),
+	(32, 'Inženjer za pristup mreži', 'Inženjer za pristup mreži', ''),
+	(33, 'Dispečer za srednji i niski napon', 'Dispečer za srednji i niski napon', ''),
+	(34, 'Glavni dispečer', 'Glavni dispečer', ''),
+	(35, 'Inženjer za zaštitu i kvalitet električne energije', 'Inženjer za zaštitu i kvalitet električne energije', ''),
+	(36, 'Vodeći elektromehaničar *', 'Vodeći elektromehaničar *', ''),
+	(37, 'Tehničar za ispitivanja **', 'Tehničar za ispitivanja **', ''),
+	(38, 'Tehničar za pripremu', 'Tehničar za pripremu', '');
 
--- Dumping structure for table inventory.location
+-- Dumping structure for table railway.location
 CREATE TABLE IF NOT EXISTS `location` (
   `location_id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
@@ -597,7 +616,7 @@ CREATE TABLE IF NOT EXISTS `location` (
   CONSTRAINT `FK_location_location` FOREIGN KEY (`parent_location_id`) REFERENCES `location` (`location_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.location: ~3 rows (approximately)
+-- Dumping data for table railway.location: ~4 rows (approximately)
 DELETE FROM `location`;
 INSERT INTO `location` (`location_id`, `name`, `code`, `parent_location_id`) VALUES
 	(1, 'ED Zenica', '101', NULL),
@@ -605,7 +624,7 @@ INSERT INTO `location` (`location_id`, `name`, `code`, `parent_location_id`) VAL
 	(3, 'PJD Zenica', '10303', 1),
 	(34, 'PJD Visoko', '105', 1);
 
--- Dumping structure for table inventory.responsibility
+-- Dumping structure for table railway.responsibility
 CREATE TABLE IF NOT EXISTS `responsibility` (
   `responsibility_id` int unsigned NOT NULL AUTO_INCREMENT,
   `user_article_id` int unsigned NOT NULL,
@@ -613,10 +632,10 @@ CREATE TABLE IF NOT EXISTS `responsibility` (
   `article_id` int unsigned NOT NULL DEFAULT '0',
   `document_id` int unsigned NOT NULL,
   `value` int NOT NULL DEFAULT '0',
-  `status` enum('zaduženo','razduženo','otpisano') CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'zaduženo',
+  `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'zaduženo',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `serial_number` varchar(255) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
-  `inv_broj` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `serial_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `inv_broj` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`responsibility_id`) USING BTREE,
   UNIQUE KEY `user_id_article_id_serial_number` (`user_id`,`article_id`,`serial_number`) USING BTREE,
   KEY `FK_104` (`article_id`),
@@ -629,15 +648,16 @@ CREATE TABLE IF NOT EXISTS `responsibility` (
   CONSTRAINT `fk_responsibility_user_article_id` FOREIGN KEY (`user_article_id`) REFERENCES `user_article` (`user_article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.responsibility: ~3 rows (approximately)
+-- Dumping data for table railway.responsibility: ~4 rows (approximately)
 DELETE FROM `responsibility`;
 INSERT INTO `responsibility` (`responsibility_id`, `user_article_id`, `user_id`, `article_id`, `document_id`, `value`, `status`, `timestamp`, `serial_number`, `inv_broj`) VALUES
 	(129, 270, 148, 93, 207, 1, 'zaduženo', '2022-11-13 18:31:51', 'HDIS63839', 'ZE0685862'),
 	(130, 271, 148, 95, 208, 1, 'zaduženo', '2022-11-13 18:32:47', 'Bsjfhkakd', 'ZE06858778'),
 	(133, 277, 148, 90, 213, 1, 'zaduženo', '2022-11-19 01:23:06', 'KJKSZPJ', 'ZE0621548'),
-	(134, 278, 149, 90, 214, 1, 'zaduženo', '2022-11-19 01:24:21', 'AEROZAKMI', 'ZE1264854');
+	(134, 279, 150, 90, 218, 1, 'zaduženo', '2022-11-27 22:09:41', 'SERIJSKINOCHANE', 'INVENTURNI'),
+	(135, 280, 156, 90, 219, 1, 'zaduženo', '2022-11-28 21:24:40', 'AEROZAKMI', 'ZE1264854');
 
--- Dumping structure for table inventory.stock
+-- Dumping structure for table railway.stock
 CREATE TABLE IF NOT EXISTS `stock` (
   `stock_id` int unsigned NOT NULL AUTO_INCREMENT,
   `article_id` int unsigned NOT NULL DEFAULT '0',
@@ -650,10 +670,11 @@ CREATE TABLE IF NOT EXISTS `stock` (
   CONSTRAINT `fk_stock_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.stock: ~11 rows (approximately)
+-- Dumping data for table railway.stock: ~13 rows (approximately)
 DELETE FROM `stock`;
 INSERT INTO `stock` (`stock_id`, `article_id`, `value_on_concract`, `value_available`, `timestamp`, `sap_number`) VALUES
 	(192, 91, 1, 0, '2022-03-14 22:45:34', '1300-100525'),
+	(217, 84, 50, 38, '2022-03-18 14:42:55', '1300-200201'),
 	(360, 97, 30, 30, '2022-03-31 16:05:38', '1300-005248'),
 	(361, 98, 5, 5, '2022-03-31 16:26:03', '1300-183994'),
 	(367, 85, 15, 17, '2022-03-31 17:58:45', '1300-200202'),
@@ -663,17 +684,17 @@ INSERT INTO `stock` (`stock_id`, `article_id`, `value_on_concract`, `value_avail
 	(441, 93, 1, 2, '2022-11-13 18:31:51', 'ZE0687922'),
 	(442, 95, 30, 29, '2022-11-13 18:32:47', '1300-551455'),
 	(445, 96, 1, 1, '2022-11-13 23:36:20', '1300-005254'),
-	(457, 90, 40, 57, '2022-11-26 22:30:19', '1300-5564321'),
-	(470, 84, 50, 48, '2022-11-27 15:11:23', '1300-200201');
+	(449, 103, 33, 33, '2022-11-26 09:09:37', ''),
+	(451, 90, 5, 0, '2022-11-28 21:24:40', '1300-100200');
 
--- Dumping structure for table inventory.upgrade_feature
+-- Dumping structure for table railway.upgrade_feature
 CREATE TABLE IF NOT EXISTS `upgrade_feature` (
   `upgrade_feature_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
-  `value` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `value` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `comment` varchar(255) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
-  `serial_number` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `serial_number` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   `article_id` int unsigned NOT NULL,
   PRIMARY KEY (`upgrade_feature_id`),
   KEY `fk_upgrade_feature_serial_number_user_article_serial_number` (`serial_number`),
@@ -681,22 +702,23 @@ CREATE TABLE IF NOT EXISTS `upgrade_feature` (
   CONSTRAINT `upgrade_feature_article_id_article_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.upgrade_feature: ~4 rows (approximately)
+-- Dumping data for table railway.upgrade_feature: ~4 rows (approximately)
 DELETE FROM `upgrade_feature`;
 INSERT INTO `upgrade_feature` (`upgrade_feature_id`, `name`, `value`, `timestamp`, `comment`, `serial_number`, `article_id`) VALUES
 	(3, 'SSD', '256GB', '2022-07-14 10:08:32', 'Ugrađen SSD 256GB, ostavljen HDD 500GB zbog podataka. Urađeno detaljno čišćenje radne stanice.', 'KJKSZPJJJ', 92),
 	(4, 'HDD', '500GB', '2022-10-21 18:05:27', 'Ugrađen HDD iz starog računara zbog podataka.', '51738FEN', 90),
-	(5, 'SSD', '256 GB', '2022-11-13 22:53:30', 'Izvađen stari HDD od 500GB te umjesto njega ugrađen SDD 256GB', 'KJKSZPJ', 90);
+	(5, 'SSD', '256 GB', '2022-11-13 22:53:30', 'Izvađen stari HDD od 500GB te umjesto njega ugrađen SDD 256GB', 'KJKSZPJ', 90),
+	(6, 'SSD', '512GB', '2022-11-20 23:29:49', 'Test', 'KJKSZPJ', 90);
 
--- Dumping structure for table inventory.user
+-- Dumping structure for table railway.user
 CREATE TABLE IF NOT EXISTS `user` (
   `user_id` int unsigned NOT NULL AUTO_INCREMENT,
   `surname` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
   `forname` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
   `fullname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `local_number` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `telephone` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `local_number` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `telephone` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   `password_hash` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   `job_id` int unsigned NOT NULL,
   `department_id` int unsigned NOT NULL,
@@ -710,19 +732,63 @@ CREATE TABLE IF NOT EXISTS `user` (
   CONSTRAINT `fk_user_location_id` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.user: ~8 rows (approximately)
+-- Dumping data for table railway.user: ~52 rows (approximately)
 DELETE FROM `user`;
 INSERT INTO `user` (`user_id`, `surname`, `forname`, `fullname`, `local_number`, `telephone`, `email`, `password_hash`, `job_id`, `department_id`, `location_id`) VALUES
-	(148, 'Mudžahid', 'Cerić', 'Cerić Mudžahid', '1696', '032/449-696', 'm.ceric@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 2, 3, 2),
+	(148, 'Mudžahid', 'Cerić', 'Cerić Mudžahid', '1696', '032/449-696', 'm.ceric@epbih.ba', 'A8E11064F018205C700B163E6AB9978077A5DF871F03AD1A43A569CC2D88957B1E44C92EE07EDBBC6523114B37002FE6BDEC5C7F4C03F1C87782312894DE3CB5', 2, 3, 2),
 	(149, 'Sabit', 'Alić', 'Alić Sabit', '1608', '032/449-608', 's.alic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 7, 5, 2),
 	(150, 'Emina', 'Hasić', 'Hasić Emina', '1613', '032/449-613', 'e.hasic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 6, 5, 2),
 	(151, 'Zahid', 'Softić', 'Softić Zahid', '1682', '032/449-682', 'z.softic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 8, 5, 2),
 	(152, 'Lejla', 'Čaršimamović', 'Čaršimamović Lejla', '1618', '032/449-618', 'l.carsimamovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 2, 2),
 	(153, 'Kenan', 'Serdarević', 'Serdarević Kenan', '1617', '032/449-617', 'k.serdarevic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 8, 11, 2),
 	(154, 'Lejla', 'Buza', 'Buza Lejla', '1651', '032/449-651', 'le.buza@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 27, 2),
-	(155, 'Damir', 'Čauš', 'Čauš Damir', '1673', '032/449-673', 'd.caus@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 28, 2);
+	(155, 'Damir', 'Čauš', 'Čauš Damir', '1673', '032/449-673', 'd.caus@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 28, 2),
+	(156, 'Edin', 'Arnaut', 'Arnaut Edin', '1601', '032/449-601', 'e.arnaut@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 12, 19, 2),
+	(157, 'Ahmed', 'Mutapčić', 'Mutapčić Ahmed', '1602', '032-449-602', 'a.mutapcic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 13, 19, 2),
+	(158, 'Azra', 'Talić', 'Talić Azra', '1603', '032/449-603', 'a.talic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 14, 19, 2),
+	(159, 'Nedžad', 'Osmanović', 'Osmanović Nedžad', '1560', '032/449-560', 'ne.osmanovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 15, 19, 2),
+	(160, 'Dženana', 'Skomorac - Kos', 'Skomorac - Kos Dženana', '1648', '032/449-648', 'dz.skomorac@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 20, 2),
+	(161, 'Jasmin', 'Ćatić', 'Ćatić Jasmin', '1501', '032/449-501', 'j.catic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 16, 20, 2),
+	(162, 'Asaf', 'Kajmaković', 'Kajmaković Asaf', '1501', '032/449-501', 'a.kajmakovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 16, 20, 2),
+	(163, 'Raif', 'Mešić', 'Mešić Raif', '1501', '032/449-501', 'r.mesic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 16, 20, 2),
+	(164, 'Halid', 'Zukić', 'Zukić Halid', '1657', '032/449-657', 'h.zukic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 21, 2),
+	(165, 'Goran', 'Skočilić', 'Skočilić Goran', '1556', '032/449-556', 'g.skocilic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 17, 21, 2),
+	(166, 'Nermin', 'Skenderović', 'Skenderović Nermin', '1557', '032/449-557', 'n.skenderovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 17, 21, 2),
+	(167, 'Nihad', 'Kesić', 'Kesić Nihad', '1558', '032/449-558', 'n.kesic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 17, 21, 2),
+	(168, 'Mirnes', 'Kaknjo', 'Kaknjo Mirnes', '1559', '032/449-559', 'm.kaknjo@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 17, 21, 2),
+	(169, 'Enes', 'Krdžalić', 'Krdžalić Enes', '1612', '032/449-612', 'e.krdzalic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 18, 34, 2),
+	(170, 'Edin', 'Kovač', 'Kovač Edin', '1612', '032/449-612', 'e.kovac@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 19, 34, 2),
+	(171, 'Adnan', 'Ibreljić', 'Ibreljić Adnan', '1658', '032/449-658', 'a.ibreljic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 20, 34, 2),
+	(172, 'Ernes', 'Bedak', 'Bedak Ernes', '1611', '032/449-611', 'e.bedak@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 6, 2),
+	(173, 'Armin', 'Bašić', 'Bašić Armin', '1611', '032/449-611', 'ar.basic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 21, 6, 2),
+	(174, 'Mirha', 'Ćatić', 'Ćatić Mirha', '1615', '032/449-615', 'm.catic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 10, 6, 2),
+	(175, 'Mirha', 'Bašić', 'Bašić Mirha', '1614', '032/449-614', 'mirha.basic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 11, 6, 2),
+	(176, 'Mirsad', 'Bečić', 'Bečić Mirsad', '1610', '032/449-610', 'm.becic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 7, 2),
+	(177, 'Adis', 'Redžepović', 'Redžepović Adis', '1697', '032/449-697', 'a.redzepovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 22, 7, 2),
+	(178, 'Amina', 'Kavazovic', 'Kavazovic Amina', '1694', '032/449-694', 'a.kavazovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 23, 7, 2),
+	(179, 'Jasmina', 'Karić', 'Karić Jasmina', '1607', '032/449-607', 'j.cucukovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 24, 7, 2),
+	(180, 'Armin', 'Maličbegović', 'Maličbegović Armin', '1609', '032/449-609', 'a.mlicbegovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 25, 7, 2),
+	(181, 'Mirhat', 'Đuherić', 'Đuherić Mirhat', '1677', '032/449-677', 'm.dzuheric@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 26, 7, 2),
+	(182, 'Rukija', 'Huseinspahić', 'Huseinspahić Rukija', '1622', '032/449-622', 'r.huseinspahic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 27, 7, 2),
+	(183, 'Amra', 'Imamović', 'Imamović Amra', '1678', '032/449-678', 'am.imamovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 8, 2),
+	(184, 'Sead', 'Kratina', 'Kratina Sead', '1606', '032/449-606', 's.kratina@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 28, 9, 2),
+	(185, 'Smaragda', 'Imamović', 'Imamović Smaragda', '1606', '032/449-606', 's.imamovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 29, 9, 2),
+	(186, 'Benjamin', 'Kovačević', 'Kovačević Benjamin', '1679', '032/449-679', 'b.kovacevuc@epbih.ba', 'D8C078577BE9F6B3F869EBF5E2E19009FFDF74C7BD3821BD6A8D0745F922E09A33C3AD3C41FEB58E5DC8B625E96CF39FF91416FDA190A362E5E9B1ABAE1AECEF', 9, 12, 2),
+	(187, 'Kenan', 'Dželo', 'Dželo Kenan', '1619', '032/449-619', 'k.dzelo@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 31, 12, 2),
+	(188, 'Asmir', 'Džidić', 'Džidić Asmir', '1674', '032/449-674', 'a.dzidic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 32, 12, 2),
+	(189, 'Igor', 'Primorac', 'Primorac Igor', '1553', '032/449-553', 'i.primorac@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 13, 2),
+	(190, 'Senad', 'Čaušević', 'Čaušević Senad', '1551', '032/449-551', 's.causevic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 33, 13, 2),
+	(191, 'Hazim', 'Durmić', 'Durmić Hazim', '1551', '032/449-551', 'h.durmic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 33, 13, 2),
+	(192, 'Samrudin', 'Kubat', 'Kubat Samrudin', '1551', '032/449-551', 'k.samrudin@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 33, 13, 2),
+	(193, 'Samir', 'Kadić', 'Kadić Samir', '1552', '032/449-552', 's.kadic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 33, 13, 2),
+	(194, 'Enes', 'Malkoć', 'Malkoć Enes', '1552', '032/449-552', 'e.malkoc@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 33, 13, 2),
+	(195, 'Mirza', 'Serdarević', 'Serdarević Mirza', '1698', '032/449-698', 'm.serdarevic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 34, 13, 2),
+	(196, 'Edin', 'Opardija', 'Opardija Edin', '1516', '032/449-516', 'e.opardija@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 35, 15, 3),
+	(197, 'Ermin', 'Husagić', 'Husagić Ermin', '1518', '032/449-518', 'e.husagic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 36, 15, 3),
+	(198, 'Admir', 'Nizamic', 'Nizamic Admir', '1518', '032/449-518', 'a.nizamic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 37, 15, 3),
+	(199, 'Čajdrić', 'Amel', 'Amel Čajdrić', '1519', '032/449-519', 'a.cajdric@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 36, 3);
 
--- Dumping structure for table inventory.user_article
+-- Dumping structure for table railway.user_article
 CREATE TABLE IF NOT EXISTS `user_article` (
   `user_article_id` int unsigned NOT NULL AUTO_INCREMENT,
   `article_id` int unsigned NOT NULL,
@@ -731,8 +797,8 @@ CREATE TABLE IF NOT EXISTS `user_article` (
   `serial_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   `status` enum('zaduženo','razduženo','otpisano') CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT 'zaduženo',
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `comment` varchar(255) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `inv_broj` varchar(50) COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `inv_broj` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
   `value` int DEFAULT NULL,
   PRIMARY KEY (`user_article_id`) USING BTREE,
   UNIQUE KEY `serial_number_status_timestamp` (`serial_number`,`status`,`timestamp`),
@@ -744,28 +810,28 @@ CREATE TABLE IF NOT EXISTS `user_article` (
   CONSTRAINT `FK_user_article_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.user_article: ~6 rows (approximately)
+-- Dumping data for table railway.user_article: ~6 rows (approximately)
 DELETE FROM `user_article`;
 INSERT INTO `user_article` (`user_article_id`, `article_id`, `document_id`, `user_id`, `serial_number`, `status`, `timestamp`, `comment`, `inv_broj`, `value`) VALUES
-	(270, 93, 246, 148, 'HDIS63839', 'zaduženo', '2022-11-13 18:31:51', 'Zaduženje nove opreme', 'ZE0685862', 1),
-	(271, 95, 208, 148, 'Bsjfhkakd', 'zaduženo', '2022-11-13 18:32:47', 'Zaduženje nove opreme', 'ZE06858778', 1),
-	(275, 96, 211, 152, '51738FEN', 'razduženo', '2022-11-13 23:36:20', '', 'ZE0621548', 1),
-	(277, 90, 248, 151, 'KJKSZPJ', 'zaduženo', '2022-11-19 01:23:06', '', 'ZE0621548', 1),
-	(278, 90, 214, 148, 'AEROZAKMI', 'zaduženo', '2022-11-19 01:24:21', 'Zaduženje nove opreme 1', 'ZE1264854', 1),
-	(300, 84, 245, 149, 'TESTNEW', 'zaduženo', '2022-11-27 15:11:23', '', 'ZE065848232', 1);
+	(270, 93, 207, 148, 'HDIS63839', 'zaduženo', '2022-11-13 18:31:51', 'Zaduženje nove opreme', 'ZE0685862', NULL),
+	(271, 95, 208, 148, 'Bsjfhkakd', 'zaduženo', '2022-11-13 18:32:47', 'Zaduženje nove opreme', 'ZE06858778', NULL),
+	(275, 96, 211, 152, '51738FEN', 'razduženo', '2022-11-13 23:36:20', '', 'ZE0621548', NULL),
+	(277, 90, 213, 148, 'KJKSZPJ', 'zaduženo', '2022-11-19 01:23:06', 'Zaduženje nove opreme', 'ZE0621548', NULL),
+	(279, 90, 218, 150, 'SERIJSKINOCHANE', 'zaduženo', '2022-11-27 22:09:40', 'Zaduženje nove opreme', 'INVENTURNI', NULL),
+	(280, 90, 219, 156, 'AEROZAKMI', 'zaduženo', '2022-11-28 21:24:40', 'Zaduženje nove opreme', 'ZE1264854', NULL);
 
--- Dumping structure for table inventory.user_token
+-- Dumping structure for table railway.user_token
 CREATE TABLE IF NOT EXISTS `user_token` (
   `user_token_id` int unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int unsigned NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `token` varchar(2550) COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `token` varchar(2550) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   `expire_at` datetime NOT NULL,
   `is_valid` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`user_token_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table inventory.user_token: ~44 rows (approximately)
+-- Dumping data for table railway.user_token: ~52 rows (approximately)
 DELETE FROM `user_token`;
 INSERT INTO `user_token` (`user_token_id`, `user_id`, `created_at`, `token`, `expire_at`, `is_valid`) VALUES
 	(4, 1, '2022-03-12 23:44:18', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxLCJpZGVudGl0eSI6Im0uY2VyaWNAZXBiaWguYmEiLCJleHAiOjE2NDk4MDcwNTguNjU2LCJpcCI6Ijo6MSIsInVhIjoiUG9zdG1hblJ1bnRpbWUvNy4yOC40IiwiaWF0IjoxNjQ3MTI4NjU4fQ.xunJeYa9nsAj7pDRMYKTSb28CdCxDxeO7F9SYu34yZk', '2022-04-12 23:44:18', 1),
@@ -815,10 +881,14 @@ INSERT INTO `user_token` (`user_token_id`, `user_id`, `created_at`, `token`, `ex
 	(48, 148, '2022-11-13 21:42:04', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MTA1NDEyNC45OSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNDIiLCJpYXQiOjE2NjgzNzU3MjR9.5yCEhStxY6REsFH8e9dngRHtqIl6ONPxMNm53q6BWKU', '2022-12-14 21:42:04', 1),
 	(49, 152, '2022-11-13 21:43:01', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNTIsImlkZW50aXR5IjoibC5jYXJzaW1hbW92aWNAZXBiaWguYmEiLCJleHAiOjE2NzEwNTQxODEuODIzLCJpcCI6Ijo6ZmZmZjoxOTIuMTY4LjAuMTMiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC40MiIsImlhdCI6MTY2ODM3NTc4MX0.3lTdl2beEnuBUmhbAE11xIegCJtorwbN89voymmVhBA', '2022-12-14 21:43:01', 1),
 	(50, 148, '2022-11-13 21:51:38', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MTA1NDY5OC40NjksImlwIjoiOjpmZmZmOjE5Mi4xNjguMC4xMyIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMDcuMC4xNDE4LjQyIiwiaWF0IjoxNjY4Mzc2Mjk4fQ.mba2tTq1uIa9t0JJVWrBCJcuxV25za2KFKwHA-YDDEw', '2022-12-14 21:51:38', 1),
-	(51, 148, '2022-11-13 23:22:08', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MTA2MDEyOC4yNjUsImlwIjoiOjpmZmZmOjE5Mi4xNjguMC4xMyIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMDcuMC4xNDE4LjQyIiwiaWF0IjoxNjY4MzgxNzI4fQ.SYkGvPZYsk2jia3hB7zU9tm4rWsjyN7QYwI_KyHJNw8', '2022-12-14 23:22:08', 1);
+	(51, 148, '2022-11-13 23:22:08', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MTA2MDEyOC4yNjUsImlwIjoiOjpmZmZmOjE5Mi4xNjguMC4xMyIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMDcuMC4xNDE4LjQyIiwiaWF0IjoxNjY4MzgxNzI4fQ.SYkGvPZYsk2jia3hB7zU9tm4rWsjyN7QYwI_KyHJNw8', '2022-12-14 23:22:08', 1),
+	(52, 148, '2022-11-20 22:12:03', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MTY2MDQxNi44MjksImlwIjoiOjpmZmZmOjEwLjEuOTEuMjIwIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNDIiLCJpYXQiOjE2Njg5ODIwMTZ9.QtnkeXUFqk-zblvuO5OwC6LI0pVr5TJFjd2_gd07x4g', '2022-12-21 22:06:56', 1),
+	(53, 148, '2022-11-23 19:59:44', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MTkxMTY3Ny40NTksImlwIjoiMTI3LjAuMC4xIiwidWEiOiJNb3ppbGxhLzUuMCAoTGludXg7IEFuZHJvaWQgMTI7IDIxMDgxMTExUkcpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgTW9iaWxlIFNhZmFyaS81MzcuMzYiLCJpYXQiOjE2NjkyMzMyNzd9.eUbIsAylLrfwz5quBGrGeV2VYBDYKu0na-4pHcZeQcM', '2022-12-24 19:54:37', 1),
+	(54, 148, '2022-11-25 23:20:25', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MjA5NjgyNS44ODgsImlwIjoiMTI3LjAuMC4xIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNTIiLCJpYXQiOjE2Njk0MTg0MjV9.OaKv8j9nkS1V2-78-obIFX2RHfLPHn02_vz0wG1gIzo', '2022-12-26 23:20:25', 1),
+	(55, 148, '2022-11-28 12:06:18', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MjMxNTU3OC4xMzksImlwIjoiMTI3LjAuMC4xIiwidWEiOiJNb3ppbGxhLzUuMCAoTGludXg7IEFuZHJvaWQgMTI7IDIxMDgxMTExUkcgQnVpbGQvU1AxQS4yMTA4MTIuMDE2KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuNTMwNC4xNDEgTW9iaWxlIFNhZmFyaS81MzcuMzYgT1BYLzEuNyIsImlhdCI6MTY2OTYzNzE3OH0.wFbVBAEICkAVdjo74xjUFVKfbRG-4n7OJRWU9DtEwg0', '2022-12-29 12:06:18', 1);
 
--- Dumping structure for trigger inventory.user_before_insert
-SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
+-- Dumping structure for trigger railway.user_before_insert
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO';
 DELIMITER //
 CREATE TRIGGER `user_before_insert` BEFORE INSERT ON `user` FOR EACH ROW BEGIN
 SET NEW.fullname = (CONCAT(NEW.forname, ' ', NEW.surname));
@@ -826,8 +896,8 @@ END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
 
--- Dumping structure for trigger inventory.user_before_update
-SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION';
+-- Dumping structure for trigger railway.user_before_update
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO';
 DELIMITER //
 CREATE TRIGGER `user_before_update` BEFORE UPDATE ON `user` FOR EACH ROW BEGIN
 SET NEW.fullname = (CONCAT(NEW.forname, ' ', NEW.surname));

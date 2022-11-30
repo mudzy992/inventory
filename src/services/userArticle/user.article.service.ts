@@ -142,13 +142,6 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         newArticleTimelineResp.status = "zaduženo"
 
         await this.articleTimeline.save(newArticleTimelineResp)
-
-        const artStock: Stock = await this.stock.findOne({
-          articleId: data.articleId,
-        });
-        this.stock.update(artStock, {
-          valueAvailable: artStock.valueAvailable + 1,
-        });
         
         return
       }
@@ -191,6 +184,13 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         newArticleTimeline.status = "zaduženo"
 
         await this.articleTimeline.save(newArticleTimeline)
+          
+        const artStock: Stock = await this.stock.findOne({
+          articleId: data.articleId,
+        });
+        this.stock.update(artStock, {
+          valueAvailable: artStock.valueAvailable - 1,
+        });
 
         if(exResponsibility){
 
@@ -204,6 +204,7 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
           newArticleTimelineDebt.status = "razduženo"
 
           await this.articleTimeline.save(newArticleTimelineDebt)
+
       }
       return await this.userArticle.findOne({
         where: { articleId: data.articleId },
@@ -249,6 +250,14 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     const exResponsibility: UserArticle = await this.userArticle.findOne({
       serialNumber: data.serialNumber,
       status: "zaduženo"
+    });
+
+    
+    const artStock: Stock = await this.stock.findOne({
+      articleId: data.articleId,
+    });
+    this.stock.update(artStock, {
+      valueAvailable: artStock.valueAvailable + 1,
     });
 
     if(exDebt) {

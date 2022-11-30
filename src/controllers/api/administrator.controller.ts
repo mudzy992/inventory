@@ -35,6 +35,7 @@ export class AdministratorController {
       resolve(admin);
     });
   }
+  
   @Post()
   @UseGuards(RoleCheckedGuard)
   @AllowToRoles('administrator')

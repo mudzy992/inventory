@@ -55,6 +55,8 @@ import { LocationService } from './services/location/location.service';
 import { DepartmentJobController } from './controllers/api/department.job.controller';
 import { DepartmentJobService } from './services/departmentJob/department.job.service';
 import { ArticleTimeline } from './entities/ArticleTimeline';
+import { ArticleTimelineController } from './controllers/api/article.timeline.controller';
+import { ArticleTimelineService } from './services/articleTimeline/article.timeline.service';
 
 @Module({
   imports: [
@@ -114,6 +116,7 @@ import { ArticleTimeline } from './entities/ArticleTimeline';
   ],
   controllers: [
     ArticleController,
+    ArticleTimelineController,
     UserController,
     CategoryController,
     StockController,
@@ -133,6 +136,7 @@ import { ArticleTimeline } from './entities/ArticleTimeline';
   ],
   providers: [
     ArticleService,
+    ArticleTimelineService,
     UserService,
     CategoryService,
     StockService,
