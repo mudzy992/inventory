@@ -53,39 +53,6 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       status: "otpisano"
     });
 
-    /* const exUserArticle: UserArticle = await this.userArticle.findOne({
-      serialNumber: data.serialNumber,
-      userId: userId,
-    })
-
-    if(!exUserArticle) {
-      return new ApiResponse(
-        'error',
-        -2015,
-        'Artikal ne postoji u UserArticle',
-      );
-    } */
-
-    const checkArticleInStock: Stock = await this.stock.findOne({
-      articleId: data.articleId,
-    });
-
-    if (!checkArticleInStock) {
-      return new ApiResponse(
-        'error',
-        -2011,
-        'Traženi artikal ne postoji u bazi podataka',
-      );
-    }
-
-    if (checkArticleInStock.valueAvailable === 0) {
-      return new ApiResponse(
-        'error',
-        -2005,
-        'Na stanju više nema traženog artikla',
-      );
-    }
-
     if (exResponsibility) {
       if (exResponsibility.userId === userId) {
         return new ApiResponse(
@@ -102,6 +69,8 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
           `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
         );
         const dokumenti = await builder.getMany();
+
+        await this.createDocument(1, '', '', '', '', '', userId, data);
     
         const newDocument: Documents = new Documents();
         newDocument.path = 'prenosnica' + (Number(dokumenti.length) + 1) + '.docx';
@@ -112,8 +81,6 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         if (!savedDocument) {
           return new ApiResponse('error', -2020, 'Prenosnica nije kreirana');
         }
-
-        await this.createDocument(1, '', '', '', '', '', userId, data);
 
         this.userArticle.update(ua, {
           documentId: savedDocument.documentsId,
@@ -150,11 +117,15 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         userArticleId: exDebt.userArticleId,
       });
 
+      this.checkStock(data.articleId)
+
       const builder = await this.document.createQueryBuilder(
         `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
       );
       const dokumenti = await builder.getMany();
   
+      await this.createDocument(1, '', '', '', '', '', userId, data);
+
       const newDocument: Documents = new Documents();
       newDocument.path = 'prenosnica' + (Number(dokumenti.length) + 1) + '.docx';
       newDocument.documentNumber = dokumenti.length + 1;
@@ -164,8 +135,6 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       if (!savedDocument) {
         return new ApiResponse('error', -2020, 'Prenosnica nije kreirana');
       }
-
-      await this.createDocument(1, '', '', '', '', '', userId, data);
 
       this.userArticle.update(ua, {
         documentId: savedDocument.documentsId,
@@ -227,20 +196,12 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     data: AddEmployeArticleDto,
   ): Promise < UserArticle | ApiResponse | ArticleTimeline> {
 
+    this.checkStock(data.articleId)
+
     const builder = await this.document.createQueryBuilder(
       `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
     );
     const dokumenti = await builder.getMany();
-
-    const newDocument: Documents = new Documents();
-    newDocument.path = 'prenosnica' + (Number(dokumenti.length) + 1) + '.docx';
-    newDocument.documentNumber = dokumenti.length + 1;
-    newDocument.articleId = data.articleId;
-
-    const savedDocument = await this.document.save(newDocument);
-    if (!savedDocument) {
-      return new ApiResponse('error', -2020, 'Prenosnica nije kreirana');
-    }
 
     const exDebt: UserArticle = await this.userArticle.findOne({
       serialNumber: data.serialNumber,
@@ -273,7 +234,18 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     const ua: UserArticle = await this.userArticle.findOne({
       userArticleId: exResponsibility.userArticleId,
     });
+    
     await this.createDocument(1, '', '', '', '', '', userId, data);
+
+    const newDocument: Documents = new Documents();
+    newDocument.path = 'prenosnica' + (Number(dokumenti.length) + 1) + '.docx';
+    newDocument.documentNumber = dokumenti.length + 1;
+    newDocument.articleId = data.articleId;
+
+    const savedDocument = await this.document.save(newDocument);
+    if (!savedDocument) {
+      return new ApiResponse('error', -2020, 'Prenosnica nije kreirana');
+    }
 
     this.userArticle.update(ua, {
       documentId: savedDocument.documentsId,
@@ -403,10 +375,15 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     user: number,
     data: AddEmployeArticleDto,
   ) {
+
+    this.checkStock(data.articleId)
+    
     const builder = await this.document.createQueryBuilder(
       `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
     );
     const dokumenti = await builder.getMany();
+
+    await this.createDocument(1, '', '', '', '', '', user, data);
 
     const newDocument: Documents = new Documents();
     newDocument.path = 'prenosnica' + Number(dokumenti.length + 1) + '.docx';
@@ -417,8 +394,6 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     if (!savedDocument) {
       return new ApiResponse('error', -2020, 'Prenosnica nije kreirana');
     }
-
-    await this.createDocument(1, '', '', '', '', '', user, data);
 
     const newUserArticleData: UserArticle = new UserArticle();
     newUserArticleData.documentId = savedDocument.documentsId;
@@ -476,6 +451,28 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     });
 
     /* FUNKCIJE */
+  }
+
+  private async checkStock(articleId: number){
+    const checkArticleInStock: Stock = await this.stock.findOne({
+      articleId: articleId,
+    });
+
+    if (!checkArticleInStock) {
+      return new ApiResponse(
+        'error',
+        -2011,
+        'Traženi artikal ne postoji u bazi podataka',
+      );
+    }
+
+    if (checkArticleInStock.valueAvailable === 0) {
+      return new ApiResponse(
+        'error',
+        -2005,
+        'Na stanju više nema traženog artikla',
+      );
+    }
   }
 
 
