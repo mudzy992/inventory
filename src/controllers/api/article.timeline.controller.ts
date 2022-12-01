@@ -31,4 +31,4 @@ import { ArticleTimelineService } from 'src/services/articleTimeline/article.tim
 })
 export class ArticleTimelineController {
   constructor(public service: ArticleTimelineService) {}
-} /* Kraj koda */
+} 
