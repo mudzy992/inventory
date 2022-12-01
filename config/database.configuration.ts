@@ -22,4 +22,3 @@ export const DatabaseConfiguration = {
 };
 
 // root - Nije,kikiriki1
-// root - root
