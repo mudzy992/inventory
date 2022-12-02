@@ -53,6 +53,39 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       status: "otpisano"
     });
 
+    /* const exUserArticle: UserArticle = await this.userArticle.findOne({
+      serialNumber: data.serialNumber,
+      userId: userId,
+    })
+
+    if(!exUserArticle) {
+      return new ApiResponse(
+        'error',
+        -2015,
+        'Artikal ne postoji u UserArticle',
+      );
+    } */
+
+    const checkArticleInStock: Stock = await this.stock.findOne({
+      articleId: data.articleId,
+    });
+
+    if (!checkArticleInStock) {
+      return new ApiResponse(
+        'error',
+        -2011,
+        'Traženi artikal ne postoji u bazi podataka',
+      );
+    }
+
+    if (checkArticleInStock.valueAvailable === 0) {
+      return new ApiResponse(
+        'error',
+        -2005,
+        'Na stanju više nema traženog artikla',
+      );
+    }
+
     if (exResponsibility) {
       if (exResponsibility.userId === userId) {
         return new ApiResponse(
@@ -264,7 +297,6 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
 
       await this.articleTimeline.save(newArticleTimelineDebt)
 
-      
       return await this.userArticle.findOne({
         where: { articleId: data.articleId },
         relations: ['article', 'user', 'document'],
@@ -415,7 +447,7 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     }
 
     const newArticleTimeline: ArticleTimeline = new ArticleTimeline();
-        newArticleTimeline.documentId = data.documentId;
+        newArticleTimeline.documentId = savedDocument.documentsId;
         newArticleTimeline.userId = user;
         newArticleTimeline.serialNumber = data.serialNumber;
         newArticleTimeline.invBroj = data.invBroj;
