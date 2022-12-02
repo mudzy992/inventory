@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `administrator_token` (
   PRIMARY KEY (`administrator_token_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.administrator_token: ~95 rows (approximately)
+-- Dumping data for table railway.administrator_token: ~102 rows (approximately)
 DELETE FROM `administrator_token`;
 INSERT INTO `administrator_token` (`administrator_token_id`, `administrator_id`, `created_at`, `token`, `expire_at`, `is_valid`) VALUES
 	(2, 1, '2022-03-18 14:07:16', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjUwMjkwODM2LjA5OCwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS85OC4wLjQ3NTguMTA5IFNhZmFyaS81MzcuMzYgT1BSLzg0LjAuNDMxNi4zNiIsImlhdCI6MTY0NzYxMjQzNn0.wVS1NEISf6X2n2HZqgmwu095Kupd6hsrximwyrGEV4o', '2022-04-18 14:07:16', 1),
@@ -145,7 +145,12 @@ INSERT INTO `administrator_token` (`administrator_token_id`, `administrator_id`,
 	(101, 1, '2022-11-29 07:26:34', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyMzg1MTk0LjEzLCJpcCI6IjEyNy4wLjAuMSIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMDcuMC4xNDE4LjU2IiwiaWF0IjoxNjY5NzA2Nzk0fQ.nHdRoMU6_nXNTvJluXmA2rXAtXOAJFc_R7CQinKxy5A', '2022-12-30 07:26:34', 1),
 	(102, 1, '2022-11-29 16:15:39', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNDE2OTM2LjEzMSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNTIiLCJpYXQiOjE2Njk3Mzg1MzZ9.wkudmIvS0DF-RZX_D7xUgq7ITK3FwOHRSOZy9XOq_7Y', '2022-12-30 16:15:36', 1),
 	(103, 1, '2022-11-29 16:37:55', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNDE4MjcyLjE1MSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4wLjEzIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNTIiLCJpYXQiOjE2Njk3Mzk4NzJ9.0UY6w1Mk97NS_qqZQHAwN5erApE_66TT4Oxc8_XNy9o', '2022-12-30 16:37:52', 1),
-	(104, 1, '2022-11-30 06:50:51', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNDY5NDUxLjIwOSwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC41NiIsImlhdCI6MTY2OTc5MTA1MX0.M_lZE-3hBVB7Pkb8S9Ne7qpzJb5bPX7k1MuYhed9X_w', '2022-12-31 06:50:51', 1);
+	(104, 1, '2022-11-30 06:50:51', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNDY5NDUxLjIwOSwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC41NiIsImlhdCI6MTY2OTc5MTA1MX0.M_lZE-3hBVB7Pkb8S9Ne7qpzJb5bPX7k1MuYhed9X_w', '2022-12-31 06:50:51', 1),
+	(105, 1, '2022-12-01 08:46:04', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNTYyNzY0LjIxLCJpcCI6IjEyNy4wLjAuMSIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMDcuMC4xNDE4LjYyIiwiaWF0IjoxNjY5ODg0MzY0fQ.maoWYmVYsyMMkJY5sS8RJ0Zflm9USDejgNonmIvZdCQ', '2023-01-01 08:46:04', 1),
+	(106, 1, '2022-12-01 08:54:53', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNTYzMjkzLjQzMywiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6IlBvc3RtYW5SdW50aW1lLzcuMjkuMiIsImlhdCI6MTY2OTg4NDg5M30.UFqslrWzsW3dD_0n7Tpfdqd03CkRT26ZFPKaqik0GDc', '2023-01-01 08:54:53', 1),
+	(107, 1, '2022-12-01 09:31:43', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNTY1NTAzLjcwOCwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC42MiIsImlhdCI6MTY2OTg4NzEwM30.eRWhprKiF5YINuz8vQbWKuqMlD6AwGjrmthUHOS_0CQ', '2023-01-01 09:31:43', 1),
+	(108, 1, '2022-12-01 10:00:55', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNTY3MjU1LjA0OSwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC42MiIsImlhdCI6MTY2OTg4ODg1NX0.uCjR15m-DZYtI-p_A9OJWjbEs9FQ5zhSlNzHEft7FIE', '2023-01-01 10:00:55', 1),
+	(109, 1, '2022-12-01 13:56:34', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNTgxMzk0LjMzNCwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC42MiIsImlhdCI6MTY2OTkwMjk5NH0.aXYGj3gpMK5sjgJZFr4b3WBJidzqQiEfw-J27i_CVus', '2023-01-01 13:56:34', 1);
 
 -- Dumping structure for table railway.article
 CREATE TABLE IF NOT EXISTS `article` (
@@ -269,12 +274,24 @@ CREATE TABLE IF NOT EXISTS `article_timeline` (
   CONSTRAINT `fk_article_timeline_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table railway.article_timeline: ~3 rows (approximately)
+-- Dumping data for table railway.article_timeline: ~15 rows (approximately)
 DELETE FROM `article_timeline`;
 INSERT INTO `article_timeline` (`article_timeline_id`, `article_id`, `user_id`, `document_id`, `serial_number`, `status`, `timestamp`, `inv_broj`, `comment`) VALUES
 	(61, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-26 23:44:35', 'ZE065848232', ''),
 	(63, 84, 152, 204, 'TESTNEW', 'zaduženo', '2022-11-26 23:50:30', 'ZE065848232', ''),
-	(64, 84, 152, 204, 'TESTNEW', 'razduženo', '2022-11-26 23:51:09', 'ZE065848232', '');
+	(64, 84, 152, 204, 'TESTNEW', 'razduženo', '2022-11-26 23:51:09', 'ZE065848232', ''),
+	(66, 96, 152, 211, '51738FEN', 'razduženo', '2022-11-13 23:36:20', 'ZE0621548', NULL),
+	(67, 95, 148, 208, 'Bsjfhkakd', 'zaduženo', '2022-11-13 18:32:47', 'ZE06858778', NULL),
+	(68, 93, 148, 207, 'HDIS63839', 'zaduženo', '2022-11-13 18:31:51', 'ZE0685862', NULL),
+	(69, 90, 156, 219, 'AEROZAKMI', 'zaduženo', '2022-11-28 21:24:40', 'ZE1264854', NULL),
+	(70, 90, 150, 218, 'SERIJSKINOCHANE', 'zaduženo', '2022-11-27 22:09:40', 'INVENTURNI', NULL),
+	(72, 90, 148, 213, 'KJKSZPJ', 'zaduženo', '2022-11-19 01:23:06', 'ZE0621548', NULL),
+	(73, 90, 148, 222, 'KJKSZPJ', 'razduženo', '2022-12-01 14:46:25', 'ZE0621548', ''),
+	(74, 90, 156, 223, 'KJKSZPJ', 'zaduženo', '2022-12-01 14:46:50', 'ZE0621548', ''),
+	(75, 90, 156, 224, 'AEROZAKMI', 'razduženo', '2022-12-01 14:48:07', 'ZE1264854', ''),
+	(76, 90, 173, 225, 'AEROZAKMI', 'zaduženo', '2022-12-01 14:48:38', 'ZE1264854', ''),
+	(77, 90, 150, 226, 'SERIJSKINOCHANE', 'razduženo', '2022-12-01 16:26:36', 'INVENTURNI', 'Zaduženje na Mirhu Ć.'),
+	(78, 90, 174, 226, 'SERIJSKINOCHANE', 'zaduženo', '2022-12-01 16:26:37', 'INVENTURNI', 'Zaduženje na Mirhu Ć.');
 
 -- Dumping structure for table railway.category
 CREATE TABLE IF NOT EXISTS `category` (
@@ -504,7 +521,7 @@ CREATE TABLE IF NOT EXISTS `documents` (
   CONSTRAINT `fk_documents_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.documents: ~15 rows (approximately)
+-- Dumping data for table railway.documents: ~23 rows (approximately)
 DELETE FROM `documents`;
 INSERT INTO `documents` (`documents_id`, `article_id`, `path`, `document_number`) VALUES
 	(204, 93, 'prenosnica1.docx', 1),
@@ -522,7 +539,14 @@ INSERT INTO `documents` (`documents_id`, `article_id`, `path`, `document_number`
 	(216, 90, 'prenosnica13.docx', 13),
 	(217, 103, 'prenosnica14.docx', 14),
 	(218, 90, 'prenosnica15.docx', 15),
-	(219, 90, 'prenosnica16.docx', 16);
+	(219, 90, 'prenosnica16.docx', 16),
+	(220, 90, 'prenosnica17.docx', 17),
+	(221, 90, 'prenosnica18.docx', 18),
+	(222, 90, 'prenosnica19.docx', 19),
+	(223, 90, 'prenosnica20.docx', 20),
+	(224, 90, 'prenosnica21.docx', 21),
+	(225, 90, 'prenosnica22.docx', 22),
+	(226, 90, 'prenosnica23.docx', 23);
 
 -- Dumping structure for table railway.feature
 CREATE TABLE IF NOT EXISTS `feature` (
@@ -648,7 +672,7 @@ CREATE TABLE IF NOT EXISTS `responsibility` (
   CONSTRAINT `fk_responsibility_user_article_id` FOREIGN KEY (`user_article_id`) REFERENCES `user_article` (`user_article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.responsibility: ~4 rows (approximately)
+-- Dumping data for table railway.responsibility: ~3 rows (approximately)
 DELETE FROM `responsibility`;
 INSERT INTO `responsibility` (`responsibility_id`, `user_article_id`, `user_id`, `article_id`, `document_id`, `value`, `status`, `timestamp`, `serial_number`, `inv_broj`) VALUES
 	(129, 270, 148, 93, 207, 1, 'zaduženo', '2022-11-13 18:31:51', 'HDIS63839', 'ZE0685862'),
@@ -685,7 +709,7 @@ INSERT INTO `stock` (`stock_id`, `article_id`, `value_on_concract`, `value_avail
 	(442, 95, 30, 29, '2022-11-13 18:32:47', '1300-551455'),
 	(445, 96, 1, 1, '2022-11-13 23:36:20', '1300-005254'),
 	(449, 103, 33, 33, '2022-11-26 09:09:37', ''),
-	(451, 90, 5, 0, '2022-11-28 21:24:40', '1300-100200');
+	(451, 90, 5, 2, '2022-11-28 21:24:40', '1300-100200');
 
 -- Dumping structure for table railway.upgrade_feature
 CREATE TABLE IF NOT EXISTS `upgrade_feature` (
@@ -810,15 +834,16 @@ CREATE TABLE IF NOT EXISTS `user_article` (
   CONSTRAINT `FK_user_article_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.user_article: ~6 rows (approximately)
+-- Dumping data for table railway.user_article: ~7 rows (approximately)
 DELETE FROM `user_article`;
 INSERT INTO `user_article` (`user_article_id`, `article_id`, `document_id`, `user_id`, `serial_number`, `status`, `timestamp`, `comment`, `inv_broj`, `value`) VALUES
 	(270, 93, 207, 148, 'HDIS63839', 'zaduženo', '2022-11-13 18:31:51', 'Zaduženje nove opreme', 'ZE0685862', NULL),
 	(271, 95, 208, 148, 'Bsjfhkakd', 'zaduženo', '2022-11-13 18:32:47', 'Zaduženje nove opreme', 'ZE06858778', NULL),
 	(275, 96, 211, 152, '51738FEN', 'razduženo', '2022-11-13 23:36:20', '', 'ZE0621548', NULL),
-	(277, 90, 213, 148, 'KJKSZPJ', 'zaduženo', '2022-11-19 01:23:06', 'Zaduženje nove opreme', 'ZE0621548', NULL),
-	(279, 90, 218, 150, 'SERIJSKINOCHANE', 'zaduženo', '2022-11-27 22:09:40', 'Zaduženje nove opreme', 'INVENTURNI', NULL),
-	(280, 90, 219, 156, 'AEROZAKMI', 'zaduženo', '2022-11-28 21:24:40', 'Zaduženje nove opreme', 'ZE1264854', NULL);
+	(277, 90, 223, 156, 'KJKSZPJ', 'zaduženo', '2022-11-19 01:23:06', 'Zaduženje nove opreme', 'ZE0621548', NULL),
+	(279, 90, 226, 174, 'SERIJSKINOCHANE', 'zaduženo', '2022-11-27 22:09:40', 'Zaduženje na Mirhu Ć.', 'INVENTURNI', NULL),
+	(280, 90, 225, 173, 'AEROZAKMI', 'zaduženo', '2022-11-28 21:24:40', 'Zaduženje nove opreme', 'ZE1264854', NULL),
+	(281, 84, 212, 152, 'TESTNEW', 'zaduženo', '2022-12-01 09:44:53', 'Zaduženje nove opreme', 'ZE065848232', NULL);
 
 -- Dumping structure for table railway.user_token
 CREATE TABLE IF NOT EXISTS `user_token` (
@@ -885,7 +910,8 @@ INSERT INTO `user_token` (`user_token_id`, `user_id`, `created_at`, `token`, `ex
 	(52, 148, '2022-11-20 22:12:03', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MTY2MDQxNi44MjksImlwIjoiOjpmZmZmOjEwLjEuOTEuMjIwIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNDIiLCJpYXQiOjE2Njg5ODIwMTZ9.QtnkeXUFqk-zblvuO5OwC6LI0pVr5TJFjd2_gd07x4g', '2022-12-21 22:06:56', 1),
 	(53, 148, '2022-11-23 19:59:44', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MTkxMTY3Ny40NTksImlwIjoiMTI3LjAuMC4xIiwidWEiOiJNb3ppbGxhLzUuMCAoTGludXg7IEFuZHJvaWQgMTI7IDIxMDgxMTExUkcpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgTW9iaWxlIFNhZmFyaS81MzcuMzYiLCJpYXQiOjE2NjkyMzMyNzd9.eUbIsAylLrfwz5quBGrGeV2VYBDYKu0na-4pHcZeQcM', '2022-12-24 19:54:37', 1),
 	(54, 148, '2022-11-25 23:20:25', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MjA5NjgyNS44ODgsImlwIjoiMTI3LjAuMC4xIiwidWEiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuMC4wIFNhZmFyaS81MzcuMzYgRWRnLzEwNy4wLjE0MTguNTIiLCJpYXQiOjE2Njk0MTg0MjV9.OaKv8j9nkS1V2-78-obIFX2RHfLPHn02_vz0wG1gIzo', '2022-12-26 23:20:25', 1),
-	(55, 148, '2022-11-28 12:06:18', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MjMxNTU3OC4xMzksImlwIjoiMTI3LjAuMC4xIiwidWEiOiJNb3ppbGxhLzUuMCAoTGludXg7IEFuZHJvaWQgMTI7IDIxMDgxMTExUkcgQnVpbGQvU1AxQS4yMTA4MTIuMDE2KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuNTMwNC4xNDEgTW9iaWxlIFNhZmFyaS81MzcuMzYgT1BYLzEuNyIsImlhdCI6MTY2OTYzNzE3OH0.wFbVBAEICkAVdjo74xjUFVKfbRG-4n7OJRWU9DtEwg0', '2022-12-29 12:06:18', 1);
+	(55, 148, '2022-11-28 12:06:18', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MjMxNTU3OC4xMzksImlwIjoiMTI3LjAuMC4xIiwidWEiOiJNb3ppbGxhLzUuMCAoTGludXg7IEFuZHJvaWQgMTI7IDIxMDgxMTExUkcgQnVpbGQvU1AxQS4yMTA4MTIuMDE2KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuNTMwNC4xNDEgTW9iaWxlIFNhZmFyaS81MzcuMzYgT1BYLzEuNyIsImlhdCI6MTY2OTYzNzE3OH0.wFbVBAEICkAVdjo74xjUFVKfbRG-4n7OJRWU9DtEwg0', '2022-12-29 12:06:18', 1),
+	(56, 148, '2022-12-01 16:32:20', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MjU5MDczOC41MTEsImlwIjoiOjpmZmZmOjE5Mi4xNjguMC4xMyIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMDcuMC4xNDE4LjUyIiwiaWF0IjoxNjY5OTEyMzM4fQ.EyaPVcfd7BDstVyUjR2wSKkHRmWIBXmm8KXIZOJ5o8k', '2023-01-01 16:32:18', 1);
 
 -- Dumping structure for trigger railway.user_before_insert
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO';
