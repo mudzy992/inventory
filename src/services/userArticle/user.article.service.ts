@@ -53,19 +53,6 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       status: "otpisano"
     });
 
-    /* const exUserArticle: UserArticle = await this.userArticle.findOne({
-      serialNumber: data.serialNumber,
-      userId: userId,
-    })
-
-    if(!exUserArticle) {
-      return new ApiResponse(
-        'error',
-        -2015,
-        'Artikal ne postoji u UserArticle',
-      );
-    } */
-
     const checkArticleInStock: Stock = await this.stock.findOne({
       articleId: data.articleId,
     });
