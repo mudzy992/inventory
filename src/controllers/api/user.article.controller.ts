@@ -62,8 +62,8 @@ export class UserArticleController {
     if (data.status === 'razduženo') {
       return this.service.debtArticleFromEmployee(id, data);
     }
-    /* if (data.status === 'otpisano') {
-      return this.destroyedItemsService.addArticleToEmploye(id, data);
-    } */
+    if (data.status === 'otpisano') {
+      return this.service.destroyeArticleFromEmployee(id, data);
+    }
   }
 }

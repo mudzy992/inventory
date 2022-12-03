@@ -290,6 +290,83 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       });
   }
 
+  async destroyeArticleFromEmployee(
+    userId: number,
+    data: AddEmployeArticleDto,
+  ): Promise < UserArticle | ApiResponse | ArticleTimeline> {
+
+    this.checkStock(data.articleId)
+
+    const builder = await this.document.createQueryBuilder(
+      `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
+    );
+    const dokumenti = await builder.getMany();
+
+    const exUserArticle: UserArticle = await this.userArticle.findOne({
+      serialNumber: data.serialNumber,
+    });
+
+    if(exUserArticle) {
+      if(exUserArticle.status === 'otpisano'){
+        return new ApiResponse(
+          'error',
+          -2009,
+          'Artikal sa traženim serijskim brojem je već ranije otpisan ili uništen',
+        );
+      }
+    }
+    
+    await this.createDocument(1, '', '', '', '', '', userId, data);
+
+    const newDocument: Documents = new Documents();
+    newDocument.path = 'prenosnica' + (Number(dokumenti.length) + 1) + '.docx';
+    newDocument.documentNumber = dokumenti.length + 1;
+    newDocument.articleId = data.articleId;
+
+    const savedDocument = await this.document.save(newDocument);
+    if (!savedDocument) {
+      return new ApiResponse('error', -2020, 'Prenosnica nije kreirana');
+    }
+
+    if(exUserArticle) {
+      const ua: UserArticle = await this.userArticle.findOne({
+        userArticleId: exUserArticle.userArticleId,
+      });
+
+      this.userArticle.update(ua, {
+        documentId: savedDocument.documentsId,
+        status: 'otpisano',
+        comment: data.comment,
+      });
+
+      if(exUserArticle.status === 'razduženo'){
+        const artStock: Stock = await this.stock.findOne({
+          articleId: data.articleId,
+        });
+    
+        this.stock.update(artStock, {
+          valueAvailable: artStock.valueAvailable - 1,
+        });
+      }
+    }
+
+      const newArticleTimelineDebt: ArticleTimeline = new ArticleTimeline();
+      newArticleTimelineDebt.documentId = savedDocument.documentsId;
+      newArticleTimelineDebt.userId = exUserArticle.userId;
+      newArticleTimelineDebt.serialNumber = data.serialNumber;
+      newArticleTimelineDebt.invBroj = data.invBroj;
+      newArticleTimelineDebt.articleId = data.articleId;
+      newArticleTimelineDebt.comment = data.comment;
+      newArticleTimelineDebt.status = "otpisano"
+
+      await this.articleTimeline.save(newArticleTimelineDebt)
+
+      return await this.userArticle.findOne({
+        where: { articleId: data.articleId },
+        relations: ['article', 'user', 'document'],
+      });
+  }
+
   private async createDocument(
     id: number,
     predao: string,
@@ -421,7 +498,7 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     newUserArticleData.invBroj = data.invBroj;
     newUserArticleData.articleId = data.articleId;
     newUserArticleData.value = data.value;
-    newUserArticleData.comment = 'Zaduženje nove opreme 2';
+    newUserArticleData.comment = 'Zaduženje nove opreme';
     newUserArticleData.status = 'zaduženo';
 
     const savedUserArticle = await this.userArticle.save(newUserArticleData);
