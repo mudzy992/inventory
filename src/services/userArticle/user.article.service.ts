@@ -37,6 +37,22 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     userId: number,
     data: AddEmployeArticleDto,
   ): Promise <User | Stock | UserArticle | ApiResponse | ArticleTimeline> {
+    
+    let lastRecord = await this.document.findOne({
+      order: {
+        created_date: 'DESC'
+      }
+    })
+
+    let currentYear = lastRecord ? new Date(lastRecord.created_date).getFullYear() : new Date().getFullYear();
+    let documentNumber;
+
+    if (currentYear === new Date().getFullYear()) {
+        documentNumber = lastRecord ? lastRecord.documentNumber + 1 : 1;
+    } else {
+        documentNumber = 1;
+        currentYear = new Date().getFullYear();
+    }
 
     const exResponsibility: UserArticle = await this.userArticle.findOne({
       serialNumber: data.serialNumber,
@@ -85,7 +101,7 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
           userArticleId: exResponsibility.userArticleId,
         });
 
-        let lastRecord = await this.document.findOne({
+        /* let lastRecord = await this.document.findOne({
           order: {
             created_date: 'DESC'
           }
@@ -99,20 +115,13 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         } else {
             documentNumber = 1;
             currentYear = new Date().getFullYear();
-        }
+        } */
 
-        console.log(documentNumber)
-
-        const builder = await this.document.createQueryBuilder(
-          `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
-        );
-        const dokumenti = await builder.getMany();
-
-        await this.createDocument(1, '', '', '', '', '', userId, data);
+        await this.createDocument('', '', '', '', '', userId, data);
     
         const newDocument: Documents = new Documents();
-        newDocument.path = 'prenosnica' + (Number(dokumenti.length) + 1) + documentNumber + '.docx';
-        newDocument.documentNumber = dokumenti.length + 1;
+        newDocument.path = 'prenosnica' + documentNumber + '.docx';
+        newDocument.documentNumber = documentNumber;
         newDocument.articleId = data.articleId;
     
         const savedDocument = await this.document.save(newDocument);
@@ -157,16 +166,27 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
 
       this.checkStock(data.articleId)
 
-      const builder = await this.document.createQueryBuilder(
-        `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
-      );
-      const dokumenti = await builder.getMany();
+      /* let lastRecord = await this.document.findOne({
+        order: {
+          created_date: 'DESC'
+        }
+      })
+
+      let currentYear = lastRecord ? new Date(lastRecord.created_date).getFullYear() : new Date().getFullYear();
+      let documentNumber;
+
+      if (currentYear === new Date().getFullYear()) {
+          documentNumber = lastRecord ? lastRecord.documentNumber + 1 : 1;
+      } else {
+          documentNumber = 1;
+          currentYear = new Date().getFullYear();
+      } */
   
-      await this.createDocument(1, '', '', '', '', '', userId, data);
+      await this.createDocument('', '', '', '', '', userId, data);
 
       const newDocument: Documents = new Documents();
-      newDocument.path = 'prenosnica' + (Number(dokumenti.length) + 1) + '.docx';
-      newDocument.documentNumber = dokumenti.length + 1;
+      newDocument.path = 'prenosnica' + documentNumber + '.docx';
+      newDocument.documentNumber = documentNumber;
       newDocument.articleId = data.articleId;
   
       const savedDocument = await this.document.save(newDocument);
@@ -225,7 +245,7 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       );
     }
 
-    await this.createDocument(1, '', '', '', '', '', userId, data);
+    await this.createDocument('', '', '', '', '', userId, data);
     return this.addArticleInResponsibility(userId, data);
   }
 
@@ -236,10 +256,21 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
 
     this.checkStock(data.articleId)
 
-    const builder = await this.document.createQueryBuilder(
-      `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
-    );
-    const dokumenti = await builder.getMany();
+    let lastRecord = await this.document.findOne({
+      order: {
+        created_date: 'DESC'
+      }
+    })
+
+    let currentYear = lastRecord ? new Date(lastRecord.created_date).getFullYear() : new Date().getFullYear();
+    let documentNumber;
+
+    if (currentYear === new Date().getFullYear()) {
+        documentNumber = lastRecord ? lastRecord.documentNumber + 1 : 1;
+    } else {
+        documentNumber = 1;
+        currentYear = new Date().getFullYear();
+    }
 
     const exDebt: UserArticle = await this.userArticle.findOne({
       serialNumber: data.serialNumber,
@@ -273,11 +304,11 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       userArticleId: exResponsibility.userArticleId,
     });
     
-    await this.createDocument(1, '', '', '', '', '', userId, data);
+    await this.createDocument('', '', '', '', '', userId, data);
 
     const newDocument: Documents = new Documents();
-    newDocument.path = 'prenosnica' + (Number(dokumenti.length) + 1) + '.docx';
-    newDocument.documentNumber = dokumenti.length + 1;
+    newDocument.path = 'prenosnica' + documentNumber + '.docx';
+    newDocument.documentNumber = documentNumber;
     newDocument.articleId = data.articleId;
 
     const savedDocument = await this.document.save(newDocument);
@@ -315,10 +346,21 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
 
     this.checkStock(data.articleId)
 
-    const builder = await this.document.createQueryBuilder(
-      `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
-    );
-    const dokumenti = await builder.getMany();
+    let lastRecord = await this.document.findOne({
+      order: {
+        created_date: 'DESC'
+      }
+    })
+
+    let currentYear = lastRecord ? new Date(lastRecord.created_date).getFullYear() : new Date().getFullYear();
+    let documentNumber;
+
+    if (currentYear === new Date().getFullYear()) {
+        documentNumber = lastRecord ? lastRecord.documentNumber + 1 : 1;
+    } else {
+        documentNumber = 1;
+        currentYear = new Date().getFullYear();
+    }
 
     const exUserArticle: UserArticle = await this.userArticle.findOne({
       serialNumber: data.serialNumber,
@@ -334,11 +376,11 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       }
     }
     
-    await this.createDocument(1, '', '', '', '', '', userId, data);
+    await this.createDocument('', '', '', '', '', userId, data);
 
     const newDocument: Documents = new Documents();
-    newDocument.path = 'prenosnica' + (Number(dokumenti.length) + 1) + '.docx';
-    newDocument.documentNumber = dokumenti.length + 1;
+    newDocument.path = 'prenosnica' + documentNumber + '.docx';
+    newDocument.documentNumber = documentNumber;
     newDocument.articleId = data.articleId;
 
     const savedDocument = await this.document.save(newDocument);
@@ -386,7 +428,6 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
   }
 
   private async createDocument(
-    id: number,
     predao: string,
     preuzeo: string,
     inv: string,
@@ -395,12 +436,21 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     userId,
     data,
   ) {
-    const builder = await this.document.createQueryBuilder(
-      `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
-    );
-    const dokumenti = await builder.getMany();
+    let lastRecord = await this.document.findOne({
+      order: {
+        created_date: 'DESC'
+      }
+    })
 
-    id = Number(dokumenti.length) + 1;
+    let currentYear = lastRecord ? new Date(lastRecord.created_date).getFullYear() : new Date().getFullYear();
+    let documentNumber;
+
+    if (currentYear === new Date().getFullYear()) {
+        documentNumber = lastRecord ? lastRecord.documentNumber + 1 : 1;
+    } else {
+        documentNumber = 1;
+        currentYear = new Date().getFullYear();
+    }
 
     const exRes: UserArticle = await this.userArticle.findOne({
       serialNumber: data.serialNumber,
@@ -465,7 +515,7 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       const buffer = await createReport({
         template,
         data: {
-          broj_prenosnice: id,
+          broj_prenosnice: documentNumber,
           predao_korisnik: predao,
           preuzeo_korisnik: preuzeo,
           inv_broj: inv,
@@ -476,7 +526,7 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       writeFileSync(
         StorageConfig.prenosnica.destination +
           'prenosnica' +
-          Number(dokumenti.length + 1) +
+          documentNumber +
           '.docx',
         buffer,
       );
@@ -492,16 +542,27 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
 
     this.checkStock(data.articleId)
     
-    const builder = await this.document.createQueryBuilder(
-      `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
-    );
-    const dokumenti = await builder.getMany();
+    let lastRecord = await this.document.findOne({
+      order: {
+        created_date: 'DESC'
+      }
+    })
 
-    await this.createDocument(1, '', '', '', '', '', user, data);
+    let currentYear = lastRecord ? new Date(lastRecord.created_date).getFullYear() : new Date().getFullYear();
+    let documentNumber;
+
+    if (currentYear === new Date().getFullYear()) {
+        documentNumber = lastRecord ? lastRecord.documentNumber + 1 : 1;
+    } else {
+        documentNumber = 1;
+        currentYear = new Date().getFullYear();
+    }
+
+    await this.createDocument('', '', '', '', '', user, data);
 
     const newDocument: Documents = new Documents();
-    newDocument.path = 'prenosnica' + Number(dokumenti.length + 1) + '.docx';
-    newDocument.documentNumber = dokumenti.length + 1;
+    newDocument.path = 'prenosnica' + documentNumber + '.docx';
+    newDocument.documentNumber = documentNumber;
     newDocument.articleId = data.articleId;
 
     const savedDocument = await this.document.save(newDocument);
