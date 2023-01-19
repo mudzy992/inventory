@@ -102,7 +102,7 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         }
 
         console.log(documentNumber)
-        
+
         const builder = await this.document.createQueryBuilder(
           `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
         );
@@ -111,7 +111,7 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         await this.createDocument(1, '', '', '', '', '', userId, data);
     
         const newDocument: Documents = new Documents();
-        newDocument.path = 'prenosnica' + (Number(dokumenti.length) + 1) + '.docx';
+        newDocument.path = 'prenosnica' + (Number(dokumenti.length) + 1) + documentNumber + '.docx';
         newDocument.documentNumber = dokumenti.length + 1;
         newDocument.articleId = data.articleId;
     
