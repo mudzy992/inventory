@@ -12,7 +12,6 @@ async function bootstrap() {
   });
   const cors = require('cors')
   app.use(cors())
-  app.enableCors();
   const PORT = process.env.PORT || 3005
   await app.listen(PORT, ()=> console.log("Sluša ba portu " + PORT));
 }
