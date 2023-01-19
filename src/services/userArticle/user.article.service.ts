@@ -85,6 +85,24 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
           userArticleId: exResponsibility.userArticleId,
         });
 
+        let lastRecord = await this.document.findOne({
+          order: {
+            created_date: 'DESC'
+          }
+        })
+
+        let currentYear = lastRecord ? new Date(lastRecord.created_date).getFullYear() : new Date().getFullYear();
+        let documentNumber;
+
+        if (currentYear === new Date().getFullYear()) {
+            documentNumber = lastRecord ? lastRecord.documentNumber + 1 : 1;
+        } else {
+            documentNumber = 1;
+            currentYear = new Date().getFullYear();
+        }
+
+        console.log(documentNumber)
+        
         const builder = await this.document.createQueryBuilder(
           `SELECT (*) documents getLastRecord ORDER BY documents_id DESC LIMIT 1`,
         );

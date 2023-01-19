@@ -10,6 +10,8 @@ async function bootstrap() {
     maxAge: StorageConfig.prenosnica.maxAge,
     index: false,
   });
+  const cors = require('cors')
+  app.use(cors())
   app.enableCors();
   const PORT = process.env.PORT || 3005
   await app.listen(PORT, ()=> console.log("Sluša ba portu " + PORT));

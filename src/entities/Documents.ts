@@ -29,6 +29,11 @@ export class Documents {
   @Column("int", { name: "document_number", default: () => "'0'" })
   documentNumber: number;
 
+  @Column("datetime", {
+    name: "created_date",
+  })
+  created_date: Date;
+
   @OneToMany(
     () => ArticleTimeline,
     (articleTimeline) => articleTimeline.document
