@@ -16,7 +16,7 @@
 export const DatabaseConfiguration = {
   hostname: 'containers-us-west-38.railway.app',
   username: 'root',
-  password: 'pog71OAKzduWQYWtKZvL',
+  password: 'cMNEK4AOceWPqHEkyHcR',
   database: 'railway',
   port: 5598,
 };
