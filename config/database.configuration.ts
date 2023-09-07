@@ -13,12 +13,20 @@
   database: 'sql7579268',
 }; */
 
+// export const DatabaseConfiguration = {
+//   hostname: 'containers-us-west-38.railway.app',
+//   username: 'root',
+//   password: 'cMNEK4AOceWPqHEkyHcR',
+//   database: 'railway',
+//   port: 5598,
+// };
+
 export const DatabaseConfiguration = {
-  hostname: 'containers-us-west-38.railway.app',
-  username: 'root',
-  password: 'cMNEK4AOceWPqHEkyHcR',
-  database: 'railway',
-  port: 5598,
+  hostname: 'sql110.infinityfree.com',
+  username: 'if0_34984097',
+  password: 'uBfR76t2rd',
+  database: 'if0_34984097_inventory',
+  port: 3306,
 };
 
 // root - Nije,kikiriki1
