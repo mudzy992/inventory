@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
--- Host:                         containers-us-west-38.railway.app
--- Server version:               8.0.31 - MySQL Community Server - GPL
--- Server OS:                    Linux
--- HeidiSQL Version:             12.1.0.6537
+-- Host:                         127.0.0.1
+-- Server version:               8.1.0 - MySQL Community Server - GPL
+-- Server OS:                    Win64
+-- HeidiSQL Version:             12.5.0.6677
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -15,25 +15,27 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
--- Dumping database structure for railway
-CREATE DATABASE IF NOT EXISTS `railway` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `railway`;
+-- Dumping database structure for inventory
+DROP DATABASE IF EXISTS `inventory`;
+CREATE DATABASE IF NOT EXISTS `inventory` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `inventory`;
 
--- Dumping structure for table railway.administrator
+-- Dumping structure for table inventory.administrator
+DROP TABLE IF EXISTS `administrator`;
 CREATE TABLE IF NOT EXISTS `administrator` (
   `administrator_id` int unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   `password_hash` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   PRIMARY KEY (`administrator_id`),
   UNIQUE KEY `administrator_username` (`username`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.administrator: ~0 rows (approximately)
-DELETE FROM `administrator`;
+-- Dumping data for table inventory.administrator: ~1 rows (approximately)
 INSERT INTO `administrator` (`administrator_id`, `username`, `password_hash`) VALUES
 	(1, 'admin', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE');
 
--- Dumping structure for table railway.administrator_token
+-- Dumping structure for table inventory.administrator_token
+DROP TABLE IF EXISTS `administrator_token`;
 CREATE TABLE IF NOT EXISTS `administrator_token` (
   `administrator_token_id` int unsigned NOT NULL AUTO_INCREMENT,
   `administrator_id` int unsigned NOT NULL,
@@ -42,10 +44,9 @@ CREATE TABLE IF NOT EXISTS `administrator_token` (
   `expire_at` datetime NOT NULL,
   `is_valid` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`administrator_token_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.administrator_token: ~102 rows (approximately)
-DELETE FROM `administrator_token`;
+-- Dumping data for table inventory.administrator_token: ~105 rows (approximately)
 INSERT INTO `administrator_token` (`administrator_token_id`, `administrator_id`, `created_at`, `token`, `expire_at`, `is_valid`) VALUES
 	(2, 1, '2022-03-18 14:07:16', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjUwMjkwODM2LjA5OCwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS85OC4wLjQ3NTguMTA5IFNhZmFyaS81MzcuMzYgT1BSLzg0LjAuNDMxNi4zNiIsImlhdCI6MTY0NzYxMjQzNn0.wVS1NEISf6X2n2HZqgmwu095Kupd6hsrximwyrGEV4o', '2022-04-18 14:07:16', 1),
 	(3, 1, '2022-03-18 14:09:09', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxLCJpZGVudGl0eSI6Im0uY2VyaWNAZXBiaWguYmEiLCJleHAiOjE2NDk4NjI2OTYuMDExLCJpcCI6Ijo6MSIsInVhIjoiUG9zdG1hblJ1bnRpbWUvNy4yOC40IiwiaWF0IjoxNjQ3MTg0Mjk2fQ.kV9bMPwIvKgxQ2Mv4Pc0ezsyVkcJtptUjH2WsklpxSg', '2022-04-18 14:09:09', 1),
@@ -150,9 +151,11 @@ INSERT INTO `administrator_token` (`administrator_token_id`, `administrator_id`,
 	(106, 1, '2022-12-01 08:54:53', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNTYzMjkzLjQzMywiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6IlBvc3RtYW5SdW50aW1lLzcuMjkuMiIsImlhdCI6MTY2OTg4NDg5M30.UFqslrWzsW3dD_0n7Tpfdqd03CkRT26ZFPKaqik0GDc', '2023-01-01 08:54:53', 1),
 	(107, 1, '2022-12-01 09:31:43', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNTY1NTAzLjcwOCwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC42MiIsImlhdCI6MTY2OTg4NzEwM30.eRWhprKiF5YINuz8vQbWKuqMlD6AwGjrmthUHOS_0CQ', '2023-01-01 09:31:43', 1),
 	(108, 1, '2022-12-01 10:00:55', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNTY3MjU1LjA0OSwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC42MiIsImlhdCI6MTY2OTg4ODg1NX0.uCjR15m-DZYtI-p_A9OJWjbEs9FQ5zhSlNzHEft7FIE', '2023-01-01 10:00:55', 1),
-	(109, 1, '2022-12-01 13:56:34', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNTgxMzk0LjMzNCwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC42MiIsImlhdCI6MTY2OTkwMjk5NH0.aXYGj3gpMK5sjgJZFr4b3WBJidzqQiEfw-J27i_CVus', '2023-01-01 13:56:34', 1);
+	(109, 1, '2022-12-01 13:56:34', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNTgxMzk0LjMzNCwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC42MiIsImlhdCI6MTY2OTkwMjk5NH0.aXYGj3gpMK5sjgJZFr4b3WBJidzqQiEfw-J27i_CVus', '2023-01-01 13:56:34', 1),
+	(110, 1, '2023-09-07 11:56:43', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk2NzY2MjAzLjUyNiwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMTUuMC4wLjAgU2FmYXJpLzUzNy4zNiBPUFIvMTAxLjAuMC4wIiwiaWF0IjoxNjk0MDg3ODAzfQ.m1SuW1-39tzcLcHlqUofHNdaNnVLKCRIMJx3471rHVQ', '2023-10-08 11:56:43', 1);
 
--- Dumping structure for table railway.article
+-- Dumping structure for table inventory.article
+DROP TABLE IF EXISTS `article`;
 CREATE TABLE IF NOT EXISTS `article` (
   `article_id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
@@ -165,10 +168,9 @@ CREATE TABLE IF NOT EXISTS `article` (
   PRIMARY KEY (`article_id`),
   KEY `fk_article_category_id` (`category_id`),
   CONSTRAINT `fk_article_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.article: ~12 rows (approximately)
-DELETE FROM `article`;
+-- Dumping data for table inventory.article: ~12 rows (approximately)
 INSERT INTO `article` (`article_id`, `name`, `excerpt`, `description`, `concract`, `category_id`, `comment`, `sap_number`) VALUES
 	(83, 'ACME SSD HD11 1TB', 'Kratki opis 1', 'Detaljan opis', 'EPU-25154/2022', 8, '', '1300-200200'),
 	(84, 'ACME SSD HD11 1024GB', 'Kratki opis', 'Detaljan opis', 'EPU-25154/2022', 8, 'Komentar 1024GB', '1300-200201'),
@@ -183,7 +185,8 @@ INSERT INTO `article` (`article_id`, `name`, `excerpt`, `description`, `concract
 	(98, 'ASUS VW199T-P 19"', '19 inča monitor', '19 inča monitor kocka', 'ABA-162819-272/2022', 10, 'Komentare brisemo', '1300-183994'),
 	(103, 'Računar Dell OptiPlex 3090 SFF', '', '', '639294 ne znam', 9, NULL, '');
 
--- Dumping structure for table railway.article_feature
+-- Dumping structure for table inventory.article_feature
+DROP TABLE IF EXISTS `article_feature`;
 CREATE TABLE IF NOT EXISTS `article_feature` (
   `article_feature_id` int unsigned NOT NULL AUTO_INCREMENT,
   `article_id` int unsigned NOT NULL DEFAULT '0',
@@ -194,10 +197,9 @@ CREATE TABLE IF NOT EXISTS `article_feature` (
   KEY `fk_article_feature_feature_id` (`feature_id`) USING BTREE,
   CONSTRAINT `fk_article_feature_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_article_feature_feature_id` FOREIGN KEY (`feature_id`) REFERENCES `feature` (`feature_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=409 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.article_feature: ~53 rows (approximately)
-DELETE FROM `article_feature`;
+-- Dumping data for table inventory.article_feature: ~53 rows (approximately)
 INSERT INTO `article_feature` (`article_feature_id`, `article_id`, `feature_id`, `value`) VALUES
 	(54, 83, 8, '1TB'),
 	(55, 83, 9, 'HDD'),
@@ -253,7 +255,8 @@ INSERT INTO `article_feature` (`article_feature_id`, `article_id`, `feature_id`,
 	(407, 103, 13, '8GB'),
 	(408, 103, 10, 'SFF');
 
--- Dumping structure for table railway.article_timeline
+-- Dumping structure for table inventory.article_timeline
+DROP TABLE IF EXISTS `article_timeline`;
 CREATE TABLE IF NOT EXISTS `article_timeline` (
   `article_timeline_id` int unsigned NOT NULL AUTO_INCREMENT,
   `article_id` int unsigned NOT NULL,
@@ -272,10 +275,9 @@ CREATE TABLE IF NOT EXISTS `article_timeline` (
   CONSTRAINT `fk_article_timeline_article` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_article_timeline_documents` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_article_timeline_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table railway.article_timeline: ~15 rows (approximately)
-DELETE FROM `article_timeline`;
+-- Dumping data for table inventory.article_timeline: ~15 rows (approximately)
 INSERT INTO `article_timeline` (`article_timeline_id`, `article_id`, `user_id`, `document_id`, `serial_number`, `status`, `timestamp`, `inv_broj`, `comment`) VALUES
 	(61, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-26 23:44:35', 'ZE065848232', ''),
 	(63, 84, 152, 204, 'TESTNEW', 'zaduženo', '2022-11-26 23:50:30', 'ZE065848232', ''),
@@ -293,7 +295,8 @@ INSERT INTO `article_timeline` (`article_timeline_id`, `article_id`, `user_id`, 
 	(77, 90, 150, 226, 'SERIJSKINOCHANE', 'razduženo', '2022-12-01 16:26:36', 'INVENTURNI', 'Zaduženje na Mirhu Ć.'),
 	(78, 90, 174, 226, 'SERIJSKINOCHANE', 'zaduženo', '2022-12-01 16:26:37', 'INVENTURNI', 'Zaduženje na Mirhu Ć.');
 
--- Dumping structure for table railway.category
+-- Dumping structure for table inventory.category
+DROP TABLE IF EXISTS `category`;
 CREATE TABLE IF NOT EXISTS `category` (
   `category_id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
@@ -304,10 +307,9 @@ CREATE TABLE IF NOT EXISTS `category` (
   UNIQUE KEY `uq_category_image_path` (`image_path`),
   KEY `fk_category_parent__category_id` (`parent__category_id`) USING BTREE,
   CONSTRAINT `FK_category_category` FOREIGN KEY (`parent__category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.category: ~8 rows (approximately)
-DELETE FROM `category`;
+-- Dumping data for table inventory.category: ~8 rows (approximately)
 INSERT INTO `category` (`category_id`, `name`, `image_path`, `parent__category_id`) VALUES
 	(7, 'Rač. oprema', 'bi bi-pc-display', NULL),
 	(8, 'Memorija pohrane', 'bi bi-hdd', 9),
@@ -318,7 +320,8 @@ INSERT INTO `category` (`category_id`, `name`, `image_path`, `parent__category_i
 	(18, 'Žični telefon', 'bi bi-phone', 11),
 	(20, 'Miš', 'bi bi-mouse2-fill', 7);
 
--- Dumping structure for table railway.debt_items
+-- Dumping structure for table inventory.debt_items
+DROP TABLE IF EXISTS `debt_items`;
 CREATE TABLE IF NOT EXISTS `debt_items` (
   `debt_items_id` int unsigned NOT NULL AUTO_INCREMENT,
   `user_article_id` int unsigned NOT NULL,
@@ -340,14 +343,14 @@ CREATE TABLE IF NOT EXISTS `debt_items` (
   CONSTRAINT `fk_debt_items_document_id` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `FK_debt_items_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_debt_items_user_article_id` FOREIGN KEY (`user_article_id`) REFERENCES `user_article` (`user_article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.debt_items: ~0 rows (approximately)
-DELETE FROM `debt_items`;
+-- Dumping data for table inventory.debt_items: ~0 rows (approximately)
 INSERT INTO `debt_items` (`debt_items_id`, `user_article_id`, `article_id`, `user_id`, `document_id`, `value`, `timestamp`, `serial_number`, `status`, `comment`, `inv_broj`) VALUES
 	(82, 275, 96, 152, 211, 1, '2022-11-13 23:36:20', '51738FEN', 'razduženo', '', 'ZE0621548');
 
--- Dumping structure for table railway.department
+-- Dumping structure for table inventory.department
+DROP TABLE IF EXISTS `department`;
 CREATE TABLE IF NOT EXISTS `department` (
   `department_id` int unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
@@ -357,10 +360,9 @@ CREATE TABLE IF NOT EXISTS `department` (
   PRIMARY KEY (`department_id`) USING BTREE,
   KEY `FK_department_department` (`parent_department_id`),
   CONSTRAINT `FK_department_department` FOREIGN KEY (`parent_department_id`) REFERENCES `department` (`department_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.department: ~32 rows (approximately)
-DELETE FROM `department`;
+-- Dumping data for table inventory.department: ~32 rows (approximately)
 INSERT INTO `department` (`department_id`, `title`, `description`, `departmend_code`, `parent_department_id`) VALUES
 	(2, 'Sektor za IKT', 'Sektor za informacione i komunikacione tehnologije IKT', '1010206', NULL),
 	(3, 'Služba za IKT Zenica', 'Sektor za informacione i komunikacione tehnologije IKT Zenica', '101020601', 2),
@@ -395,7 +397,8 @@ INSERT INTO `department` (`department_id`, `title`, `description`, `departmend_c
 	(36, 'Služba za održavanje mreža i postrojenja', 'Služba za održavanje mreža i postrojenja', '103080401', 35),
 	(37, 'Služba za transport', 'Služba za transport', '103080402', 35);
 
--- Dumping structure for table railway.department_job
+-- Dumping structure for table inventory.department_job
+DROP TABLE IF EXISTS `department_job`;
 CREATE TABLE IF NOT EXISTS `department_job` (
   `department_job_id` int unsigned NOT NULL AUTO_INCREMENT,
   `department_id` int unsigned NOT NULL DEFAULT '0',
@@ -408,10 +411,9 @@ CREATE TABLE IF NOT EXISTS `department_job` (
   CONSTRAINT `department_job_department_id` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `department_job_job_id` FOREIGN KEY (`job_id`) REFERENCES `job` (`job_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `FK_department_job_location` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.department_job: ~69 rows (approximately)
-DELETE FROM `department_job`;
+-- Dumping data for table inventory.department_job: ~69 rows (approximately)
 INSERT INTO `department_job` (`department_job_id`, `department_id`, `job_id`, `location_id`) VALUES
 	(2, 3, 2, 2),
 	(13, 5, 7, 2),
@@ -483,7 +485,8 @@ INSERT INTO `department_job` (`department_job_id`, `department_id`, `job_id`, `l
 	(110, 35, 8, 2),
 	(111, 36, 9, 2);
 
--- Dumping structure for table railway.destroyed
+-- Dumping structure for table inventory.destroyed
+DROP TABLE IF EXISTS `destroyed`;
 CREATE TABLE IF NOT EXISTS `destroyed` (
   `destroyed_id` int unsigned NOT NULL AUTO_INCREMENT,
   `user_article_id` int unsigned NOT NULL,
@@ -507,48 +510,49 @@ CREATE TABLE IF NOT EXISTS `destroyed` (
   CONSTRAINT `fk_destroyed_user_article_id` FOREIGN KEY (`user_article_id`) REFERENCES `user_article` (`user_article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.destroyed: ~0 rows (approximately)
-DELETE FROM `destroyed`;
+-- Dumping data for table inventory.destroyed: ~0 rows (approximately)
 
--- Dumping structure for table railway.documents
+-- Dumping structure for table inventory.documents
+DROP TABLE IF EXISTS `documents`;
 CREATE TABLE IF NOT EXISTS `documents` (
   `documents_id` int unsigned NOT NULL AUTO_INCREMENT,
   `article_id` int unsigned NOT NULL,
   `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
   `document_number` int NOT NULL DEFAULT '0',
+  `created_date` datetime NOT NULL,
   PRIMARY KEY (`documents_id`),
   KEY `fk_documents_article_id` (`article_id`),
   CONSTRAINT `fk_documents_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=227 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.documents: ~23 rows (approximately)
-DELETE FROM `documents`;
-INSERT INTO `documents` (`documents_id`, `article_id`, `path`, `document_number`) VALUES
-	(204, 93, 'prenosnica1.docx', 1),
-	(205, 93, 'prenosnica2.docx', 2),
-	(206, 90, 'prenosnica3.docx', 3),
-	(207, 93, 'prenosnica4.docx', 4),
-	(208, 95, 'prenosnica5.docx', 5),
-	(209, 96, 'prenosnica6.docx', 6),
-	(210, 96, 'prenosnica7.docx', 7),
-	(211, 96, 'prenosnica8.docx', 8),
-	(212, 90, 'prenosnica9.docx', 9),
-	(213, 90, 'prenosnica10.docx', 10),
-	(214, 90, 'prenosnica11.docx', 11),
-	(215, 90, 'prenosnica12.docx', 12),
-	(216, 90, 'prenosnica13.docx', 13),
-	(217, 103, 'prenosnica14.docx', 14),
-	(218, 90, 'prenosnica15.docx', 15),
-	(219, 90, 'prenosnica16.docx', 16),
-	(220, 90, 'prenosnica17.docx', 17),
-	(221, 90, 'prenosnica18.docx', 18),
-	(222, 90, 'prenosnica19.docx', 19),
-	(223, 90, 'prenosnica20.docx', 20),
-	(224, 90, 'prenosnica21.docx', 21),
-	(225, 90, 'prenosnica22.docx', 22),
-	(226, 90, 'prenosnica23.docx', 23);
+-- Dumping data for table inventory.documents: ~23 rows (approximately)
+INSERT INTO `documents` (`documents_id`, `article_id`, `path`, `document_number`, `created_date`) VALUES
+	(204, 93, 'prenosnica1.docx', 1, '2023-09-07 14:14:32'),
+	(205, 93, 'prenosnica2.docx', 2, '2023-09-07 14:14:33'),
+	(206, 90, 'prenosnica3.docx', 3, '2023-09-07 14:14:34'),
+	(207, 93, 'prenosnica4.docx', 4, '2023-09-07 14:14:34'),
+	(208, 95, 'prenosnica5.docx', 5, '2023-09-07 14:14:35'),
+	(209, 96, 'prenosnica6.docx', 6, '2023-09-07 14:14:35'),
+	(210, 96, 'prenosnica7.docx', 7, '2023-09-07 14:14:36'),
+	(211, 96, 'prenosnica8.docx', 8, '2023-09-07 14:14:37'),
+	(212, 90, 'prenosnica9.docx', 9, '2023-09-07 14:14:37'),
+	(213, 90, 'prenosnica10.docx', 10, '2024-09-07 14:14:38'),
+	(214, 90, 'prenosnica11.docx', 11, '2025-09-07 14:14:39'),
+	(215, 90, 'prenosnica12.docx', 12, '2023-09-07 14:14:41'),
+	(216, 90, 'prenosnica13.docx', 13, '2023-09-07 14:14:43'),
+	(217, 103, 'prenosnica14.docx', 14, '2023-09-07 14:14:44'),
+	(218, 90, 'prenosnica15.docx', 15, '2023-09-07 14:14:44'),
+	(219, 90, 'prenosnica16.docx', 16, '2023-09-07 14:14:45'),
+	(220, 90, 'prenosnica17.docx', 17, '2023-09-07 14:14:45'),
+	(221, 90, 'prenosnica18.docx', 18, '2023-09-07 14:14:46'),
+	(222, 90, 'prenosnica19.docx', 19, '2023-09-07 14:14:46'),
+	(223, 90, 'prenosnica20.docx', 20, '2023-09-07 14:14:47'),
+	(224, 90, 'prenosnica21.docx', 21, '2023-09-07 14:14:50'),
+	(225, 90, 'prenosnica22.docx', 22, '2023-09-07 14:14:48'),
+	(226, 90, 'prenosnica23.docx', 23, '2023-09-07 14:14:49');
 
--- Dumping structure for table railway.feature
+-- Dumping structure for table inventory.feature
+DROP TABLE IF EXISTS `feature`;
 CREATE TABLE IF NOT EXISTS `feature` (
   `feature_id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
@@ -557,10 +561,9 @@ CREATE TABLE IF NOT EXISTS `feature` (
   UNIQUE KEY `uq_feature_category_id_name` (`category_id`,`name`),
   KEY `fk_feature_category_id` (`category_id`) USING BTREE,
   CONSTRAINT `fk_feature_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.feature: ~19 rows (approximately)
-DELETE FROM `feature`;
+-- Dumping data for table inventory.feature: ~19 rows (approximately)
 INSERT INTO `feature` (`feature_id`, `name`, `category_id`) VALUES
 	(8, 'Kapacitet', 8),
 	(9, 'Tip', 8),
@@ -582,17 +585,17 @@ INSERT INTO `feature` (`feature_id`, `name`, `category_id`) VALUES
 	(49, 'DPI', 20),
 	(50, 'Tip', 20);
 
--- Dumping structure for table railway.job
+-- Dumping structure for table inventory.job
+DROP TABLE IF EXISTS `job`;
 CREATE TABLE IF NOT EXISTS `job` (
   `job_id` int unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
   `description` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
   `job_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
   PRIMARY KEY (`job_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.job: ~34 rows (approximately)
-DELETE FROM `job`;
+-- Dumping data for table inventory.job: ~34 rows (approximately)
 INSERT INTO `job` (`job_id`, `title`, `description`, `job_code`) VALUES
 	(2, 'Tehničar za IKT **', 'Tehničar za IKT ** Zenica', '936545'),
 	(6, 'Koordinator za GIS', 'Koordinator za GIS', 'undefined'),
@@ -629,7 +632,8 @@ INSERT INTO `job` (`job_id`, `title`, `description`, `job_code`) VALUES
 	(37, 'Tehničar za ispitivanja **', 'Tehničar za ispitivanja **', ''),
 	(38, 'Tehničar za pripremu', 'Tehničar za pripremu', '');
 
--- Dumping structure for table railway.location
+-- Dumping structure for table inventory.location
+DROP TABLE IF EXISTS `location`;
 CREATE TABLE IF NOT EXISTS `location` (
   `location_id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
@@ -638,17 +642,17 @@ CREATE TABLE IF NOT EXISTS `location` (
   PRIMARY KEY (`location_id`),
   KEY `FK_location_location` (`parent_location_id`),
   CONSTRAINT `FK_location_location` FOREIGN KEY (`parent_location_id`) REFERENCES `location` (`location_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.location: ~4 rows (approximately)
-DELETE FROM `location`;
+-- Dumping data for table inventory.location: ~4 rows (approximately)
 INSERT INTO `location` (`location_id`, `name`, `code`, `parent_location_id`) VALUES
 	(1, 'ED Zenica', '101', NULL),
 	(2, 'Direkcija Zenica', '103', 1),
 	(3, 'PJD Zenica', '10303', 1),
 	(34, 'PJD Visoko', '105', 1);
 
--- Dumping structure for table railway.responsibility
+-- Dumping structure for table inventory.responsibility
+DROP TABLE IF EXISTS `responsibility`;
 CREATE TABLE IF NOT EXISTS `responsibility` (
   `responsibility_id` int unsigned NOT NULL AUTO_INCREMENT,
   `user_article_id` int unsigned NOT NULL,
@@ -670,10 +674,9 @@ CREATE TABLE IF NOT EXISTS `responsibility` (
   CONSTRAINT `fk_responsibility_document_id` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `FK_responsibility_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_responsibility_user_article_id` FOREIGN KEY (`user_article_id`) REFERENCES `user_article` (`user_article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=136 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.responsibility: ~3 rows (approximately)
-DELETE FROM `responsibility`;
+-- Dumping data for table inventory.responsibility: ~5 rows (approximately)
 INSERT INTO `responsibility` (`responsibility_id`, `user_article_id`, `user_id`, `article_id`, `document_id`, `value`, `status`, `timestamp`, `serial_number`, `inv_broj`) VALUES
 	(129, 270, 148, 93, 207, 1, 'zaduženo', '2022-11-13 18:31:51', 'HDIS63839', 'ZE0685862'),
 	(130, 271, 148, 95, 208, 1, 'zaduženo', '2022-11-13 18:32:47', 'Bsjfhkakd', 'ZE06858778'),
@@ -681,7 +684,8 @@ INSERT INTO `responsibility` (`responsibility_id`, `user_article_id`, `user_id`,
 	(134, 279, 150, 90, 218, 1, 'zaduženo', '2022-11-27 22:09:41', 'SERIJSKINOCHANE', 'INVENTURNI'),
 	(135, 280, 156, 90, 219, 1, 'zaduženo', '2022-11-28 21:24:40', 'AEROZAKMI', 'ZE1264854');
 
--- Dumping structure for table railway.stock
+-- Dumping structure for table inventory.stock
+DROP TABLE IF EXISTS `stock`;
 CREATE TABLE IF NOT EXISTS `stock` (
   `stock_id` int unsigned NOT NULL AUTO_INCREMENT,
   `article_id` int unsigned NOT NULL DEFAULT '0',
@@ -692,10 +696,9 @@ CREATE TABLE IF NOT EXISTS `stock` (
   PRIMARY KEY (`stock_id`),
   KEY `fk_stock_article_id` (`article_id`),
   CONSTRAINT `fk_stock_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=452 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.stock: ~13 rows (approximately)
-DELETE FROM `stock`;
+-- Dumping data for table inventory.stock: ~13 rows (approximately)
 INSERT INTO `stock` (`stock_id`, `article_id`, `value_on_concract`, `value_available`, `timestamp`, `sap_number`) VALUES
 	(192, 91, 1, 0, '2022-03-14 22:45:34', '1300-100525'),
 	(217, 84, 50, 38, '2022-03-18 14:42:55', '1300-200201'),
@@ -711,7 +714,8 @@ INSERT INTO `stock` (`stock_id`, `article_id`, `value_on_concract`, `value_avail
 	(449, 103, 33, 33, '2022-11-26 09:09:37', ''),
 	(451, 90, 5, 2, '2022-11-28 21:24:40', '1300-100200');
 
--- Dumping structure for table railway.upgrade_feature
+-- Dumping structure for table inventory.upgrade_feature
+DROP TABLE IF EXISTS `upgrade_feature`;
 CREATE TABLE IF NOT EXISTS `upgrade_feature` (
   `upgrade_feature_id` int unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
@@ -724,17 +728,17 @@ CREATE TABLE IF NOT EXISTS `upgrade_feature` (
   KEY `fk_upgrade_feature_serial_number_user_article_serial_number` (`serial_number`),
   KEY `upgrade_feature_article_id_article_article_id` (`article_id`),
   CONSTRAINT `upgrade_feature_article_id_article_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.upgrade_feature: ~4 rows (approximately)
-DELETE FROM `upgrade_feature`;
+-- Dumping data for table inventory.upgrade_feature: ~4 rows (approximately)
 INSERT INTO `upgrade_feature` (`upgrade_feature_id`, `name`, `value`, `timestamp`, `comment`, `serial_number`, `article_id`) VALUES
 	(3, 'SSD', '256GB', '2022-07-14 10:08:32', 'Ugrađen SSD 256GB, ostavljen HDD 500GB zbog podataka. Urađeno detaljno čišćenje radne stanice.', 'KJKSZPJJJ', 92),
 	(4, 'HDD', '500GB', '2022-10-21 18:05:27', 'Ugrađen HDD iz starog računara zbog podataka.', '51738FEN', 90),
 	(5, 'SSD', '256 GB', '2022-11-13 22:53:30', 'Izvađen stari HDD od 500GB te umjesto njega ugrađen SDD 256GB', 'KJKSZPJ', 90),
 	(6, 'SSD', '512GB', '2022-11-20 23:29:49', 'Test', 'KJKSZPJ', 90);
 
--- Dumping structure for table railway.user
+-- Dumping structure for table inventory.user
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `user_id` int unsigned NOT NULL AUTO_INCREMENT,
   `surname` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
@@ -754,10 +758,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   CONSTRAINT `fk_user_department_id` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_user_job_id` FOREIGN KEY (`job_id`) REFERENCES `job` (`job_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_user_location_id` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.user: ~52 rows (approximately)
-DELETE FROM `user`;
+-- Dumping data for table inventory.user: ~52 rows (approximately)
 INSERT INTO `user` (`user_id`, `surname`, `forname`, `fullname`, `local_number`, `telephone`, `email`, `password_hash`, `job_id`, `department_id`, `location_id`) VALUES
 	(148, 'Mudžahid', 'Cerić', 'Cerić Mudžahid', '1696', '032/449-696', 'm.ceric@epbih.ba', 'A8E11064F018205C700B163E6AB9978077A5DF871F03AD1A43A569CC2D88957B1E44C92EE07EDBBC6523114B37002FE6BDEC5C7F4C03F1C87782312894DE3CB5', 2, 3, 2),
 	(149, 'Sabit', 'Alić', 'Alić Sabit', '1608', '032/449-608', 's.alic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 7, 5, 2),
@@ -812,7 +815,8 @@ INSERT INTO `user` (`user_id`, `surname`, `forname`, `fullname`, `local_number`,
 	(198, 'Admir', 'Nizamic', 'Nizamic Admir', '1518', '032/449-518', 'a.nizamic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 37, 15, 3),
 	(199, 'Čajdrić', 'Amel', 'Amel Čajdrić', '1519', '032/449-519', 'a.cajdric@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 36, 3);
 
--- Dumping structure for table railway.user_article
+-- Dumping structure for table inventory.user_article
+DROP TABLE IF EXISTS `user_article`;
 CREATE TABLE IF NOT EXISTS `user_article` (
   `user_article_id` int unsigned NOT NULL AUTO_INCREMENT,
   `article_id` int unsigned NOT NULL,
@@ -832,10 +836,9 @@ CREATE TABLE IF NOT EXISTS `user_article` (
   CONSTRAINT `fk_user_article_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON UPDATE CASCADE,
   CONSTRAINT `fk_user_article_document_id` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON UPDATE CASCADE,
   CONSTRAINT `FK_user_article_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=282 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.user_article: ~7 rows (approximately)
-DELETE FROM `user_article`;
+-- Dumping data for table inventory.user_article: ~7 rows (approximately)
 INSERT INTO `user_article` (`user_article_id`, `article_id`, `document_id`, `user_id`, `serial_number`, `status`, `timestamp`, `comment`, `inv_broj`, `value`) VALUES
 	(270, 93, 207, 148, 'HDIS63839', 'zaduženo', '2022-11-13 18:31:51', 'Zaduženje nove opreme', 'ZE0685862', NULL),
 	(271, 95, 208, 148, 'Bsjfhkakd', 'zaduženo', '2022-11-13 18:32:47', 'Zaduženje nove opreme', 'ZE06858778', NULL),
@@ -845,7 +848,8 @@ INSERT INTO `user_article` (`user_article_id`, `article_id`, `document_id`, `use
 	(280, 90, 225, 173, 'AEROZAKMI', 'zaduženo', '2022-11-28 21:24:40', 'Zaduženje nove opreme', 'ZE1264854', NULL),
 	(281, 84, 212, 152, 'TESTNEW', 'zaduženo', '2022-12-01 09:44:53', 'Zaduženje nove opreme', 'ZE065848232', NULL);
 
--- Dumping structure for table railway.user_token
+-- Dumping structure for table inventory.user_token
+DROP TABLE IF EXISTS `user_token`;
 CREATE TABLE IF NOT EXISTS `user_token` (
   `user_token_id` int unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int unsigned NOT NULL DEFAULT '0',
@@ -854,10 +858,9 @@ CREATE TABLE IF NOT EXISTS `user_token` (
   `expire_at` datetime NOT NULL,
   `is_valid` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`user_token_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
 
--- Dumping data for table railway.user_token: ~52 rows (approximately)
-DELETE FROM `user_token`;
+-- Dumping data for table inventory.user_token: ~53 rows (approximately)
 INSERT INTO `user_token` (`user_token_id`, `user_id`, `created_at`, `token`, `expire_at`, `is_valid`) VALUES
 	(4, 1, '2022-03-12 23:44:18', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxLCJpZGVudGl0eSI6Im0uY2VyaWNAZXBiaWguYmEiLCJleHAiOjE2NDk4MDcwNTguNjU2LCJpcCI6Ijo6MSIsInVhIjoiUG9zdG1hblJ1bnRpbWUvNy4yOC40IiwiaWF0IjoxNjQ3MTI4NjU4fQ.xunJeYa9nsAj7pDRMYKTSb28CdCxDxeO7F9SYu34yZk', '2022-04-12 23:44:18', 1),
 	(5, 1, '2022-03-12 23:44:25', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxLCJpZGVudGl0eSI6Im0uY2VyaWNAZXBiaWguYmEiLCJleHAiOjE2NDk4MDcwNjUuODUzLCJpcCI6Ijo6MSIsInVhIjoiUG9zdG1hblJ1bnRpbWUvNy4yOC40IiwiaWF0IjoxNjQ3MTI4NjY1fQ.3QFienwuIkBTzWAtYwK6GQw7wiXSKfdMYBmSk-pGHXg', '2022-04-12 23:44:25', 1),
@@ -913,7 +916,8 @@ INSERT INTO `user_token` (`user_token_id`, `user_id`, `created_at`, `token`, `ex
 	(55, 148, '2022-11-28 12:06:18', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MjMxNTU3OC4xMzksImlwIjoiMTI3LjAuMC4xIiwidWEiOiJNb3ppbGxhLzUuMCAoTGludXg7IEFuZHJvaWQgMTI7IDIxMDgxMTExUkcgQnVpbGQvU1AxQS4yMTA4MTIuMDE2KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA3LjAuNTMwNC4xNDEgTW9iaWxlIFNhZmFyaS81MzcuMzYgT1BYLzEuNyIsImlhdCI6MTY2OTYzNzE3OH0.wFbVBAEICkAVdjo74xjUFVKfbRG-4n7OJRWU9DtEwg0', '2022-12-29 12:06:18', 1),
 	(56, 148, '2022-12-01 16:32:20', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MjU5MDczOC41MTEsImlwIjoiOjpmZmZmOjE5Mi4xNjguMC4xMyIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMDcuMC4xNDE4LjUyIiwiaWF0IjoxNjY5OTEyMzM4fQ.EyaPVcfd7BDstVyUjR2wSKkHRmWIBXmm8KXIZOJ5o8k', '2023-01-01 16:32:18', 1);
 
--- Dumping structure for trigger railway.user_before_insert
+-- Dumping structure for trigger inventory.user_before_insert
+DROP TRIGGER IF EXISTS `user_before_insert`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO';
 DELIMITER //
 CREATE TRIGGER `user_before_insert` BEFORE INSERT ON `user` FOR EACH ROW BEGIN
@@ -922,7 +926,8 @@ END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
 
--- Dumping structure for trigger railway.user_before_update
+-- Dumping structure for trigger inventory.user_before_update
+DROP TRIGGER IF EXISTS `user_before_update`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO';
 DELIMITER //
 CREATE TRIGGER `user_before_update` BEFORE UPDATE ON `user` FOR EACH ROW BEGIN

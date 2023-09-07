@@ -1,10 +1,10 @@
-/* export const DatabaseConfiguration = {
-  hostname: 'localhost',
+export const DatabaseConfiguration = {
+  hostname: '127.0.0.1',
   database: 'inventory',
   username: 'root',
-  password: 'root',
+  password: 'Mojalozinka!1',
   port: 3306,
-}; */
+}; 
 
 /* export const DatabaseConfiguration = {
   hostname: 'sql7.freemysqlhosting.net',
@@ -21,12 +21,12 @@
 //   port: 5598,
 // };
 
-export const DatabaseConfiguration = {
-  hostname: 'sql110.infinityfree.com',
-  username: 'if0_34984097',
-  password: 'uBfR76t2rd',
-  database: 'if0_34984097_inventory',
-  port: 3306,
-};
+// export const DatabaseConfiguration = {
+//   hostname: 'sql110.infinityfree.com',
+//   username: 'if0_34984097',
+//   password: 'uBfR76t2rd',
+//   database: 'if0_34984097_inventory',
+//   port: 3306,
+// };
 
 // root - Nije,kikiriki1

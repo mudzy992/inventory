@@ -8,6 +8,7 @@ import { AddEmployeArticleDto } from 'src/dtos/user/add.employe.article.dto';
 import { Article } from 'src/entities/Article';
 import { ArticleTimeline } from 'src/entities/ArticleTimeline';
 import { Documents } from 'src/entities/Documents';
+import { Responsibility } from 'src/entities/Responsibility';
 import { Stock } from 'src/entities/Stock';
 import { User } from 'src/entities/User';
 import { UserArticle } from 'src/entities/UserArticle';
@@ -29,6 +30,8 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     private readonly document: Repository<Documents>,
     @InjectRepository(ArticleTimeline)
     private readonly articleTimeline: Repository<ArticleTimeline>,
+    @InjectRepository(Responsibility)
+    private readonly responsibility: Repository<Responsibility>,
   ) {
     super(userArticle);
   }
@@ -332,6 +335,13 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       newArticleTimelineDebt.status = "razduženo"
 
       await this.articleTimeline.save(newArticleTimelineDebt)
+
+      const resArticle: Responsibility = await this.responsibility.findOne({
+        /*  userId: user, */
+         serialNumber: data.serialNumber,
+         articleId: data.articleId,
+       });
+       await this.responsibility.remove(resArticle);
 
       return await this.userArticle.findOne({
         where: { articleId: data.articleId },
