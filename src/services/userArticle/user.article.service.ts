@@ -104,21 +104,9 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
           userArticleId: exResponsibility.userArticleId,
         });
 
-        /* let lastRecord = await this.document.findOne({
-          order: {
-            created_date: 'DESC'
-          }
+        const respons: Responsibility = await this.responsibility.findOne({
+          userArticleId: ua.userArticleId
         })
-
-        let currentYear = lastRecord ? new Date(lastRecord.created_date).getFullYear() : new Date().getFullYear();
-        let documentNumber;
-
-        if (currentYear === new Date().getFullYear()) {
-            documentNumber = lastRecord ? lastRecord.documentNumber + 1 : 1;
-        } else {
-            documentNumber = 1;
-            currentYear = new Date().getFullYear();
-        } */
 
         await this.createDocument('', '', '', '', '', userId, data);
     
@@ -132,33 +120,54 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
           return new ApiResponse('error', -2020, 'Prenosnica nije kreirana');
         }
 
+        if(respons){
+          this.responsibility.update(respons, {
+            documentId: savedDocument.documentsId,
+            timestamp: ua.timestamp,
+          })
+        } else if (!respons){
+          const newResponsibility: Responsibility = new Responsibility();
+          newResponsibility.userArticleId = ua.userArticleId;
+          newResponsibility.userId = ua.userId;
+          newResponsibility.articleId = ua.articleId;
+          newResponsibility.documentId = savedDocument.documentsId;
+          newResponsibility.timestamp = ua.timestamp;
+          newResponsibility.value = ua.value;
+          newResponsibility.serialNumber = ua.serialNumber;
+          newResponsibility.invBroj = ua.invBroj;
+          newResponsibility.status = 'zaduženo';
+
+          const savedResponsibility = await this.responsibility.save(newResponsibility);
+          if (!savedResponsibility) {
+            return new ApiResponse('error', -2020, 'Zaduženje nije kreirano');
+          }
+        }
+
         this.userArticle.update(ua, {
           documentId: savedDocument.documentsId,
           userId: userId,
           comment: data.comment,
         });
-        
-        const newArticleTimelineDebt: ArticleTimeline = new ArticleTimeline();
-        newArticleTimelineDebt.documentId = savedDocument.documentsId;
-        newArticleTimelineDebt.userId = exResponsibility.userId;
-        newArticleTimelineDebt.serialNumber = data.serialNumber;
-        newArticleTimelineDebt.invBroj = data.invBroj;
-        newArticleTimelineDebt.articleId = data.articleId;
-        newArticleTimelineDebt.comment = data.comment;
-        newArticleTimelineDebt.status = "razduženo"
 
-        await this.articleTimeline.save(newArticleTimelineDebt)
+        await this.newArticleTimeline(
+            savedDocument.documentsId,
+            exResponsibility.userId,
+            data.serialNumber,
+            data.invBroj,
+            data.articleId,
+            data.comment,
+            "razduženo"
+          )
 
-        const newArticleTimelineResp: ArticleTimeline = new ArticleTimeline();
-        newArticleTimelineResp.documentId = savedDocument.documentsId;
-        newArticleTimelineResp.userId = userId;
-        newArticleTimelineResp.serialNumber = data.serialNumber;
-        newArticleTimelineResp.invBroj = data.invBroj;
-        newArticleTimelineResp.articleId = data.articleId;
-        newArticleTimelineResp.comment = data.comment;
-        newArticleTimelineResp.status = "zaduženo"
-
-        await this.articleTimeline.save(newArticleTimelineResp)
+        await this.newArticleTimeline(
+            savedDocument.documentsId,
+            userId,
+            data.serialNumber,
+            data.invBroj,
+            data.articleId,
+            data.comment,
+            "zaduženo"
+          )
         
         return
       }
@@ -168,23 +177,7 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       });
 
       this.checkStock(data.articleId)
-
-      /* let lastRecord = await this.document.findOne({
-        order: {
-          created_date: 'DESC'
-        }
-      })
-
-      let currentYear = lastRecord ? new Date(lastRecord.created_date).getFullYear() : new Date().getFullYear();
-      let documentNumber;
-
-      if (currentYear === new Date().getFullYear()) {
-          documentNumber = lastRecord ? lastRecord.documentNumber + 1 : 1;
-      } else {
-          documentNumber = 1;
-          currentYear = new Date().getFullYear();
-      } */
-  
+ 
       await this.createDocument('', '', '', '', '', userId, data);
 
       const newDocument: Documents = new Documents();
@@ -201,19 +194,18 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         documentId: savedDocument.documentsId,
         userId: userId,
         status: 'zaduženo',
-        comment: "Zaduženje nove opreme",
+        comment: "Zaduženje nove opreme 2",
       });
 
-      const newArticleTimeline: ArticleTimeline = new ArticleTimeline();
-        newArticleTimeline.documentId = savedDocument.documentsId;
-        newArticleTimeline.userId = userId;
-        newArticleTimeline.serialNumber = data.serialNumber;
-        newArticleTimeline.invBroj = data.invBroj;
-        newArticleTimeline.articleId = data.articleId;
-        newArticleTimeline.comment = data.comment;
-        newArticleTimeline.status = "zaduženo"
-
-        await this.articleTimeline.save(newArticleTimeline)
+      await this.newArticleTimeline(
+        savedDocument.documentsId,
+        userId,
+        data.serialNumber,
+        data.invBroj,
+        data.articleId,
+        data.comment,
+        "zaduženo"
+        )
           
         const artStock: Stock = await this.stock.findOne({
           articleId: data.articleId,
@@ -224,17 +216,15 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
 
         if(exResponsibility){
 
-          const newArticleTimelineDebt: ArticleTimeline = new ArticleTimeline();
-          newArticleTimelineDebt.documentId = savedDocument.documentsId;
-          newArticleTimelineDebt.userId = exResponsibility.userId;
-          newArticleTimelineDebt.serialNumber = data.serialNumber;
-          newArticleTimelineDebt.invBroj = data.invBroj;
-          newArticleTimelineDebt.articleId = data.articleId;
-          newArticleTimelineDebt.comment = data.comment;
-          newArticleTimelineDebt.status = "razduženo"
-
-          await this.articleTimeline.save(newArticleTimelineDebt)
-
+          await this.newArticleTimeline(
+            savedDocument.documentsId,
+            exResponsibility.userId,
+            data.serialNumber,
+            data.invBroj,
+            data.articleId,
+            data.comment,
+            "razduženo"
+          )
       }
       return await this.userArticle.findOne({
         where: { articleId: data.articleId },
@@ -303,7 +293,8 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       }
     }
 
-    const ua: UserArticle = await this.userArticle.findOne({
+    if(exResponsibility) {
+      const ua: UserArticle = await this.userArticle.findOne({
       userArticleId: exResponsibility.userArticleId,
     });
     
@@ -325,16 +316,15 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       comment: data.comment,
     });
 
-      const newArticleTimelineDebt: ArticleTimeline = new ArticleTimeline();
-      newArticleTimelineDebt.documentId = savedDocument.documentsId;
-      newArticleTimelineDebt.userId = exResponsibility.userId;
-      newArticleTimelineDebt.serialNumber = data.serialNumber;
-      newArticleTimelineDebt.invBroj = data.invBroj;
-      newArticleTimelineDebt.articleId = data.articleId;
-      newArticleTimelineDebt.comment = data.comment;
-      newArticleTimelineDebt.status = "razduženo"
-
-      await this.articleTimeline.save(newArticleTimelineDebt)
+      await this.newArticleTimeline(
+              savedDocument.documentsId,
+              exResponsibility.userId,
+              data.serialNumber,
+              data.invBroj,
+              data.articleId,
+              data.comment,
+              "razduženo"
+          )
 
       const resArticle: Responsibility = await this.responsibility.findOne({
         /*  userId: user, */
@@ -347,6 +337,9 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         where: { articleId: data.articleId },
         relations: ['article', 'user', 'document'],
       });
+    }
+
+    //U SLUČAJU DA IDE NA SKLADIŠTE TREBA POVEĆAVATI BROJ STOCK
   }
 
   async destroyeArticleFromEmployee(
@@ -420,21 +413,49 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       }
     }
 
-      const newArticleTimelineDebt: ArticleTimeline = new ArticleTimeline();
-      newArticleTimelineDebt.documentId = savedDocument.documentsId;
-      newArticleTimelineDebt.userId = exUserArticle.userId;
-      newArticleTimelineDebt.serialNumber = data.serialNumber;
-      newArticleTimelineDebt.invBroj = data.invBroj;
-      newArticleTimelineDebt.articleId = data.articleId;
-      newArticleTimelineDebt.comment = data.comment;
-      newArticleTimelineDebt.status = "otpisano"
-
-      await this.articleTimeline.save(newArticleTimelineDebt)
-
+      await this.newArticleTimeline(
+        savedDocument.documentsId,
+        exUserArticle.userId,
+        data.serialNumber,
+        data.invBroj,
+        data.articleId,
+        data.comment,
+        "otpisano"
+      )
       return await this.userArticle.findOne({
         where: { articleId: data.articleId },
         relations: ['article', 'user', 'document'],
       });
+  }
+
+  async newArticleTimeline (
+    newDocumentId: number,
+    newUserId: number,
+    newSerilaNumber: string,
+    newInvBroj: string,
+    newArticleId: number,
+    newComment: string,
+    status: "zaduženo" | "razduženo" | "otpisano"
+  ){
+    const newArticleTimeline: ArticleTimeline = new ArticleTimeline();
+        newArticleTimeline.documentId = newDocumentId;
+        newArticleTimeline.userId = newUserId;
+        newArticleTimeline.serialNumber = newSerilaNumber;
+        newArticleTimeline.invBroj = newInvBroj;
+        newArticleTimeline.articleId = newArticleId;
+        newArticleTimeline.comment = newComment;
+        newArticleTimeline.status = status
+
+        await this.articleTimeline.save(newArticleTimeline)
+
+        const savedArticleTimeline = await this.articleTimeline.save(newArticleTimeline)
+      if (!savedArticleTimeline) {
+        return new ApiResponse(
+          'error',
+          -2021,
+          'Historija artikla nije spašena' /* Iako do ove greške teško da će doći */,
+        );
+      }
   }
 
   private async createDocument(
@@ -587,7 +608,7 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     newUserArticleData.invBroj = data.invBroj;
     newUserArticleData.articleId = data.articleId;
     newUserArticleData.value = data.value;
-    newUserArticleData.comment = 'Zaduženje nove opreme';
+    newUserArticleData.comment = 'Zaduženje nove opreme 1';
     newUserArticleData.status = 'zaduženo';
 
     const savedUserArticle = await this.userArticle.save(newUserArticleData);
@@ -599,23 +620,16 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       );
     }
 
-    const newArticleTimeline: ArticleTimeline = new ArticleTimeline();
-        newArticleTimeline.documentId = savedDocument.documentsId;
-        newArticleTimeline.userId = user;
-        newArticleTimeline.serialNumber = data.serialNumber;
-        newArticleTimeline.invBroj = data.invBroj;
-        newArticleTimeline.articleId = data.articleId;
-        newArticleTimeline.comment = data.comment;
-        newArticleTimeline.status = "zaduženo"
-
-    const savedArticleTimeline = await this.articleTimeline.save(newArticleTimeline)
-      if (!savedArticleTimeline) {
-        return new ApiResponse(
-          'error',
-          -2021,
-          'Historija artikla nije spašena' /* Iako do ove greške teško da će doći */,
-        );
-      }
+    await this.newArticleTimeline(
+      savedDocument.documentsId,
+      user,
+      data.serialNumber,
+      data.invBroj,
+      data.articleId,
+      data.comment,
+      "zaduženo"
+    )
+    
 
     const articleInStock: Stock = await this.stock.findOne({
       articleId: data.articleId,
@@ -659,8 +673,6 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       );
     }
   }
-
-
 
   async getBySerialNumber(serialNumber: string): Promise<UserArticle | null> {
     const article = await this.userArticle.findOne({
