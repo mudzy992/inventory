@@ -190,7 +190,9 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         return new ApiResponse('error', -2020, 'Prenosnica nije kreirana');
       }
 
-      this.userArticle.update(ua, {
+      await this.newResponsibility(ua.userArticleId, userId, ua.articleId, savedDocument.documentsId, ua.value, "zaduženo", ua.serialNumber, ua.invBroj);
+
+      await this.userArticle.update(ua, {
         documentId: savedDocument.documentsId,
         userId: userId,
         status: 'zaduženo',
@@ -428,6 +430,36 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       });
   }
 
+  async newResponsibility (
+    userArticleId: number,
+    userId: number,
+    articleId: number,
+    documentId: number,
+    value: number,
+    status: "zaduženo",
+    serialNumber: string,
+    inventurniBroj: string, 
+  ){
+    const newResponsibility: Responsibility = new Responsibility();
+    newResponsibility.userId = userId;
+    newResponsibility.userArticleId = userArticleId;
+    newResponsibility.articleId = articleId;
+    newResponsibility.documentId = documentId;
+    newResponsibility.value = value;
+    newResponsibility.status = status;
+    newResponsibility.serialNumber = serialNumber;
+    newResponsibility.invBroj = inventurniBroj;
+
+    const savedResponsibility = await this.responsibility.save(newResponsibility)
+    if (!savedResponsibility) {
+      return new ApiResponse(
+        'error',
+        -2022,
+        'Zaduženje nije spašeno'
+      );
+    }
+  }
+
   async newArticleTimeline (
     newDocumentId: number,
     newUserId: number,
@@ -445,8 +477,6 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         newArticleTimeline.articleId = newArticleId;
         newArticleTimeline.comment = newComment;
         newArticleTimeline.status = status
-
-        await this.articleTimeline.save(newArticleTimeline)
 
         const savedArticleTimeline = await this.articleTimeline.save(newArticleTimeline)
       if (!savedArticleTimeline) {
@@ -473,7 +503,14 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       }
     })
 
-    let currentYear = lastRecord ? new Date(lastRecord.created_date).getFullYear() : new Date().getFullYear();
+    /* let currentYear = lastRecord ? new Date(lastRecord.created_date).getFullYear() : new Date().getFullYear(); */
+    let currentYear;
+    if (lastRecord && lastRecord.created_date) {
+      currentYear = new Date(lastRecord.created_date).getFullYear();
+    } else {
+      currentYear = new Date().getFullYear();
+    }
+
     let documentNumber;
 
     if (currentYear === new Date().getFullYear()) {
@@ -630,6 +667,15 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       "zaduženo"
     )
     
+    await this.newResponsibility(
+      newUserArticleData.userArticleId, 
+      user, 
+      newUserArticleData.articleId, 
+      savedDocument.documentsId, 
+      newUserArticleData.value, 
+      "zaduženo",
+      newUserArticleData.serialNumber,
+      newUserArticleData.invBroj);
 
     const articleInStock: Stock = await this.stock.findOne({
       articleId: data.articleId,
