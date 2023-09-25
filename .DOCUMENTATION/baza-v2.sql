@@ -16,38 +16,35 @@
 
 
 -- Dumping database structure for inventory
-DROP DATABASE IF EXISTS `inventory`;
 CREATE DATABASE IF NOT EXISTS `inventory` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `inventory`;
 
 -- Dumping structure for table inventory.administrator
-DROP TABLE IF EXISTS `administrator`;
 CREATE TABLE IF NOT EXISTS `administrator` (
   `administrator_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
-  `password_hash` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `password_hash` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   PRIMARY KEY (`administrator_id`),
   UNIQUE KEY `administrator_username` (`username`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.administrator: ~1 rows (approximately)
-INSERT INTO `administrator` (`administrator_id`, `username`, `password_hash`) VALUES
+-- Dumping data for table inventory.administrator: ~0 rows (approximately)
+REPLACE INTO `administrator` (`administrator_id`, `username`, `password_hash`) VALUES
 	(1, 'admin', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE');
 
 -- Dumping structure for table inventory.administrator_token
-DROP TABLE IF EXISTS `administrator_token`;
 CREATE TABLE IF NOT EXISTS `administrator_token` (
   `administrator_token_id` int unsigned NOT NULL AUTO_INCREMENT,
   `administrator_id` int unsigned NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `token` varchar(2550) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `token` varchar(2550) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `expire_at` datetime NOT NULL,
   `is_valid` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`administrator_token_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.administrator_token: ~105 rows (approximately)
-INSERT INTO `administrator_token` (`administrator_token_id`, `administrator_id`, `created_at`, `token`, `expire_at`, `is_valid`) VALUES
+-- Dumping data for table inventory.administrator_token: ~115 rows (approximately)
+REPLACE INTO `administrator_token` (`administrator_token_id`, `administrator_id`, `created_at`, `token`, `expire_at`, `is_valid`) VALUES
 	(2, 1, '2022-03-18 14:07:16', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjUwMjkwODM2LjA5OCwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS85OC4wLjQ3NTguMTA5IFNhZmFyaS81MzcuMzYgT1BSLzg0LjAuNDMxNi4zNiIsImlhdCI6MTY0NzYxMjQzNn0.wVS1NEISf6X2n2HZqgmwu095Kupd6hsrximwyrGEV4o', '2022-04-18 14:07:16', 1),
 	(3, 1, '2022-03-18 14:09:09', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxLCJpZGVudGl0eSI6Im0uY2VyaWNAZXBiaWguYmEiLCJleHAiOjE2NDk4NjI2OTYuMDExLCJpcCI6Ijo6MSIsInVhIjoiUG9zdG1hblJ1bnRpbWUvNy4yOC40IiwiaWF0IjoxNjQ3MTg0Mjk2fQ.kV9bMPwIvKgxQ2Mv4Pc0ezsyVkcJtptUjH2WsklpxSg', '2022-04-18 14:09:09', 1),
 	(4, 1, '2022-03-18 14:33:08', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjUwMjkyMzg4LjE4OSwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS85OC4wLjQ3NTguMTA5IFNhZmFyaS81MzcuMzYgT1BSLzg0LjAuNDMxNi4zNiIsImlhdCI6MTY0NzYxMzk4OH0.dxbmG36FD0jfkzcKQNYZLewOu9x-cxoqIxujt4_M6Ys', '2022-04-18 14:33:08', 1),
@@ -152,26 +149,35 @@ INSERT INTO `administrator_token` (`administrator_token_id`, `administrator_id`,
 	(107, 1, '2022-12-01 09:31:43', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNTY1NTAzLjcwOCwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC42MiIsImlhdCI6MTY2OTg4NzEwM30.eRWhprKiF5YINuz8vQbWKuqMlD6AwGjrmthUHOS_0CQ', '2023-01-01 09:31:43', 1),
 	(108, 1, '2022-12-01 10:00:55', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNTY3MjU1LjA0OSwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC42MiIsImlhdCI6MTY2OTg4ODg1NX0.uCjR15m-DZYtI-p_A9OJWjbEs9FQ5zhSlNzHEft7FIE', '2023-01-01 10:00:55', 1),
 	(109, 1, '2022-12-01 13:56:34', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjcyNTgxMzk0LjMzNCwiaXAiOiIxMjcuMC4wLjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMDcuMC4wLjAgU2FmYXJpLzUzNy4zNiBFZGcvMTA3LjAuMTQxOC42MiIsImlhdCI6MTY2OTkwMjk5NH0.aXYGj3gpMK5sjgJZFr4b3WBJidzqQiEfw-J27i_CVus', '2023-01-01 13:56:34', 1),
-	(110, 1, '2023-09-07 11:56:43', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk2NzY2MjAzLjUyNiwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMTUuMC4wLjAgU2FmYXJpLzUzNy4zNiBPUFIvMTAxLjAuMC4wIiwiaWF0IjoxNjk0MDg3ODAzfQ.m1SuW1-39tzcLcHlqUofHNdaNnVLKCRIMJx3471rHVQ', '2023-10-08 11:56:43', 1);
+	(110, 1, '2023-09-07 11:56:43', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk2NzY2MjAzLjUyNiwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMTUuMC4wLjAgU2FmYXJpLzUzNy4zNiBPUFIvMTAxLjAuMC4wIiwiaWF0IjoxNjk0MDg3ODAzfQ.m1SuW1-39tzcLcHlqUofHNdaNnVLKCRIMJx3471rHVQ', '2023-10-08 11:56:43', 1),
+	(111, 1, '2023-09-14 13:20:26', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk3Mzc2MDI2LjAwOCwiaXAiOiI6OmZmZmY6MTkyLjE2OC4xMi41MiIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzExNS4wLjAuMCBTYWZhcmkvNTM3LjM2IE9QUi8xMDEuMC4wLjAiLCJpYXQiOjE2OTQ2OTc2MjZ9.CbQ1aXy0IFg2Usje4SsxMG4YzEMcfFGGbYO8rtoGJaA', '2023-10-15 13:20:26', 1),
+	(112, 1, '2023-09-15 13:07:24', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk3NDYxNjQ0Ljc4OSwiaXAiOiI6OmZmZmY6MTkyLjE2OC4xMi41MiIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzExNS4wLjAuMCBTYWZhcmkvNTM3LjM2IE9QUi8xMDEuMC4wLjAiLCJpYXQiOjE2OTQ3ODMyNDR9.g6tc5lktaokDGyAjpzqeiGItg3ajx1gu4Af3adGu6H4', '2023-10-16 13:07:24', 1),
+	(113, 1, '2023-09-19 13:07:15', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk3ODA3MjM1LjkxNCwiaXAiOiI6OmZmZmY6MTkyLjE2OC4xMi41MiIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzExNS4wLjAuMCBTYWZhcmkvNTM3LjM2IE9QUi8xMDEuMC4wLjAiLCJpYXQiOjE2OTUxMjg4MzV9.TUXXCscDWjqHgSKvar-cNgk8lRtl7GsoVxNziTfg-yY', '2023-10-20 13:07:15', 1),
+	(114, 1, '2023-09-19 13:40:53', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk3ODA5MjUzLjU5MiwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMTUuMC4wLjAgU2FmYXJpLzUzNy4zNiBPUFIvMTAxLjAuMC4wIiwiaWF0IjoxNjk1MTMwODUzfQ.-D7Bp7nKbyQGQeabJMNaWQxJaEAltr_0s1i-wfFrhNg', '2023-10-20 13:40:53', 1),
+	(115, 1, '2023-09-20 05:48:07', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk3ODY3Mjg3LjEwMiwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMTUuMC4wLjAgU2FmYXJpLzUzNy4zNiBPUFIvMTAxLjAuMC4wIiwiaWF0IjoxNjk1MTg4ODg3fQ.DqXUmMuhdrnPVAe1lxYtZcJz8xCPWMoAV_ChtcMsyzE', '2023-10-21 05:48:07', 1),
+	(116, 1, '2023-09-20 06:13:20', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk3ODY4ODAwLjc4OCwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMTUuMC4wLjAgU2FmYXJpLzUzNy4zNiBPUFIvMTAxLjAuMC4wIiwiaWF0IjoxNjk1MTkwNDAwfQ.A_1SvZ__O7WW8W7jcaFamefKSGU_ZGECyXIqSvKWGUg', '2023-10-21 06:13:20', 1),
+	(117, 1, '2023-09-20 07:36:18', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk3ODczNzc4LjM5OCwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMTUuMC4wLjAgU2FmYXJpLzUzNy4zNiBPUFIvMTAxLjAuMC4wIiwiaWF0IjoxNjk1MTk1Mzc4fQ.z2LinBQktQaK02IHtg7vcp8o8kqwJSOloNN3LrsSgUo', '2023-10-21 07:36:18', 1),
+	(118, 1, '2023-09-21 08:37:59', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk3OTYzODc5LjM1NywiaXAiOiI6OjEiLCJ1YSI6IlBvc3RtYW5SdW50aW1lLzcuMzMuMCIsImlhdCI6MTY5NTI4NTQ3OX0.nCVRJm88aFWwaOdlk7dMaKDAAe-NIIdQJspfXia3MlI', '2023-10-22 08:37:59', 1),
+	(119, 1, '2023-09-21 10:22:41', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk3OTcwMTYxLjkyNiwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMTUuMC4wLjAgU2FmYXJpLzUzNy4zNiBPUFIvMTAxLjAuMC4wIiwiaWF0IjoxNjk1MjkxNzYxfQ.GZGDb5O3i_mRgVQXPmU4hMZcZPZQ2z05kMRwAdk_WBs', '2023-10-22 10:22:41', 1),
+	(120, 1, '2023-09-21 10:32:38', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk3OTcwNzU4LjcwMiwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMTUuMC4wLjAgU2FmYXJpLzUzNy4zNiBPUFIvMTAxLjAuMC4wIiwiaWF0IjoxNjk1MjkyMzU4fQ.QT5TU44W0BdMolRtgwrUBq36vhzcBldRfUkvbyaGXNU', '2023-10-22 10:32:38', 1);
 
 -- Dumping structure for table inventory.article
-DROP TABLE IF EXISTS `article`;
 CREATE TABLE IF NOT EXISTS `article` (
   `article_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
-  `excerpt` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
-  `description` varchar(450) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
-  `concract` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '0',
+  `excerpt` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '0',
+  `description` varchar(450) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '0',
+  `concract` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '0',
   `category_id` int unsigned NOT NULL DEFAULT '0',
-  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `sap_number` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
+  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `sap_number` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '0',
   PRIMARY KEY (`article_id`),
   KEY `fk_article_category_id` (`category_id`),
   CONSTRAINT `fk_article_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.article: ~12 rows (approximately)
-INSERT INTO `article` (`article_id`, `name`, `excerpt`, `description`, `concract`, `category_id`, `comment`, `sap_number`) VALUES
+-- Dumping data for table inventory.article: ~17 rows (approximately)
+REPLACE INTO `article` (`article_id`, `name`, `excerpt`, `description`, `concract`, `category_id`, `comment`, `sap_number`) VALUES
 	(83, 'ACME SSD HD11 1TB', 'Kratki opis 1', 'Detaljan opis', 'EPU-25154/2022', 8, '', '1300-200200'),
 	(84, 'ACME SSD HD11 1024GB', 'Kratki opis', 'Detaljan opis', 'EPU-25154/2022', 8, 'Komentar 1024GB', '1300-200201'),
 	(85, 'ACME SSD HD11 1024MB', 'Kratki opis', 'Detaljan opis', 'EPU-25154/2022', 8, 'Komentar 1024MB serverski', '1300-200202'),
@@ -183,24 +189,28 @@ INSERT INTO `article` (`article_id`, `name`, `excerpt`, `description`, `concract
 	(96, 'ThinkCentre M83 SFF Pro Desktop', 'The new small form factor (SFF) pro design features the compactness of the SFF with the expansion ability of a tower. The SFF desktops weigh in at 16.5 lbs / 7.8 kg and support both horizontal and vertical orientations.', 'The new small form factor (SFF) pro design features the compactness of the SFF with the expansion ability of a tower. The SFF desktops weigh in at 16.5 lbs / 7.8 kg and support both horizontal and vertical orientations.', 'EZE-254584/2022', 9, 'Komentare će trebati ukinuti', '1300-005254'),
 	(97, 'ThinkCentre M92/M92p Tiny, Small, Tower', 'This Tiny desktop packs a powerful enterprise performance and Intel Pro manageability into an ultra-compact form factor thats energy-efficient and easy to manage.', 'This Tiny desktop packs a powerful enterprise performance and Intel Pro manageability into an ultra-compact form factor thats energy-efficient and easy to manage.', 'EZE-58479/2022', 9, 'Komentare brišemo', '1300-005248'),
 	(98, 'ASUS VW199T-P 19"', '19 inča monitor', '19 inča monitor kocka', 'ABA-162819-272/2022', 10, 'Komentare brisemo', '1300-183994'),
-	(103, 'Računar Dell OptiPlex 3090 SFF', '', '', '639294 ne znam', 9, NULL, '');
+	(103, 'Računar Dell OptiPlex 3090 SFF', '', '', '639294 ne znam', 9, NULL, ''),
+	(104, 'Philips 170S', 'Monitor Philips', 'Monitor Philips', 'Ugovor 1', 10, NULL, '1300-100000'),
+	(105, 'Philips S Line 20', 'Monitor Philips S Line 20"', 'Monitor Philips S Line 20"', 'Ugovor Monitor', 10, NULL, '1300-100001'),
+	(106, 'HP Compaq 8200 Elite Small Form Factor PC', 'HP Compaq 8200 Elite Small Form Factor PC je stariji model računara koji je prvobitno pušten u prodaju oko 2011. godine. ', 'HP Compaq 8200 Elite Small Form Factor PC', 'Ugovor računar', 9, NULL, '1300-100002'),
+	(107, 'Dell 21,5"', 'Dell 21,5"', 'Dell 21,5"', 'Ugovor Monitori', 10, NULL, '1300-100003'),
+	(108, 'HP Compaq L1506', 'Monitor HP Compaq L1506 je stariji model monitora koji je pušten u prodaju oko 2006. godine.', 'Monitor HP Compaq L1506 je osnovni model koji je pružao standardne performanse za osnovne računarske zadatke. Nema naprednih karakteristika ili tehnologija koje biste očekivali na modernijim monitorima.', 'Ugovor monitori', 10, NULL, '1300-100004');
 
 -- Dumping structure for table inventory.article_feature
-DROP TABLE IF EXISTS `article_feature`;
 CREATE TABLE IF NOT EXISTS `article_feature` (
   `article_feature_id` int unsigned NOT NULL AUTO_INCREMENT,
   `article_id` int unsigned NOT NULL DEFAULT '0',
   `feature_id` int unsigned NOT NULL DEFAULT '0',
-  `value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '',
+  `value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`article_feature_id`),
   UNIQUE KEY `uq_article_feature_article_id_feature_id` (`article_id`,`feature_id`) USING BTREE,
   KEY `fk_article_feature_feature_id` (`feature_id`) USING BTREE,
   CONSTRAINT `fk_article_feature_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_article_feature_feature_id` FOREIGN KEY (`feature_id`) REFERENCES `feature` (`feature_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=409 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=426 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Dumping data for table inventory.article_feature: ~53 rows (approximately)
-INSERT INTO `article_feature` (`article_feature_id`, `article_id`, `feature_id`, `value`) VALUES
+REPLACE INTO `article_feature` (`article_feature_id`, `article_id`, `feature_id`, `value`) VALUES
 	(54, 83, 8, '1TB'),
 	(55, 83, 9, 'HDD'),
 	(64, 84, 8, '1024GB'),
@@ -253,20 +263,36 @@ INSERT INTO `article_feature` (`article_feature_id`, `article_id`, `feature_id`,
 	(405, 103, 11, 'I5 10500'),
 	(406, 103, 14, '256GB SSD'),
 	(407, 103, 13, '8GB'),
-	(408, 103, 10, 'SFF');
+	(408, 103, 10, 'SFF'),
+	(409, 104, 23, 'VGA'),
+	(410, 104, 19, '1280*1024'),
+	(411, 105, 23, 'VGA'),
+	(412, 105, 19, '1280*1024'),
+	(413, 105, 22, '20'),
+	(414, 106, 11, ' Intel Core i3'),
+	(415, 106, 14, '500'),
+	(416, 106, 13, '8'),
+	(417, 106, 10, 'SFF'),
+	(418, 107, 23, 'VGA/HDMI'),
+	(419, 107, 19, '1920*1080'),
+	(420, 107, 22, '21,5'),
+	(421, 108, 23, 'VGA'),
+	(422, 108, 20, '400:1'),
+	(423, 108, 19, '1024*768'),
+	(424, 108, 21, '250 nits'),
+	(425, 108, 22, '');
 
 -- Dumping structure for table inventory.article_timeline
-DROP TABLE IF EXISTS `article_timeline`;
 CREATE TABLE IF NOT EXISTS `article_timeline` (
   `article_timeline_id` int unsigned NOT NULL AUTO_INCREMENT,
   `article_id` int unsigned NOT NULL,
   `user_id` int unsigned NOT NULL,
   `document_id` int unsigned NOT NULL,
-  `serial_number` varchar(50) NOT NULL,
-  `status` enum('zaduženo','razduženo','otpisano') NOT NULL DEFAULT 'zaduženo',
+  `serial_number` varchar(50) COLLATE utf8mb4_bin NOT NULL,
+  `status` enum('zaduženo','razduženo','otpisano') COLLATE utf8mb4_bin NOT NULL DEFAULT 'zaduženo',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `inv_broj` varchar(50) NOT NULL,
-  `comment` varchar(250) DEFAULT NULL,
+  `inv_broj` varchar(50) COLLATE utf8mb4_bin NOT NULL,
+  `comment` varchar(250) COLLATE utf8mb4_bin DEFAULT NULL,
   PRIMARY KEY (`article_timeline_id`),
   UNIQUE KEY `serial_number_status_timestamp` (`serial_number`,`status`,`timestamp`),
   KEY `fk_article_timeline_article` (`article_id`),
@@ -275,42 +301,28 @@ CREATE TABLE IF NOT EXISTS `article_timeline` (
   CONSTRAINT `fk_article_timeline_article` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_article_timeline_documents` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_article_timeline_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=165 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.article_timeline: ~15 rows (approximately)
-INSERT INTO `article_timeline` (`article_timeline_id`, `article_id`, `user_id`, `document_id`, `serial_number`, `status`, `timestamp`, `inv_broj`, `comment`) VALUES
-	(61, 84, 148, 204, 'TESTNEW', 'razduženo', '2022-11-26 23:44:35', 'ZE065848232', ''),
-	(63, 84, 152, 204, 'TESTNEW', 'zaduženo', '2022-11-26 23:50:30', 'ZE065848232', ''),
-	(64, 84, 152, 204, 'TESTNEW', 'razduženo', '2022-11-26 23:51:09', 'ZE065848232', ''),
-	(66, 96, 152, 211, '51738FEN', 'razduženo', '2022-11-13 23:36:20', 'ZE0621548', NULL),
-	(67, 95, 148, 208, 'Bsjfhkakd', 'zaduženo', '2022-11-13 18:32:47', 'ZE06858778', NULL),
-	(68, 93, 148, 207, 'HDIS63839', 'zaduženo', '2022-11-13 18:31:51', 'ZE0685862', NULL),
-	(69, 90, 156, 219, 'AEROZAKMI', 'zaduženo', '2022-11-28 21:24:40', 'ZE1264854', NULL),
-	(70, 90, 150, 218, 'SERIJSKINOCHANE', 'zaduženo', '2022-11-27 22:09:40', 'INVENTURNI', NULL),
-	(72, 90, 148, 213, 'KJKSZPJ', 'zaduženo', '2022-11-19 01:23:06', 'ZE0621548', NULL),
-	(73, 90, 148, 222, 'KJKSZPJ', 'razduženo', '2022-12-01 14:46:25', 'ZE0621548', ''),
-	(74, 90, 156, 223, 'KJKSZPJ', 'zaduženo', '2022-12-01 14:46:50', 'ZE0621548', ''),
-	(75, 90, 156, 224, 'AEROZAKMI', 'razduženo', '2022-12-01 14:48:07', 'ZE1264854', ''),
-	(76, 90, 173, 225, 'AEROZAKMI', 'zaduženo', '2022-12-01 14:48:38', 'ZE1264854', ''),
-	(77, 90, 150, 226, 'SERIJSKINOCHANE', 'razduženo', '2022-12-01 16:26:36', 'INVENTURNI', 'Zaduženje na Mirhu Ć.'),
-	(78, 90, 174, 226, 'SERIJSKINOCHANE', 'zaduženo', '2022-12-01 16:26:37', 'INVENTURNI', 'Zaduženje na Mirhu Ć.');
+-- Dumping data for table inventory.article_timeline: ~0 rows (approximately)
+REPLACE INTO `article_timeline` (`article_timeline_id`, `article_id`, `user_id`, `document_id`, `serial_number`, `status`, `timestamp`, `inv_broj`, `comment`) VALUES
+	(163, 90, 148, 293, 'S4PT4033', 'zaduženo', '2023-09-25 11:34:42', 'ZE06878665', 'Komentrar'),
+	(164, 90, 152, 294, 'S4PT4038', 'zaduženo', '2023-09-25 13:31:03', 'ZE06878662', '');
 
 -- Dumping structure for table inventory.category
-DROP TABLE IF EXISTS `category`;
 CREATE TABLE IF NOT EXISTS `category` (
   `category_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
-  `image_path` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '',
+  `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '0',
+  `image_path` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `parent__category_id` int unsigned DEFAULT NULL,
   PRIMARY KEY (`category_id`),
   UNIQUE KEY `uq_category_name` (`name`),
   UNIQUE KEY `uq_category_image_path` (`image_path`),
   KEY `fk_category_parent__category_id` (`parent__category_id`) USING BTREE,
   CONSTRAINT `FK_category_category` FOREIGN KEY (`parent__category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Dumping data for table inventory.category: ~8 rows (approximately)
-INSERT INTO `category` (`category_id`, `name`, `image_path`, `parent__category_id`) VALUES
+REPLACE INTO `category` (`category_id`, `name`, `image_path`, `parent__category_id`) VALUES
 	(7, 'Rač. oprema', 'bi bi-pc-display', NULL),
 	(8, 'Memorija pohrane', 'bi bi-hdd', 9),
 	(9, 'Radne stanice', 'bi bi-pc-display-horizontal', 7),
@@ -321,7 +333,6 @@ INSERT INTO `category` (`category_id`, `name`, `image_path`, `parent__category_i
 	(20, 'Miš', 'bi bi-mouse2-fill', 7);
 
 -- Dumping structure for table inventory.debt_items
-DROP TABLE IF EXISTS `debt_items`;
 CREATE TABLE IF NOT EXISTS `debt_items` (
   `debt_items_id` int unsigned NOT NULL AUTO_INCREMENT,
   `user_article_id` int unsigned NOT NULL,
@@ -330,10 +341,10 @@ CREATE TABLE IF NOT EXISTS `debt_items` (
   `document_id` int unsigned NOT NULL,
   `value` int NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `serial_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'razduženo',
-  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `inv_broj` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `serial_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'razduženo',
+  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `inv_broj` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   PRIMARY KEY (`debt_items_id`),
   UNIQUE KEY `article_id_user_id_timestamp_serial_number` (`article_id`,`user_id`,`timestamp`,`serial_number`) USING BTREE,
   KEY `fk_debt_items_document_id` (`document_id`),
@@ -343,27 +354,24 @@ CREATE TABLE IF NOT EXISTS `debt_items` (
   CONSTRAINT `fk_debt_items_document_id` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `FK_debt_items_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_debt_items_user_article_id` FOREIGN KEY (`user_article_id`) REFERENCES `user_article` (`user_article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Dumping data for table inventory.debt_items: ~0 rows (approximately)
-INSERT INTO `debt_items` (`debt_items_id`, `user_article_id`, `article_id`, `user_id`, `document_id`, `value`, `timestamp`, `serial_number`, `status`, `comment`, `inv_broj`) VALUES
-	(82, 275, 96, 152, 211, 1, '2022-11-13 23:36:20', '51738FEN', 'razduženo', '', 'ZE0621548');
 
 -- Dumping structure for table inventory.department
-DROP TABLE IF EXISTS `department`;
 CREATE TABLE IF NOT EXISTS `department` (
   `department_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
-  `description` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `departmend_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
+  `title` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'undefined',
+  `description` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `departmend_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'undefined',
   `parent_department_id` int unsigned DEFAULT NULL,
   PRIMARY KEY (`department_id`) USING BTREE,
   KEY `FK_department_department` (`parent_department_id`),
   CONSTRAINT `FK_department_department` FOREIGN KEY (`parent_department_id`) REFERENCES `department` (`department_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Dumping data for table inventory.department: ~32 rows (approximately)
-INSERT INTO `department` (`department_id`, `title`, `description`, `departmend_code`, `parent_department_id`) VALUES
+REPLACE INTO `department` (`department_id`, `title`, `description`, `departmend_code`, `parent_department_id`) VALUES
 	(2, 'Sektor za IKT', 'Sektor za informacione i komunikacione tehnologije IKT', '1010206', NULL),
 	(3, 'Služba za IKT Zenica', 'Sektor za informacione i komunikacione tehnologije IKT Zenica', '101020601', 2),
 	(5, 'Sektor za investicije', 'Sektor za investicije', '1030802', NULL),
@@ -398,7 +406,6 @@ INSERT INTO `department` (`department_id`, `title`, `description`, `departmend_c
 	(37, 'Služba za transport', 'Služba za transport', '103080402', 35);
 
 -- Dumping structure for table inventory.department_job
-DROP TABLE IF EXISTS `department_job`;
 CREATE TABLE IF NOT EXISTS `department_job` (
   `department_job_id` int unsigned NOT NULL AUTO_INCREMENT,
   `department_id` int unsigned NOT NULL DEFAULT '0',
@@ -411,10 +418,10 @@ CREATE TABLE IF NOT EXISTS `department_job` (
   CONSTRAINT `department_job_department_id` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `department_job_job_id` FOREIGN KEY (`job_id`) REFERENCES `job` (`job_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `FK_department_job_location` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Dumping data for table inventory.department_job: ~69 rows (approximately)
-INSERT INTO `department_job` (`department_job_id`, `department_id`, `job_id`, `location_id`) VALUES
+REPLACE INTO `department_job` (`department_job_id`, `department_id`, `job_id`, `location_id`) VALUES
 	(2, 3, 2, 2),
 	(13, 5, 7, 2),
 	(14, 5, 6, 2),
@@ -486,7 +493,6 @@ INSERT INTO `department_job` (`department_job_id`, `department_id`, `job_id`, `l
 	(111, 36, 9, 2);
 
 -- Dumping structure for table inventory.destroyed
-DROP TABLE IF EXISTS `destroyed`;
 CREATE TABLE IF NOT EXISTS `destroyed` (
   `destroyed_id` int unsigned NOT NULL AUTO_INCREMENT,
   `user_article_id` int unsigned NOT NULL,
@@ -495,10 +501,10 @@ CREATE TABLE IF NOT EXISTS `destroyed` (
   `document_id` int unsigned NOT NULL,
   `value` int NOT NULL DEFAULT '0',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `serial_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
-  `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'otpisano',
-  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `inv_broj` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `serial_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'otpisano',
+  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `inv_broj` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   PRIMARY KEY (`destroyed_id`),
   UNIQUE KEY `article_id_user_id_serial_number` (`article_id`,`user_id`,`serial_number`) USING BTREE,
   KEY `fk_destroyed_document_id` (`document_id`),
@@ -508,63 +514,40 @@ CREATE TABLE IF NOT EXISTS `destroyed` (
   CONSTRAINT `fk_destroyed_document_id` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `FK_destroyed_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_destroyed_user_article_id` FOREIGN KEY (`user_article_id`) REFERENCES `user_article` (`user_article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Dumping data for table inventory.destroyed: ~0 rows (approximately)
 
 -- Dumping structure for table inventory.documents
-DROP TABLE IF EXISTS `documents`;
 CREATE TABLE IF NOT EXISTS `documents` (
   `documents_id` int unsigned NOT NULL AUTO_INCREMENT,
   `article_id` int unsigned NOT NULL,
-  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `document_number` int NOT NULL DEFAULT '0',
-  `created_date` datetime NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT (now()),
   PRIMARY KEY (`documents_id`),
   KEY `fk_documents_article_id` (`article_id`),
   CONSTRAINT `fk_documents_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=227 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=295 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.documents: ~23 rows (approximately)
-INSERT INTO `documents` (`documents_id`, `article_id`, `path`, `document_number`, `created_date`) VALUES
-	(204, 93, 'prenosnica1.docx', 1, '2023-09-07 14:14:32'),
-	(205, 93, 'prenosnica2.docx', 2, '2023-09-07 14:14:33'),
-	(206, 90, 'prenosnica3.docx', 3, '2023-09-07 14:14:34'),
-	(207, 93, 'prenosnica4.docx', 4, '2023-09-07 14:14:34'),
-	(208, 95, 'prenosnica5.docx', 5, '2023-09-07 14:14:35'),
-	(209, 96, 'prenosnica6.docx', 6, '2023-09-07 14:14:35'),
-	(210, 96, 'prenosnica7.docx', 7, '2023-09-07 14:14:36'),
-	(211, 96, 'prenosnica8.docx', 8, '2023-09-07 14:14:37'),
-	(212, 90, 'prenosnica9.docx', 9, '2023-09-07 14:14:37'),
-	(213, 90, 'prenosnica10.docx', 10, '2024-09-07 14:14:38'),
-	(214, 90, 'prenosnica11.docx', 11, '2025-09-07 14:14:39'),
-	(215, 90, 'prenosnica12.docx', 12, '2023-09-07 14:14:41'),
-	(216, 90, 'prenosnica13.docx', 13, '2023-09-07 14:14:43'),
-	(217, 103, 'prenosnica14.docx', 14, '2023-09-07 14:14:44'),
-	(218, 90, 'prenosnica15.docx', 15, '2023-09-07 14:14:44'),
-	(219, 90, 'prenosnica16.docx', 16, '2023-09-07 14:14:45'),
-	(220, 90, 'prenosnica17.docx', 17, '2023-09-07 14:14:45'),
-	(221, 90, 'prenosnica18.docx', 18, '2023-09-07 14:14:46'),
-	(222, 90, 'prenosnica19.docx', 19, '2023-09-07 14:14:46'),
-	(223, 90, 'prenosnica20.docx', 20, '2023-09-07 14:14:47'),
-	(224, 90, 'prenosnica21.docx', 21, '2023-09-07 14:14:50'),
-	(225, 90, 'prenosnica22.docx', 22, '2023-09-07 14:14:48'),
-	(226, 90, 'prenosnica23.docx', 23, '2023-09-07 14:14:49');
+-- Dumping data for table inventory.documents: ~0 rows (approximately)
+REPLACE INTO `documents` (`documents_id`, `article_id`, `path`, `document_number`, `created_date`) VALUES
+	(293, 90, 'prenosnica1.docx', 1, '2023-09-25 13:34:42'),
+	(294, 90, 'prenosnica2.docx', 2, '2023-09-25 15:31:03');
 
 -- Dumping structure for table inventory.feature
-DROP TABLE IF EXISTS `feature`;
 CREATE TABLE IF NOT EXISTS `feature` (
   `feature_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '0',
   `category_id` int unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`feature_id`),
   UNIQUE KEY `uq_feature_category_id_name` (`category_id`,`name`),
   KEY `fk_feature_category_id` (`category_id`) USING BTREE,
   CONSTRAINT `fk_feature_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Dumping data for table inventory.feature: ~19 rows (approximately)
-INSERT INTO `feature` (`feature_id`, `name`, `category_id`) VALUES
+REPLACE INTO `feature` (`feature_id`, `name`, `category_id`) VALUES
 	(8, 'Kapacitet', 8),
 	(9, 'Tip', 8),
 	(11, 'CPU', 9),
@@ -586,17 +569,16 @@ INSERT INTO `feature` (`feature_id`, `name`, `category_id`) VALUES
 	(50, 'Tip', 20);
 
 -- Dumping structure for table inventory.job
-DROP TABLE IF EXISTS `job`;
 CREATE TABLE IF NOT EXISTS `job` (
   `job_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
-  `description` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `job_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'undefined',
+  `title` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'undefined',
+  `description` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `job_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'undefined',
   PRIMARY KEY (`job_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Dumping data for table inventory.job: ~34 rows (approximately)
-INSERT INTO `job` (`job_id`, `title`, `description`, `job_code`) VALUES
+REPLACE INTO `job` (`job_id`, `title`, `description`, `job_code`) VALUES
 	(2, 'Tehničar za IKT **', 'Tehničar za IKT ** Zenica', '936545'),
 	(6, 'Koordinator za GIS', 'Koordinator za GIS', 'undefined'),
 	(7, 'Projekt menadžer', 'Projekt menadžer', 'undefined'),
@@ -633,26 +615,24 @@ INSERT INTO `job` (`job_id`, `title`, `description`, `job_code`) VALUES
 	(38, 'Tehničar za pripremu', 'Tehničar za pripremu', '');
 
 -- Dumping structure for table inventory.location
-DROP TABLE IF EXISTS `location`;
 CREATE TABLE IF NOT EXISTS `location` (
   `location_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
-  `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `parent_location_id` int unsigned DEFAULT NULL,
   PRIMARY KEY (`location_id`),
   KEY `FK_location_location` (`parent_location_id`),
   CONSTRAINT `FK_location_location` FOREIGN KEY (`parent_location_id`) REFERENCES `location` (`location_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Dumping data for table inventory.location: ~4 rows (approximately)
-INSERT INTO `location` (`location_id`, `name`, `code`, `parent_location_id`) VALUES
+REPLACE INTO `location` (`location_id`, `name`, `code`, `parent_location_id`) VALUES
 	(1, 'ED Zenica', '101', NULL),
 	(2, 'Direkcija Zenica', '103', 1),
 	(3, 'PJD Zenica', '10303', 1),
 	(34, 'PJD Visoko', '105', 1);
 
 -- Dumping structure for table inventory.responsibility
-DROP TABLE IF EXISTS `responsibility`;
 CREATE TABLE IF NOT EXISTS `responsibility` (
   `responsibility_id` int unsigned NOT NULL AUTO_INCREMENT,
   `user_article_id` int unsigned NOT NULL,
@@ -660,10 +640,10 @@ CREATE TABLE IF NOT EXISTS `responsibility` (
   `article_id` int unsigned NOT NULL DEFAULT '0',
   `document_id` int unsigned NOT NULL,
   `value` int NOT NULL DEFAULT '0',
-  `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT 'zaduženo',
+  `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'zaduženo',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `serial_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
-  `inv_broj` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `serial_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `inv_broj` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   PRIMARY KEY (`responsibility_id`) USING BTREE,
   UNIQUE KEY `user_id_article_id_serial_number` (`user_id`,`article_id`,`serial_number`) USING BTREE,
   KEY `FK_104` (`article_id`),
@@ -674,80 +654,79 @@ CREATE TABLE IF NOT EXISTS `responsibility` (
   CONSTRAINT `fk_responsibility_document_id` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `FK_responsibility_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_responsibility_user_article_id` FOREIGN KEY (`user_article_id`) REFERENCES `user_article` (`user_article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=136 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=153 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.responsibility: ~5 rows (approximately)
-INSERT INTO `responsibility` (`responsibility_id`, `user_article_id`, `user_id`, `article_id`, `document_id`, `value`, `status`, `timestamp`, `serial_number`, `inv_broj`) VALUES
-	(129, 270, 148, 93, 207, 1, 'zaduženo', '2022-11-13 18:31:51', 'HDIS63839', 'ZE0685862'),
-	(130, 271, 148, 95, 208, 1, 'zaduženo', '2022-11-13 18:32:47', 'Bsjfhkakd', 'ZE06858778'),
-	(133, 277, 148, 90, 213, 1, 'zaduženo', '2022-11-19 01:23:06', 'KJKSZPJ', 'ZE0621548'),
-	(134, 279, 150, 90, 218, 1, 'zaduženo', '2022-11-27 22:09:41', 'SERIJSKINOCHANE', 'INVENTURNI'),
-	(135, 280, 156, 90, 219, 1, 'zaduženo', '2022-11-28 21:24:40', 'AEROZAKMI', 'ZE1264854');
+-- Dumping data for table inventory.responsibility: ~0 rows (approximately)
+REPLACE INTO `responsibility` (`responsibility_id`, `user_article_id`, `user_id`, `article_id`, `document_id`, `value`, `status`, `timestamp`, `serial_number`, `inv_broj`) VALUES
+	(151, 290, 148, 90, 293, 1, 'zaduženo', '2023-09-25 11:34:42', 'S4PT4033', 'ZE06878665'),
+	(152, 291, 152, 90, 294, 1, 'zaduženo', '2023-09-25 13:31:03', 'S4PT4038', 'ZE06878662');
 
 -- Dumping structure for table inventory.stock
-DROP TABLE IF EXISTS `stock`;
 CREATE TABLE IF NOT EXISTS `stock` (
   `stock_id` int unsigned NOT NULL AUTO_INCREMENT,
   `article_id` int unsigned NOT NULL DEFAULT '0',
   `value_on_concract` int NOT NULL DEFAULT '0',
   `value_available` int NOT NULL DEFAULT '0',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `sap_number` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
+  `sap_number` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '0',
   PRIMARY KEY (`stock_id`),
   KEY `fk_stock_article_id` (`article_id`),
   CONSTRAINT `fk_stock_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=452 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=467 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.stock: ~13 rows (approximately)
-INSERT INTO `stock` (`stock_id`, `article_id`, `value_on_concract`, `value_available`, `timestamp`, `sap_number`) VALUES
-	(192, 91, 1, 0, '2022-03-14 22:45:34', '1300-100525'),
+-- Dumping data for table inventory.stock: ~16 rows (approximately)
+REPLACE INTO `stock` (`stock_id`, `article_id`, `value_on_concract`, `value_available`, `timestamp`, `sap_number`) VALUES
+	(192, 91, 10, 10, '2022-03-14 22:45:34', '1300-100525'),
 	(217, 84, 50, 38, '2022-03-18 14:42:55', '1300-200201'),
-	(360, 97, 30, 30, '2022-03-31 16:05:38', '1300-005248'),
-	(361, 98, 5, 5, '2022-03-31 16:26:03', '1300-183994'),
-	(367, 85, 15, 17, '2022-03-31 17:58:45', '1300-200202'),
-	(413, 92, 5, 0, '2022-04-30 03:48:59', '1300-132525'),
+	(360, 97, 32, 32, '2022-03-31 16:05:38', '1300-005248'),
+	(367, 85, 15, 14, '2022-03-31 17:58:45', '1300-200202'),
+	(413, 92, 31, 31, '2022-04-30 03:48:59', '1300-132525'),
 	(434, 102, 131, 2, '2022-10-22 17:26:31', 'ZE06879222'),
 	(437, 83, 50, 29, '2022-10-22 17:41:16', '1300-200205'),
-	(441, 93, 1, 2, '2022-11-13 18:31:51', 'ZE0687922'),
-	(442, 95, 30, 29, '2022-11-13 18:32:47', '1300-551455'),
-	(445, 96, 1, 1, '2022-11-13 23:36:20', '1300-005254'),
-	(449, 103, 33, 33, '2022-11-26 09:09:37', ''),
-	(451, 90, 5, 2, '2022-11-28 21:24:40', '1300-100200');
+	(442, 95, 91, 91, '2022-11-13 18:32:47', '1300-551455'),
+	(445, 96, 33, 33, '2022-11-13 23:36:20', '1300-005254'),
+	(449, 103, 23, 23, '2022-11-26 09:09:37', ''),
+	(454, 98, 24, 24, '2023-09-15 13:38:15', '1300-183994'),
+	(459, 93, 13, 13, '2023-09-19 13:45:59', 'ZE0687922'),
+	(460, 104, 37, 37, '2023-09-22 13:32:37', '1300-100000'),
+	(461, 105, 27, 27, '2023-09-22 13:34:43', '1300-100001'),
+	(462, 106, 18, 18, '2023-09-22 13:38:31', '1300-100002'),
+	(463, 107, 31, 31, '2023-09-22 13:49:58', '1300-100003'),
+	(464, 108, 3, 3, '2023-09-22 13:52:59', '1300-100004'),
+	(466, 90, 6, 4, '2023-09-25 13:31:03', '1300-100200');
 
 -- Dumping structure for table inventory.upgrade_feature
-DROP TABLE IF EXISTS `upgrade_feature`;
 CREATE TABLE IF NOT EXISTS `upgrade_feature` (
   `upgrade_feature_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
-  `value` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `value` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
-  `serial_number` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `serial_number` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `article_id` int unsigned NOT NULL,
   PRIMARY KEY (`upgrade_feature_id`),
   KEY `fk_upgrade_feature_serial_number_user_article_serial_number` (`serial_number`),
   KEY `upgrade_feature_article_id_article_article_id` (`article_id`),
   CONSTRAINT `upgrade_feature_article_id_article_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Dumping data for table inventory.upgrade_feature: ~4 rows (approximately)
-INSERT INTO `upgrade_feature` (`upgrade_feature_id`, `name`, `value`, `timestamp`, `comment`, `serial_number`, `article_id`) VALUES
+REPLACE INTO `upgrade_feature` (`upgrade_feature_id`, `name`, `value`, `timestamp`, `comment`, `serial_number`, `article_id`) VALUES
 	(3, 'SSD', '256GB', '2022-07-14 10:08:32', 'Ugrađen SSD 256GB, ostavljen HDD 500GB zbog podataka. Urađeno detaljno čišćenje radne stanice.', 'KJKSZPJJJ', 92),
 	(4, 'HDD', '500GB', '2022-10-21 18:05:27', 'Ugrađen HDD iz starog računara zbog podataka.', '51738FEN', 90),
 	(5, 'SSD', '256 GB', '2022-11-13 22:53:30', 'Izvađen stari HDD od 500GB te umjesto njega ugrađen SDD 256GB', 'KJKSZPJ', 90),
 	(6, 'SSD', '512GB', '2022-11-20 23:29:49', 'Test', 'KJKSZPJ', 90);
 
 -- Dumping structure for table inventory.user
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `user_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `surname` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
-  `forname` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL DEFAULT '0',
-  `fullname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `local_number` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `telephone` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
-  `password_hash` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `surname` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '0',
+  `forname` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '0',
+  `fullname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `local_number` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `telephone` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `password_hash` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `job_id` int unsigned NOT NULL,
   `department_id` int unsigned NOT NULL,
   `location_id` int unsigned NOT NULL,
@@ -758,10 +737,10 @@ CREATE TABLE IF NOT EXISTS `user` (
   CONSTRAINT `fk_user_department_id` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_user_job_id` FOREIGN KEY (`job_id`) REFERENCES `job` (`job_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_user_location_id` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Dumping data for table inventory.user: ~52 rows (approximately)
-INSERT INTO `user` (`user_id`, `surname`, `forname`, `fullname`, `local_number`, `telephone`, `email`, `password_hash`, `job_id`, `department_id`, `location_id`) VALUES
+REPLACE INTO `user` (`user_id`, `surname`, `forname`, `fullname`, `local_number`, `telephone`, `email`, `password_hash`, `job_id`, `department_id`, `location_id`) VALUES
 	(148, 'Mudžahid', 'Cerić', 'Cerić Mudžahid', '1696', '032/449-696', 'm.ceric@epbih.ba', 'A8E11064F018205C700B163E6AB9978077A5DF871F03AD1A43A569CC2D88957B1E44C92EE07EDBBC6523114B37002FE6BDEC5C7F4C03F1C87782312894DE3CB5', 2, 3, 2),
 	(149, 'Sabit', 'Alić', 'Alić Sabit', '1608', '032/449-608', 's.alic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 7, 5, 2),
 	(150, 'Emina', 'Hasić', 'Hasić Emina', '1613', '032/449-613', 'e.hasic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 6, 5, 2),
@@ -816,17 +795,16 @@ INSERT INTO `user` (`user_id`, `surname`, `forname`, `fullname`, `local_number`,
 	(199, 'Čajdrić', 'Amel', 'Amel Čajdrić', '1519', '032/449-519', 'a.cajdric@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 36, 3);
 
 -- Dumping structure for table inventory.user_article
-DROP TABLE IF EXISTS `user_article`;
 CREATE TABLE IF NOT EXISTS `user_article` (
   `user_article_id` int unsigned NOT NULL AUTO_INCREMENT,
   `article_id` int unsigned NOT NULL,
   `document_id` int unsigned NOT NULL,
   `user_id` int unsigned DEFAULT NULL,
-  `serial_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
-  `status` enum('zaduženo','razduženo','otpisano') CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT 'zaduženo',
+  `serial_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `status` enum('zaduženo','razduženo','otpisano') CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT 'zaduženo',
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
-  `inv_broj` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci DEFAULT NULL,
+  `comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `inv_broj` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `value` int DEFAULT NULL,
   PRIMARY KEY (`user_article_id`) USING BTREE,
   UNIQUE KEY `serial_number_status_timestamp` (`serial_number`,`status`,`timestamp`),
@@ -836,32 +814,26 @@ CREATE TABLE IF NOT EXISTS `user_article` (
   CONSTRAINT `fk_user_article_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON UPDATE CASCADE,
   CONSTRAINT `fk_user_article_document_id` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON UPDATE CASCADE,
   CONSTRAINT `FK_user_article_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=282 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=292 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.user_article: ~7 rows (approximately)
-INSERT INTO `user_article` (`user_article_id`, `article_id`, `document_id`, `user_id`, `serial_number`, `status`, `timestamp`, `comment`, `inv_broj`, `value`) VALUES
-	(270, 93, 207, 148, 'HDIS63839', 'zaduženo', '2022-11-13 18:31:51', 'Zaduženje nove opreme', 'ZE0685862', NULL),
-	(271, 95, 208, 148, 'Bsjfhkakd', 'zaduženo', '2022-11-13 18:32:47', 'Zaduženje nove opreme', 'ZE06858778', NULL),
-	(275, 96, 211, 152, '51738FEN', 'razduženo', '2022-11-13 23:36:20', '', 'ZE0621548', NULL),
-	(277, 90, 223, 156, 'KJKSZPJ', 'zaduženo', '2022-11-19 01:23:06', 'Zaduženje nove opreme', 'ZE0621548', NULL),
-	(279, 90, 226, 174, 'SERIJSKINOCHANE', 'zaduženo', '2022-11-27 22:09:40', 'Zaduženje na Mirhu Ć.', 'INVENTURNI', NULL),
-	(280, 90, 225, 173, 'AEROZAKMI', 'zaduženo', '2022-11-28 21:24:40', 'Zaduženje nove opreme', 'ZE1264854', NULL),
-	(281, 84, 212, 152, 'TESTNEW', 'zaduženo', '2022-12-01 09:44:53', 'Zaduženje nove opreme', 'ZE065848232', NULL);
+-- Dumping data for table inventory.user_article: ~0 rows (approximately)
+REPLACE INTO `user_article` (`user_article_id`, `article_id`, `document_id`, `user_id`, `serial_number`, `status`, `timestamp`, `comment`, `inv_broj`, `value`) VALUES
+	(290, 90, 293, 148, 'S4PT4033', 'zaduženo', '2023-09-25 11:34:42', 'Zaduženje nove opreme 1', 'ZE06878665', 1),
+	(291, 90, 294, 152, 'S4PT4038', 'zaduženo', '2023-09-25 13:31:03', 'Zaduženje nove opreme 1', 'ZE06878662', 1);
 
 -- Dumping structure for table inventory.user_token
-DROP TABLE IF EXISTS `user_token`;
 CREATE TABLE IF NOT EXISTS `user_token` (
   `user_token_id` int unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int unsigned NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `token` varchar(2550) CHARACTER SET utf8mb4 COLLATE utf8mb4_bs_0900_ai_ci NOT NULL,
+  `token` varchar(2550) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `expire_at` datetime NOT NULL,
   `is_valid` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`user_token_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bs_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Dumping data for table inventory.user_token: ~53 rows (approximately)
-INSERT INTO `user_token` (`user_token_id`, `user_id`, `created_at`, `token`, `expire_at`, `is_valid`) VALUES
+REPLACE INTO `user_token` (`user_token_id`, `user_id`, `created_at`, `token`, `expire_at`, `is_valid`) VALUES
 	(4, 1, '2022-03-12 23:44:18', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxLCJpZGVudGl0eSI6Im0uY2VyaWNAZXBiaWguYmEiLCJleHAiOjE2NDk4MDcwNTguNjU2LCJpcCI6Ijo6MSIsInVhIjoiUG9zdG1hblJ1bnRpbWUvNy4yOC40IiwiaWF0IjoxNjQ3MTI4NjU4fQ.xunJeYa9nsAj7pDRMYKTSb28CdCxDxeO7F9SYu34yZk', '2022-04-12 23:44:18', 1),
 	(5, 1, '2022-03-12 23:44:25', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxLCJpZGVudGl0eSI6Im0uY2VyaWNAZXBiaWguYmEiLCJleHAiOjE2NDk4MDcwNjUuODUzLCJpcCI6Ijo6MSIsInVhIjoiUG9zdG1hblJ1bnRpbWUvNy4yOC40IiwiaWF0IjoxNjQ3MTI4NjY1fQ.3QFienwuIkBTzWAtYwK6GQw7wiXSKfdMYBmSk-pGHXg', '2022-04-12 23:44:25', 1),
 	(6, 1, '2022-03-13 00:03:08', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxLCJpZGVudGl0eSI6Im0uY2VyaWNAZXBiaWguYmEiLCJleHAiOjE2NDk4MDgxODguOTI3LCJpcCI6Ijo6ZmZmZjoxOTIuMTY4LjAuMTMiLCJ1YSI6Ik1vemlsbGEvNS4wIChYMTE7IExpbnV4IHg4Nl82NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzk5LjAuNDg0NC41MSBTYWZhcmkvNTM3LjM2IiwiaWF0IjoxNjQ3MTI5Nzg4fQ.8HXyIqvNmT3ntccVzg3tJQKgMSdE0WGNLacFLWtEk0o', '2022-04-13 00:03:08', 1),
@@ -917,7 +889,6 @@ INSERT INTO `user_token` (`user_token_id`, `user_id`, `created_at`, `token`, `ex
 	(56, 148, '2022-12-01 16:32:20', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxNDgsImlkZW50aXR5IjoibS5jZXJpY0BlcGJpaC5iYSIsImV4cCI6MTY3MjU5MDczOC41MTEsImlwIjoiOjpmZmZmOjE5Mi4xNjguMC4xMyIsInVhIjoiTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEwNy4wLjAuMCBTYWZhcmkvNTM3LjM2IEVkZy8xMDcuMC4xNDE4LjUyIiwiaWF0IjoxNjY5OTEyMzM4fQ.EyaPVcfd7BDstVyUjR2wSKkHRmWIBXmm8KXIZOJ5o8k', '2023-01-01 16:32:18', 1);
 
 -- Dumping structure for trigger inventory.user_before_insert
-DROP TRIGGER IF EXISTS `user_before_insert`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO';
 DELIMITER //
 CREATE TRIGGER `user_before_insert` BEFORE INSERT ON `user` FOR EACH ROW BEGIN
@@ -927,7 +898,6 @@ DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
 
 -- Dumping structure for trigger inventory.user_before_update
-DROP TRIGGER IF EXISTS `user_before_update`;
 SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO';
 DELIMITER //
 CREATE TRIGGER `user_before_update` BEFORE UPDATE ON `user` FOR EACH ROW BEGIN
