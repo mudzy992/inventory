@@ -200,7 +200,7 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         documentId: savedDocument.documentsId,
         userId: userId,
         status: 'zaduženo',
-        comment: "Zaduženje nove opreme 2",
+        comment: "Zaduženje nove opreme",
       });
 
       await this.newArticleTimeline(
@@ -492,122 +492,6 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       }
   }
 
-  // private async createDocument(
-  //   predao: string,
-  //   preuzeo: string,
-  //   inv: string,
-  //   naziv: string,
-  //   komentar: string,
-  //   userId,
-  //   data,
-  // ) {
-  //   let lastRecord = await this.document.findOne({
-  //     order: {
-  //       created_date: 'DESC'
-  //     }
-  //   })
-
-  //   /* let currentYear = lastRecord ? new Date(lastRecord.created_date).getFullYear() : new Date().getFullYear(); */
-  //   let currentYear;
-  //   if (lastRecord && lastRecord.created_date) {
-  //     currentYear = new Date(lastRecord.created_date).getFullYear();
-  //   } else {
-  //     currentYear = new Date().getFullYear();
-  //   }
-
-  //   let documentNumber;
-
-  //   if (currentYear === new Date().getFullYear()) {
-  //       documentNumber = lastRecord ? lastRecord.documentNumber + 1 : 1;
-  //   } else {
-  //       documentNumber = 1;
-  //       currentYear = new Date().getFullYear();
-  //   }
-
-  //   const exRes: UserArticle = await this.userArticle.findOne({
-  //     serialNumber: data.serialNumber,
-  //     status: "zaduženo",
-  //   });
-
-  //   if (exRes) {
-  //     if(data.status === 'razduženo') {
-  //       const predaoKorisnik: User = await this.user.findOne({
-  //         userId: userId,
-  //       });
-  //       predao = predaoKorisnik.fullname;
-  //       preuzeo = "Skladište"
-
-  //     } else if (data.status === 'zaduženo') {
-  //       const predaoKorisnik: User = await this.user.findOne({
-  //         userId: exRes.userId,
-  //       });
-  //       predao = predaoKorisnik.fullname;
-  
-  //       const preuzeoKorisnik: User = await this.user.findOne({
-  //         userId: userId,
-  //       });
-  //       preuzeo = preuzeoKorisnik.fullname;
-  //     } 
-  //   }
-
-  //   if (!exRes) {
-  //     const exDebt: UserArticle = await this.userArticle.findOne({
-  //       serialNumber: data.serialNumber,
-  //       status: "razduženo"
-  //     });
-
-  //     if (exDebt) {
-  //     predao = 'Skladište';
-  //     const preuzeoKorisnik: User = await this.user.findOne({
-  //       userId: userId,
-  //     });
-  //     preuzeo = preuzeoKorisnik.fullname;
-  //   }
-
-  //   predao = 'Skladište';
-
-  // const preuzeoKorisnik: User = await this.user.findOne({
-  //   userId: userId,
-  // });
-
-  // preuzeo = preuzeoKorisnik.fullname;
-  // }
-
-  // const article: Article = await this.article.findOne({
-  //     articleId: data.articleId,
-  //   });
-  //   inv = data.invBroj;
-  //   naziv = article.name;
-  //   komentar = data.comment;
-  //   try {
-  //     const template = readFileSync(
-  //       StorageConfig.prenosnica.template,
-  //       /* StorageConfig.prenosnica.fullPath + 'templates/prenosnica.docx', */
-  //     );
-  //     const buffer = await createReport({
-  //       template,
-  //       data: {
-  //         broj_prenosnice: documentNumber,
-  //         predao_korisnik: predao,
-  //         preuzeo_korisnik: preuzeo,
-  //         inv_broj: inv,
-  //         naziv: naziv,
-  //         komentar: komentar,
-  //       },
-  //     });
-  //     writeFileSync(
-  //       StorageConfig.prenosnica.destination +
-  //         'prenosnica' +
-  //         documentNumber +
-  //         '.docx',
-  //       buffer,
-  //     );
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
-
-
   private async createDocument(
     predao: string,
     preuzeo: string,
@@ -617,141 +501,249 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     userId,
     data,
   ) {
-    const lastRecord = await this.getLastRecord();
-  
-    const currentYear = this.getCurrentYear(lastRecord);
-  
-    const { predao: newPredao, preuzeo: newPreuzeo } = await this.getPredaoPreuzeo(
-      data,
-      userId
-    );
-  
-    const article = await this.getArticle(data);
+    let lastRecord = await this.document.findOne({
+      order: {
+        created_date: 'DESC'
+      }
+    })
+
+    /* let currentYear = lastRecord ? new Date(lastRecord.created_date).getFullYear() : new Date().getFullYear(); */
+    let currentYear;
+    if (lastRecord && lastRecord.created_date) {
+      currentYear = new Date(lastRecord.created_date).getFullYear();
+    } else {
+      currentYear = new Date().getFullYear();
+    }
+
     let documentNumber;
 
     if (currentYear === new Date().getFullYear()) {
-      documentNumber = lastRecord ? lastRecord.documentNumber + 1 : 1;
+        documentNumber = lastRecord ? lastRecord.documentNumber + 1 : 1;
     } else {
-      documentNumber = 1;
+        documentNumber = 1;
+        currentYear = new Date().getFullYear();
     }
-  
-    inv = data.invBroj;
-    naziv = article.name;
-    komentar = data.comment;
-  
-    try {
-      const template = this.readTemplate();
-      const buffer = await this.createReport(
-        documentNumber,
-        newPredao,
-        newPreuzeo,
-        inv,
-        naziv,
-        komentar,
-        template
-      );
-      this.writeReport(buffer, documentNumber);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-  
-  private async getLastRecord() {
-    return await this.document.findOne({
-      order: {
-        created_date: 'DESC',
-      },
-    });
-  }
-  
-  private getCurrentYear(lastRecord) {
-    return lastRecord && lastRecord.created_date
-      ? new Date(lastRecord.created_date).getFullYear()
-      : new Date().getFullYear();
-  }
-  
-  private async getPredaoPreuzeo(data, userId) {
-    let predao = 'Skladište';
-    let preuzeo = 'Skladište';
-  
-    const exRes = await this.userArticle.findOne({
+
+    const exRes: UserArticle = await this.userArticle.findOne({
       serialNumber: data.serialNumber,
-      status: 'zaduženo',
+      status: "zaduženo",
     });
-  
+
     if (exRes) {
-      if (data.status === 'razduženo') {
-        const predaoKorisnik = await this.user.findOne({
+      if(data.status === 'razduženo') {
+        const predaoKorisnik: User = await this.user.findOne({
           userId: userId,
         });
         predao = predaoKorisnik.fullname;
-        preuzeo = 'Skladište';
+        preuzeo = "Skladište"
+
       } else if (data.status === 'zaduženo') {
-        const predaoKorisnik = await this.user.findOne({
+        const predaoKorisnik: User = await this.user.findOne({
           userId: exRes.userId,
         });
         predao = predaoKorisnik.fullname;
   
-        const preuzeoKorisnik = await this.user.findOne({
+        const preuzeoKorisnik: User = await this.user.findOne({
           userId: userId,
         });
         preuzeo = preuzeoKorisnik.fullname;
-      }
-    } else {
-      const exDebt = await this.userArticle.findOne({
-        serialNumber: data.serialNumber,
-        status: 'razduženo',
-      });
-  
-      if (exDebt) {
-        const preuzeoKorisnik = await this.user.findOne({
-          userId: userId,
-        });
-        preuzeo = preuzeoKorisnik.fullname;
-      }
+      } 
     }
-  
-    return { predao, preuzeo };
+
+    if (!exRes) {
+      const exDebt: UserArticle = await this.userArticle.findOne({
+        serialNumber: data.serialNumber,
+        status: "razduženo"
+      });
+
+      if (exDebt) {
+      predao = 'Skladište';
+      const preuzeoKorisnik: User = await this.user.findOne({
+        userId: userId,
+      });
+      preuzeo = preuzeoKorisnik.fullname;
+    }
+
+    predao = 'Skladište';
+
+  const preuzeoKorisnik: User = await this.user.findOne({
+    userId: userId,
+  });
+
+  preuzeo = preuzeoKorisnik.fullname;
   }
-  
-  private async getArticle(data) {
-    return await this.article.findOne({
+
+  const article: Article = await this.article.findOne({
       articleId: data.articleId,
     });
+    inv = data.invBroj;
+    naziv = article.name;
+    komentar = data.comment;
+    try {
+      const template = readFileSync(
+        StorageConfig.prenosnica.template,
+        /* StorageConfig.prenosnica.fullPath + 'templates/prenosnica.docx', */
+      );
+      const buffer = await createReport({
+        template,
+        data: {
+          broj_prenosnice: documentNumber,
+          predao_korisnik: predao,
+          preuzeo_korisnik: preuzeo,
+          inv_broj: inv,
+          naziv: naziv,
+          komentar: komentar,
+        },
+      });
+      writeFileSync(
+        StorageConfig.prenosnica.destination +
+          'prenosnica' +
+          documentNumber +
+          '.docx',
+        buffer,
+      );
+    } catch (err) {
+      console.log(err);
+    }
   }
+
+
+  // private async createDocument(
+  //   inv: string,
+  //   naziv: string,
+  //   komentar: string,
+  //   userId,
+  //   data,
+  // ) {
+  //   const lastRecord = await this.getLastRecord();
   
-  private readTemplate() {
-    return readFileSync(StorageConfig.prenosnica.template);
-  }
+  //   const currentYear = this.getCurrentYear(lastRecord);
   
-  private async createReport(
-    documentNumber,
-    predao,
-    preuzeo,
-    inv,
-    naziv,
-    komentar,
-    template
-  ) {
-    return await createReport({
-      template,
-      data: {
-        broj_prenosnice: documentNumber,
-        predao_korisnik: predao,
-        preuzeo_korisnik: preuzeo,
-        inv_broj: inv,
-        naziv: naziv,
-        komentar: komentar,
-      },
-    });
-  }
+  //   const { predao, preuzeo } = await this.getPredaoPreuzeo(data, userId);
+    
+  //   const article = await this.getArticle(data);
+  //   let documentNumber;
   
-  private writeReport(buffer, documentNumber) {
-    writeFileSync(
-      `${StorageConfig.prenosnica.destination}prenosnica${documentNumber}.docx`,
-      buffer
-    );
-  }
+  //   if (currentYear === new Date().getFullYear()) {
+  //     documentNumber = lastRecord ? lastRecord.documentNumber + 1 : 1;
+  //   } else {
+  //     documentNumber = 1;
+  //   }
+  
+  //   inv = data.invBroj;
+  //   naziv = article.name;
+  //   komentar = data.comment;
+  
+  //   try {
+  //     const template = this.readTemplate();
+  //     const buffer = await this.createReport(
+  //       documentNumber,
+  //       predao,
+  //       preuzeo,
+  //       inv,
+  //       naziv,
+  //       komentar,
+  //       template
+  //     );
+  //     this.writeReport(buffer, documentNumber);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
+
+  // private async getPredaoPreuzeo(data, userId) {
+  //   let predao = 'Skladište';
+  //   let preuzeo = 'Skladište';
+  
+  //   if (data.status === 'zaduženo') {
+  //     const exRes = await this.userArticle.findOne({
+  //       serialNumber: data.serialNumber,
+  //       userId: userId,
+  //     });
+  
+  //     if (exRes) {
+  //       // Postoji unos u userArticle, koristite odgovarajuće vrednosti
+  //       const predaoKorisnik = await this.user.findOne({
+  //         userId: exRes.userId,
+  //       });
+  //       predao = predaoKorisnik.fullname;
+  
+  //       const preuzeoKorisnik = await this.user.findOne({
+  //         userId: userId,
+  //       });
+  //       preuzeo = preuzeoKorisnik.fullname;
+  //     }
+  //   } else if (data.status === 'razduženo') {
+  //     const exDebt = await this.userArticle.findOne({
+  //       serialNumber: data.serialNumber,
+  //       status: 'razduženo',
+  //     });
+  
+  //     if (exDebt) {
+  //       // Postoji unos u userArticle za status "razduženo"
+  //       const preuzeoKorisnik = await this.user.findOne({
+  //         userId: userId,
+  //       });
+  //       preuzeo = preuzeoKorisnik.fullname;
+  //     }
+  //   }
+  
+  //   return { predao, preuzeo };
+  // }
+  
+  // private async getLastRecord() {
+  //   return await this.document.findOne({
+  //     order: {
+  //       created_date: 'DESC',
+  //     },
+  //   });
+  // }
+  
+  // private getCurrentYear(lastRecord) {
+  //   return lastRecord && lastRecord.created_date
+  //     ? new Date(lastRecord.created_date).getFullYear()
+  //     : new Date().getFullYear();
+  // }
+  
+  
+  // private async getArticle(data) {
+  //   return await this.article.findOne({
+  //     articleId: data.articleId,
+  //   });
+  // }
+  
+  // private readTemplate() {
+  //   return readFileSync(StorageConfig.prenosnica.template);
+  // }
+  
+  // private async createReport(
+  //   documentNumber,
+  //   predao,
+  //   preuzeo,
+  //   inv,
+  //   naziv,
+  //   komentar,
+  //   template
+  // ) {
+  //   return await createReport({
+  //     template,
+  //     data: {
+  //       broj_prenosnice: documentNumber,
+  //       predao_korisnik: predao,
+  //       preuzeo_korisnik: preuzeo,
+  //       inv_broj: inv,
+  //       naziv: naziv,
+  //       komentar: komentar,
+  //     },
+  //   });
+  // }
+  
+  // private writeReport(buffer, documentNumber) {
+  //   writeFileSync(
+  //     `${StorageConfig.prenosnica.destination}prenosnica${documentNumber}.docx`,
+  //     buffer
+  //   );
+  // }
   
 
   private async addArticleInResponsibility(
@@ -796,7 +788,7 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     newUserArticleData.invBroj = data.invBroj;
     newUserArticleData.articleId = data.articleId;
     newUserArticleData.value = data.value;
-    newUserArticleData.comment = 'Zaduženje nove opreme 1';
+    newUserArticleData.comment = 'Zaduženje nove opreme';
     newUserArticleData.status = 'zaduženo';
 
     const savedUserArticle = await this.userArticle.save(newUserArticleData);
