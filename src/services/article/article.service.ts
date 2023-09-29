@@ -68,7 +68,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     await this.stock.save(newArticleInStock);
 
     /* Vrati artikal na prikaz */
-    return await this.findOne(savedArticle.articleId, {
+    return await this.findBy(savedArticle.articleId, {
       relations: [
         'category',
         'articleFeature',
@@ -80,7 +80,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
   async getBySapNumber(sapNumber: string): Promise<Stock | null> {
     /* Mehanizam pronalaženja artikla u skladištu po sap broju */
-    const sapnumber = await this.stock.findOne({ sapNumber: sapNumber });
+    const sapnumber = await this.stock.findOneBy({ sapNumber: sapNumber });
     if (sapnumber) {
       return sapnumber;
     }
@@ -91,7 +91,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     articleId: number,
     data: EditFullArticleDto,
   ): Promise<Article | ApiResponse> {
-    const existingArticle: Article = await this.article.findOne({articleId: articleId})
+    const existingArticle: Article = await this.article.findOneBy({articleId: articleId})
     if (!existingArticle) {
       return new ApiResponse('error', -1001, 'Artikal ne postoji u skladištu');
     }
@@ -111,7 +111,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     }
     
     if (data.stock !== null) {
-      const existingArticleInStock = await this.stock.findOne({articleId : articleId})
+      const existingArticleInStock = await this.stock.findOneBy({articleId : articleId})
       this.stock.update(existingArticleInStock, {
         valueOnConcract : data.stock.valueOnConcract,
         valueAvailable : data.stock.valueAvailable,
@@ -120,7 +120,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     }
 
      if (data.features !== null) {
-       await this.articleFeature.remove(await this.articleFeature.find({articleId : articleId}));
+       await this.articleFeature.remove(await this.articleFeature.findBy({articleId : articleId}));
       for (const feature of data.features) {
         const newArticleFeature: ArticleFeature = new ArticleFeature();
         newArticleFeature.articleId = articleId;
@@ -130,7 +130,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       } 
     }
 
-    return await this.findOne(articleId, {
+    return await this.find(articleId, {
       relations: [
         'category',
         'articleFeature',
@@ -144,12 +144,12 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     articleId: number,
     data: AddArticleDto,
   ): Promise<Stock> {
-    const existingStockArticle = await this.stock.findOne({
+    const existingStockArticle = await this.stock.findOneBy({
       articleId: articleId,
     });
     if (existingStockArticle) {
       await this.stock.remove(
-        await this.stock.findOne({ articleId: articleId }),
+        await this.stock.findOneBy({ articleId: articleId }),
       );
       const newArticleStock: Stock = new Stock();
       newArticleStock.articleId = articleId;

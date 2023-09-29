@@ -27,7 +27,7 @@ export class FeatureService extends TypeOrmCrudService<Feature> {
       return new ApiResponse('error', -4001, 'Osobina nije sačuvana')
     }
 
-    return await this.findOne(savedFeature.featureId, { 
+    return await this.findOneBy(savedFeature.featureId, { 
       relations: ['articleFeature', 'category', 'articles'],
     })
   }
@@ -36,7 +36,7 @@ export class FeatureService extends TypeOrmCrudService<Feature> {
     const newFeature: Feature = new Feature();
 
 
-    return await this.findOne( {
+    return await this.findOneBy( {
       relations: ['articleFeature',' category',]
     })
   }

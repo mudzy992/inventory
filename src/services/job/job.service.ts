@@ -29,13 +29,13 @@ export class JobService extends TypeOrmCrudService<Job> {
       return new ApiResponse('error', -10001, 'Radno mjesto nije sačuvano')
     }
 
-    return await this.findOne(savedJob.jobId, {
+    return await this.findOneBy(savedJob.jobId, {
       relations: ['departmentJobs'],
     })
   }
 
   async editJob(jobId: number, data: EditJobDto): Promise<Job | ApiResponse> {
-    const existingJob: Job = await this.job.findOne({jobId: jobId})
+    const existingJob: Job = await this.job.findOneBy({jobId: jobId})
     if (!existingJob) {
       return new ApiResponse('error', -10002, 'Radno mjesto nije pronađeno')
     }
@@ -48,13 +48,13 @@ export class JobService extends TypeOrmCrudService<Job> {
       return new ApiResponse('error', -10001, 'Radno mjesto nije sačuvano')
     }
 
-    return await this.findOne(savedJob.jobId, {
+    return await this.findOneBy(savedJob.jobId, {
       relations: ['departmentJobs'],
     })
   }
 
   async deleteJob(jobId: number): Promise<ApiResponse> {
-    const existingJob: Job = await this.job.findOne({jobId: jobId})
+    const existingJob: Job = await this.job.findOneBy({jobId: jobId})
     if (!existingJob) {
       return new ApiResponse('error', -10002, 'Radno mjesto nije pronađeno')
     }
