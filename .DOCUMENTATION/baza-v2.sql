@@ -41,9 +41,9 @@ CREATE TABLE IF NOT EXISTS `administrator_token` (
   `expire_at` datetime NOT NULL,
   `is_valid` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`administrator_token_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.administrator_token: ~115 rows (approximately)
+-- Dumping data for table inventory.administrator_token: ~116 rows (approximately)
 REPLACE INTO `administrator_token` (`administrator_token_id`, `administrator_id`, `created_at`, `token`, `expire_at`, `is_valid`) VALUES
 	(2, 1, '2022-03-18 14:07:16', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjUwMjkwODM2LjA5OCwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS85OC4wLjQ3NTguMTA5IFNhZmFyaS81MzcuMzYgT1BSLzg0LjAuNDMxNi4zNiIsImlhdCI6MTY0NzYxMjQzNn0.wVS1NEISf6X2n2HZqgmwu095Kupd6hsrximwyrGEV4o', '2022-04-18 14:07:16', 1),
 	(3, 1, '2022-03-18 14:09:09', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidXNlciIsImlkIjoxLCJpZGVudGl0eSI6Im0uY2VyaWNAZXBiaWguYmEiLCJleHAiOjE2NDk4NjI2OTYuMDExLCJpcCI6Ijo6MSIsInVhIjoiUG9zdG1hblJ1bnRpbWUvNy4yOC40IiwiaWF0IjoxNjQ3MTg0Mjk2fQ.kV9bMPwIvKgxQ2Mv4Pc0ezsyVkcJtptUjH2WsklpxSg', '2022-04-18 14:09:09', 1),
@@ -159,7 +159,8 @@ REPLACE INTO `administrator_token` (`administrator_token_id`, `administrator_id`
 	(117, 1, '2023-09-20 07:36:18', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk3ODczNzc4LjM5OCwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMTUuMC4wLjAgU2FmYXJpLzUzNy4zNiBPUFIvMTAxLjAuMC4wIiwiaWF0IjoxNjk1MTk1Mzc4fQ.z2LinBQktQaK02IHtg7vcp8o8kqwJSOloNN3LrsSgUo', '2023-10-21 07:36:18', 1),
 	(118, 1, '2023-09-21 08:37:59', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk3OTYzODc5LjM1NywiaXAiOiI6OjEiLCJ1YSI6IlBvc3RtYW5SdW50aW1lLzcuMzMuMCIsImlhdCI6MTY5NTI4NTQ3OX0.nCVRJm88aFWwaOdlk7dMaKDAAe-NIIdQJspfXia3MlI', '2023-10-22 08:37:59', 1),
 	(119, 1, '2023-09-21 10:22:41', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk3OTcwMTYxLjkyNiwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMTUuMC4wLjAgU2FmYXJpLzUzNy4zNiBPUFIvMTAxLjAuMC4wIiwiaWF0IjoxNjk1MjkxNzYxfQ.GZGDb5O3i_mRgVQXPmU4hMZcZPZQ2z05kMRwAdk_WBs', '2023-10-22 10:22:41', 1),
-	(120, 1, '2023-09-21 10:32:38', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk3OTcwNzU4LjcwMiwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMTUuMC4wLjAgU2FmYXJpLzUzNy4zNiBPUFIvMTAxLjAuMC4wIiwiaWF0IjoxNjk1MjkyMzU4fQ.QT5TU44W0BdMolRtgwrUBq36vhzcBldRfUkvbyaGXNU', '2023-10-22 10:32:38', 1);
+	(120, 1, '2023-09-21 10:32:38', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk3OTcwNzU4LjcwMiwiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMTUuMC4wLjAgU2FmYXJpLzUzNy4zNiBPUFIvMTAxLjAuMC4wIiwiaWF0IjoxNjk1MjkyMzU4fQ.QT5TU44W0BdMolRtgwrUBq36vhzcBldRfUkvbyaGXNU', '2023-10-22 10:32:38', 1),
+	(121, 1, '2023-09-28 13:57:15', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImlkIjoxLCJpZGVudGl0eSI6ImFkbWluIiwiZXhwIjoxNjk4NTg3ODM1LjM2MywiaXAiOiI6OjEiLCJ1YSI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMTYuMC4wLjAgU2FmYXJpLzUzNy4zNiBPUFIvMTAyLjAuMC4wIiwiaWF0IjoxNjk1OTA5NDM1fQ.4cBuHA05w6GC1TIIEHJDj1unnuU0ZyeJPZZu12Srsuw', '2023-10-29 13:57:15', 1);
 
 -- Dumping structure for table inventory.article
 CREATE TABLE IF NOT EXISTS `article` (
@@ -209,7 +210,7 @@ CREATE TABLE IF NOT EXISTS `article_feature` (
   CONSTRAINT `fk_article_feature_feature_id` FOREIGN KEY (`feature_id`) REFERENCES `feature` (`feature_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=426 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.article_feature: ~53 rows (approximately)
+-- Dumping data for table inventory.article_feature: ~70 rows (approximately)
 REPLACE INTO `article_feature` (`article_feature_id`, `article_id`, `feature_id`, `value`) VALUES
 	(54, 83, 8, '1TB'),
 	(55, 83, 9, 'HDD'),
@@ -301,12 +302,39 @@ CREATE TABLE IF NOT EXISTS `article_timeline` (
   CONSTRAINT `fk_article_timeline_article` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_article_timeline_documents` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_article_timeline_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=165 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=205 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.article_timeline: ~0 rows (approximately)
+-- Dumping data for table inventory.article_timeline: ~29 rows (approximately)
 REPLACE INTO `article_timeline` (`article_timeline_id`, `article_id`, `user_id`, `document_id`, `serial_number`, `status`, `timestamp`, `inv_broj`, `comment`) VALUES
 	(163, 90, 148, 293, 'S4PT4033', 'zaduženo', '2023-09-25 11:34:42', 'ZE06878665', 'Komentrar'),
-	(164, 90, 152, 294, 'S4PT4038', 'zaduženo', '2023-09-25 13:31:03', 'ZE06878662', '');
+	(171, 90, 157, 301, 'S4PT4035', 'zaduženo', '2023-09-26 06:54:04', 'ZE06878661', ''),
+	(172, 90, 150, 302, 'S4PT4047', 'zaduženo', '2023-09-26 06:54:41', 'ZE06878666', ''),
+	(177, 90, 152, 307, 'S4PT4038', 'zaduženo', '2023-09-28 06:22:07', 'ZE06878662', ''),
+	(178, 90, 200, 308, 'S4PT4040', 'zaduženo', '2023-09-28 07:59:58', 'ZE06878664', ''),
+	(179, 90, 201, 309, 'S4PT4044', 'zaduženo', '2023-09-28 08:00:43', 'ZE06878663', ''),
+	(180, 91, 207, 310, 'CZC1118K7Z', 'zaduženo', '2023-09-28 11:38:42', 'ZG0687167', ''),
+	(181, 91, 151, 311, 'CZC1118K6N', 'zaduženo', '2023-09-28 11:39:45', 'ZG0687152', ''),
+	(182, 91, 151, 312, 'CZC1118K6N', 'razduženo', '2023-09-28 11:40:36', 'ZG0687152', 'Greška prilikom prvog zaduženje. U startu je ovaj računar bio zadužen na Rašidu Hajdić.'),
+	(183, 91, 208, 312, 'CZC1118K6N', 'zaduženo', '2023-09-28 11:40:36', 'ZG0687152', 'Greška prilikom prvog zaduženje. U startu je ovaj računar bio zadužen na Rašidu Hajdić.'),
+	(184, 91, 210, 313, 'CZC1118K7L', 'zaduženo', '2023-09-28 12:05:37', 'ZE0687908', ''),
+	(185, 91, 209, 314, 'CZC1118K77', 'zaduženo', '2023-09-28 12:05:57', 'ZE0687907', ''),
+	(186, 91, 211, 315, 'CZC1118K8N', 'zaduženo', '2023-09-28 12:15:01', 'ZG0687151', ''),
+	(187, 93, 209, 316, 'CN41060Z0V', 'zaduženo', '2023-09-28 12:16:34', 'ZE0687920', ''),
+	(188, 92, 149, 317, 'S4S54781', 'zaduženo', '2023-09-28 12:19:59', 'ZE0687457', ''),
+	(190, 92, 174, 319, 'S4G27223', 'zaduženo', '2023-09-28 12:21:12', 'ZE0687314', ''),
+	(191, 92, 175, 320, 'S4G27129', 'zaduženo', '2023-09-28 12:21:36', 'ZE0687342', ''),
+	(192, 92, 181, 321, 'S4G27201', 'zaduženo', '2023-09-28 12:22:09', 'ZE0687343', ''),
+	(194, 92, 177, 323, 'S4S54522', 'zaduženo', '2023-09-28 12:26:54', 'ZE0687453', ''),
+	(195, 92, 186, 324, 'S4S54794', 'zaduženo', '2023-09-28 12:27:55', 'ZG0686649', ''),
+	(196, 92, 179, 325, 'S4S54204', 'zaduženo', '2023-09-28 12:28:27', 'ZE0687500', ''),
+	(197, 92, 188, 326, 'S4S54766', 'zaduženo', '2023-09-28 12:32:25', 'ZE0687451', ''),
+	(198, 92, 173, 327, 'S4S59266', 'zaduženo', '2023-09-28 12:32:53', 'ZE0687443', ''),
+	(199, 92, 169, 328, 'S4G27138', 'zaduženo', '2023-09-28 12:33:28', 'ZE0687317', ''),
+	(200, 92, 151, 329, 'S4S59287', 'zaduženo', '2023-09-28 12:34:09', 'ZG0686647', ''),
+	(201, 92, 212, 330, 'S4S54800', 'zaduženo', '2023-09-28 12:39:01', 'ZG0686648', ''),
+	(202, 92, 213, 331, 'S4S41757', 'zaduženo', '2023-09-28 12:39:21', 'ZE0687444', ''),
+	(203, 92, 215, 332, 'S4S54770', 'zaduženo', '2023-09-28 13:02:32', 'ZE0687450', ''),
+	(204, 92, 216, 333, 'S4S54785', 'zaduženo', '2023-09-28 13:02:56', 'ZE0687452', '');
 
 -- Dumping structure for table inventory.category
 CREATE TABLE IF NOT EXISTS `category` (
@@ -368,9 +396,9 @@ CREATE TABLE IF NOT EXISTS `department` (
   PRIMARY KEY (`department_id`) USING BTREE,
   KEY `FK_department_department` (`parent_department_id`),
   CONSTRAINT `FK_department_department` FOREIGN KEY (`parent_department_id`) REFERENCES `department` (`department_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.department: ~32 rows (approximately)
+-- Dumping data for table inventory.department: ~35 rows (approximately)
 REPLACE INTO `department` (`department_id`, `title`, `description`, `departmend_code`, `parent_department_id`) VALUES
 	(2, 'Sektor za IKT', 'Sektor za informacione i komunikacione tehnologije IKT', '1010206', NULL),
 	(3, 'Služba za IKT Zenica', 'Sektor za informacione i komunikacione tehnologije IKT Zenica', '101020601', 2),
@@ -403,7 +431,10 @@ REPLACE INTO `department` (`department_id`, `title`, `description`, `departmend_
 	(34, 'Služba za sigurnost i zaštitu', 'Služba za sigurnost i zaštitu', '103080103', 19),
 	(35, 'Sektor za održavanje mreža i postrojenja', '', '1030804', NULL),
 	(36, 'Služba za održavanje mreža i postrojenja', 'Služba za održavanje mreža i postrojenja', '103080401', 35),
-	(37, 'Služba za transport', 'Služba za transport', '103080402', 35);
+	(37, 'Služba za transport', 'Služba za transport', '103080402', 35),
+	(38, 'Poslovna jedinica Zenica', 'Poslovna jedinica Zenica', '1030806', NULL),
+	(39, 'Poslovna jedinica Doboj Jug', '', '103080611', NULL),
+	(40, 'Služba za planiranje, analizu i izvještavanje', '', '', 19);
 
 -- Dumping structure for table inventory.department_job
 CREATE TABLE IF NOT EXISTS `department_job` (
@@ -418,9 +449,9 @@ CREATE TABLE IF NOT EXISTS `department_job` (
   CONSTRAINT `department_job_department_id` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `department_job_job_id` FOREIGN KEY (`job_id`) REFERENCES `job` (`job_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `FK_department_job_location` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=123 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.department_job: ~69 rows (approximately)
+-- Dumping data for table inventory.department_job: ~80 rows (approximately)
 REPLACE INTO `department_job` (`department_job_id`, `department_id`, `job_id`, `location_id`) VALUES
 	(2, 3, 2, 2),
 	(13, 5, 7, 2),
@@ -490,7 +521,18 @@ REPLACE INTO `department_job` (`department_job_id`, `department_id`, `job_id`, `
 	(107, 15, 35, 2),
 	(109, 15, 38, 2),
 	(110, 35, 8, 2),
-	(111, 36, 9, 2);
+	(111, 36, 9, 2),
+	(112, 25, 39, 2),
+	(113, 25, 40, 2),
+	(114, 25, 41, 2),
+	(115, 25, 42, 2),
+	(116, 25, 43, 2),
+	(117, 3, 44, 2),
+	(118, 38, 45, 3),
+	(119, 39, 45, 38),
+	(120, 40, 48, 2),
+	(121, 40, 46, 2),
+	(122, 31, 47, 2);
 
 -- Dumping structure for table inventory.destroyed
 CREATE TABLE IF NOT EXISTS `destroyed` (
@@ -528,12 +570,39 @@ CREATE TABLE IF NOT EXISTS `documents` (
   PRIMARY KEY (`documents_id`),
   KEY `fk_documents_article_id` (`article_id`),
   CONSTRAINT `fk_documents_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=295 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=335 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.documents: ~0 rows (approximately)
+-- Dumping data for table inventory.documents: ~29 rows (approximately)
 REPLACE INTO `documents` (`documents_id`, `article_id`, `path`, `document_number`, `created_date`) VALUES
 	(293, 90, 'prenosnica1.docx', 1, '2023-09-25 13:34:42'),
-	(294, 90, 'prenosnica2.docx', 2, '2023-09-25 15:31:03');
+	(301, 90, 'prenosnica2.docx', 2, '2023-09-26 08:54:04'),
+	(302, 90, 'prenosnica3.docx', 3, '2023-09-26 08:54:41'),
+	(307, 90, 'prenosnica4.docx', 4, '2023-09-28 08:22:07'),
+	(308, 90, 'prenosnica5.docx', 5, '2023-09-28 09:59:58'),
+	(309, 90, 'prenosnica6.docx', 6, '2023-09-28 10:00:43'),
+	(310, 91, 'prenosnica7.docx', 7, '2023-09-28 13:38:42'),
+	(311, 91, 'prenosnica8.docx', 8, '2023-09-28 13:39:45'),
+	(312, 91, 'prenosnica9.docx', 9, '2023-09-28 13:40:36'),
+	(313, 91, 'prenosnica10.docx', 10, '2023-09-28 14:05:37'),
+	(314, 91, 'prenosnica11.docx', 11, '2023-09-28 14:05:57'),
+	(315, 91, 'prenosnica12.docx', 12, '2023-09-28 14:15:01'),
+	(316, 93, 'prenosnica13.docx', 13, '2023-09-28 14:16:34'),
+	(317, 92, 'prenosnica14.docx', 14, '2023-09-28 14:19:59'),
+	(319, 92, 'prenosnica16.docx', 16, '2023-09-28 14:21:12'),
+	(320, 92, 'prenosnica17.docx', 17, '2023-09-28 14:21:36'),
+	(321, 92, 'prenosnica18.docx', 18, '2023-09-28 14:22:09'),
+	(323, 92, 'prenosnica19.docx', 19, '2023-09-28 14:26:54'),
+	(324, 92, 'prenosnica20.docx', 20, '2023-09-28 14:27:55'),
+	(325, 92, 'prenosnica21.docx', 21, '2023-09-28 14:28:27'),
+	(326, 92, 'prenosnica22.docx', 22, '2023-09-28 14:32:25'),
+	(327, 92, 'prenosnica23.docx', 23, '2023-09-28 14:32:53'),
+	(328, 92, 'prenosnica24.docx', 24, '2023-09-28 14:33:28'),
+	(329, 92, 'prenosnica25.docx', 25, '2023-09-28 14:34:09'),
+	(330, 92, 'prenosnica26.docx', 26, '2023-09-28 14:39:01'),
+	(331, 92, 'prenosnica27.docx', 27, '2023-09-28 14:39:21'),
+	(332, 92, 'prenosnica28.docx', 28, '2023-09-28 15:02:32'),
+	(333, 92, 'prenosnica29.docx', 29, '2023-09-28 15:02:56'),
+	(334, 92, 'prenosnica29.docx', 29, '2023-09-28 15:02:56');
 
 -- Dumping structure for table inventory.feature
 CREATE TABLE IF NOT EXISTS `feature` (
@@ -575,9 +644,9 @@ CREATE TABLE IF NOT EXISTS `job` (
   `description` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `job_code` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'undefined',
   PRIMARY KEY (`job_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.job: ~34 rows (approximately)
+-- Dumping data for table inventory.job: ~44 rows (approximately)
 REPLACE INTO `job` (`job_id`, `title`, `description`, `job_code`) VALUES
 	(2, 'Tehničar za IKT **', 'Tehničar za IKT ** Zenica', '936545'),
 	(6, 'Koordinator za GIS', 'Koordinator za GIS', 'undefined'),
@@ -612,7 +681,17 @@ REPLACE INTO `job` (`job_id`, `title`, `description`, `job_code`) VALUES
 	(35, 'Inženjer za zaštitu i kvalitet električne energije', 'Inženjer za zaštitu i kvalitet električne energije', ''),
 	(36, 'Vodeći elektromehaničar *', 'Vodeći elektromehaničar *', ''),
 	(37, 'Tehničar za ispitivanja **', 'Tehničar za ispitivanja **', ''),
-	(38, 'Tehničar za pripremu', 'Tehničar za pripremu', '');
+	(38, 'Tehničar za pripremu', 'Tehničar za pripremu', ''),
+	(39, 'Samostalni referent nabavke*', 'Samostalni referent nabavke*', ''),
+	(40, 'Stručni saradnik za nabavku i ugovaranje', 'Stručni saradnik za nabavku i ugovaranje', ''),
+	(41, 'Vodeći skladištar**', 'Vodeći skladištar**', ''),
+	(42, 'Vodeći skladištar', 'Vodeći skladištar', ''),
+	(43, 'Referent za računovodstvo**', 'Referent za računovodstvo**', ''),
+	(44, 'Stručni saradnik za održavanje IKT servis i infrastrukture', 'Stručni saradnik za održavanje IKT servis i infrastrukture', ''),
+	(45, 'Rukovodilac Poslovne Jedinice', '', ''),
+	(46, 'Stručni saradnik za planiranje i izvještavanje', '', ''),
+	(47, 'Vodeći referent za naplatu i utuženja*', '', ''),
+	(48, 'Stručni suradnik za finansijske i računovodstvene poslove', 'Stručni suradnik za finansijske i računovodstvene poslove', 'undefined');
 
 -- Dumping structure for table inventory.location
 CREATE TABLE IF NOT EXISTS `location` (
@@ -623,14 +702,18 @@ CREATE TABLE IF NOT EXISTS `location` (
   PRIMARY KEY (`location_id`),
   KEY `FK_location_location` (`parent_location_id`),
   CONSTRAINT `FK_location_location` FOREIGN KEY (`parent_location_id`) REFERENCES `location` (`location_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.location: ~4 rows (approximately)
+-- Dumping data for table inventory.location: ~8 rows (approximately)
 REPLACE INTO `location` (`location_id`, `name`, `code`, `parent_location_id`) VALUES
 	(1, 'ED Zenica', '101', NULL),
 	(2, 'Direkcija Zenica', '103', 1),
 	(3, 'PJD Zenica', '10303', 1),
-	(34, 'PJD Visoko', '105', 1);
+	(34, 'PJD Visoko', '105', 1),
+	(35, 'PJD Maglaj', '103080607', 2),
+	(36, 'PJD Breza', '103080604', 1),
+	(37, 'PJD Zenica', '', 1),
+	(38, 'PJD Doboj Jug', '', NULL);
 
 -- Dumping structure for table inventory.responsibility
 CREATE TABLE IF NOT EXISTS `responsibility` (
@@ -654,12 +737,37 @@ CREATE TABLE IF NOT EXISTS `responsibility` (
   CONSTRAINT `fk_responsibility_document_id` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `FK_responsibility_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_responsibility_user_article_id` FOREIGN KEY (`user_article_id`) REFERENCES `user_article` (`user_article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=153 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=191 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.responsibility: ~0 rows (approximately)
+-- Dumping data for table inventory.responsibility: ~27 rows (approximately)
 REPLACE INTO `responsibility` (`responsibility_id`, `user_article_id`, `user_id`, `article_id`, `document_id`, `value`, `status`, `timestamp`, `serial_number`, `inv_broj`) VALUES
 	(151, 290, 148, 90, 293, 1, 'zaduženo', '2023-09-25 11:34:42', 'S4PT4033', 'ZE06878665'),
-	(152, 291, 152, 90, 294, 1, 'zaduženo', '2023-09-25 13:31:03', 'S4PT4038', 'ZE06878662');
+	(159, 298, 157, 90, 301, 1, 'zaduženo', '2023-09-26 06:54:04', 'S4PT4035', 'ZE06878661'),
+	(160, 299, 150, 90, 302, 1, 'zaduženo', '2023-09-26 06:54:41', 'S4PT4047', 'ZE06878666'),
+	(165, 304, 152, 90, 307, 1, 'zaduženo', '2023-09-28 06:22:07', 'S4PT4038', 'ZE06878662'),
+	(166, 305, 200, 90, 308, 1, 'zaduženo', '2023-09-28 07:59:58', 'S4PT4040', 'ZE06878664'),
+	(167, 306, 201, 90, 309, 1, 'zaduženo', '2023-09-28 08:00:43', 'S4PT4044', 'ZE06878663'),
+	(168, 307, 207, 91, 310, 1, 'zaduženo', '2023-09-28 11:38:42', 'CZC1118K7Z', 'ZG0687167'),
+	(169, 308, 208, 91, 312, 1, 'zaduženo', '2023-09-28 11:39:45', 'CZC1118K6N', 'ZG0687152'),
+	(170, 309, 210, 91, 313, 1, 'zaduženo', '2023-09-28 12:05:37', 'CZC1118K7L', 'ZE0687908'),
+	(171, 310, 209, 91, 314, 1, 'zaduženo', '2023-09-28 12:05:57', 'CZC1118K77', 'ZE0687907'),
+	(172, 311, 211, 91, 315, 1, 'zaduženo', '2023-09-28 12:15:01', 'CZC1118K8N', 'ZG0687151'),
+	(173, 312, 209, 93, 316, 1, 'zaduženo', '2023-09-28 12:16:34', 'CN41060Z0V', 'ZE0687920'),
+	(174, 313, 149, 92, 317, 1, 'zaduženo', '2023-09-28 12:19:59', 'S4S54781', 'ZE0687457'),
+	(176, 315, 174, 92, 319, 1, 'zaduženo', '2023-09-28 12:21:12', 'S4G27223', 'ZE0687314'),
+	(177, 316, 175, 92, 320, 1, 'zaduženo', '2023-09-28 12:21:36', 'S4G27129', 'ZE0687342'),
+	(178, 317, 181, 92, 321, 1, 'zaduženo', '2023-09-28 12:22:09', 'S4G27201', 'ZE0687343'),
+	(180, 319, 177, 92, 323, 1, 'zaduženo', '2023-09-28 12:26:54', 'S4S54522', 'ZE0687453'),
+	(181, 320, 186, 92, 324, 1, 'zaduženo', '2023-09-28 12:27:55', 'S4S54794', 'ZG0686649'),
+	(182, 321, 179, 92, 325, 1, 'zaduženo', '2023-09-28 12:28:27', 'S4S54204', 'ZE0687500'),
+	(183, 322, 188, 92, 326, 1, 'zaduženo', '2023-09-28 12:32:25', 'S4S54766', 'ZE0687451'),
+	(184, 323, 173, 92, 327, 1, 'zaduženo', '2023-09-28 12:32:53', 'S4S59266', 'ZE0687443'),
+	(185, 324, 169, 92, 328, 1, 'zaduženo', '2023-09-28 12:33:28', 'S4G27138', 'ZE0687317'),
+	(186, 325, 151, 92, 329, 1, 'zaduženo', '2023-09-28 12:34:09', 'S4S59287', 'ZG0686647'),
+	(187, 326, 212, 92, 330, 1, 'zaduženo', '2023-09-28 12:39:01', 'S4S54800', 'ZG0686648'),
+	(188, 327, 213, 92, 331, 1, 'zaduženo', '2023-09-28 12:39:21', 'S4S41757', 'ZE0687444'),
+	(189, 328, 215, 92, 332, 1, 'zaduženo', '2023-09-28 13:02:32', 'S4S54770', 'ZE0687450'),
+	(190, 329, 216, 92, 333, 1, 'zaduženo', '2023-09-28 13:02:56', 'S4S54785', 'ZE0687452');
 
 -- Dumping structure for table inventory.stock
 CREATE TABLE IF NOT EXISTS `stock` (
@@ -672,28 +780,28 @@ CREATE TABLE IF NOT EXISTS `stock` (
   PRIMARY KEY (`stock_id`),
   KEY `fk_stock_article_id` (`article_id`),
   CONSTRAINT `fk_stock_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=467 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=505 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.stock: ~16 rows (approximately)
+-- Dumping data for table inventory.stock: ~18 rows (approximately)
 REPLACE INTO `stock` (`stock_id`, `article_id`, `value_on_concract`, `value_available`, `timestamp`, `sap_number`) VALUES
-	(192, 91, 10, 10, '2022-03-14 22:45:34', '1300-100525'),
 	(217, 84, 50, 38, '2022-03-18 14:42:55', '1300-200201'),
 	(360, 97, 32, 32, '2022-03-31 16:05:38', '1300-005248'),
 	(367, 85, 15, 14, '2022-03-31 17:58:45', '1300-200202'),
-	(413, 92, 31, 31, '2022-04-30 03:48:59', '1300-132525'),
 	(434, 102, 131, 2, '2022-10-22 17:26:31', 'ZE06879222'),
 	(437, 83, 50, 29, '2022-10-22 17:41:16', '1300-200205'),
 	(442, 95, 91, 91, '2022-11-13 18:32:47', '1300-551455'),
 	(445, 96, 33, 33, '2022-11-13 23:36:20', '1300-005254'),
 	(449, 103, 23, 23, '2022-11-26 09:09:37', ''),
 	(454, 98, 24, 24, '2023-09-15 13:38:15', '1300-183994'),
-	(459, 93, 13, 13, '2023-09-19 13:45:59', 'ZE0687922'),
 	(460, 104, 37, 37, '2023-09-22 13:32:37', '1300-100000'),
 	(461, 105, 27, 27, '2023-09-22 13:34:43', '1300-100001'),
 	(462, 106, 18, 18, '2023-09-22 13:38:31', '1300-100002'),
 	(463, 107, 31, 31, '2023-09-22 13:49:58', '1300-100003'),
 	(464, 108, 3, 3, '2023-09-22 13:52:59', '1300-100004'),
-	(466, 90, 6, 4, '2023-09-25 13:31:03', '1300-100200');
+	(481, 90, 6, 0, '2023-09-28 08:00:43', '1300-100200'),
+	(486, 91, 10, 5, '2023-09-28 12:15:01', '1300-100525'),
+	(487, 93, 13, 12, '2023-09-28 12:16:34', 'ZE0687922'),
+	(504, 92, 31, 16, '2023-09-28 13:02:58', '1300-132525');
 
 -- Dumping structure for table inventory.upgrade_feature
 CREATE TABLE IF NOT EXISTS `upgrade_feature` (
@@ -737,15 +845,15 @@ CREATE TABLE IF NOT EXISTS `user` (
   CONSTRAINT `fk_user_department_id` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_user_job_id` FOREIGN KEY (`job_id`) REFERENCES `job` (`job_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `fk_user_location_id` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=200 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=218 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.user: ~52 rows (approximately)
+-- Dumping data for table inventory.user: ~70 rows (approximately)
 REPLACE INTO `user` (`user_id`, `surname`, `forname`, `fullname`, `local_number`, `telephone`, `email`, `password_hash`, `job_id`, `department_id`, `location_id`) VALUES
 	(148, 'Mudžahid', 'Cerić', 'Cerić Mudžahid', '1696', '032/449-696', 'm.ceric@epbih.ba', 'A8E11064F018205C700B163E6AB9978077A5DF871F03AD1A43A569CC2D88957B1E44C92EE07EDBBC6523114B37002FE6BDEC5C7F4C03F1C87782312894DE3CB5', 2, 3, 2),
 	(149, 'Sabit', 'Alić', 'Alić Sabit', '1608', '032/449-608', 's.alic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 7, 5, 2),
 	(150, 'Emina', 'Hasić', 'Hasić Emina', '1613', '032/449-613', 'e.hasic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 6, 5, 2),
 	(151, 'Zahid', 'Softić', 'Softić Zahid', '1682', '032/449-682', 'z.softic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 8, 5, 2),
-	(152, 'Lejla', 'Čaršimamović', 'Čaršimamović Lejla', '1618', '032/449-618', 'l.carsimamovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 2, 2),
+	(152, 'Lejla', 'Pojskić', 'Pojskić Lejla', '1618', '032/449-618', 'l.carsimamovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 2, 2),
 	(153, 'Kenan', 'Serdarević', 'Serdarević Kenan', '1617', '032/449-617', 'k.serdarevic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 8, 11, 2),
 	(154, 'Lejla', 'Buza', 'Buza Lejla', '1651', '032/449-651', 'le.buza@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 27, 2),
 	(155, 'Damir', 'Čauš', 'Čauš Damir', '1673', '032/449-673', 'd.caus@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 28, 2),
@@ -792,7 +900,25 @@ REPLACE INTO `user` (`user_id`, `surname`, `forname`, `fullname`, `local_number`
 	(196, 'Edin', 'Opardija', 'Opardija Edin', '1516', '032/449-516', 'e.opardija@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 35, 15, 3),
 	(197, 'Ermin', 'Husagić', 'Husagić Ermin', '1518', '032/449-518', 'e.husagic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 36, 15, 3),
 	(198, 'Admir', 'Nizamic', 'Nizamic Admir', '1518', '032/449-518', 'a.nizamic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 37, 15, 3),
-	(199, 'Čajdrić', 'Amel', 'Amel Čajdrić', '1519', '032/449-519', 'a.cajdric@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 36, 3);
+	(199, 'Amel', 'Čajdrić', 'Čajdrić Amel', '1519', '032/449-519', 'a.cajdric@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 36, 3),
+	(200, 'Amar', 'Kasap', 'Kasap Amar', '1666', '032/449-666', 'a.kasap@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 9, 25, 2),
+	(201, 'Hedina', 'Čaušević', 'Čaušević Hedina', '1635', '032/449-635', 'he.causevic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 39, 25, 2),
+	(202, 'Senad', 'Ćatić', 'Ćatić Senad', '60847', '032/609-847', 'se.catic@elektroprivreda.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 42, 25, 35),
+	(203, 'Kemal', 'Dautbegović', 'Dautbegović Kemal', '1641', '032/449-641', 'k.dautbegovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 40, 25, 2),
+	(204, 'Edin', 'Heremić', 'Heremić Edin', '1532', '032/449-532', 'e.heremic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 41, 25, 3),
+	(205, 'Subhija', 'Muharemović', 'Muharemović Subhija', '1636', '032/449-636', 's.muharemovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 40, 25, 2),
+	(206, 'Mustafa', 'Omanović', 'Omanović Mustafa', '61080', '032/786-080', 'm.omanovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 42, 25, 36),
+	(207, 'Amra', 'Pojskić', 'Pojskić Amra', '1621', '032/449-621', 'a.pojskic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 8, 29, 2),
+	(208, 'Rašida', 'Hajdić', 'Hajdić Rašida', '1615', '032/449-615', 'r.hajdic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 32, 12, 2),
+	(209, 'Emir', 'Hedžić', 'Hedžić Emir', '1654', '032/449-654', 'e.hedzic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 44, 3, 2),
+	(210, 'Evel', 'Subašić', 'Subašić Evel', '1653', '062/449-653', 'evels@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 44, 3, 2),
+	(211, 'Aidin', 'Pripoljac', 'Pripoljac Aidin', '1561', '032/449-561', 'a.pripoljac@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 45, 38, 37),
+	(212, 'Tarik', 'Krivokapa', 'Krivokapa Tarik', '1615', '032/449-615', 't.krivokapa@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 11, 6, 2),
+	(213, 'Vedad', 'Smailbegović', 'Smailbegović Vedad', '1619', '032/449-619', 'v.smailbegovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 32, 12, 2),
+	(214, 'Irfan', 'Vilašević', 'Vilašević Irfan', '61700', '032/699-700', 'v.irfan@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 45, 39, 38),
+	(215, 'Amina', 'Alibašić', 'Alibašić Amina', '1640', '032/449-640', 'a.alibasic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 46, 40, 2),
+	(216, 'Derviša', 'Kalčo', 'Kalčo Derviša', '1640', '032/449-640', 'd.kalco@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 48, 24, 2),
+	(217, 'Emira', 'Brajlović', 'Brajlović Emira', '1625', '032/449-625', 'em.brajlovic@epbih.ba', 'A5DFA812369F37FFD1755CA396C471CCEBC16B19DAEC09A1442287BCE01BD2BDC7603A2B86DF587FDAFA3EDEF4DA3E9D76E8B8194D24E696DCCA329CDD1429DE', 47, 31, 2);
 
 -- Dumping structure for table inventory.user_article
 CREATE TABLE IF NOT EXISTS `user_article` (
@@ -814,12 +940,37 @@ CREATE TABLE IF NOT EXISTS `user_article` (
   CONSTRAINT `fk_user_article_article_id` FOREIGN KEY (`article_id`) REFERENCES `article` (`article_id`) ON UPDATE CASCADE,
   CONSTRAINT `fk_user_article_document_id` FOREIGN KEY (`document_id`) REFERENCES `documents` (`documents_id`) ON UPDATE CASCADE,
   CONSTRAINT `FK_user_article_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=292 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=331 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
--- Dumping data for table inventory.user_article: ~0 rows (approximately)
+-- Dumping data for table inventory.user_article: ~27 rows (approximately)
 REPLACE INTO `user_article` (`user_article_id`, `article_id`, `document_id`, `user_id`, `serial_number`, `status`, `timestamp`, `comment`, `inv_broj`, `value`) VALUES
-	(290, 90, 293, 148, 'S4PT4033', 'zaduženo', '2023-09-25 11:34:42', 'Zaduženje nove opreme 1', 'ZE06878665', 1),
-	(291, 90, 294, 152, 'S4PT4038', 'zaduženo', '2023-09-25 13:31:03', 'Zaduženje nove opreme 1', 'ZE06878662', 1);
+	(290, 90, 293, 148, 'S4PT4033', 'zaduženo', '2023-09-25 11:34:42', 'Zaduženje nove opreme', 'ZE06878665', 1),
+	(298, 90, 301, 157, 'S4PT4035', 'zaduženo', '2023-09-26 06:54:04', 'Zaduženje nove opreme', 'ZE06878661', 1),
+	(299, 90, 302, 150, 'S4PT4047', 'zaduženo', '2023-09-26 06:54:41', 'Zaduženje nove opreme', 'ZE06878666', 1),
+	(304, 90, 307, 152, 'S4PT4038', 'zaduženo', '2023-09-28 06:22:07', 'Zaduženje nove opreme', 'ZE06878662', 1),
+	(305, 90, 308, 200, 'S4PT4040', 'zaduženo', '2023-09-28 07:59:58', 'Zaduženje nove opreme', 'ZE06878664', 1),
+	(306, 90, 309, 201, 'S4PT4044', 'zaduženo', '2023-09-28 08:00:43', 'Zaduženje nove opreme', 'ZE06878663', 1),
+	(307, 91, 310, 207, 'CZC1118K7Z', 'zaduženo', '2023-09-28 11:38:42', 'Zaduženje nove opreme', 'ZG0687167', 1),
+	(308, 91, 312, 208, 'CZC1118K6N', 'zaduženo', '2023-09-28 11:39:45', 'Greška prilikom prvog zaduženje. U startu je ovaj računar bio zadužen na Rašidu Hajdić.', 'ZG0687152', 1),
+	(309, 91, 313, 210, 'CZC1118K7L', 'zaduženo', '2023-09-28 12:05:37', 'Zaduženje nove opreme', 'ZE0687908', 1),
+	(310, 91, 314, 209, 'CZC1118K77', 'zaduženo', '2023-09-28 12:05:57', 'Zaduženje nove opreme', 'ZE0687907', 1),
+	(311, 91, 315, 211, 'CZC1118K8N', 'zaduženo', '2023-09-28 12:15:01', 'Zaduženje nove opreme', 'ZG0687151', 1),
+	(312, 93, 316, 209, 'CN41060Z0V', 'zaduženo', '2023-09-28 12:16:34', 'Zaduženje nove opreme', 'ZE0687920', 1),
+	(313, 92, 317, 149, 'S4S54781', 'zaduženo', '2023-09-28 12:19:59', 'Zaduženje nove opreme', 'ZE0687457', 1),
+	(315, 92, 319, 174, 'S4G27223', 'zaduženo', '2023-09-28 12:21:12', 'Zaduženje nove opreme', 'ZE0687314', 1),
+	(316, 92, 320, 175, 'S4G27129', 'zaduženo', '2023-09-28 12:21:36', 'Zaduženje nove opreme', 'ZE0687342', 1),
+	(317, 92, 321, 181, 'S4G27201', 'zaduženo', '2023-09-28 12:22:09', 'Zaduženje nove opreme', 'ZE0687343', 1),
+	(319, 92, 323, 177, 'S4S54522', 'zaduženo', '2023-09-28 12:26:54', 'Zaduženje nove opreme', 'ZE0687453', 1),
+	(320, 92, 324, 186, 'S4S54794', 'zaduženo', '2023-09-28 12:27:55', 'Zaduženje nove opreme', 'ZG0686649', 1),
+	(321, 92, 325, 179, 'S4S54204', 'zaduženo', '2023-09-28 12:28:27', 'Zaduženje nove opreme', 'ZE0687500', 1),
+	(322, 92, 326, 188, 'S4S54766', 'zaduženo', '2023-09-28 12:32:25', 'Zaduženje nove opreme', 'ZE0687451', 1),
+	(323, 92, 327, 173, 'S4S59266', 'zaduženo', '2023-09-28 12:32:53', 'Zaduženje nove opreme', 'ZE0687443', 1),
+	(324, 92, 328, 169, 'S4G27138', 'zaduženo', '2023-09-28 12:33:28', 'Zaduženje nove opreme', 'ZE0687317', 1),
+	(325, 92, 329, 151, 'S4S59287', 'zaduženo', '2023-09-28 12:34:09', 'Zaduženje nove opreme', 'ZG0686647', 1),
+	(326, 92, 330, 212, 'S4S54800', 'zaduženo', '2023-09-28 12:39:01', 'Zaduženje nove opreme', 'ZG0686648', 1),
+	(327, 92, 331, 213, 'S4S41757', 'zaduženo', '2023-09-28 12:39:21', 'Zaduženje nove opreme', 'ZE0687444', 1),
+	(328, 92, 332, 215, 'S4S54770', 'zaduženo', '2023-09-28 13:02:32', 'Zaduženje nove opreme', 'ZE0687450', 1),
+	(329, 92, 333, 216, 'S4S54785', 'zaduženo', '2023-09-28 13:02:56', 'Zaduženje nove opreme', 'ZE0687452', 1);
 
 -- Dumping structure for table inventory.user_token
 CREATE TABLE IF NOT EXISTS `user_token` (
