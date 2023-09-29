@@ -120,7 +120,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     }
 
      if (data.features !== null) {
-       await this.articleFeature.remove(await this.articleFeature.find({articleId : articleId}));
+       await this.articleFeature.remove(await this.articleFeature.findOne({articleId : articleId}));
       for (const feature of data.features) {
         const newArticleFeature: ArticleFeature = new ArticleFeature();
         newArticleFeature.articleId = articleId;
