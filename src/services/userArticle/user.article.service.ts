@@ -837,10 +837,8 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       where: { articleId: data.articleId },
       relations: ['article', 'user', 'document'],
     });
-
-    /* FUNKCIJE */
   }
-
+/* FUNKCIJE */
   private async checkStock(articleId: number){
     const checkArticleInStock: Stock = await this.stock.findOne({
       articleId: articleId,
