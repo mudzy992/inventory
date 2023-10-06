@@ -85,20 +85,20 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     */
 
     /* Provjera da li je artikal zadužen */
-    const exResponsibility: Responsibility = await this.responsibility.findOneBy({
+    const exResponsibility: Responsibility = await this.responsibility.findOne({
       serialNumber: data.serialNumber,
     });
 
-    const exDebt: DebtItems = await this.debtItems.findOneBy({
+    const exDebt: DebtItems = await this.debtItems.findOne({
       serialNumber: data.serialNumber,
     });
 
-    const exDestroyed: Destroyed = await this.destroyed.findOneBy({
+    const exDestroyed: Destroyed = await this.destroyed.findOne({
       serialNumber: data.serialNumber,
     });
 
     if (!exResponsibility) {
-      const checkArticleInStock: Stock = await this.stock.findOneBy({
+      const checkArticleInStock: Stock = await this.stock.findOne({
         articleId: data.articleId,
       });
       if (!checkArticleInStock) {
@@ -125,14 +125,14 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
           'Artikal sa traženim serijskim brojem je već zadužen na korisnika',
         );
       } else if (exResponsibility.userId !== userId) {
-        const ua: UserArticle = await this.userArticle.findOneBy({
+        const ua: UserArticle = await this.userArticle.findOne({
           userArticleId: exResponsibility.userArticleId,
         });
         this.userArticle.update(ua, {
           status: 'razduženo',
           comment: data.comment,
         });
-        const artStock: Stock = await this.stock.findOneBy({
+        const artStock: Stock = await this.stock.findOne({
           articleId: data.articleId,
         });
         this.stock.update(artStock, {
@@ -174,17 +174,17 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     const dokumenti = await builder.getMany();
     id = Number(dokumenti.length) + 1;
 
-    const exRes: Responsibility = await this.responsibility.findOneBy({
+    const exRes: Responsibility = await this.responsibility.findOne({
       serialNumber: data.serialNumber,
     });
 
     if (!exRes) {
-      const exDebt: DebtItems = await this.debtItems.findOneBy({
+      const exDebt: DebtItems = await this.debtItems.findOne({
         serialNumber: data.serialNumber,
       });
 
       if (exDebt) {
-        const predaoKorisnik: User = await this.user.findOneBy({
+        const predaoKorisnik: User = await this.user.findOne({
           userId: exDebt.userId,
         });
         predao = predaoKorisnik.forname + ' ' + predaoKorisnik.surname;
@@ -194,18 +194,18 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
       predao = 'Skladište';
     }
     if (exRes) {
-      const predaoKorisnik: User = await this.user.findOneBy({
+      const predaoKorisnik: User = await this.user.findOne({
         userId: exRes.userId,
       });
       predao = predaoKorisnik.forname + ' ' + predaoKorisnik.surname;
     }
 
-    const preuzeoKorisnik: User = await this.user.findOneBy({
+    const preuzeoKorisnik: User = await this.user.findOne({
       userId: userId,
     });
     preuzeo = preuzeoKorisnik.forname + ' ' + preuzeoKorisnik.surname;
 
-    const article: Article = await this.article.findOneBy({
+    const article: Article = await this.article.findOne({
       articleId: data.articleId,
     });
     inv = data.invBroj;
@@ -299,7 +299,7 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     }
 
     /* Provjera ako artikla nema na stanju više na skladištu da se zaduži, i ako ima skini određeni broj */
-    const articleInStock: Stock = await this.stock.findOneBy({
+    const articleInStock: Stock = await this.stock.findOne({
       articleId: data.articleId,
     });
 
@@ -313,7 +313,7 @@ export class ResponsibilityService extends TypeOrmCrudService<Responsibility> {
     newArticleStock.sapNumber = articleInStock.sapNumber;
     await this.stock.save(newArticleStock);
 
-    return await this.responsibility.findOneBy({
+    return await this.responsibility.findOne({
       where: { articleId: data.articleId },
       relations: ['article', 'user', 'userArticle'],
     });

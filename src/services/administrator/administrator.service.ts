@@ -21,7 +21,7 @@ export class AdministratorService {
   }
 
   async getByUsername(username: string): Promise<Administrator | null> {
-    const admin = await this.administrator.findOneBy({
+    const admin = await this.administrator.findOne({
       username: username,
     });
     if (admin) {
@@ -31,7 +31,7 @@ export class AdministratorService {
   }
 
   getById(id: number): Promise<Administrator> {
-    return this.administrator.findOneBy(id);
+    return this.administrator.findOne(id);
   }
 
   add(data: AddAdministratorDto): Promise<Administrator | ApiResponse> {
@@ -56,7 +56,7 @@ export class AdministratorService {
     id: number,
     data: EditAdministratorDto,
   ): Promise<Administrator | ApiResponse> {
-    const admin: Administrator = await this.administrator.findOneBy(id);
+    const admin: Administrator = await this.administrator.findOne(id);
     if (admin === undefined) {
       return new Promise((resolve) => {
         resolve(new ApiResponse('error', -8002));
@@ -78,7 +78,7 @@ export class AdministratorService {
   }
 
   async getAdministratorToken(token: string): Promise<AdministratorToken> {
-    return await this.administratorToken.findOneBy({
+    return await this.administratorToken.findOne({
       token: token,
     });
   }
@@ -86,7 +86,7 @@ export class AdministratorService {
   async invalidateToken(
     token: string,
   ): Promise<AdministratorToken | ApiResponse> {
-    const administratorToken = await this.administratorToken.findOneBy({
+    const administratorToken = await this.administratorToken.findOne({
       token: token,
     });
     if (!administratorToken) {
@@ -100,7 +100,7 @@ export class AdministratorService {
   async invalidateAdministratorTokens(
     administratorId: number,
   ): Promise<(AdministratorToken | ApiResponse)[]> {
-    const administratorTokens = await this.administratorToken.findBy({
+    const administratorTokens = await this.administratorToken.find({
       administratorId: administratorId,
     });
     const results = [];

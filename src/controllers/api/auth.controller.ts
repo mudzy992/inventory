@@ -176,7 +176,7 @@ export class AuthController {
     jwtData.role = 'user';
     jwtData.id = user.userId;
     jwtData.identity = user.email;
-    jwtData.exp = this.getDatePlus(60 * 1);
+    jwtData.exp = this.getDatePlus(60 * 5);
     jwtData.ip = req.ip.toString();
     jwtData.ua = req.headers['user-agent'];
 

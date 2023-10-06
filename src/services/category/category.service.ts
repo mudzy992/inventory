@@ -26,7 +26,7 @@ export class CategoryService extends TypeOrmCrudService<Category> {
       return new ApiResponse('error', -4002, 'Kategorija nije sačuvana')
     }
 
-    return await this.findBy(savedCategory.categoryId, {
+    return await this.findOne(savedCategory.categoryId, {
       relations: ['articles', 'parentCategory', 'categories', 'features'],
     })
   }

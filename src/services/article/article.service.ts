@@ -68,7 +68,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     await this.stock.save(newArticleInStock);
 
     /* Vrati artikal na prikaz */
-    return await this.findBy(savedArticle.articleId, {
+    return await this.findOne(savedArticle.articleId, {
       relations: [
         'category',
         'articleFeature',
@@ -80,7 +80,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
   async getBySapNumber(sapNumber: string): Promise<Stock | null> {
     /* Mehanizam pronalaženja artikla u skladištu po sap broju */
-    const sapnumber = await this.stock.findOneBy({ sapNumber: sapNumber });
+    const sapnumber = await this.stock.findOne({ sapNumber: sapNumber });
     if (sapnumber) {
       return sapnumber;
     }
@@ -91,7 +91,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     articleId: number,
     data: EditFullArticleDto,
   ): Promise<Article | ApiResponse> {
-    const existingArticle: Article = await this.article.findOneBy({articleId: articleId})
+    const existingArticle: Article = await this.article.findOne({articleId: articleId})
     if (!existingArticle) {
       return new ApiResponse('error', -1001, 'Artikal ne postoji u skladištu');
     }
@@ -111,7 +111,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     }
     
     if (data.stock !== null) {
-      const existingArticleInStock = await this.stock.findOneBy({articleId : articleId})
+      const existingArticleInStock = await this.stock.findOne({articleId : articleId})
       this.stock.update(existingArticleInStock, {
         valueOnConcract : data.stock.valueOnConcract,
         valueAvailable : data.stock.valueAvailable,
@@ -130,7 +130,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       } 
     }
 
-    return await this.find(articleId, {
+    return await this.findOne(articleId, {
       relations: [
         'category',
         'articleFeature',
@@ -144,12 +144,12 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     articleId: number,
     data: AddArticleDto,
   ): Promise<Stock> {
-    const existingStockArticle = await this.stock.findOneBy({
+    const existingStockArticle = await this.stock.findOne({
       articleId: articleId,
     });
     if (existingStockArticle) {
       await this.stock.remove(
-        await this.stock.findOneBy({ articleId: articleId }),
+        await this.stock.findOne({ articleId: articleId }),
       );
       const newArticleStock: Stock = new Stock();
       newArticleStock.articleId = articleId;

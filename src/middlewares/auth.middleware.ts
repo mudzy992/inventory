@@ -24,7 +24,7 @@ export class AuthMiddleware implements NestMiddleware {
     const token = req.headers.authorization;
     const tokenParts = token.split(' ');
     if (tokenParts.length !== 2) {
-      throw new HttpException('Ne valja token', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Neispravan token!', HttpStatus.UNAUTHORIZED);
     }
     const tokenString = tokenParts[1];
 
@@ -33,36 +33,36 @@ export class AuthMiddleware implements NestMiddleware {
     try {
       jwtData = jwt.verify(tokenString, jwtSecret);
     } catch (e) {
-      throw new HttpException('Bad token found', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Neispravan token!', HttpStatus.UNAUTHORIZED);
     }
 
     if (!jwtData) {
-      throw new HttpException('Bad token found', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Neispravan token!', HttpStatus.UNAUTHORIZED);
     }
 
     if (jwtData.ip !== req.ip.toString()) {
-      throw new HttpException('Bad token found', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Neispravan token!', HttpStatus.UNAUTHORIZED);
     }
 
     if (jwtData.ua !== req.headers['user-agent']) {
-      throw new HttpException('Bad token found', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Neispravan token!', HttpStatus.UNAUTHORIZED);
     }
 
     if (jwtData.role === 'administrator') {
       const administrator = await this.administratorService.getById(jwtData.id);
       if (!administrator) {
-        throw new HttpException('Account not found', HttpStatus.UNAUTHORIZED);
+        throw new HttpException('Korisnik nije pronađen', HttpStatus.UNAUTHORIZED);
       }
     } else if (jwtData.role === 'user') {
       const user = await this.userService.getById(jwtData.id);
       if (!user) {
-        throw new HttpException('Account not found', HttpStatus.UNAUTHORIZED);
+        throw new HttpException('Korisnik nije pronađen', HttpStatus.UNAUTHORIZED);
       }
     }
 
     const trenutniTimestamp = new Date().getTime() / 1000;
     if (trenutniTimestamp >= jwtData.exp) {
-      throw new HttpException('The token has expired', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Token je istekao', HttpStatus.UNAUTHORIZED);
     }
 
     req.token = jwtData;

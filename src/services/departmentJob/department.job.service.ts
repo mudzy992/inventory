@@ -27,7 +27,7 @@ export class DepartmentJobService extends TypeOrmCrudService<DepartmentJob> {
       return new ApiResponse('error', -12002, 'Veza sektor, radno mjesto i lokacije nije sačuvana')
     }
 
-    return await this.findOneBy(savedDepartmentJob.departmentJobId, {
+    return await this.findOne(savedDepartmentJob.departmentJobId, {
       relations: ['department', 'job', 'location'],
     })
   }

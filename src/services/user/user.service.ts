@@ -66,7 +66,7 @@ export class UserService extends TypeOrmCrudService<User> {
     passwordHash.update(data.password);
     const passwordHashString = passwordHash.digest('hex').toUpperCase();
 
-    const existingUser = await this.user.findOneBy({ userId : userId })
+    const existingUser = await this.user.findOne({ userId : userId })
 
     existingUser.forname = data.forname;
     existingUser.surname = data.surename;
@@ -85,11 +85,11 @@ export class UserService extends TypeOrmCrudService<User> {
     }
 
   async getById(id) {
-    return await this.user.findOneBy(id);
+    return await this.user.findOne(id);
   }
 
   async getByEmail(email: string): Promise<User | null> {
-    const user = await this.user.findOneBy({
+    const user = await this.user.findOne({
       email: email,
     });
     if (user) {
@@ -107,13 +107,13 @@ export class UserService extends TypeOrmCrudService<User> {
   }
 
   async getUserToken(token: string): Promise<UserToken> {
-    return await this.userToken.findOneBy({
+    return await this.userToken.findOne({
       token: token,
     });
   }
 
   async invalidateToken(token: string): Promise<UserToken | ApiResponse> {
-    const userToken = await this.userToken.findOneBy({
+    const userToken = await this.userToken.findOne({
       token: token,
     });
 
@@ -131,7 +131,7 @@ export class UserService extends TypeOrmCrudService<User> {
   async invalidateUserTokens(
     userId: number,
   ): Promise<(UserToken | ApiResponse)[]> {
-    const userTokens = await this.userToken.findBy({
+    const userTokens = await this.userToken.find({
       userId: userId,
     });
 
