@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Article } from './Article';
 import { Feature } from './Feature';
+import { Stock } from './Stock';
 
 @Index('uq_category_name', ['name'], { unique: true })
 @Index('uq_category_image_path', ['imagePath'], { unique: true })
@@ -48,4 +49,7 @@ export class Category {
 
   @OneToMany(() => Feature, (feature) => feature.category)
   features: Feature[];
+
+  @OneToMany(() => Stock, (stock) => stock.category)
+  stocks: Stock[];
 }

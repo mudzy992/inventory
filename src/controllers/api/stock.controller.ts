@@ -20,6 +20,9 @@ import { StockService } from 'src/services/stock/stock.service';
       articles: {
         eager: true,
       },
+      category: {
+        eager:false,
+      }
     },
   },
 })

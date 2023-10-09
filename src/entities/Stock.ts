@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Article } from './Article';
+import { Category } from './Category';
 
 @Index('article_id', ['articleId'], { unique: true })
 @Entity('stock', { schema: 'inventory' })
@@ -34,16 +35,11 @@ export class Stock {
   @Column('varchar', { name: 'sap_number', nullable: false })
   sapNumber: string;
 
-  /* @OneToMany(() => Stock, (stock) => stock.articles)
-  articlesInStock: Article[]; */
-
-  /* @ManyToOne(() => Article, (article) => article.articlesInStock, {
-    onDelete: 'RESTRICT',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{ name: 'article_id', referencedColumnName: 'articleId' }])
-  articles: Article; */
-
   @OneToMany(() => Article, (article) => article.articlesInStock)
   stockArticle: Article[];
+
+  @ManyToOne(() => Category, (category) => category.stocks)
+  @JoinColumn({ name: 'article_id' })
+  category: Category;
+
 }

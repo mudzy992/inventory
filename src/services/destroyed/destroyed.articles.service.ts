@@ -47,8 +47,11 @@ export class DestroyedArticlesService extends TypeOrmCrudService<Destroyed> {
 
     const existinArticleDestroyed: UserArticle = await this.userArticle.findOne(
       {
-        serialNumber: data.serialNumber,
-      },
+        where:
+        {
+          serialNumber: data.serialNumber,
+        }
+    },
     );
     /* Ako bi imao ikada potrebu da otpišem nešto što je na skladištu, ta provjera će ići ovdje, nešto slično kao što je u responsibility */
     if (!existinArticleDestroyed) {
@@ -86,20 +89,23 @@ export class DestroyedArticlesService extends TypeOrmCrudService<Destroyed> {
     let value = 0;
     const existingResponsibilityArticleOnUser: Responsibility =
       await this.responsibility.findOne({
-        userId: user,
-        status: 'zaduženo',
-        articleId: data.articleId,
-        serialNumber: data.serialNumber,
-      });
+        where:
+          {
+          userId: user,
+          status: 'zaduženo',
+          articleId: data.articleId,
+          serialNumber: data.serialNumber,
+        }
+    });
 
     if (existingResponsibilityArticleOnUser) {
       value = existingResponsibilityArticleOnUser.value;
       await this.responsibility.remove(existingResponsibilityArticleOnUser);
     }
 
-    const existinArticleDebt: DebtItems = await this.debtItems.findOne({
+    const existinArticleDebt: DebtItems = await this.debtItems.findOne({where:{
       serialNumber: data.serialNumber,
-    });
+    }});
 
     if (existinArticleDebt) {
       value = existinArticleDebt.value;

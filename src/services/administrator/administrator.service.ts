@@ -22,7 +22,7 @@ export class AdministratorService {
 
   async getByUsername(username: string): Promise<Administrator | null> {
     const admin = await this.administrator.findOne({
-      username: username,
+      where: {username: username},
     });
     if (admin) {
       return admin;
@@ -31,7 +31,7 @@ export class AdministratorService {
   }
 
   getById(id: number): Promise<Administrator> {
-    return this.administrator.findOne(id);
+    return this.administrator.findOne({where:{administratorId: id}});
   }
 
   add(data: AddAdministratorDto): Promise<Administrator | ApiResponse> {
@@ -56,7 +56,7 @@ export class AdministratorService {
     id: number,
     data: EditAdministratorDto,
   ): Promise<Administrator | ApiResponse> {
-    const admin: Administrator = await this.administrator.findOne(id);
+    const admin: Administrator = await this.administrator.findOne({where:{administratorId:id}});
     if (admin === undefined) {
       return new Promise((resolve) => {
         resolve(new ApiResponse('error', -8002));
@@ -79,7 +79,7 @@ export class AdministratorService {
 
   async getAdministratorToken(token: string): Promise<AdministratorToken> {
     return await this.administratorToken.findOne({
-      token: token,
+      where:{token: token},
     });
   }
 
@@ -87,7 +87,7 @@ export class AdministratorService {
     token: string,
   ): Promise<AdministratorToken | ApiResponse> {
     const administratorToken = await this.administratorToken.findOne({
-      token: token,
+      where:{token: token},
     });
     if (!administratorToken) {
       return new ApiResponse('error', -10001, 'Neispravan osvježavajući token');
@@ -101,7 +101,7 @@ export class AdministratorService {
     administratorId: number,
   ): Promise<(AdministratorToken | ApiResponse)[]> {
     const administratorTokens = await this.administratorToken.find({
-      administratorId: administratorId,
+      where:{administratorId: administratorId}
     });
     const results = [];
     for (const administratorToken of administratorTokens) {

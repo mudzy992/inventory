@@ -31,6 +31,9 @@ import { CategoryService } from 'src/services/category/category.service';
       features: {
         eager: true,
       },
+      stocks: {
+        eager: true,
+      },
     },
   },
 })

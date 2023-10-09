@@ -27,7 +27,8 @@ export class FeatureService extends TypeOrmCrudService<Feature> {
       return new ApiResponse('error', -4001, 'Osobina nije sačuvana')
     }
 
-    return await this.findOne(savedFeature.featureId, { 
+    return await this.findOne({
+      where:{featureId:savedFeature.featureId},  
       relations: ['articleFeature', 'category', 'articles'],
     })
   }
