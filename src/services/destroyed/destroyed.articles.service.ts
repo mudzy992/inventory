@@ -45,10 +45,10 @@ export class DestroyedArticlesService extends TypeOrmCrudService<Destroyed> {
     /* vrsiti historija zaduzenja i razduzenja sa timestamp DONE */
     /*  */
 
-    const existinArticleDestroyed: UserArticle = await this.userArticle.findOneBy(
-      {
+    const existinArticleDestroyed: UserArticle = await this.userArticle.findOne(
+      {where:{
         serialNumber: data.serialNumber,
-      },
+      }},
     );
     /* Ako bi imao ikada potrebu da otpišem nešto što je na skladištu, ta provjera će ići ovdje, nešto slično kao što je u responsibility */
     if (!existinArticleDestroyed) {
@@ -85,21 +85,21 @@ export class DestroyedArticlesService extends TypeOrmCrudService<Destroyed> {
   private async destroyArticle(user: number, data: AddEmployeArticleDto) {
     let value = 0;
     const existingResponsibilityArticleOnUser: Responsibility =
-      await this.responsibility.findOneBy({
+      await this.responsibility.findOne({where:{
         userId: user,
         status: 'zaduženo',
         articleId: data.articleId,
         serialNumber: data.serialNumber,
-      });
+      }});
 
     if (existingResponsibilityArticleOnUser) {
       value = existingResponsibilityArticleOnUser.value;
       await this.responsibility.remove(existingResponsibilityArticleOnUser);
     }
 
-    const existinArticleDebt: DebtItems = await this.debtItems.findOneBy({
+    const existinArticleDebt: DebtItems = await this.debtItems.findOne({where:{
       serialNumber: data.serialNumber,
-    });
+    }});
 
     if (existinArticleDebt) {
       value = existinArticleDebt.value;
@@ -158,7 +158,7 @@ export class DestroyedArticlesService extends TypeOrmCrudService<Destroyed> {
     }
 
     
-    return await this.destroyed.findOneBy({
+    return await this.destroyed.findOne({
       where: { articleId: data.articleId },
       relations: ['article', 'user', 'userArticle'],
     });

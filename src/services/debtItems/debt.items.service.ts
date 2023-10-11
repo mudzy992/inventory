@@ -49,10 +49,10 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
       - Ako se artikal ne nalazi ni u responsibility, povući grešku da artikal ne postoji
     */
 
-    const exDebt : DebtItems = await this.debtItems.findOneBy({ 
+    const exDebt : DebtItems = await this.debtItems.findOne({where:{ 
       userId: userId,
       serialNumber: data.serialNumber
-    })
+    }})
 
     if (exDebt) {
       return new ApiResponse(
@@ -62,9 +62,9 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
       );
     }
     if (!exDebt) {
-      const exRes : Responsibility = await this.responsibility.findOneBy({ 
+      const exRes : Responsibility = await this.responsibility.findOne({where:{ 
         serialNumber: data.serialNumber,
-      })
+      }})
       if (exRes) {
         await this.createDocument(1, '', '', '', '', '', userId, data);
         return this.addDebtArticle(userId, data)
@@ -76,10 +76,10 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
           'Oprema nema zaduženje, da bi se izvršilo razduženje',
         );
       }
-      const exDest : Destroyed = await this.destroyed.findOneBy({
+      const exDest : Destroyed = await this.destroyed.findOne({where:{
         userId: userId,
         serialNumber: data.serialNumber
-      })
+      }})
       if (exDest) {
         return new ApiResponse(
           'error',
@@ -112,19 +112,19 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     const dokumenti = await builder.getMany();
     id = Number(dokumenti.length) + 1;
 
-    const exRes: Responsibility = await this.responsibility.findOneBy({
+    const exRes: Responsibility = await this.responsibility.findOne({where:{
       serialNumber: data.serialNumber,
-    });
+    }});
 
     if (!exRes) {
-      const exDebt: DebtItems = await this.debtItems.findOneBy({
+      const exDebt: DebtItems = await this.debtItems.findOne({where:{
         serialNumber: data.serialNumber,
-      });
+      }});
 
       if (exDebt) {
-        const predaoKorisnik: User = await this.user.findOneBy({
+        const predaoKorisnik: User = await this.user.findOne({where:{
           userId: exDebt.userId,
-        });
+        }});
         predao = predaoKorisnik.forname + ' ' + predaoKorisnik.surname;
       } else {
         predao = 'Skladište';
@@ -132,15 +132,15 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
       predao = 'Skladište';
     }
     if (exRes) {
-      const predaoKorisnik: User = await this.user.findOneBy({
+      const predaoKorisnik: User = await this.user.findOne({where:{
         userId: exRes.userId,
-      });
+      }});
       predao = predaoKorisnik.forname + ' ' + predaoKorisnik.surname;
     }
   
-    const articleName: Article = await this.article.findOneBy({
+    const articleName: Article = await this.article.findOne({where:{
       articleId: data.articleId,
-    });
+    }});
     naziv = articleName.name;
     inv = data.serialNumber;
     komentar = data.comment;
@@ -194,11 +194,11 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     /* Izvlačimo artikal iz responsibilitiy koji odgovara našem dto, te isti
     brišemo iz responsibility tabele, jer nije više zadužen, razdužuje se
     await koristim da bi izvukao value stanje */
-    const resArticle: Responsibility = await this.responsibility.findOneBy({
+    const resArticle: Responsibility = await this.responsibility.findOne({where:{
      /*  userId: user, */
       serialNumber: data.serialNumber,
       articleId: data.articleId,
-    });
+    }});
     const value = await resArticle.value;
     await this.responsibility.remove(resArticle);
 
@@ -241,9 +241,9 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
     /* Nakon evidencije artikla u UserArticle potrebno uraditi izmjenu i u 
     tabeli skladišta, gdje nakon razduženja artikla, artikal treba biti 
     ponovo na stanju */
-    const articleInStock: Stock = await this.stock.findOneBy({
+    const articleInStock: Stock = await this.stock.findOne({where:{
       articleId: data.articleId,
-    });
+    }});
     await this.stock.remove(articleInStock);
     const newArticleStock: Stock = await new Stock();
     newArticleStock.articleId = data.articleId;
@@ -256,7 +256,7 @@ export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
       return new ApiResponse('error', -2010, 'Artikal nije spašen u skladište');
     }
 
-    return await this.debtItems.findOneBy({
+    return await this.debtItems.findOne({
       where: { articleId: data.articleId },
       relations: ['article', 'user', 'userArticle'],
     });

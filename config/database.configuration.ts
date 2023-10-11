@@ -2,7 +2,7 @@ export const DatabaseConfiguration = {
   hostname: '127.0.0.1',
   database: 'inventory',
   username: 'root',
-  password: 'nije,kikiriki',
+  password: 'Mojalozinka!1',
   // password: 'Mojalozinka!1',
   port: 3306,
 }; 

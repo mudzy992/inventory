@@ -57,24 +57,24 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         currentYear = new Date().getFullYear();
     }
 
-    const exResponsibility: UserArticle = await this.userArticle.findOneBy({
+    const exResponsibility: UserArticle = await this.userArticle.findOne({where:{
       serialNumber: data.serialNumber,
       status: "zaduženo"
-    });
+    }});
 
-    const exDebt: UserArticle = await this.userArticle.findOneBy({
+    const exDebt: UserArticle = await this.userArticle.findOne({where:{
       serialNumber: data.serialNumber,
       status: "razduženo"
-    });
+    }});
 
-    const exDestroyed: UserArticle = await this.userArticle.findOneBy({
+    const exDestroyed: UserArticle = await this.userArticle.findOne({where:{
       serialNumber: data.serialNumber,
       status: "otpisano"
-    });
+    }});
 
-    const checkArticleInStock: Stock = await this.stock.findOneBy({
+    const checkArticleInStock: Stock = await this.stock.findOne({where:{
       articleId: data.articleId,
-    });
+    }});
 
     if (!checkArticleInStock) {
       return new ApiResponse(
@@ -101,15 +101,15 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
           'Artikal sa traženim serijskim brojem je već zadužen na korisnika',
         );
       } else if (exResponsibility.userId !== userId) {
-        const ua: UserArticle = await this.userArticle.findOneBy({
+        const ua: UserArticle = await this.userArticle.findOne({where:{
           userArticleId: exResponsibility.userArticleId,
-        });
+        }});
 
         /* Kod ima grešku ako nema artikala na stock, postoći ne možeš zadužiti */
 
-        const respons: Responsibility = await this.responsibility.findOneBy({
+        const respons: Responsibility = await this.responsibility.findOne({where:{
           userArticleId: ua.userArticleId
-        })
+        }})
 
         await this.createDocument('', '', '', '', '', userId, data);
     
@@ -176,9 +176,9 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         return
       }
     } else if (exDebt) {
-      const ua: UserArticle = await this.userArticle.findOneBy({
+      const ua: UserArticle = await this.userArticle.findOne({where:{
         userArticleId: exDebt.userArticleId,
-      });
+      }});
 
       this.checkStock(data.articleId)
  
@@ -213,9 +213,9 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         "zaduženo"
         )
           
-        const artStock: Stock = await this.stock.findOneBy({
+        const artStock: Stock = await this.stock.findOne({where:{
           articleId: data.articleId,
-        });
+        }});
         this.stock.update(artStock, {
           valueAvailable: artStock.valueAvailable - 1,
         });
@@ -271,20 +271,20 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         currentYear = new Date().getFullYear();
     }
 
-    const exDebt: UserArticle = await this.userArticle.findOneBy({
+    const exDebt: UserArticle = await this.userArticle.findOne({where:{
       serialNumber: data.serialNumber,
       status: "razduženo"
-    });
+    }});
 
-    const exResponsibility: UserArticle = await this.userArticle.findOneBy({
+    const exResponsibility: UserArticle = await this.userArticle.findOne({where:{
       serialNumber: data.serialNumber,
       status: "zaduženo"
-    });
+    }});
 
     
-    const artStock: Stock = await this.stock.findOneBy({
+    const artStock: Stock = await this.stock.findOne({where:{
       articleId: data.articleId,
-    });
+    }});
     this.stock.update(artStock, {
       valueAvailable: artStock.valueAvailable + 1,
     });
@@ -300,9 +300,9 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     }
 
     if(exResponsibility) {
-      const ua: UserArticle = await this.userArticle.findOneBy({
+      const ua: UserArticle = await this.userArticle.findOne({where:{
       userArticleId: exResponsibility.userArticleId,
-    });
+    }});
     
     await this.createDocument('', '', '', '', '', userId, data);
 
@@ -332,11 +332,11 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
               "razduženo"
           )
 
-      const resArticle: Responsibility = await this.responsibility.findOneBy({
+      const resArticle: Responsibility = await this.responsibility.findOne({where:{
         /*  userId: user, */
          serialNumber: data.serialNumber,
          articleId: data.articleId,
-       });
+       }});
        await this.responsibility.remove(resArticle);
 
       return await this.userArticle.findOne({
@@ -371,9 +371,9 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         currentYear = new Date().getFullYear();
     }
 
-    const exUserArticle: UserArticle = await this.userArticle.findOneBy({
+    const exUserArticle: UserArticle = await this.userArticle.findOne({where:{
       serialNumber: data.serialNumber,
-    });
+    }});
 
     if(exUserArticle) {
       if(exUserArticle.status === 'otpisano'){
@@ -398,9 +398,9 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     }
 
     if(exUserArticle) {
-      const ua: UserArticle = await this.userArticle.findOneBy({
+      const ua: UserArticle = await this.userArticle.findOne({where:{
         userArticleId: exUserArticle.userArticleId,
-      });
+      }});
 
       this.userArticle.update(ua, {
         documentId: savedDocument.documentsId,
@@ -409,9 +409,9 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       });
 
       if(exUserArticle.status === 'razduženo'){
-        const artStock: Stock = await this.stock.findOneBy({
+        const artStock: Stock = await this.stock.findOne({where:{
           articleId: data.articleId,
-        });
+        }});
     
         this.stock.update(artStock, {
           valueAvailable: artStock.valueAvailable - 1,
@@ -524,58 +524,58 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
         currentYear = new Date().getFullYear();
     }
 
-    const exRes: UserArticle = await this.userArticle.findOneBy({
+    const exRes: UserArticle = await this.userArticle.findOne({where:{
       serialNumber: data.serialNumber,
       status: "zaduženo",
-    });
+    }});
 
     if (exRes) {
       if(data.status === 'razduženo') {
-        const predaoKorisnik: User = await this.user.findOneBy({
+        const predaoKorisnik: User = await this.user.findOne({where:{
           userId: userId,
-        });
+        }});
         predao = predaoKorisnik.fullname;
         preuzeo = "Skladište"
 
       } else if (data.status === 'zaduženo') {
-        const predaoKorisnik: User = await this.user.findOneBy({
+        const predaoKorisnik: User = await this.user.findOne({where:{
           userId: exRes.userId,
-        });
+        }});
         predao = predaoKorisnik.fullname;
   
-        const preuzeoKorisnik: User = await this.user.findOneBy({
+        const preuzeoKorisnik: User = await this.user.findOne({where:{
           userId: userId,
-        });
+        }});
         preuzeo = preuzeoKorisnik.fullname;
       } 
     }
 
     if (!exRes) {
-      const exDebt: UserArticle = await this.userArticle.findOneBy({
+      const exDebt: UserArticle = await this.userArticle.findOne({where:{
         serialNumber: data.serialNumber,
         status: "razduženo"
-      });
+      }});
 
       if (exDebt) {
       predao = 'Skladište';
-      const preuzeoKorisnik: User = await this.user.findOneBy({
+      const preuzeoKorisnik: User = await this.user.findOne({where:{
         userId: userId,
-      });
+      }});
       preuzeo = preuzeoKorisnik.fullname;
     }
 
     predao = 'Skladište';
 
-  const preuzeoKorisnik: User = await this.user.findOneBy({
+  const preuzeoKorisnik: User = await this.user.findOne({where:{
     userId: userId,
-  });
+  }});
 
   preuzeo = preuzeoKorisnik.fullname;
   }
 
-  const article: Article = await this.article.findOneBy({
+  const article: Article = await this.article.findOne({where:{
       articleId: data.articleId,
-    });
+    }});
     inv = data.invBroj;
     naziv = article.name;
     komentar = data.comment;
@@ -820,9 +820,9 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
       newUserArticleData.serialNumber,
       newUserArticleData.invBroj);
 
-    const articleInStock: Stock = await this.stock.findOneBy({
+    const articleInStock: Stock = await this.stock.findOne({where:{
       articleId: data.articleId,
-    });
+    }});
 
     await this.stock.remove(articleInStock); 
     const newArticleStock: Stock = await new Stock(); 
@@ -833,15 +833,16 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
     newArticleStock.sapNumber = articleInStock.sapNumber;
     await this.stock.save(newArticleStock);
 
-    return await this.userArticle.find({
+    return await this.userArticle.findOne({
       where: { articleId: data.articleId },
       relations: ['article', 'user', 'document'],
     });
   }
 /* FUNKCIJE */
   private async checkStock(articleId: number){
-    const checkArticleInStock: Stock = await this.stock.findOne({
-      articleId: articleId,
+    const checkArticleInStock: Stock = await this.stock.findOne(
+      {
+      where:{articleId: articleId},
     });
 
     if (!checkArticleInStock) {
@@ -862,9 +863,9 @@ export class UserArticleService extends TypeOrmCrudService<UserArticle> {
   }
 
   async getBySerialNumber(serialNumber: string): Promise<UserArticle | null> {
-    const article = await this.userArticle.findOneBy({
+    const article = await this.userArticle.findOne({where:{
       serialNumber: serialNumber,
-    });
+    }});
     if (article) {
       return article;
     }

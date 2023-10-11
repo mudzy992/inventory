@@ -26,7 +26,8 @@ export class LocationService extends TypeOrmCrudService<Location> {
       return new ApiResponse('error', -4002, 'Lokacija nije sačuvana')
     }
 
-    return await this.findOneBy(savedLocation.locationId, {
+    return await this.findOne({
+      where:{locationId: savedLocation.locationId}, 
       relations: ['departmentJobs', 'locations'],
     })
   }
