@@ -37,9 +37,4 @@ export class Stock {
 
   @OneToMany(() => Article, (article) => article.articlesInStock)
   stockArticle: Article[];
-
-  @ManyToOne(() => Category, (category) => category.stocks)
-  @JoinColumn({ name: 'article_id' })
-  category: Category;
-
 }

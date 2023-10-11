@@ -49,7 +49,4 @@ export class Category {
 
   @OneToMany(() => Feature, (feature) => feature.category)
   features: Feature[];
-
-  @OneToMany(() => Stock, (stock) => stock.category)
-  stocks: Stock[];
 }
