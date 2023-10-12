@@ -9,7 +9,8 @@ async function bootstrap() {
     prefix: StorageConfig.prenosnica.urlPrefix,
     maxAge: StorageConfig.prenosnica.maxAge,
     index: false,
-  });
+  },   
+  );
   app.enableCors();
   const PORT = process.env.PORT || 3005
   await app.listen(PORT, ()=> console.log("Sluša ba portu " + PORT));
