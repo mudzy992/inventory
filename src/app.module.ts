@@ -57,6 +57,8 @@ import { DepartmentJobService } from './services/departmentJob/department.job.se
 import { ArticleTimeline } from './entities/ArticleTimeline';
 import { ArticleTimelineController } from './controllers/api/article.timeline.controller';
 import { ArticleTimelineService } from './services/articleTimeline/article.timeline.service';
+import { WebhookController } from './controllers/api/web.hook.controller';
+import { SkipAuthMiddleware } from './middlewares/skip.auth.middleware';
 
 @Module({
   imports: [
@@ -133,6 +135,7 @@ import { ArticleTimelineService } from './services/articleTimeline/article.timel
     JobController,
     LocationController,
     DepartmentJobController,
+    WebhookController,
   ],
   providers: [
     ArticleService,
@@ -166,7 +169,7 @@ export class AppModule implements NestModule {
     // Nema throw već mi treba da odredimo šta treba da radi
     // a mi želimo da on primjeni određeni middleware
     consumer
-      .apply(AuthMiddleware)
+      .apply(AuthMiddleware, SkipAuthMiddleware)
       // kada kažemo koji middleware naš konzumer treba da primjenjuje
       // moramo da damo nekoliko izuzetaka, i spisak ruta za koje će važiti
       .exclude('auth/*') // Izbjegni sve što počinje sa auth/*, 'assets/*', 'uploads/*'itd.
