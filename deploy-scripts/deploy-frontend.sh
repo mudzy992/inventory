@@ -24,7 +24,7 @@ npm install
 
 # Ponovno pokrenite aplikaciju pomoću PM2 ili nekog drugog proces managera
 # Ako PM2 nije instaliran, možete zamijeniti s `node dist/src/main.js`
-npm start
+npm start src
 
 # Skripta je uspješno završena
 echo "Ažuriranje i ponovno pokretanje uspješno završeno za frontend."
