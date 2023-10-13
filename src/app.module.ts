@@ -59,7 +59,7 @@ import { ArticleTimelineController } from './controllers/api/article.timeline.co
 import { ArticleTimelineService } from './services/articleTimeline/article.timeline.service';
 import { WebhookController } from './controllers/api/web.hook.controller';
 import { SkipAuthMiddleware } from './middlewares/skip.auth.middleware';
-import { WebhookFrontendController } from './controllers/api/web.hook.frontend';
+import { WebhookFrontendController } from './controllers/api/web.hook.frontend.controller';
 
 @Module({
   imports: [
