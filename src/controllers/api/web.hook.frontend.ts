@@ -7,7 +7,7 @@ import { SkipAuthMiddleware } from 'src/middlewares/skip.auth.middleware';
 @Controller('auth/')
 @UseGuards(SkipAuthMiddleware)
 export class WebhookController {
-  @Post('github')
+  @Post('frontend')
   async handleGitHubWebhook(@Req() req: Request, @Res() res: Response): Promise<void> {
     // Postavite svoj tajni ključ ovdje
     const secret = 'tajniključzawebhook';
