@@ -10,7 +10,7 @@ if [[ "$1" != "$SECRET_KEY" ]]; then
 fi
 
 # Postavite putanju do vašeg repozitorija
-REPO_PATH="Documents/GitHub/frontend-inventory/"
+REPO_PATH="Documents/GitHub/frontend-inventory"
 
 # Navigirajte do repozitorija
 cd $REPO_PATH
