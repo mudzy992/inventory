@@ -15,16 +15,18 @@ REPO_PATH="Documents/GitHub/inventory/"
 # Navigirajte do repozitorija
 cd $REPO_PATH
 
-# Resetirajte repozitorij na najnoviju verziju na glavnoj grani
-git reset --hard HEAD
-git pull
+# Provjerite status PM2 instance za vašu aplikaciju
+if pm2 info inventory-backend >/dev/null 2>&1; then
+  # Ako PM2 instanca već postoji, izvršite restart
+  pm2 restart inventory-backend
+else
+  # Ako PM2 instanca ne postoji, pokrenite novu
+  # Instalirajte sve ovisnosti
+  npm install
 
-# Instalirajte sve ovisnosti
-npm install
-
-# Ponovno pokrenite aplikaciju pomoću PM2 ili nekog drugog proces managera
-# Ako PM2 nije instaliran, možete zamijeniti s `node dist/src/main.js`
-pm2 restart dist/src/main.js
+  # Pokrenite aplikaciju pomoću PM2
+  pm2 start dist/src/main.js --name inventory-backend
+fi
 
 # Skripta je uspješno završena
 echo "Ažuriranje i ponovno pokretanje uspješno završeno za backend."
