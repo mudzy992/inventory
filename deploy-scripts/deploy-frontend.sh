@@ -10,7 +10,7 @@ if [[ "$1" != "$SECRET_KEY" ]]; then
 fi
 
 # Postavite putanju do vašeg repozitorija
-REPO_PATH="/home/administrator/Documents/GitHub/inventory"
+REPO_PATH="/home/administrator/Documents/GitHub/inventory/src"
 
 # Navigirajte do repozitorija
 cd $REPO_PATH
@@ -24,7 +24,7 @@ npm install
 
 # Ponovno pokrenite aplikaciju pomoću PM2 ili nekog drugog proces managera
 # Ako PM2 nije instaliran, možete zamijeniti s `node dist/src/main.js`
-npm start run
+npm start
 
 # Skripta je uspješno završena
 echo "Ažuriranje i ponovno pokretanje uspješno završeno za frontend."
