@@ -22,7 +22,7 @@ export class WebhookController {
 
     // Ovdje možete postaviti svoju logiku izvršavanja skripte deploy.sh
     // Koristite `exec` funkciju za izvršavanje skripte
-    exec('sh ../../deploy-scripts/deploy.sh', (error, stdout, stderr) => {
+    exec('sh ./deploy-scripts/deploy.sh', (error, stdout, stderr) => {
       if (error) {
         console.error(`Greška prilikom izvršavanja deploy.sh: ${error}`);
         res.status(500).send('Greška prilikom izvršavanja deploy.sh!');
