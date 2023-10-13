@@ -158,8 +158,8 @@ import { SkipAuthMiddleware } from './middlewares/skip.auth.middleware';
     DepartmentJobService,
   ],
   exports: [
-    // zbog middleware potrebno je exportovati servis
-    // da bi svi ostali elementi koji se nalaze van okvira modula
+    // zbog middleware potrebno je exportovati servis!
+    // da bi svi ostali elementi koji se nalaze van okvira modula!
     AdministratorService,
     UserService,
   ],
