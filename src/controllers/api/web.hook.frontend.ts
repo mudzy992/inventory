@@ -29,7 +29,7 @@ export class WebhookFrontendController {
         return;
       }
       console.log(`Skripta deploy.sh je uspješno izvršena: ${stdout}`);
-      res.status(200).send('Webhook primljen i deployiran.');
+      res.status(200).send('Webhook primljen i deployiran za frontend.');
     });
   }
 
