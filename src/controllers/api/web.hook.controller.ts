@@ -25,7 +25,7 @@ export class WebhookController {
     exec('sh ../../deploy-scripts/deploy.sh', (error, stdout, stderr) => {
       if (error) {
         console.error(`Greška prilikom izvršavanja deploy.sh: ${error}`);
-        res.status(500).send('Greška prilikom izvršavanja deploy.sh');
+        res.status(500).send('Greška prilikom izvršavanja deploy.sh!');
         return;
       }
       console.log(`Skripta deploy.sh je uspješno izvršena: ${stdout}`);
