@@ -27,4 +27,4 @@ npm install
 pm2 restart dist/src/main.js
 
 # Skripta je uspješno završena
-echo "Ažuriranje i ponovno pokretanje uspješno završeno."
+echo "Ažuriranje i ponovno pokretanje uspješno završeno za backend."
