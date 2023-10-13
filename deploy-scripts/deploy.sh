@@ -5,7 +5,7 @@ SECRET_KEY="tajniključzawebhook"
 
 # Provjerite da li je tajni ključ ispravan
 if [[ "$1" != "$SECRET_KEY" ]]; then
-  echo "Nevažeći tajni ključ. Pristup odbijen."
+  echo "Neispravan tajni ključ. Pristup odbijen."
   exit 1
 fi
 
