@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Ovdje postavite svoj tajni ključ za webhook
+# Tajni ključ za webhook
 SECRET_KEY="tajniključzawebhook"
 
 # Provjerite da li je tajni ključ ispravan
