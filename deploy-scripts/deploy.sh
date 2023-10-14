@@ -21,7 +21,7 @@ if pm2 info inventory-backend >/dev/null 2>&1; then
   pm2 restart inventory-backend --watch
 else
   # Ako PM2 instanca ne postoji, pokrenite novu
-  # Instalirajte sve ovisnosti
+  # Instalacija svih dep
   npm install
 
   # Pokrenite aplikaciju pomoću PM2
