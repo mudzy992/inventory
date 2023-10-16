@@ -26,37 +26,48 @@ export class ArticleService extends TypeOrmCrudService<Article> {
   }
 
   async createNewArticleInStock(data: AddArticleDto): Promise<Article | ApiResponse> {
+    const sapNumber = data.sap_number;
+    const existingArticle = await this.getBySapNumber(sapNumber);
+
+    if (existingArticle) {
+      return new ApiResponse('error', -1000, 'Artikal već postoji u skladištu');
+    }
+
     const newArticle: Article = new Article();
     newArticle.name = data.name;
     newArticle.categoryId = data.categoryId;
     newArticle.excerpt = data.excerpt;
     newArticle.description = data.description;
     newArticle.concract = data.concract;
-    newArticle.sapNumber = data.sap_number;
-  
+    newArticle.sapNumber = sapNumber;
+
     const savedArticle = await this.articleRepository.save(newArticle);
-  
+
     for (const feature of data.features) {
-      const newArticleFeatures: ArticleFeature = new ArticleFeature();
-      newArticleFeatures.articleId = savedArticle.articleId; // Promijenili smo 'article' u 'articleId'
-      newArticleFeatures.featureId = feature.featureId;
-      newArticleFeatures.value = feature.value;
-  
-      await this.articleFeatureRepository.save(newArticleFeatures);
+      const newArticleFeature: ArticleFeature = new ArticleFeature();
+      newArticleFeature.articleId = savedArticle.articleId;
+      newArticleFeature.featureId = feature.featureId;
+      newArticleFeature.value = feature.value;
+
+      await this.articleFeatureRepository.save(newArticleFeature);
     }
-  
+
     const newArticleInStock: Stock = new Stock();
-    newArticleInStock.articleId = savedArticle.articleId; // Promijenili smo 'article' u 'articleId'
+    newArticleInStock.articleId = savedArticle.articleId;
     newArticleInStock.valueOnConcract = data.stock.valueOnConcract;
     newArticleInStock.valueAvailable = data.stock.valueAvailable;
-    newArticleInStock.sapNumber = data.sap_number;
-  
+    newArticleInStock.sapNumber = sapNumber;
+
     await this.stockRepository.save(newArticleInStock);
-  
+
     return await this.articleRepository.findOne({
       where: { articleId: savedArticle.articleId },
       relations: ['category', 'articleFeature', 'features', 'articlesInStock'],
     });
+  }
+
+  async getBySapNumber(sapNumber: string): Promise<Article | null> {
+    return this.articleRepository.findOne({where:{ sapNumber }});
   }
   
 

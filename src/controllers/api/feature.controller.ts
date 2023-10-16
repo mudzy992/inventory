@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
 import { Feature } from 'src/entities/Feature';
 import { FeatureService } from 'src/services/feature/feature.service';
@@ -40,10 +40,13 @@ export class FeatureController {
   ): Promise<Feature | ApiResponse> {
     return await this.service.createNewFeature(data);
   }
-  @Patch()
-  async editFeatures(
+
+    @Patch(':id')
+  async editFeature(
+    @Param('id') featureId: number,
     @Body() data: EditFeatureDto,
   ): Promise<Feature | ApiResponse> {
-    return await this.service.editFeatures(data)
+    return await this.service.editFeature(featureId, data);
   }
+
 }

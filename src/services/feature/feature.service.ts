@@ -59,4 +59,5 @@ export class FeatureService extends TypeOrmCrudService<Feature> {
       return new ApiResponse('error', -4000, 'Neuspješna izmjena osobine - ' + error);
     }
   }
+
 }

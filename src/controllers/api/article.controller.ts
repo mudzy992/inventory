@@ -75,14 +75,23 @@ export class ArticleController {
     @Param('id') id: number,
     @Body() data: EditFullArticleDto,
   ) {
+    const article = await this.service.findOne({where:{articleId:id}});
+    if (!article) {
+      return new ApiResponse('error', -1001, 'Članak nije pronađen.');
+    }
     return await this.service.editFullArticle(id, data);
   }
+
 
   @Patch('/stock/:id')
   async changeStockExistArticle(
     @Param('id') id: number,
     @Body() data: AddArticleDto,
   ) {
+    const article = await this.service.findOne({where:{articleId:id}});
+    if (!article) {
+      return new ApiResponse('error', -1001, 'Članak nije pronađen.');
+    }
     return await this.service.changeStockExistArticle(id, data);
   }
 } /* Kraj koda */
