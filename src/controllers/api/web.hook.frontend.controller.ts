@@ -9,7 +9,7 @@ import { SkipAuthMiddleware } from 'src/middlewares/skip.auth.middleware';
 export class WebhookFrontendController {
   @Post('frontend')
   async handleGitHubWebhook(@Req() req: Request, @Res() res: Response): Promise<void> {
-    // Postavite svoj tajni ključ ovdje
+    // Tajni ključ ovdje
     const secret = 'tajniključzawebhook';
 
     const signature = req.get('X-Hub-Signature-256');
