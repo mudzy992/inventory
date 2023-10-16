@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Administrator } from 'src/entities/Administrator';
 import { Repository } from 'typeorm';
 import * as crypto from 'crypto';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { AddAdministratorDto } from 'src/dtos/administrator/add.administrator.dto';
 import { EditAdministratorDto } from './edit.administrator.dto';
 import { AdministratorToken } from 'src/entities/AdministratorToken';
+import { Administrator } from 'src/entities/Administrator';
 
 @Injectable()
 export class AdministratorService {
@@ -16,97 +16,94 @@ export class AdministratorService {
     @InjectRepository(AdministratorToken)
     private readonly administratorToken: Repository<AdministratorToken>,
   ) {}
-  getAll(): Promise<Administrator[]> {
-    return this.administrator.find();
+
+  async getAll(): Promise<Administrator[]> {
+    return await this.administrator.find();
   }
 
   async getByUsername(username: string): Promise<Administrator | null> {
-    const admin = await this.administrator.findOne({where:{
-      username: username,
-    }});
-    if (admin) {
-      return admin;
-    }
-    return null;
+    return await this.administrator.findOne({ where: { username: username } });
   }
 
-  getById(id: number): Promise<Administrator> {
-    return this.administrator.findOne({where:{administratorId:id}});
+  async getById(id: number): Promise<Administrator> {
+    return await this.administrator.findOne({where:{administratorId:id}});
   }
 
-  add(data: AddAdministratorDto): Promise<Administrator | ApiResponse> {
-    const passwordHash = crypto.createHash('sha512');
-    passwordHash.update(data.password);
-    const passwordHashString = passwordHash.digest('hex').toUpperCase();
-    const newAdmin: Administrator = new Administrator();
-    newAdmin.username = data.username;
-    newAdmin.passwordHash = passwordHashString;
-    return new Promise((resolve) => {
-      this.administrator
-        .save(newAdmin)
-        .then((data) => resolve(data))
-        .catch((error) => {
-          const response: ApiResponse = new ApiResponse('error', -8001);
-          resolve(response);
-        });
-    });
-  }
+  async add(data: AddAdministratorDto): Promise<Administrator | ApiResponse> {
+    try {
+      const passwordHash = crypto
+        .createHash('sha512')
+        .update(data.password)
+        .digest('hex')
+        .toUpperCase();
 
-  async editById(
-    id: number,
-    data: EditAdministratorDto,
-  ): Promise<Administrator | ApiResponse> {
-    const admin: Administrator = await this.administrator.findOne({where:{administratorId: id}});
-    if (admin === undefined) {
-      return new Promise((resolve) => {
-        resolve(new ApiResponse('error', -8002));
+      const newAdmin: Administrator = this.administrator.create({
+        username: data.username,
+        passwordHash: passwordHash,
       });
+
+      return await this.administrator.save(newAdmin);
+    } catch (error) {
+      const response: ApiResponse = new ApiResponse('error', -8001);
+      throw new HttpException(response, HttpStatus.BAD_REQUEST);
     }
-    const passwordHash = crypto.createHash('sha512');
-    passwordHash.update(data.password);
-    const passwordHashString = passwordHash.digest('hex').toUpperCase();
-    admin.passwordHash = passwordHashString;
-    return this.administrator.save(admin);
   }
+
+  async editById(id: number, data: EditAdministratorDto): Promise<Administrator | ApiResponse> {
+    const admin: Administrator = await this.administrator.findOne({where:{administratorId:id}});
+    if (!admin) {
+      const response: ApiResponse = new ApiResponse('error', -8002);
+      throw new HttpException(response, HttpStatus.NOT_FOUND);
+    }
+
+    const passwordHash = crypto
+      .createHash('sha512')
+      .update(data.password)
+      .digest('hex')
+      .toUpperCase();
+
+    admin.passwordHash = passwordHash;
+
+    return await this.administrator.save(admin);
+  }
+
   async addToken(administratorId: number, token: string, expiresAt: string) {
-    const administratorToken = new AdministratorToken();
-    administratorToken.administratorId = administratorId;
-    administratorToken.token = token;
-    administratorToken.expireAt = expiresAt;
+    const administratorToken = this.administratorToken.create({
+      administratorId,
+      token,
+      expireAt: expiresAt,
+    });
 
     return await this.administratorToken.save(administratorToken);
   }
 
   async getAdministratorToken(token: string): Promise<AdministratorToken> {
-    return await this.administratorToken.findOne({where:{
-      token: token,
-    }});
+    return await this.administratorToken.findOne({ where: { token: token } });
   }
 
-  async invalidateToken(
-    token: string,
-  ): Promise<AdministratorToken | ApiResponse> {
-    const administratorToken = await this.administratorToken.findOne({where:{
-      token: token,
-    }});
+  async invalidateToken(token: string): Promise<AdministratorToken | ApiResponse> {
+    const administratorToken = await this.administratorToken.findOne({ where: { token: token } });
+
     if (!administratorToken) {
-      return new ApiResponse('error', -10001, 'Neispravan osvježavajući token');
+      const response: ApiResponse = new ApiResponse('error', -10001, 'Neispravan osvježavajući token');
+      throw new HttpException(response, HttpStatus.BAD_REQUEST);
     }
+
     administratorToken.isValid = 0;
     await this.administratorToken.save(administratorToken);
-    return await this.getAdministratorToken(token);
+
+    return administratorToken;
   }
 
-  async invalidateAdministratorTokens(
-    administratorId: number,
-  ): Promise<(AdministratorToken | ApiResponse)[]> {
-    const administratorTokens = await this.administratorToken.find({where:{
-      administratorId: administratorId,
-    }});
-    const results = [];
+  async invalidateAdministratorTokens(administratorId: number): Promise<(AdministratorToken | ApiResponse)[]> {
+    const administratorTokens = await this.administratorToken.find({ where: { administratorId: administratorId } });
+
+    const results: (AdministratorToken | ApiResponse)[] = [];
+
     for (const administratorToken of administratorTokens) {
-      results.push(this.invalidateToken(administratorToken.token));
+      results.push(await this.invalidateToken(administratorToken.token));
     }
+
     return results;
   }
-} /* Kraj koda */
+}
