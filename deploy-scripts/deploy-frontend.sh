@@ -29,4 +29,4 @@ npm install
 pm2 startOrRestart ecosystem.config.js --env production --update-env
 
 # Skripta je uspješno završena
-echo "Ažuriranje i ponovno pokretanje uspješno završeno za frontend."
+echo "Ažuriranje i ponovno pokretanje uspješno završeno za FrontEnd."
