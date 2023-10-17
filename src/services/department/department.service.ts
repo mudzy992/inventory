@@ -11,10 +11,11 @@ import { Repository } from 'typeorm';
 export class DepartmentService extends TypeOrmCrudService<Department> {
   constructor(
     @InjectRepository(Department)
-    private readonly department: Repository<Department>, 
+    private readonly department: Repository<Department>,
   ) {
     super(department);
   }
+
   async createNewDepartment(data: AddNewDepartmentDto): Promise<Department | ApiResponse> {
     const newDepartment: Department = new Department();
     newDepartment.title = data.title;
@@ -25,56 +26,53 @@ export class DepartmentService extends TypeOrmCrudService<Department> {
     const savedDepartment = await this.department.save(newDepartment);
 
     if (!savedDepartment) {
-      return new ApiResponse('error', -4002, 'Sektor ili odjeljenje nije sačuvano')
+      return new ApiResponse('error', -4002, 'Sektor ili odjeljenje nije sačuvano');
     }
 
     return await this.findOne({
-      where:{departmentId: savedDepartment.departmentId},
+      where: { departmentId: savedDepartment.departmentId },
       relations: ['parentDepartment', 'departments', 'departmentJobs'],
-    })
+    });
   }
 
-  async editDepartment(departmentId:number, data: EditDepartmentDto): Promise <Department | ApiResponse> {
-    const existingDepartmet: Department = await this.department.findOne({where:{departmentId: departmentId}})
-    if(!existingDepartmet) {
-      return new ApiResponse('error', -4003, 'Sektor ili odjeljenje nije pronađen/o')
-    } 
-
-    existingDepartmet.title = data.title;
-    existingDepartmet.description = data.description
-    existingDepartmet.departmendCode = data.departmentCode;
-    existingDepartmet.parentDepartmentId = data.parentDepartmentId;
-
-    const savedEditedDepartmet = this.department.save(existingDepartmet)
-
-    if(!savedEditedDepartmet) {
-      return new ApiResponse('error', -4002, 'Sektor ili odjeljenje  nije sačuvano')
+  async editDepartment(departmentId: number, data: EditDepartmentDto): Promise<Department | ApiResponse> {
+    const existingDepartment: Department = await this.department.findOne({ where: { departmentId: departmentId } });
+    if (!existingDepartment) {
+      return new ApiResponse('error', -4003, 'Sektor ili odjeljenje nije pronađeno');
     }
 
-    return savedEditedDepartmet
+    existingDepartment.title = data.title;
+    existingDepartment.description = data.description;
+    existingDepartment.departmendCode = data.departmentCode;
+    existingDepartment.parentDepartmentId = data.parentDepartmentId;
+
+    const savedEditedDepartment = await this.department.save(existingDepartment);
+
+    if (!savedEditedDepartment) {
+      return new ApiResponse('error', -4002, 'Sektor ili odjeljenje nije sačuvano');
+    }
+
+    return savedEditedDepartment;
   }
 
   async deleteDepartment(departmentId: number): Promise<ApiResponse> {
-    const existingDepartmet: Department = await this.department.findOne({where:{departmentId: departmentId}})
-    if(!existingDepartmet) {
-      return new ApiResponse('error', -4003, 'Sektor ili odjeljenje nije pronađen/o')
+    const existingDepartment: Department = await this.department.findOne({ where: { departmentId: departmentId } });
+    if (!existingDepartment) {
+      return new ApiResponse('error', -4003, 'Sektor ili odjeljenje nije pronađeno');
     }
 
-    if(existingDepartmet.parentDepartmentId !== null){
-      return new ApiResponse('error', -4006, 'Nemoguće obrisati sektor ili odjeljenje koje je dio nekog drugog sektora ili odjeljenja!')
-    }
-    if(existingDepartmet.parentDepartmentId === null) {
-      const existingParentId = await this.department.findOne({where:{parentDepartmentId: departmentId}})
-      if(existingParentId){
-      return new ApiResponse('error', -4007, 'Nemoguće obrisati glavni sektor ili odjeljenje, potrebno obrisati sektore ili odjeljenja koja se nalaze u istom!')
-      }
+    // Check if the department has sub-departments
+    const subDepartmentsCount = await this.department.count({ where: { parentDepartmentId: departmentId } });
+    if (subDepartmentsCount > 0) {
+      return new ApiResponse('error', -4006, 'Nemoguće obrisati sektor ili odjeljenje koje ima podsektore');
     }
 
-    const deleteExistingDepartmet = await this.department.delete(departmentId)
-    if(!deleteExistingDepartmet) {
-      return new ApiResponse('error', -4004, 'Sektor ili odjeljenje nije obrisano')
-    } 
+    const deleteResult = await this.department.delete(departmentId);
 
-    return new ApiResponse('ok', -4005, 'Sektor ili odjeljenje uspješno obrisano')
+    if (deleteResult.affected === 0) {
+      return new ApiResponse('error', -4004, 'Sektor ili odjeljenje nije obrisano');
+    }
+
+    return new ApiResponse('ok', 0, 'Sektor ili odjeljenje uspješno obrisano');
   }
 }

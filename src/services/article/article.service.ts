@@ -9,126 +9,122 @@ import { Stock } from 'src/entities/Stock';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository } from 'typeorm';
 
+
 @Injectable()
 export class ArticleService extends TypeOrmCrudService<Article> {
   constructor(
     @InjectRepository(Article)
-    private readonly article: Repository<Article>,
+    private readonly articleRepository: Repository<Article>,
 
     @InjectRepository(ArticleFeature)
-    private readonly articleFeature: Repository<ArticleFeature>,
+    private readonly articleFeatureRepository: Repository<ArticleFeature>,
 
     @InjectRepository(Stock)
-    private readonly stock: Repository<Stock>,
+    private readonly stockRepository: Repository<Stock>,
   ) {
-    super(article);
+    super(articleRepository);
   }
-  /* dodavanje novog artikla (koristi add.article.dto.ts)
-  Kreiranje novog metoda async je zbog toga što imamo rezultate koji su na await
-  PRVI KORAK:createFullArticle(će uzimati podatke koji su tipa AddArtucleDto): vraćat će rezultat obećanje <Artikal ili grešku>
-  Kao što vidimo vraća nam full artikal, a mi znamo da u tom full artiklu imamo cijenu, features, slike koji nam trebaju
-  I to nije problem, jer ćemo dobiti articleId koji će biti na awaitu, i na osnovu tog articleId ćemo pridružiti cijenu, features, slike */
 
-  async createNewArticleInStock(
-    data: AddArticleDto,
-  ): Promise<Article | ApiResponse> {
+  async createNewArticleInStock(data: AddArticleDto): Promise<Article | ApiResponse> {
+    const sapNumber = data.sap_number;
+    const existingArticle = await this.getBySapNumber(sapNumber);
+
+    if (existingArticle) {
+      return new ApiResponse('error', -1000, 'Artikal već postoji u skladištu');
+    }
+
     const newArticle: Article = new Article();
     newArticle.name = data.name;
     newArticle.categoryId = data.categoryId;
     newArticle.excerpt = data.excerpt;
     newArticle.description = data.description;
     newArticle.concract = data.concract;
-    newArticle.sapNumber = data.sap_number;
-    /* Sada kada smo kreirali artikal, njega je potrebno snimiti u neku konstantu i čuvati ga na await 
-      to radimo u ovom trenutku jer ćemo tako dobiti articleId, već ovdje artikal ide u bazu podataka (na returnu)*/
+    newArticle.sapNumber = sapNumber;
 
-    const savedArticle = await this.article.save(newArticle);
-    /* Dodati taj artikal u skladište */
-
-    /* sada kada imamo articleId smješteno u savedArticle možemo za taj artikal dodati feature i njih snimiti isto u neku konstantu
-      pošto je features jedan niz podataka (tako smo naveli u Dto, ali i planirali u bazi, artikal može imati više features-a) 
-      tu se koristi for petlja konstrukcije za svaki varijantu feature dodaj određeni podatak i vrti u krug */
+    const savedArticle = await this.articleRepository.save(newArticle);
 
     for (const feature of data.features) {
-      /* Ali kao što je i slučaj iznad features-e smještamo isto u jednu konstantu */
-      const newArticleFeatures: ArticleFeature = new ArticleFeature();
-      newArticleFeatures.articleId = savedArticle.articleId;
-      newArticleFeatures.featureId = feature.featureId;
-      newArticleFeatures.value = feature.value;
-      /* Uraditi snimanje tog articleFeatures */
-      await this.articleFeature.save(newArticleFeatures);
+      const newArticleFeature: ArticleFeature = new ArticleFeature();
+      newArticleFeature.articleId = savedArticle.articleId;
+      newArticleFeature.featureId = feature.featureId;
+      newArticleFeature.value = feature.value;
+
+      await this.articleFeatureRepository.save(newArticleFeature);
     }
 
     const newArticleInStock: Stock = new Stock();
     newArticleInStock.articleId = savedArticle.articleId;
     newArticleInStock.valueOnConcract = data.stock.valueOnConcract;
     newArticleInStock.valueAvailable = data.stock.valueAvailable;
-    newArticleInStock.sapNumber = data.sap_number;
+    newArticleInStock.sapNumber = sapNumber;
 
-    await this.stock.save(newArticleInStock);
+    await this.stockRepository.save(newArticleInStock);
 
-    /* Vrati artikal na prikaz */
-    return await this.findOne({ 
+    return await this.articleRepository.findOne({
       where: { articleId: savedArticle.articleId },
       relations: ['category', 'articleFeature', 'features', 'articlesInStock'],
     });
-    
-  } /* Kraj metoda za kreiranje novog artikla */
-
-  async getBySapNumber(sapNumber: string): Promise<Stock | null> {
-    /* Mehanizam pronalaženja artikla u skladištu po sap broju */
-    const sapnumber = await this.stock.findOne({where:{ sapNumber: sapNumber }});
-    if (sapnumber) {
-      return sapnumber;
-    }
-    return null;
   }
+
+  async getBySapNumber(sapNumber: string): Promise<Article | null> {
+    return this.articleRepository.findOne({where:{ sapNumber }});
+  }
+  
 
   async editFullArticle(
     articleId: number,
     data: EditFullArticleDto,
   ): Promise<Article | ApiResponse> {
-    const existingArticle: Article = await this.article.findOne({where:{articleId: articleId}})
+    const existingArticle: Article = await this.articleRepository.findOne({ where: { articleId: articleId } });
+  
     if (!existingArticle) {
       return new ApiResponse('error', -1001, 'Artikal ne postoji u skladištu');
     }
+  
     if (data.details !== null) {
-      this.article.update(existingArticle, {
-          name : data.details.name,
-          categoryId : data.categoryId,
-          excerpt : data.details.excerpt,
-          description : data.details.description,
-          concract : data.details.concract,
-        })
-        const savedArticle = await this.article.save(existingArticle);
-
-        if (!savedArticle) {
-          return new ApiResponse('error', -1002, 'Artikal nije moguće spasiti');
-        }
+      this.articleRepository.update(existingArticle, {
+        name: data.details.name,
+        categoryId: data.categoryId,
+        excerpt: data.details.excerpt,
+        description: data.details.description,
+        concract: data.details.concract,
+      });
+  
+      const savedArticle = await this.articleRepository.save(existingArticle);
+  
+      if (!savedArticle) {
+        return new ApiResponse('error', -1002, 'Artikal nije moguće spasiti');
+      }
     }
-    
+  
     if (data.stock !== null) {
-      const existingArticleInStock = await this.stock.findOne({where:{articleId : articleId}})
-      this.stock.update(existingArticleInStock, {
-        valueOnConcract : data.stock.valueOnConcract,
-        valueAvailable : data.stock.valueAvailable,
-        sapNumber : data.stock.sap_number,
-      })
+      const existingArticleInStock = await this.stockRepository.findOne({ where: { articleId: articleId } });
+  
+      if (existingArticleInStock) {
+        this.stockRepository.update(existingArticleInStock, {
+          valueOnConcract: data.stock.valueOnConcract,
+          valueAvailable: data.stock.valueAvailable,
+          sapNumber: data.stock.sap_number,
+        });
+      }
     }
-
-     if (data.features !== null) {
-       await this.articleFeature.remove(await this.articleFeature.findOne({where:{articleId : articleId}}));
+  
+    if (data.features !== null) {
+      await this.articleFeatureRepository.remove(
+        await this.articleFeatureRepository.findOne({ where: { articleId: articleId } })
+      );
+  
       for (const feature of data.features) {
         const newArticleFeature: ArticleFeature = new ArticleFeature();
         newArticleFeature.articleId = articleId;
         newArticleFeature.featureId = feature.featureId;
         newArticleFeature.value = feature.value;
-        await this.articleFeature.save(newArticleFeature);
-      } 
+        await this.articleFeatureRepository.save(newArticleFeature);
+      }
     }
-
-    return await this.findOne(
-      {where:{articleId:articleId},
+  
+    return await this.articleRepository.findOne({
+      where: { articleId: articleId },
       relations: [
         'category',
         'articleFeature',
@@ -136,26 +132,26 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         'articlesInStock',
       ],
     });
+  }
   
+
+
+async changeStockExistArticle(articleId: number, data: AddArticleDto): Promise<Stock> {
+  const existingStock = await this.stockRepository.findOne({ where: { articleId: articleId } });
+
+  if (existingStock) {
+    await this.stockRepository.remove(existingStock);
+
+    const newArticleStock: Stock = new Stock();
+    newArticleStock.articleId = articleId; // Ovdje koristimo 'articleId' umjesto 'article'
+    newArticleStock.valueOnConcract = data.stock.valueOnConcract;
+    newArticleStock.valueAvailable = data.stock.valueAvailable;
+    newArticleStock.sapNumber = data.sap_number;
+
+    await this.stockRepository.save(newArticleStock);
+
+    return newArticleStock;
   }
- async changeStockExistArticle(
-    articleId: number,
-    data: AddArticleDto,
-  ): Promise<Stock> {
-    const existingStockArticle = await this.stock.findOne({where:{
-      articleId: articleId,
-    }});
-    if (existingStockArticle) {
-      await this.stock.remove(
-        await this.stock.findOne({where:{ articleId: articleId }}),
-      );
-      const newArticleStock: Stock = new Stock();
-      newArticleStock.articleId = articleId;
-      newArticleStock.valueOnConcract = data.stock.valueOnConcract;
-      newArticleStock.valueAvailable = data.stock.valueAvailable;
-      newArticleStock.sapNumber = data.sap_number;
-      await this.stock.save(newArticleStock);
-      return newArticleStock;
-    }
-  }
-} /* Kraj koda */
+}
+
+}
