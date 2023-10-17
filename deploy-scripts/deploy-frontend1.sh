@@ -15,18 +15,16 @@ REPO_PATH="/home/administrator/Documents/GitHub/frontend-inventory/"
 # Navigirajte do repozitorija
 cd $REPO_PATH
 
-# Resetirajte repozitorij na najnoviju verziju na produkcioni grani
-PRODUCTION_BRANCH="AI-optimizacija"
-
-git checkout $PRODUCTION_BRANCH
+# Resetirajte repozitorij na najnoviju verziju na glavnoj grani
+git reset --hard HEAD
 git pull
 
-# Instalirajte sve ovisnosti pomoću npm
+# Instalirajte sve ovisnosti
 npm install
 
-# Pokrenite ili restartajte aplikaciju koristeći PM2
-# Ovdje zamijenite 'your_app_name' s odgovarajućim imenom za vašu aplikaciju
-pm2 startOrRestart ecosystem.config.js --env production --update-env
+# Ponovno pokrenite aplikaciju pomoću PM2 ili nekog drugog proces managera
+# Ako PM2 nije instaliran, možete zamijeniti s `node dist/src/main.js`
+npm start run
 
 # Skripta je uspješno završena
 echo "Ažuriranje i ponovno pokretanje uspješno završeno za frontend."
