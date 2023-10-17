@@ -14,7 +14,7 @@ module.exports = {
       production : {
         user : 'administrator', // Zamijenite s vašim SSH korisničkim imenom
         host : '77.221.21.7',
-        ref  : 'AI-optimizacija', // Zamijenite s imenom vaše produkcione grane
+        ref  : 'origin/AI-optimizacija', // Zamijenite s imenom vaše produkcione grane
         repo : 'https://github.com/mudzy992/frontend-inventory.git', // Zamijenite sa URL-om vašeg repozitorija
         path : '/home/administrator/Documents/GitHub/frontend-inventory/', // Zamijenite sa stvarnom putanjom na vašem serveru
         'post-deploy' : 'npm install && pm2 reload ecosystem.config.js --env production',
