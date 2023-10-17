@@ -28,7 +28,7 @@ export class WebhookController {
         res.status(500).send('Greška prilikom izvršavanja deploy.sh!');
         return;
       }
-      console.log(`Skripta deploy.sh je uspješno izvršena: ${stdout}`);
+      console.log(`Skripta deploy.sh za backend je uspješno izvršena: ${stdout}`);
       res.status(200).send('Webhook primljen i deployiran za backend.');
     });
   }
