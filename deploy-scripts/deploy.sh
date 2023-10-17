@@ -29,4 +29,4 @@ else
 fi
 
 # Skripta je uspješno završena
-echo "Ažuriranje i ponovno pokretanje uspješno završeno za backend."
+echo "Ažuriranje i ponovno pokretanje uspješno završeno za BackEnd."
