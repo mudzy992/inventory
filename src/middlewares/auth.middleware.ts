@@ -18,10 +18,7 @@ export class AuthMiddleware implements NestMiddleware {
     public userService: UserService,
   ) {}
   async use(req: Request, res: Response, next: NextFunction) {
-    if(req.path === '/api/webhook/github')
-    {
-      return next()
-    } else {
+    
     if (!req.headers.authorization) {
       throw new HttpException('Nema tokena', HttpStatus.UNAUTHORIZED);
     }
@@ -73,5 +70,5 @@ export class AuthMiddleware implements NestMiddleware {
 
     next();
     // Nakon što smo sve provjere završili, potrebo je AuthMiddleware implementirati u app.module.ts
-  }}
+  }
 }
