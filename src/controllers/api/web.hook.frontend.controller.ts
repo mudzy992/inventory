@@ -34,7 +34,7 @@ export class WebhookFrontendController {
   }
 
   private verifyGitHubSignature(secret: string, body: any, signature: string): boolean {
-    // Implementirajte provjeru GitHub-ovog potpisa ovdje
+    
     // Za provjeru potpisa možete koristiti crypto modul ili neki paket za tu svrhu
     // Implementacija ovisi o vašim specifičnim potrebama
     return true; // Vratite true ako je provjera uspješna
