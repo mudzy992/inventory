@@ -16,7 +16,12 @@ REPO_PATH="/home/administrator/Documents/GitHub/frontend-inventory/"
 cd $REPO_PATH
 
 # Resetirajte repozitorij na najnoviju verziju na glavnoj grani
-git reset --hard HEAD
+# git reset --hard HEAD
+# Postavite svoju produkcioni granu (npr., "main" ili "production")
+PRODUCTION_BRANCH="AI-optimizacija"
+
+# Resetirajte repozitorij na najnoviju verziju na produkcioni grani
+git checkout $PRODUCTION_BRANCH
 git pull
 
 # Instalirajte sve ovisnosti
