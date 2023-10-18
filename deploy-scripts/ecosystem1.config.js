@@ -1,7 +1,7 @@
 module.exports = {
     apps : [{
       name: 'inventory-frontend', // Zamijenite s odgovarajućim imenom za vašu aplikaciju
-      script: '/home/administrator/Documents/GitHub/frontend-inventory/node_modules/react-scripts/bin/react-scripts.js',
+      script: 'npm',
       args: 'start',
       interpreter: 'none',
       env: {
