@@ -16,9 +16,13 @@ REPO_PATH="/home/administrator/Documents/GitHub/frontend-inventory/"
 cd $REPO_PATH
 
 # Resetirajte repozitorij na najnoviju verziju na produkcioni grani
-PRODUCTION_BRANCH="AI-optimizacija"
+#PRODUCTION_BRANCH="AI-optimizacija"
 
-git checkout $PRODUCTION_BRANCH
+# Dobijte informacije o trenutnom branch-u iz webhook događaja
+BRANCH=$(echo $2 | cut -d/ -f3)
+
+git checkout $BRANCH
+#git checkout $PRODUCTION_BRANCH
 git pull
 
 # Instalirajte sve ovisnosti pomoću npm
