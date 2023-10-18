@@ -25,7 +25,7 @@ else
   npm install
 
   # Pokrenite aplikaciju pomoću PM2
-  pm2 start dist/src/main.js --name inventory-backend --watch
+  pm2 startOrRestart dist/src/main.js --name inventory-backend --watch
 fi
 
 # Skripta je uspješno završena
