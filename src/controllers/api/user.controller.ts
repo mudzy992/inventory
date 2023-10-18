@@ -36,13 +36,13 @@ import { UserService } from 'src/services/user/user.service';
         eager: true,
       },
       responsibilities: {
-        eager: true,
+        eager: false,
       },
       debtItems: {
-        eager: true,
+        eager: false,
       },
       destroyeds: {
-        eager: true,
+        eager: false,
       },
     },
   },

@@ -158,4 +158,11 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       return newArticleStock;
     }
   }
+
+  async findPaginatedArticles(offset: number, perPage: number): Promise<Article[]> {
+    return this.article.find({
+      skip: offset,
+      take: perPage,
+    });
+  }
 } /* Kraj koda */
