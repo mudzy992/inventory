@@ -14,6 +14,7 @@ REPO_PATH="Documents/GitHub/inventory/"
 
 # Navigirajte do repozitorija
 cd $REPO_PATH
+git pull
 
 # Provjerite status PM2 instance za vašu aplikaciju
 if pm2 info inventory-backend >/dev/null 2>&1; then
@@ -23,7 +24,6 @@ else
   # Ako PM2 instanca ne postoji, pokrenite novu
   # Instalacija svih dep
   npm install
-  npm run build
 
   # Pokrenite aplikaciju pomoću PM2
   pm2 start dist/src/main.js --name inventory-backend --watch
