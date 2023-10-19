@@ -23,6 +23,7 @@ else
   # Ako PM2 instanca ne postoji, pokrenite novu
   # Instalacija svih dep
   npm install
+  npm run build
 
   # Pokrenite aplikaciju pomoću PM2
   pm2 start dist/src/main.js --name inventory-backend --watch
