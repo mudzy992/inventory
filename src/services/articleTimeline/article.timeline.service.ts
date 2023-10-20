@@ -9,8 +9,22 @@ import { Repository } from 'typeorm';
 export class ArticleTimelineService extends TypeOrmCrudService<ArticleTimeline> {
   constructor(
     @InjectRepository(ArticleTimeline)
-    private readonly articleTimeline: Repository<ArticleTimeline>, //Čim spomenenom neki repozitorijum moramo da taj repozitoriju evidentiramo u našem osnovnom modulu (app.module.ts)
+    private readonly articleTimelineRepository: Repository<ArticleTimeline>, //Čim spomenenom neki repozitorijum moramo da taj repozitoriju evidentiramo u našem osnovnom modulu (app.module.ts)
   ) {
-    super(articleTimeline);
+    super(articleTimelineRepository);
   }
+
+  async findPaginatedArticlesTimeline(id: number, perPage: number, offset: number) {
+    const [results, totalResults] = await this.articleTimelineRepository.findAndCount({
+      where: { articleId: id },
+      take: perPage,
+      skip: offset,
+      relations: ['article', 'document', 'user'],
+    });
+  
+    return {
+      results,
+      total: totalResults,
+    };
+  }  
 }

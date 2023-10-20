@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
 import { AddArticleDto } from 'src/dtos/article/add.article.dto';
 import { EditFullArticleDto } from 'src/dtos/article/edit.full.article.dto';
@@ -86,15 +86,5 @@ export class ArticleController {
     return await this.service.changeStockExistArticle(id, data);
   }
 
-  @Get('/p/')
-  async findAll(
-    @Query('page') page: number = 1,
-    @Query('perPage') perPage: number = 10,
-  ): Promise<Article[]> {
-    // Računajte ofset temeljen na stranici i broju članaka po stranici
-    const offset = (page - 1) * perPage;
-
-    // Dohvatite članke koristeći paginaciju
-    return this.service.findPaginatedArticles(offset, perPage);
-  }
+  
 } /* Kraj koda */
