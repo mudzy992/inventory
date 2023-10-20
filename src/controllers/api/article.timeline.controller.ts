@@ -32,7 +32,7 @@ import { ArticleTimelineService } from 'src/services/articleTimeline/article.tim
 export class ArticleTimelineController {
   constructor(private readonly articleTimelineService: ArticleTimelineService) {}
 
-  @Get('p/:id')
+  @Get('/:id')
   async findPaginatedArticlesTimeline(
     @Param('id') id: number,
     @Query('perPage') perPage: number = 10,
