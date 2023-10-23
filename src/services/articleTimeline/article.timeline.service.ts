@@ -13,6 +13,20 @@ export class ArticleTimelineService extends TypeOrmCrudService<ArticleTimeline> 
   ) {
     super(articleTimelineRepository);
   }
+  async getAll() {
+    return this.articleTimelineRepository.find(); 
+  }
+
+  async getBySerialNumber(serialNumber: string): Promise<ArticleTimeline[] | null> {
+    const serialnumber = await this.articleTimelineRepository.find(
+      {
+        where:{ serialNumber: serialNumber }
+      });
+    if (serialnumber) {
+      return serialnumber;
+    }
+    return null;
+  }
 
   async findPaginatedArticlesTimeline(id: number, perPage: number, offset: number) {
     const [results, totalResults] = await this.articleTimelineRepository.findAndCount({

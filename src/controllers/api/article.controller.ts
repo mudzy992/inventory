@@ -37,7 +37,7 @@ import { ArticleService } from 'src/services/article/article.service';
         eager: true,
       },
       userArticles: {
-        eager: true,
+        eager: false,
       },
       responsibilities: {
         eager: false,
@@ -49,7 +49,7 @@ import { ArticleService } from 'src/services/article/article.service';
         eager: false,
       },
       documents: {
-        eager: true,
+        eager: false,
       },
     },
   },

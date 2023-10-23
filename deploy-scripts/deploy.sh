@@ -15,6 +15,7 @@ REPO_PATH="Documents/GitHub/inventory/"
 # Navigirajte do repozitorija
 cd $REPO_PATH
 git pull
+npm run build --production
 
 # Provjerite status PM2 instance za vašu aplikaciju
 if pm2 info inventory-backend >/dev/null 2>&1; then

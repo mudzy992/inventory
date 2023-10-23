@@ -17,7 +17,7 @@ import { StockService } from 'src/services/stock/stock.service';
   },
   query: {
     join: {
-      articles: {
+      stockArticle: {
         eager: true,
       },
     },

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import {  Controller, Get, Param, Query } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
 import { ArticleTimeline } from 'src/entities/ArticleTimeline';
 import { ArticleTimelineService } from 'src/services/articleTimeline/article.timeline.service';
@@ -32,7 +32,19 @@ import { ArticleTimelineService } from 'src/services/articleTimeline/article.tim
 export class ArticleTimelineController {
   constructor(private readonly articleTimelineService: ArticleTimelineService) {}
 
-  @Get('/:id')
+  @Get('all/')
+  async getAllResources() {
+    return this.articleTimelineService.getAll();
+  }
+
+  @Get('SN/:sn')
+  async getBySerialNumber(
+    @Param('sn') sn: string,
+  ) {
+    return this.articleTimelineService.getBySerialNumber(sn);
+  }
+
+  @Get('p/:id/')
   async findPaginatedArticlesTimeline(
     @Param('id') id: number,
     @Query('perPage') perPage: number = 10,

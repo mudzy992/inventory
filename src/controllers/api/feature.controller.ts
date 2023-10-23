@@ -27,7 +27,7 @@ import { EditFeatureDto } from 'src/dtos/features/edit.feature.dto';
         eager: true,
       },
       articles: {
-        eager: true,
+        eager: false,
       },
     },
   },
