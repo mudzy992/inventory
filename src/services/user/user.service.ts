@@ -29,7 +29,7 @@ export class UserService extends TypeOrmCrudService<User> {
     const passwordHashString = passwordHash.digest('hex').toUpperCase();
 
     const newUser: User = new User();
-    newUser.surname = data.surename;
+    newUser.surname = data.surname;
     newUser.forname = data.forname;
     newUser.email = data.email;
     newUser.localNumber = data.localNumber;
@@ -56,7 +56,7 @@ export class UserService extends TypeOrmCrudService<User> {
       return new ApiResponse(
         'error',
         -6001,
-        'This user account cannot be created.',
+        'This user account cannot be created.' + e.message,
       );
     }
   }

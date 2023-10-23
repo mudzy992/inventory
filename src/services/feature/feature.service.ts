@@ -29,7 +29,7 @@ export class FeatureService extends TypeOrmCrudService<Feature> {
 
     return await this.findOne({
       where: {featureId: savedFeature.featureId},
-      relations: ['articleFeature', 'category', 'articles'],
+      relations: ['articleFeatures', 'category'],
     })
   }
 
@@ -38,7 +38,7 @@ export class FeatureService extends TypeOrmCrudService<Feature> {
 
 
     return await this.findOne( {
-      relations: ['articleFeature',' category',]
+      relations: ['articleFeatures',' category',]
     })
   }
 }

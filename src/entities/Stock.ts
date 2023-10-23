@@ -35,7 +35,4 @@ export class Stock {
 
   @OneToMany(() => Article, (article) => article.stock)
   articles: Article[];
-
-  @OneToMany(() => Article, (article) => article.stock_2)
-  articles2: Article[];
 }

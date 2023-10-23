@@ -3,15 +3,14 @@ import * as Validator from 'class-validator';
 export class AddNewEmployeDto {
   @Validator.IsNotEmpty()
   @Validator.IsString()
-  @Validator.Length(2, 64)
-  surename: string;
+  @Validator.Length(2, 255)
+  surname: string;
 
   @Validator.IsNotEmpty()
   @Validator.IsString()
-  @Validator.Length(2, 64)
+  @Validator.Length(2, 255)
   forname: string;
 
-  @Validator.IsNotEmpty()
   @Validator.IsEmail({
     allow_ip_domain: false,
     allow_utf8_local_part: true,
@@ -20,12 +19,12 @@ export class AddNewEmployeDto {
   email: string;
 
   @Validator.IsString()
-  @Validator.Length(2, 64)
+  @Validator.Length(2, 50)
   localNumber: string;
 
   @Validator.IsString()
-  @Validator.Length(2, 64)
-  telephone: string;
+  @Validator.Length(2, 50)
+  telephone: string | null; // Since it's nullable in the entity
 
   @Validator.IsNumber()
   departmentId: number;
@@ -40,4 +39,9 @@ export class AddNewEmployeDto {
   @Validator.IsString()
   @Validator.Length(6, 12)
   password: string;
+
+  @Validator.IsIn(['aktivan', 'neaktivan'])
+  status: 'aktivan' | 'neaktivan';
+
+  // You can include additional fields if needed
 }

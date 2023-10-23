@@ -4,8 +4,8 @@ import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { AddArticleDto } from 'src/dtos/article/add.article.dto';
 
 import { Article } from 'src/entities/Article';
-import { ArticleFeature } from 'src/entities1/ArticleFeature';
-import { Stock } from 'src/entities1/Stock';
+import { ArticleFeature } from 'src/entities/ArticleFeature';
+import { Stock } from 'src/entities/Stock';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository } from 'typeorm';
 
@@ -86,7 +86,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     /* Vrati artikal na prikaz */
     return await this.findOne({ 
       where: { articleId: savedArticle.articleId },
-      relations: ['category', 'articleFeature', 'features', 'articlesInStock'],
+      relations: ['user', 'stock', 'stock_2', 'articleFeatures', 'articleTimelines', 'documents', 'upgradeFeatures'],
     });
     
   } /* Kraj metoda za kreiranje novog artikla */
@@ -100,7 +100,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     return null;
   }
 
-//   async editFullArticle(
+//   async editArticle(
 //     articleId: number,
 //     data: EditFullArticleDto,
 //   ): Promise<Article | ApiResponse> {

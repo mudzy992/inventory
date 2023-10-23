@@ -17,11 +17,12 @@ export class StockService extends TypeOrmCrudService<Stock> {
     super(stockRepository);
   }
 
-  async addStock(newStock: AddStockDto): Promise<ApiResponse> {
+  async addStock(newStock: AddStockDto): Promise<Stock | ApiResponse> {
     try {
       const stock = this.stockRepository.create(newStock);
       await this.stockRepository.save(stock);
-      return new ApiResponse('ok', 200, 'Artikal uspješno dodan na skladište.');
+      new ApiResponse('ok', 200, 'Artikal uspješno dodan na skladište.');
+      return stock
     } catch (error) {
       return new ApiResponse('error', -1000, 'Greška prilikom dodavanja artikla na skladište.');
     }

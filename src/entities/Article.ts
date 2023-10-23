@@ -61,18 +61,11 @@ export class Article {
   user: User;
 
   @ManyToOne(() => Stock, (stock) => stock.articles, {
-    onDelete: "NO ACTION",
-    onUpdate: "NO ACTION",
-  })
-  @JoinColumn([{ name: "stock_id", referencedColumnName: "stockId" }])
-  stock: Stock;
-
-  @ManyToOne(() => Stock, (stock) => stock.articles2, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
   @JoinColumn([{ name: "stock_id", referencedColumnName: "stockId" }])
-  stock_2: Stock;
+  stock: Stock;
 
   @OneToMany(() => ArticleFeature, (articleFeature) => articleFeature.article)
   articleFeatures: ArticleFeature[];

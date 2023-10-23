@@ -7,7 +7,7 @@ import { ApiResponse } from 'src/misc/api.response.class';
 import { StockService } from 'src/services/stock/stock.service';
 
 
-@Controller('stock')
+@Controller('api/stock')
 @Crud({
   model: {
     type: Stock,
@@ -33,7 +33,7 @@ export class StockController {
   }
 
   @Post()
-  async addStock(@Body() newStock: AddStockDto): Promise<ApiResponse> {
+  async addStock(@Body() newStock: AddStockDto): Promise<Stock | ApiResponse> {
     return this.stockService.addStock(newStock);
   }
 

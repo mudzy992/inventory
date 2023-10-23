@@ -6,7 +6,7 @@ import * as crypto from 'crypto';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { AddAdministratorDto } from 'src/dtos/administrator/add.administrator.dto';
 import { EditAdministratorDto } from './edit.administrator.dto';
-import { AdministratorToken } from 'src/entities1/AdministratorToken';
+import { AdministratorToken } from 'src/entities/AdministratorToken';
 
 @Injectable()
 export class AdministratorService {

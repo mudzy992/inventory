@@ -28,10 +28,10 @@ export class AdministratorToken {
   token: string;
 
   @Column("timestamp", { name: "expire_at", nullable: true })
-  expireAt: Date | null;
+  expireAt: string | null;
 
   @Column("tinyint", { name: "is_valid", nullable: true, width: 1 })
-  isValid: boolean | null;
+  isValid: number | null;
 
   @ManyToOne(
     () => Administrator,
