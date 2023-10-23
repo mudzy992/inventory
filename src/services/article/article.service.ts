@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { AddArticleDto } from 'src/dtos/article/add.article.dto';
-import { EditFullArticleDto } from 'src/dtos/article/edit.full.article.dto';
+
 import { Article } from 'src/entities/Article';
-import { ArticleFeature } from 'src/entities/ArticleFeature';
-import { Stock } from 'src/entities/Stock';
+import { ArticleFeature } from 'src/entities1/ArticleFeature';
+import { Stock } from 'src/entities1/Stock';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository } from 'typeorm';
 
@@ -29,20 +29,44 @@ export class ArticleService extends TypeOrmCrudService<Article> {
   Kao što vidimo vraća nam full artikal, a mi znamo da u tom full artiklu imamo cijenu, features, slike koji nam trebaju
   I to nije problem, jer ćemo dobiti articleId koji će biti na awaitu, i na osnovu tog articleId ćemo pridružiti cijenu, features, slike */
 
-  async createNewArticleInStock(
+  async addNewArticle(
+    stockId: number,
     data: AddArticleDto,
   ): Promise<Article | ApiResponse> {
+    const existingStock = await this.stock.findOne({where:{stockId: stockId}});
+
+    const existingArticle = await this.article.findOne({ 
+      where:{serialNumber : data.serialNumber}
+    });
+
+    if(existingArticle) {
+      if(existingArticle.status === "zaduženo"){
+        return new ApiResponse('error', -2001, "Artikal je već zadužen na " + existingArticle.user.fullname)
+      }
+      return new ApiResponse('error', -2002, 'Artikal već postoji, ali nije zadužen. Status: ' + existingArticle.status)
+    }
     const newArticle: Article = new Article();
-    newArticle.name = data.name;
-    newArticle.categoryId = data.categoryId;
-    newArticle.excerpt = data.excerpt;
-    newArticle.description = data.description;
-    newArticle.concract = data.concract;
-    newArticle.sapNumber = data.sap_number;
+    newArticle.serialNumber = data.serialNumber;
+    newArticle.invNumber = data.invNumber;
+    newArticle.userId = data.userId;
+    newArticle.documentId = data.documentId;
+    newArticle.status = data.status;
+    newArticle.stockId = stockId;
+    newArticle.comment = data.comment;
     /* Sada kada smo kreirali artikal, njega je potrebno snimiti u neku konstantu i čuvati ga na await 
       to radimo u ovom trenutku jer ćemo tako dobiti articleId, već ovdje artikal ide u bazu podataka (na returnu)*/
 
     const savedArticle = await this.article.save(newArticle);
+
+    if(data.status === 'zaduženo'){
+      await this.stock.update(existingStock, {
+        valueAvailable: existingStock.valueAvailable - 1
+      })
+    } else if (data.status === 'razduženo') {
+      await this.stock.update(existingStock, {
+        valueAvailable: existingStock.valueAvailable + 1
+      })
+    }
     /* Dodati taj artikal u skladište */
 
     /* sada kada imamo articleId smješteno u savedArticle možemo za taj artikal dodati feature i njih snimiti isto u neku konstantu
@@ -58,14 +82,6 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       /* Uraditi snimanje tog articleFeatures */
       await this.articleFeature.save(newArticleFeatures);
     }
-
-    const newArticleInStock: Stock = new Stock();
-    newArticleInStock.articleId = savedArticle.articleId;
-    newArticleInStock.valueOnConcract = data.stock.valueOnConcract;
-    newArticleInStock.valueAvailable = data.stock.valueAvailable;
-    newArticleInStock.sapNumber = data.sap_number;
-
-    await this.stock.save(newArticleInStock);
 
     /* Vrati artikal na prikaz */
     return await this.findOne({ 
@@ -84,80 +100,80 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     return null;
   }
 
-  async editFullArticle(
-    articleId: number,
-    data: EditFullArticleDto,
-  ): Promise<Article | ApiResponse> {
-    const existingArticle: Article = await this.article.findOne({where:{articleId: articleId}})
-    if (!existingArticle) {
-      return new ApiResponse('error', -1001, 'Artikal ne postoji u skladištu');
-    }
-    if (data.details !== null) {
-      this.article.update(existingArticle, {
-          name : data.details.name,
-          categoryId : data.categoryId,
-          excerpt : data.details.excerpt,
-          description : data.details.description,
-          concract : data.details.concract,
-        })
-        const savedArticle = await this.article.save(existingArticle);
+//   async editFullArticle(
+//     articleId: number,
+//     data: EditFullArticleDto,
+//   ): Promise<Article | ApiResponse> {
+//     const existingArticle: Article = await this.article.findOne({where:{articleId: articleId}})
+//     if (!existingArticle) {
+//       return new ApiResponse('error', -1001, 'Artikal ne postoji u skladištu');
+//     }
+//     if (data.details !== null) {
+//       this.article.update(existingArticle, {
+//           name : data.details.name,
+//           categoryId : data.categoryId,
+//           excerpt : data.details.excerpt,
+//           description : data.details.description,
+//           concract : data.details.concract,
+//         })
+//         const savedArticle = await this.article.save(existingArticle);
 
-        if (!savedArticle) {
-          return new ApiResponse('error', -1002, 'Artikal nije moguće spasiti');
-        }
-    }
+//         if (!savedArticle) {
+//           return new ApiResponse('error', -1002, 'Artikal nije moguće spasiti');
+//         }
+//     }
     
-    if (data.stock !== null) {
-      const existingArticleInStock = await this.stock.findOne({where:{articleId : articleId}})
-      this.stock.update(existingArticleInStock, {
-        valueOnConcract : data.stock.valueOnConcract,
-        valueAvailable : data.stock.valueAvailable,
-        sapNumber : data.stock.sap_number,
-      })
-    }
+//     if (data.stock !== null) {
+//       const existingArticleInStock = await this.stock.findOne({where:{articleId : articleId}})
+//       this.stock.update(existingArticleInStock, {
+//         valueOnConcract : data.stock.valueOnConcract,
+//         valueAvailable : data.stock.valueAvailable,
+//         sapNumber : data.stock.sap_number,
+//       })
+//     }
 
-     if (data.features !== null) {
-       await this.articleFeature.remove(await this.articleFeature.findOne({where:{articleId : articleId}}));
-      for (const feature of data.features) {
-        const newArticleFeature: ArticleFeature = new ArticleFeature();
-        newArticleFeature.articleId = articleId;
-        newArticleFeature.featureId = feature.featureId;
-        newArticleFeature.value = feature.value;
-        await this.articleFeature.save(newArticleFeature);
-      } 
-    }
+//      if (data.features !== null) {
+//        await this.articleFeature.remove(await this.articleFeature.findOne({where:{articleId : articleId}}));
+//       for (const feature of data.features) {
+//         const newArticleFeature: ArticleFeature = new ArticleFeature();
+//         newArticleFeature.articleId = articleId;
+//         newArticleFeature.featureId = feature.featureId;
+//         newArticleFeature.value = feature.value;
+//         await this.articleFeature.save(newArticleFeature);
+//       } 
+//     }
 
-    return await this.findOne(
-      {where:{articleId:articleId},
-      relations: [
-        'category',
-        'articleFeature',
-        'features',
-        'articlesInStock',
-      ],
-    });
+//     return await this.findOne(
+//       {where:{articleId:articleId},
+//       relations: [
+//         'category',
+//         'articleFeature',
+//         'features',
+//         'articlesInStock',
+//       ],
+//     });
   
-  }
- async changeStockExistArticle(
-    articleId: number,
-    data: AddArticleDto,
-  ): Promise<Stock> {
-    const existingStockArticle = await this.stock.findOne({where:{
-      articleId: articleId,
-    }});
-    if (existingStockArticle) {
-      await this.stock.remove(
-        await this.stock.findOne({where:{ articleId: articleId }}),
-      );
-      const newArticleStock: Stock = new Stock();
-      newArticleStock.articleId = articleId;
-      newArticleStock.valueOnConcract = data.stock.valueOnConcract;
-      newArticleStock.valueAvailable = data.stock.valueAvailable;
-      newArticleStock.sapNumber = data.sap_number;
-      await this.stock.save(newArticleStock);
-      return newArticleStock;
-    }
-  }
+//   }
+//  async changeStockExistArticle(
+//     articleId: number,
+//     data: AddArticleDto,
+//   ): Promise<Stock> {
+//     const existingStockArticle = await this.stock.findOne({where:{
+//       articleId: articleId,
+//     }});
+//     if (existingStockArticle) {
+//       await this.stock.remove(
+//         await this.stock.findOne({where:{ articleId: articleId }}),
+//       );
+//       const newArticleStock: Stock = new Stock();
+//       newArticleStock.articleId = articleId;
+//       newArticleStock.valueOnConcract = data.stock.valueOnConcract;
+//       newArticleStock.valueAvailable = data.stock.valueAvailable;
+//       newArticleStock.sapNumber = data.sap_number;
+//       await this.stock.save(newArticleStock);
+//       return newArticleStock;
+//     }
+//   }
 
   
 } /* Kraj koda */

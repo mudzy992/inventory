@@ -7,75 +7,67 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Article } from "./Article";
-import { Documents } from "./Documents";
 import { User } from "./User";
+import { Documents } from "./Documents";
 
-@Index("fk_article_timeline_article", ["articleId"], {})
-@Index("fk_article_timeline_documents", ["documentId"], {})
-@Index("fk_article_timeline_user", ["userId"], {})
-@Index(
-  "serial_number_status_timestamp",
-  ["serialNumber", "status", "timestamp"],
-  { unique: true }
-)
-@Entity("article_timeline", { schema: "inventory" })
+@Index("article_id", ["articleId"], {})
+@Index("user_id", ["userId"], {})
+@Index("document_id", ["documentId"], {})
+@Entity("article_timeline", { schema: "inventory_v2" })
 export class ArticleTimeline {
-  @PrimaryGeneratedColumn({
-    type: "int",
-    name: "article_timeline_id",
-    unsigned: true,
-  })
+  @PrimaryGeneratedColumn({ type: "int", name: "article_timeline_id" })
   articleTimelineId: number;
 
-  @Column("int", { name: "article_id", unsigned: true })
+  @Column("int", { name: "article_id" })
   articleId: number;
 
-  @Column("int", { name: "user_id", unsigned: true })
+  @Column("int", { name: "user_id" })
   userId: number;
 
-  @Column("int", { name: "document_id", unsigned: true })
+  @Column("int", { name: "document_id" })
   documentId: number;
 
-  @Column("varchar", { name: "serial_number", length: 50 })
-  serialNumber: string;
+  @Column("varchar", { name: "serial_number", nullable: true, length: 50 })
+  serialNumber: string | null;
 
   @Column("enum", {
     name: "status",
+    nullable: true,
     enum: ["zaduženo", "razduženo", "otpisano"],
-    default: () => "'zaduženo'",
   })
-  status: "zaduženo" | "razduženo" | "otpisano";
+  status: "zaduženo" | "razduženo" | "otpisano" | null;
 
   @Column("timestamp", {
     name: "timestamp",
+    nullable: true,
     default: () => "CURRENT_TIMESTAMP",
   })
-  timestamp: Date;
+  timestamp: Date | null;
 
-  @Column("varchar", { name: "inv_broj", length: 50 })
-  invBroj: string;
+  @Column("varchar", { name: "inv_number", nullable: true, length: 50 })
+  invNumber: string | null;
 
-  @Column("varchar", { name: "comment", nullable: true, length: 250 })
+  @Column("text", { name: "comment", nullable: true })
   comment: string | null;
 
   @ManyToOne(() => Article, (article) => article.articleTimelines, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "article_id", referencedColumnName: "articleId" }])
   article: Article;
 
-  @ManyToOne(() => Documents, (documents) => documents.articleTimelines, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
-  })
-  @JoinColumn([{ name: "document_id", referencedColumnName: "documentsId" }])
-  document: Documents;
-
   @ManyToOne(() => User, (user) => user.articleTimelines, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "user_id", referencedColumnName: "userId" }])
   user: User;
+
+  @ManyToOne(() => Documents, (documents) => documents.articleTimelines, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
+  @JoinColumn([{ name: "document_id", referencedColumnName: "documentsId" }])
+  document: Documents;
 }

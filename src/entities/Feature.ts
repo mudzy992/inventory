@@ -3,47 +3,32 @@ import {
   Entity,
   Index,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Article } from './Article';
-import { ArticleFeature } from './ArticleFeature';
-import { Category } from './Category';
+} from "typeorm";
+import { ArticleFeature } from "./ArticleFeature";
+import { Category } from "./Category";
 
-@Index('fk_feature_category_id', ['categoryId'], {})
-@Entity('feature')
+@Index("category_id", ["categoryId"], {})
+@Entity("feature", { schema: "inventory_v2" })
 export class Feature {
-  [x: string]: any;
-  @PrimaryGeneratedColumn({ type: 'int', name: 'feature_id', unsigned: true })
+  @PrimaryGeneratedColumn({ type: "int", name: "feature_id" })
   featureId: number;
 
-  @Column('int', { name: 'category_id' })
-  categoryId: number;
-
-  @Column('varchar', { name: 'name', length: 255 })
+  @Column("varchar", { name: "name", length: 255 })
   name: string;
 
+  @Column("int", { name: "category_id" })
+  categoryId: number;
+
   @OneToMany(() => ArticleFeature, (articleFeature) => articleFeature.feature)
-  articleFeature: ArticleFeature;
+  articleFeatures: ArticleFeature[];
 
   @ManyToOne(() => Category, (category) => category.features, {
-    onDelete: 'RESTRICT',
-    onUpdate: 'CASCADE',
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
   })
-  @JoinColumn([{ name: 'category_id', referencedColumnName: 'categoryId' }])
+  @JoinColumn([{ name: "category_id", referencedColumnName: "categoryId" }])
   category: Category;
-
-  @ManyToMany((type) => Article, (article) => article.features)
-  @JoinTable({
-    name: 'article_feature',
-    joinColumn: { name: 'feature_id', referencedColumnName: 'featureId' },
-    inverseJoinColumn: {
-      name: 'article_id',
-      referencedColumnName: 'articleId',
-    },
-  })
-  articles: Article[];
 }

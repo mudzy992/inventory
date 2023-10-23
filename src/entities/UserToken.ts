@@ -1,29 +1,42 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { User } from "./User";
 
-@Entity('user_token')
+@Index("user_id", ["userId"], {})
+@Entity("user_token", { schema: "inventory_v2" })
 export class UserToken {
-  @PrimaryGeneratedColumn({
-    type: 'int',
-    name: 'user_token_id',
-    unsigned: true,
-  })
+  @PrimaryGeneratedColumn({ type: "int", name: "user_token_id" })
   userTokenId: number;
 
-  @Column('int', { name: 'user_id', unsigned: true })
-  userId: number;
+  @Column("int", { name: "user_id", nullable: true })
+  userId: number | null;
 
-  @Column('timestamp', {
-    name: 'created_at',
-    default: () => 'CURRENT_TIMESTAMP',
+  @Column("timestamp", {
+    name: "created_at",
+    nullable: true,
+    default: () => "CURRENT_TIMESTAMP",
   })
-  createdAt: Date;
+  createdAt: Date | null;
 
-  @Column('varchar', { name: 'token', length: 2550 })
+  @Column("varchar", { name: "token", length: 255 })
   token: string;
 
-  @Column('datetime', { name: 'expire_at' })
+  @Column("timestamp", { name: "expire_at", nullable: true })
   expireAt: string;
 
-  @Column('tinyint', { name: 'is_valid', default: () => "'1'" })
-  isValid: number;
+  @Column("tinyint", { name: "is_valid", nullable: true, width: 1 })
+  isValid: number | null;
+
+  @ManyToOne(() => User, (user) => user.userTokens, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
+  @JoinColumn([{ name: "user_id", referencedColumnName: "userId" }])
+  user: User;
 }

@@ -6,40 +6,30 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Article } from './Article';
-import { Feature } from './Feature';
+} from "typeorm";
+import { Feature } from "./Feature";
 
-@Index('uq_category_name', ['name'], { unique: true })
-@Index('uq_category_image_path', ['imagePath'], { unique: true })
-@Index('fk_category_parent__category_id', ['parentCategoryId'], {})
-@Entity('category')
+@Index("parent_category_id", ["parentCategoryId"], {})
+@Entity("category", { schema: "inventory_v2" })
 export class Category {
-  @PrimaryGeneratedColumn({ type: 'int', name: 'category_id', unsigned: true })
+  @PrimaryGeneratedColumn({ type: "int", name: "category_id" })
   categoryId: number;
 
-  @Column('varchar', { name: 'name', unique: true, length: 32 })
+  @Column("varchar", { name: "name", length: 255 })
   name: string;
 
-  @Column('varchar', { name: 'image_path', unique: true, length: 128 })
-  imagePath: string;
+  @Column("varchar", { name: "image_path", nullable: true, length: 255 })
+  imagePath: string | null;
 
-  @Column('int', {
-    name: 'parent__category_id',
-    nullable: true,
-    unsigned: true,
-  })
+  @Column("int", { name: "parent_category_id", nullable: true })
   parentCategoryId: number | null;
 
-  @OneToMany(() => Article, (article) => article.category)
-  articles: Article[];
-
   @ManyToOne(() => Category, (category) => category.categories, {
-    onDelete: 'RESTRICT',
-    onUpdate: 'CASCADE',
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
   })
   @JoinColumn([
-    { name: 'parent__category_id', referencedColumnName: 'categoryId' },
+    { name: "parent_category_id", referencedColumnName: "categoryId" },
   ])
   parentCategory: Category;
 

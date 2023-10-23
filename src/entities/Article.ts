@@ -3,61 +3,79 @@ import {
   Entity,
   Index,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Category } from "./Category";
+import { User } from "./User";
+import { Stock } from "./Stock";
 import { ArticleFeature } from "./ArticleFeature";
 import { ArticleTimeline } from "./ArticleTimeline";
-import { DebtItems } from "./DebtItems";
-import { Destroyed } from "./Destroyed";
 import { Documents } from "./Documents";
-import { Responsibility } from "./Responsibility";
-import { Stock } from "./Stock";
 import { UpgradeFeature } from "./UpgradeFeature";
-import { UserArticle } from "./UserArticle";
-import { User } from "./User";
-import { Feature } from "./Feature";
 
-@Index("fk_article_category_id", ["categoryId"], {})
-@Entity("article", { schema: "inventory" })
+@Index("user_id", ["userId"], {})
+@Index("fk_article_stock", ["stockId"], {})
+@Entity("article", { schema: "inventory_v2" })
 export class Article {
-  @PrimaryGeneratedColumn({ type: "int", name: "article_id", unsigned: true })
+  @PrimaryGeneratedColumn({ type: "int", name: "article_id" })
   articleId: number;
 
-  @Column("varchar", { name: "name", length: 255, default: () => "'0'" })
-  name: string;
+  @Column("varchar", { name: "serial_number", nullable: true, length: 50 })
+  serialNumber: string | null;
 
-  @Column("varchar", { name: "excerpt", length: 255, default: () => "'0'" })
-  excerpt: string;
+  @Column("varchar", { name: "inv_number", nullable: true, length: 50 })
+  invNumber: string | null;
 
-  @Column("varchar", { name: "description", length: 450, default: () => "'0'" })
-  description: string;
+  @Column("int", { name: "user_id" })
+  userId: number;
 
-  @Column("varchar", { name: "concract", length: 255, default: () => "'0'" })
-  concract: string;
+  @Column("int", { name: "document_id" })
+  documentId: number;
 
-  @Column("int", { name: "category_id", unsigned: true, default: () => "'0'" })
-  categoryId: number;
+  @Column("enum", {
+    name: "status",
+    nullable: true,
+    enum: ["zaduženo", "razduženo", "otpisano"],
+  })
+  status: "zaduženo" | "razduženo" | "otpisano" | null;
 
-  @Column("varchar", { name: "comment", nullable: true, length: 255 })
+  @Column("timestamp", {
+    name: "timestamp",
+    nullable: true,
+    default: () => "CURRENT_TIMESTAMP",
+  })
+  timestamp: Date | null;
+
+  @Column("int", { name: "stock_id", nullable: true })
+  stockId: number | null;
+
+  @Column("varchar", { name: "comment", nullable: true, length: 500 })
   comment: string | null;
 
-  @Column("varchar", { name: "sap_number", length: 50, default: () => "'0'" })
-  sapNumber: string;
+  @ManyToOne(() => User, (user) => user.articles, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
+  @JoinColumn([{ name: "user_id", referencedColumnName: "userId" }])
+  user: User;
 
-  @ManyToOne(() => Category, (category) => category.articles, {
-    onDelete: "RESTRICT",
+  @ManyToOne(() => Stock, (stock) => stock.articles, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
+  @JoinColumn([{ name: "stock_id", referencedColumnName: "stockId" }])
+  stock: Stock;
+
+  @ManyToOne(() => Stock, (stock) => stock.articles2, {
+    onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
-  @JoinColumn([{ name: "category_id", referencedColumnName: "categoryId" }])
-  category: Category;
+  @JoinColumn([{ name: "stock_id", referencedColumnName: "stockId" }])
+  stock_2: Stock;
 
   @OneToMany(() => ArticleFeature, (articleFeature) => articleFeature.article)
-  articleFeature: ArticleFeature[];
+  articleFeatures: ArticleFeature[];
 
   @OneToMany(
     () => ArticleTimeline,
@@ -65,50 +83,9 @@ export class Article {
   )
   articleTimelines: ArticleTimeline[];
 
-  @OneToMany(() => DebtItems, (debtItems) => debtItems.article)
-  debtItems: DebtItems[];
-
-  @OneToMany(() => Destroyed, (destroyed) => destroyed.article)
-  destroyeds: Destroyed[];
-
   @OneToMany(() => Documents, (documents) => documents.article)
   documents: Documents[];
 
-  @OneToMany(() => Responsibility, (responsibility) => responsibility.article)
-  responsibilities: Responsibility[];
-
-  @ManyToOne(() => Stock, (stock) => stock.stockArticle, {
-    onDelete: 'RESTRICT',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn([{ name: 'article_id', referencedColumnName: 'articleId' }])
-  articlesInStock: Stock;
-
   @OneToMany(() => UpgradeFeature, (upgradeFeature) => upgradeFeature.article)
   upgradeFeatures: UpgradeFeature[];
-
-  @OneToMany(() => UserArticle, (userArticle) => userArticle.article)
-  userArticles: UserArticle[];
-
-  @ManyToMany(() => User, (user) => user.articles)
-  @JoinTable({
-    name: 'user_article',
-    joinColumn: { name: 'article_id', referencedColumnName: 'articleId' },
-    inverseJoinColumn: {
-      name: 'user_id',
-      referencedColumnName: 'userId',
-    },
-  })
-  userDetails: User[];
-
-  @ManyToMany((type) => Feature, (feature) => feature.articles)
-  @JoinTable({
-    name: 'article_feature',
-    joinColumn: { name: 'article_id', referencedColumnName: 'articleId' },
-    inverseJoinColumn: {
-      name: 'feature_id',
-      referencedColumnName: 'featureId',
-    },
-  })
-  features: Feature[];
 }

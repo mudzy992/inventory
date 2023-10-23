@@ -1,16 +1,26 @@
-import { ArticleDetailsDto } from './article.details.dto';
-import { ArticleFeatureComponentDto } from './article.feature.component.dto';
-import { ArticleStockComponentDto } from './article.stock.component.dto';
+import { IsOptional, IsString, IsInt, IsEnum } from 'class-validator';
 
-export class EditFullArticleDto {
-  categoryId: number;
-  details: ArticleDetailsDto | null;
-/*   name: string | null;
-  categoryId: number | null;
-  excerpt: string | null;
-  description: string | null;
-  concract: string | null;
-  comment: string | null; */
-  stock: ArticleStockComponentDto | null;
-  features: ArticleFeatureComponentDto[] | null;
+export class EditArticleDto {
+  @IsString()
+  @IsOptional()
+  serialNumber?: string;
+
+  @IsString()
+  @IsOptional()
+  invNumber?: string;
+
+  @IsInt()
+  @IsOptional()
+  userId?: number;
+
+  @IsInt()
+  @IsOptional()
+  documentId?: number;
+
+  @IsEnum(['zaduženo', 'razduženo', 'otpisano'], { each: true })
+  @IsOptional()
+  status?: 'zaduženo' | 'razduženo' | 'otpisano';
+
+  @IsOptional()
+  features?: Array<{ featureId: number; value: string }>;
 }

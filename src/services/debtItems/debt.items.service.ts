@@ -14,7 +14,7 @@ import { Documents } from 'src/entities/Documents';
 import { StorageConfig } from 'config/storage.config';
 import { writeFileSync, readFileSync } from 'fs';
 import createReport from 'docx-templates';
-import { Article } from 'src/entities/Article';
+import { Article } from 'src/entities1/Article';
 
 @Injectable()
 export class DebtItemsService extends TypeOrmCrudService<DebtItems> {
