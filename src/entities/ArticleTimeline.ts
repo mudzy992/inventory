@@ -24,7 +24,7 @@ export class ArticleTimeline {
   @Column("int", { name: "user_id" })
   userId: number;
 
-  @Column("int", { name: "document_id" })
+  @Column("int", { name: "document_id", })
   documentId: number;
 
   @Column("varchar", { name: "serial_number", nullable: true, length: 50 })

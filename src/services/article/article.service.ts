@@ -50,55 +50,121 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     }
 
     const existingArticle = await this.article.findOne({ 
-      where:{serialNumber : data.serialNumber}
+      where:{serialNumber : data.serialNumber},
+      relations: ['user', 'stock'] 
     });
 
-    if(existingArticle) {
-      if(existingArticle.status === "zaduženo" ){
-        return new ApiResponse('error', -2001, "Artikal je već zadužen")
-      } else if(existingArticle.status === 'razduženo'){
-      return new ApiResponse('error', -2002, 'Artikal već postoji, ali nije zadužen.')
-    }
-    }
-    const newArticle: Article = new Article();
-    newArticle.serialNumber = data.serialNumber;
-    newArticle.invNumber = data.invNumber;
-    newArticle.userId = data.userId;
-    newArticle.status = data.status;
-    newArticle.stockId = stockId;
-    newArticle.comment = data.comment;
-    /* Sada kada smo kreirali artikal, njega je potrebno snimiti u neku konstantu i čuvati ga na await 
-      to radimo u ovom trenutku jer ćemo tako dobiti articleId, već ovdje artikal ide u bazu podataka (na returnu)*/
+    let predao: string;
+    let preuzeo: string;
+    if (existingArticle){
+      if (data.status === 'zaduženo' && existingArticle.status === 'zaduženo') {
+        predao = existingArticle.user.fullname;
+        const preuzeoKorisnik = await this.user.findOne({ where: { userId: data.userId } });
+        preuzeo = preuzeoKorisnik.fullname;
 
-    const savedArticle = await this.article.save(newArticle);
+        await this.article.update(existingArticle.articleId, { userId: data.userId, status: 'zaduženo' });
+        await this.createDocument( 
+          existingArticle.articleId, 
+          data.comment, 
+          existingStock.name,
+          data.invNumber,
+          predao,
+          preuzeo)
 
-    existingStock.valueAvailable = existingStock.valueAvailable -1;
-    await this.stock.save(existingStock);  
+          return await this.findOne({ 
+            where: { articleId: existingArticle.articleId },
+          });
+      } else if (data.status === 'razduženo' && existingArticle.status === 'zaduženo') {
+        predao = existingArticle.user.fullname;
+        preuzeo = 'Skladište';
+
+        await this.article.update(existingArticle.articleId, { userId: null, status: 'razduženo'});
+        await this.createDocument( 
+          existingArticle.articleId, 
+          data.comment, 
+          existingStock.name,
+          data.invNumber,
+          predao,
+          preuzeo);
+
+          existingStock.valueAvailable = existingStock.valueAvailable +1;
+          await this.stock.save(existingStock);  
+
+          return await this.findOne({ 
+            where: { articleId: existingArticle.articleId },
+          });
+      }
     
-    await this.createDocument(data.userId, 38, data.status, data.comment)
-    
-    /* Dodati taj artikal u skladište */
+      if (data.status === 'zaduženo' && existingArticle.status === 'razduženo') {
+        predao = 'Skladište';
+        const preuzeoKorisnik = await this.user.findOne({ where: { userId: data.userId } });
+        preuzeo = preuzeoKorisnik.fullname;
 
-    /* sada kada imamo articleId smješteno u savedArticle možemo za taj artikal dodati feature i njih snimiti isto u neku konstantu
-      pošto je features jedan niz podataka (tako smo naveli u Dto, ali i planirali u bazi, artikal može imati više features-a) 
-      tu se koristi for petlja konstrukcije za svaki varijantu feature dodaj određeni podatak i vrti u krug */
+        await this.article.update(existingArticle.articleId, { userId: data.userId, status: 'zaduženo' });
+        await this.createDocument( 
+          existingArticle.articleId, 
+          data.comment, 
+          existingStock.name,
+          data.invNumber,
+          predao,
+          preuzeo)
 
-    for (const feature of data.features) {
-      /* Ali kao što je i slučaj iznad features-e smještamo isto u jednu konstantu */
-      const newArticleFeatures: ArticleFeature = new ArticleFeature();
-      newArticleFeatures.articleId = savedArticle.articleId;
-      newArticleFeatures.featureId = feature.featureId;
-      newArticleFeatures.value = feature.value;
-      /* Uraditi snimanje tog articleFeatures */
-      await this.articleFeature.save(newArticleFeatures);
+          return await this.findOne({ 
+            where: { articleId: existingArticle.articleId },
+          });
+      }
     }
+  
+    if (!existingArticle && data.status === 'zaduženo') {
+      predao = 'Skladište';
+      const preuzeoKorisnik = await this.user.findOne({ where: { userId: data.userId } });
+      preuzeo = preuzeoKorisnik.fullname;
 
-    /* Vrati artikal na prikaz */
-    return await this.findOne({ 
-      where: { articleId: savedArticle.articleId },
-      relations: ['user', 'stock', 'articleFeatures', 'articleTimelines', 'documents', 'upgradeFeatures'],
-    });
+
+      const newArticle: Article = new Article();
+      newArticle.serialNumber = data.serialNumber;
+      newArticle.invNumber = data.invNumber;
+      newArticle.userId = data.userId;
+      newArticle.status = data.status;
+      newArticle.stockId = stockId;
+      newArticle.comment = data.comment;
+      /* Sada kada smo kreirali artikal, njega je potrebno snimiti u neku konstantu i čuvati ga na await 
+        to radimo u ovom trenutku jer ćemo tako dobiti articleId, već ovdje artikal ide u bazu podataka (na returnu)*/
+
+      const savedArticle = await this.article.save(newArticle);
+
+      existingStock.valueAvailable = existingStock.valueAvailable -1;
+      await this.stock.save(existingStock);  
     
+        await this.createDocument( 
+          savedArticle.articleId, 
+          data.comment, 
+          existingStock.name,
+          data.invNumber,
+          predao,
+          preuzeo) 
+      /* Dodati taj artikal u skladište */
+
+      /* sada kada imamo articleId smješteno u savedArticle možemo za taj artikal dodati feature i njih snimiti isto u neku konstantu
+        pošto je features jedan niz podataka (tako smo naveli u Dto, ali i planirali u bazi, artikal može imati više features-a) 
+        tu se koristi for petlja konstrukcije za svaki varijantu feature dodaj određeni podatak i vrti u krug */
+
+      for (const feature of data.features) {
+        /* Ali kao što je i slučaj iznad features-e smještamo isto u jednu konstantu */
+        const newArticleFeatures: ArticleFeature = new ArticleFeature();
+        newArticleFeatures.articleId = savedArticle.articleId;
+        newArticleFeatures.featureId = feature.featureId;
+        newArticleFeatures.value = feature.value;
+        /* Uraditi snimanje tog articleFeatures */
+        await this.articleFeature.save(newArticleFeatures);
+      }
+
+      /* Vrati artikal na prikaz */
+      return await this.findOne({ 
+        where: { articleId: savedArticle.articleId },
+        relations: ['user', 'stock', 'articleFeatures', 'articleTimelines', 'documents', 'upgradeFeatures'],
+      });
+    }
   } /* Kraj metoda za kreiranje novog artikla */
 
   async getBySapNumber(sapNumber: string): Promise<Stock | null> {
@@ -187,29 +253,26 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
 
 private async createDocument(
-  userId: number,
   articleId: number,
-  status: 'zaduženo' | 'razduženo' | 'otpisano',
   comment: string,
+  name: string,
+  invNumber: string,
+  predao: string,
+  preuzeo: string,
 ) {
-  let predao: string = '';
-  let preuzeo: string = '';
-  let inv: string = '';
-  let naziv: string = '';
+  let documentNumber: number;
 
-  let documentNumber;
+  const lastRecord: Documents | undefined = await this.document.findOne({
+    where:{},
+    order: {
+      createdDate: 'DESC'
+    }
+  })
 
-  const lastRecord = await this.document.findOne({
-    where: {articleId : articleId}
-  });
-
-
-  if(!lastRecord) {
-    return new ApiResponse('error', -52565, 'nema nijedan rekord pronađen')
-  }
-
-  if(lastRecord) {
-    return new ApiResponse('error', -52565, 'nema nijedan rekord pronađen')
+  if (!lastRecord) {
+    documentNumber = 1;
+  } else {
+    documentNumber = lastRecord.documentNumber + 1;
   }
 
  
@@ -236,35 +299,8 @@ private async createDocument(
 
   const savedDocument = await this.document.save(newDoc);
 
-  const article: Article = await this.article.findOne({
-    where: {
-      articleId: articleId,
-    },
-    relations: ['user']  // Dodajte relaciju prema entitetu User
-  });
-  if (status === 'zaduženo' && article.status === 'zaduženo') {
-    predao = article.user.fullname;
-    const preuzeoKorisnik = await this.user.findOne({ where: { userId: userId } });
-    preuzeo = preuzeoKorisnik.fullname;
-  } else if (status === 'razduženo' && article.status === 'zaduženo') {
-    predao = article.user.fullname;
-    preuzeo = 'Skladište';
-  }
-  if (status === 'zaduženo' && article.status === 'razduženo') {
-    predao = 'Skladište';
-    const preuzeoKorisnik = await this.user.findOne({ where: { userId: userId } });
-    preuzeo = preuzeoKorisnik.fullname;
-  }
-  if (!article && status === 'zaduženo') {
-    predao = 'Skladište';
-    const preuzeoKorisnik = await this.user.findOne({ where: { userId: userId } });
-    preuzeo = preuzeoKorisnik.fullname;
-  }
-
   await this.article.update(articleId, { documentId: savedDocument.documentsId });
 
-  inv = article.invNumber;
-  naziv = article.stock.name;
   let komentar = comment;
   try {
     const template = readFileSync(
@@ -277,8 +313,8 @@ private async createDocument(
         broj_prenosnice: documentNumber,
         predao_korisnik: predao,
         preuzeo_korisnik: preuzeo,
-        inv_broj: inv,
-        naziv: naziv,
+        inv_broj: invNumber,
+        naziv: name,
         komentar: komentar,
       },
     });
