@@ -22,12 +22,9 @@ import { ArticleService } from 'src/services/article/article.service';
     join: {
       user: {
         eager: true,
-      },
-      stock: {
-        eager: true,
         exclude:['passwordHash']
       },
-      stock_2: {
+      stock: {
         eager: true,
       },
       articleFeatures: {

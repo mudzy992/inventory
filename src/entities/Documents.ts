@@ -27,10 +27,9 @@ export class Documents {
 
   @Column("timestamp", {
     name: "created_date",
-    nullable: true,
     default: () => "CURRENT_TIMESTAMP",
   })
-  createdDate: Date | null;
+  createdDate: Date;
 
   @OneToMany(
     () => ArticleTimeline,

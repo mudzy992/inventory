@@ -30,8 +30,8 @@ export class Article {
   @Column("int", { name: "user_id" })
   userId: number;
 
-  @Column("int", { name: "document_id" })
-  documentId: number;
+  @Column("int", { name: "document_id", nullable: true})
+  documentId: number | null;
 
   @Column("enum", {
     name: "status",

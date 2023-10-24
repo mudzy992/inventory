@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { AddArticleDto } from 'src/dtos/article/add.article.dto';
-
+import { StorageConfig } from 'config/storage.config';
+import createReport from 'docx-templates';
+import { writeFileSync, readFileSync } from 'fs';
 import { Article } from 'src/entities/Article';
 import { ArticleFeature } from 'src/entities/ArticleFeature';
+import { Documents } from 'src/entities/Documents';
 import { Stock } from 'src/entities/Stock';
+import { User } from 'src/entities/User';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository } from 'typeorm';
 
@@ -20,6 +24,12 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
     @InjectRepository(Stock)
     private readonly stock: Repository<Stock>,
+
+    @InjectRepository(Documents)
+    private readonly document: Repository<Documents>,
+
+    @InjectRepository(User)
+    private readonly user: Repository<User>,
   ) {
     super(article);
   }
@@ -35,21 +45,25 @@ export class ArticleService extends TypeOrmCrudService<Article> {
   ): Promise<Article | ApiResponse> {
     const existingStock = await this.stock.findOne({where:{stockId: stockId}});
 
+    if(!existingStock) {
+      return new ApiResponse('error', -2000, 'Artikal ne postoji u skladištu.')
+    }
+
     const existingArticle = await this.article.findOne({ 
       where:{serialNumber : data.serialNumber}
     });
 
     if(existingArticle) {
-      if(existingArticle.status === "zaduženo"){
-        return new ApiResponse('error', -2001, "Artikal je već zadužen na " + existingArticle.user.fullname)
-      }
-      return new ApiResponse('error', -2002, 'Artikal već postoji, ali nije zadužen. Status: ' + existingArticle.status)
+      if(existingArticle.status === "zaduženo" ){
+        return new ApiResponse('error', -2001, "Artikal je već zadužen")
+      } else if(existingArticle.status === 'razduženo'){
+      return new ApiResponse('error', -2002, 'Artikal već postoji, ali nije zadužen.')
+    }
     }
     const newArticle: Article = new Article();
     newArticle.serialNumber = data.serialNumber;
     newArticle.invNumber = data.invNumber;
     newArticle.userId = data.userId;
-    newArticle.documentId = data.documentId;
     newArticle.status = data.status;
     newArticle.stockId = stockId;
     newArticle.comment = data.comment;
@@ -58,15 +72,11 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
     const savedArticle = await this.article.save(newArticle);
 
-    if(data.status === 'zaduženo'){
-      await this.stock.update(existingStock, {
-        valueAvailable: existingStock.valueAvailable - 1
-      })
-    } else if (data.status === 'razduženo') {
-      await this.stock.update(existingStock, {
-        valueAvailable: existingStock.valueAvailable + 1
-      })
-    }
+    existingStock.valueAvailable = existingStock.valueAvailable -1;
+    await this.stock.save(existingStock);  
+    
+    await this.createDocument(data.userId, 38, data.status, data.comment)
+    
     /* Dodati taj artikal u skladište */
 
     /* sada kada imamo articleId smješteno u savedArticle možemo za taj artikal dodati feature i njih snimiti isto u neku konstantu
@@ -86,7 +96,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     /* Vrati artikal na prikaz */
     return await this.findOne({ 
       where: { articleId: savedArticle.articleId },
-      relations: ['user', 'stock', 'stock_2', 'articleFeatures', 'articleTimelines', 'documents', 'upgradeFeatures'],
+      relations: ['user', 'stock', 'articleFeatures', 'articleTimelines', 'documents', 'upgradeFeatures'],
     });
     
   } /* Kraj metoda za kreiranje novog artikla */
@@ -175,5 +185,113 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 //     }
 //   }
 
+
+private async createDocument(
+  userId: number,
+  articleId: number,
+  status: 'zaduženo' | 'razduženo' | 'otpisano',
+  comment: string,
+) {
+  let predao: string = '';
+  let preuzeo: string = '';
+  let inv: string = '';
+  let naziv: string = '';
+
+  let documentNumber;
+
+  const lastRecord = await this.document.findOne({
+    where: {articleId : articleId}
+  });
+
+
+  if(!lastRecord) {
+    return new ApiResponse('error', -52565, 'nema nijedan rekord pronađen')
+  }
+
+  if(lastRecord) {
+    return new ApiResponse('error', -52565, 'nema nijedan rekord pronađen')
+  }
+
+ 
+  /* let currentYear = lastRecord ? new Date(lastRecord.created_date).getFullYear() : new Date().getFullYear(); */
+  let currentYear;
+  if (lastRecord && lastRecord.createdDate) {
+    currentYear = new Date(lastRecord.createdDate).getFullYear();
+  } else {
+    currentYear = new Date().getFullYear();
+  }
+
+  if (currentYear === new Date().getFullYear()) {
+      documentNumber = lastRecord ? lastRecord.documentNumber + 1 : 1;
+  } else {
+      documentNumber = 1;
+      currentYear = new Date().getFullYear();
+  }
   
+
+  const newDoc : Documents = new Documents();
+  newDoc.path = 'prenosnica' + documentNumber + '.docx';
+  newDoc.documentNumber = documentNumber;
+  newDoc.articleId = articleId;
+
+  const savedDocument = await this.document.save(newDoc);
+
+  const article: Article = await this.article.findOne({
+    where: {
+      articleId: articleId,
+    },
+    relations: ['user']  // Dodajte relaciju prema entitetu User
+  });
+  if (status === 'zaduženo' && article.status === 'zaduženo') {
+    predao = article.user.fullname;
+    const preuzeoKorisnik = await this.user.findOne({ where: { userId: userId } });
+    preuzeo = preuzeoKorisnik.fullname;
+  } else if (status === 'razduženo' && article.status === 'zaduženo') {
+    predao = article.user.fullname;
+    preuzeo = 'Skladište';
+  }
+  if (status === 'zaduženo' && article.status === 'razduženo') {
+    predao = 'Skladište';
+    const preuzeoKorisnik = await this.user.findOne({ where: { userId: userId } });
+    preuzeo = preuzeoKorisnik.fullname;
+  }
+  if (!article && status === 'zaduženo') {
+    predao = 'Skladište';
+    const preuzeoKorisnik = await this.user.findOne({ where: { userId: userId } });
+    preuzeo = preuzeoKorisnik.fullname;
+  }
+
+  await this.article.update(articleId, { documentId: savedDocument.documentsId });
+
+  inv = article.invNumber;
+  naziv = article.stock.name;
+  let komentar = comment;
+  try {
+    const template = readFileSync(
+      StorageConfig.prenosnica.template,
+      /* StorageConfig.prenosnica.fullPath + 'templates/prenosnica.docx', */
+    );
+    const buffer = await createReport({
+      template,
+      data: {
+        broj_prenosnice: documentNumber,
+        predao_korisnik: predao,
+        preuzeo_korisnik: preuzeo,
+        inv_broj: inv,
+        naziv: naziv,
+        komentar: komentar,
+      },
+    });
+    writeFileSync(
+      StorageConfig.prenosnica.destination +
+        'prenosnica' +
+        documentNumber +
+        '.docx',
+      buffer,
+    );
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 } /* Kraj koda */

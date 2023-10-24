@@ -4,7 +4,6 @@ export class AddArticleDto {
   serialNumber: string;
   invNumber: string;
   userId: number;
-  documentId: number;
   status: "zaduženo" | "razduženo" | "otpisano";
   stockId: number;
   comment: string;
