@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { Feature } from "./Feature";
 import { Stock } from "./Stock";
+import { Article } from "./Article";
 
 @Index("parent_category_id", ["parentCategoryId"], {})
 @Entity("category", { schema: "inventory_v2" })
@@ -24,6 +25,9 @@ export class Category {
 
   @Column("int", { name: "parent_category_id", nullable: true })
   parentCategoryId: number | null;
+
+  @OneToMany(() => Article, (article) => article.category)
+  articles: Article[];
 
   @ManyToOne(() => Category, (category) => category.categories, {
     onDelete: "NO ACTION",

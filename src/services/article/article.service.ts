@@ -11,7 +11,7 @@ import { Documents } from 'src/entities/Documents';
 import { Stock } from 'src/entities/Stock';
 import { User } from 'src/entities/User';
 import { ApiResponse } from 'src/misc/api.response.class';
-import { Like, Repository, MoreThanOrEqual, LessThanOrEqual } from 'typeorm';
+import { Like, Repository, MoreThanOrEqual, LessThanOrEqual, Brackets } from 'typeorm';
 
 @Injectable()
 export class ArticleService extends TypeOrmCrudService<Article> {
@@ -162,7 +162,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       /* Vrati artikal na prikaz */
       return await this.findOne({ 
         where: { articleId: savedArticle.articleId },
-        relations: ['user', 'stock', 'articleFeatures', 'articleTimelines', 'documents', 'upgradeFeatures'],
+        relations: ['user', 'stock', 'category', 'articleFeatures', 'articleTimelines', 'documents', 'upgradeFeatures'],
       });
     }
   } /* Kraj metoda za kreiranje novog artikla */
@@ -177,46 +177,33 @@ export class ArticleService extends TypeOrmCrudService<Article> {
   }
 
   async articleSearchPaginationByStockId(stockId: number, perPage: number, offset: number, query: string) {
-    const queryBuilder = this.article
+    const resultsQuery = this.article
       .createQueryBuilder('article')
       .leftJoin('article.user', 'user')
-      .where('article.stockId = :stockId', { stockId })
-      .andWhere(qb => {
-        qb.where('user.fullname LIKE :query', { query: `%${query}%` })
-          .orWhere('article.serialNumber LIKE :query', { query: `%${query}%` })
-          .orWhere('article.invNumber LIKE :query', { query: `%${query}%` })
-          .orWhere('article.status LIKE :query', { query: `%${query}%` });
-      });
-  
-    const [results, totalResults] = await queryBuilder
-      .select(['article', 'user.fullname'])
+      .where('article.stockId = :stockId', { stockId: stockId })
+      .select(['article', 'user.fullname', 'user.userId'])
       .take(perPage)
-      .skip(offset)
-      .getManyAndCount();
-  
-    return {
-      results,
-      total: totalResults,
-    };
-  }
-  
-  
-  
-  
+      .skip(offset);
 
-  async articlePaginationByStockId(id: number, perPage: number, offset: number) {
-    const [results, totalResults] = await this.article.findAndCount({
-      where: { stockId: id },
-      take: perPage,
-      skip: offset,
-      relations: ['user', 'stock', 'documents'],
-    });
-  
+    if (query) {
+      resultsQuery.andWhere(
+        new Brackets(qb => {
+          qb.where('user.fullname LIKE :query', { query: `%${query}%` });
+          qb.orWhere('article.serialNumber LIKE :query', { query: `%${query}%` });
+          qb.orWhere('article.invNumber LIKE :query', { query: `%${query}%` });
+          qb.orWhere('article.status LIKE :query', { query: `%${query}%` });
+        }),
+      );
+    }
+
+    const [results, totalResults] = await resultsQuery.getManyAndCount();
+
     return {
       results,
       total: totalResults,
     };
   }
+
   
 
 //   async editArticle(

@@ -28,7 +28,7 @@ export class CategoryService extends TypeOrmCrudService<Category> {
 
     return await this.findOne({
       where:{categoryId: savedCategory.categoryId},
-      relations: ['parentCategory', 'categories', 'features'],
+      relations: ['parentCategory', 'categories', 'features', 'articles'],
     })
   }
 }

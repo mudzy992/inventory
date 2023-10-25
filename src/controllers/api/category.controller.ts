@@ -31,6 +31,10 @@ import { CategoryService } from 'src/services/category/category.service';
       features: {
         eager: true,
       },
+      articles: {
+        eager: true,
+      },
+      
     },
   },
 })

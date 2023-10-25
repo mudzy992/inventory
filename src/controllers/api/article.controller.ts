@@ -27,6 +27,9 @@ import { ArticleService } from 'src/services/article/article.service';
       stock: {
         eager: true,
       },
+      category: {
+        eager: true,
+      },
       articleFeatures: {
         eager: true,
       },
@@ -45,34 +48,23 @@ import { ArticleService } from 'src/services/article/article.service';
 })
 export class ArticleController {
   constructor(public service: ArticleService) {}
-  @Post(':id')
+  @Post(':stockId')
   async addNewArticle(
-    @Param('id') id: number,
+    @Param('stockId') id: number,
     @Body() data: AddArticleDto,
   ): Promise<Article | ApiResponse> {
     return await this.service.addNewArticle(id, data);
   }
 
-  @Get('s/:id')
-  async articlePaginationByStockId(
-    @Param('id') id: number,
-    @Query('perPage') perPage: number = 10,
-    @Query('page') page: number = 1, // Dodali smo 'page' parametar za broj stranice
-  ) {
-    const offset = (page - 1) * perPage; // Izračunajte offset na temelju broja stranice
-    return this.service.articlePaginationByStockId(id, perPage, offset);
-  }
-
-
-  @Get('search/:id')
+  @Get('s/:stockId')
   async articleSearchPaginationByStockId(
-    @Param('id') id: number,
+    @Param('stockId') stockId: number,
     @Query('perPage') perPage: number = 10,
     @Query('page') page: number = 1,
     @Query('query') query: string = '',
   ) {
     const offset = (page - 1) * perPage;
-    return this.service.articleSearchPaginationByStockId(id, perPage, offset, query);
+    return this.service.articleSearchPaginationByStockId(stockId, perPage, offset, query);
   }
 
   // @Patch(':id')

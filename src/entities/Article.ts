@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { User } from "./User";
 import { Stock } from "./Stock";
+import { Category } from "./Category";
 import { ArticleFeature } from "./ArticleFeature";
 import { ArticleTimeline } from "./ArticleTimeline";
 import { Documents } from "./Documents";
@@ -16,6 +17,7 @@ import { UpgradeFeature } from "./UpgradeFeature";
 
 @Index("user_id", ["userId"], {})
 @Index("fk_article_stock", ["stockId"], {})
+@Index("article_ibfk_3", ["categoryId"], {})
 @Entity("article", { schema: "inventory_v2" })
 export class Article {
   @PrimaryGeneratedColumn({ type: "int", name: "article_id" })
@@ -53,6 +55,9 @@ export class Article {
   @Column("varchar", { name: "comment", nullable: true, length: 500 })
   comment: string | null;
 
+  @Column("int", { name: "category_id", nullable: true })
+  categoryId: number | null;
+
   @ManyToOne(() => User, (user) => user.articles, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
@@ -66,6 +71,13 @@ export class Article {
   })
   @JoinColumn([{ name: "stock_id", referencedColumnName: "stockId" }])
   stock: Stock;
+
+  @ManyToOne(() => Category, (category) => category.articles, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
+  @JoinColumn([{ name: "category_id", referencedColumnName: "categoryId" }])
+  category: Category;
 
   @OneToMany(() => ArticleFeature, (articleFeature) => articleFeature.article)
   articleFeatures: ArticleFeature[];
