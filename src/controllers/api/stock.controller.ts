@@ -14,8 +14,12 @@ import { StockService } from 'src/services/stock/stock.service';
   },
   query: {
     join: {
-      articles: {}, 
-      articles2: {},
+      articles: {
+        eager: true,
+      }, 
+      category: {
+        eager: true,
+      },
     },
   },
 })
@@ -23,13 +27,18 @@ export class StockController {
   constructor(private readonly stockService: StockService) {}
 
   @Get()
-  async getAllStocks(): Promise<Stock[]> {
+  async getAllStocks(): Promise<Stock[] | ApiResponse> {
     return this.stockService.getAllStocks();
   }
 
   @Get(':id')
   async getStockById(@Param('id') stockId: number): Promise<Stock | ApiResponse> {
     return this.stockService.getStockById(stockId);
+  }
+
+  @Get('c/:id')
+  async getStockByCategoryId(@Param('id') categoryId: number): Promise<Stock[] | ApiResponse> {
+    return this.stockService.getStockByCategoryId(categoryId);
   }
 
   @Post()

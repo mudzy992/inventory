@@ -19,7 +19,7 @@ import { CategoryService } from 'src/services/category/category.service';
   },
   query: {
     join: {
-      articles: {
+      stocks: {
         eager: true,
       },
       parentCategory: {

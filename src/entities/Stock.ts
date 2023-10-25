@@ -1,5 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Article } from "./Article";
+import { Category } from "./Category";
 
 @Entity("stock", { schema: "inventory_v2" })
 export class Stock {
@@ -35,4 +36,11 @@ export class Stock {
 
   @OneToMany(() => Article, (article) => article.stock)
   articles: Article[];
+
+  @ManyToOne(() => Category, (category) => category.stocks, {
+    onDelete: "RESTRICT",
+    onUpdate: "CASCADE",
+  })
+  @JoinColumn([{ name: "category_id", referencedColumnName: "categoryId" }])
+  category: Category;
 }

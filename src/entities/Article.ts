@@ -61,8 +61,8 @@ export class Article {
   user: User;
 
   @ManyToOne(() => Stock, (stock) => stock.articles, {
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "stock_id", referencedColumnName: "stockId" }])
   stock: Stock;

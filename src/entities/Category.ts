@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Feature } from "./Feature";
+import { Stock } from "./Stock";
 
 @Index("parent_category_id", ["parentCategoryId"], {})
 @Entity("category", { schema: "inventory_v2" })
@@ -38,4 +39,7 @@ export class Category {
 
   @OneToMany(() => Feature, (feature) => feature.category)
   features: Feature[];
+
+  @OneToMany(() => Stock, (stock) => stock.category)
+  stocks: Stock[];
 }

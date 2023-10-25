@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
 import { AddArticleDto } from 'src/dtos/article/add.article.dto';
 import { EditArticleDto } from 'src/dtos/article/edit.full.article.dto';
@@ -51,6 +51,28 @@ export class ArticleController {
     @Body() data: AddArticleDto,
   ): Promise<Article | ApiResponse> {
     return await this.service.addNewArticle(id, data);
+  }
+
+  @Get('s/:id')
+  async articlePaginationByStockId(
+    @Param('id') id: number,
+    @Query('perPage') perPage: number = 10,
+    @Query('page') page: number = 1, // Dodali smo 'page' parametar za broj stranice
+  ) {
+    const offset = (page - 1) * perPage; // Izračunajte offset na temelju broja stranice
+    return this.service.articlePaginationByStockId(id, perPage, offset);
+  }
+
+
+  @Get('search/:id')
+  async articleSearchPaginationByStockId(
+    @Param('id') id: number,
+    @Query('perPage') perPage: number = 10,
+    @Query('page') page: number = 1,
+    @Query('query') query: string = '',
+  ) {
+    const offset = (page - 1) * perPage;
+    return this.service.articleSearchPaginationByStockId(id, perPage, offset, query);
   }
 
   // @Patch(':id')

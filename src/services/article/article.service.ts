@@ -11,7 +11,7 @@ import { Documents } from 'src/entities/Documents';
 import { Stock } from 'src/entities/Stock';
 import { User } from 'src/entities/User';
 import { ApiResponse } from 'src/misc/api.response.class';
-import { Repository } from 'typeorm';
+import { Like, Repository, MoreThanOrEqual, LessThanOrEqual } from 'typeorm';
 
 @Injectable()
 export class ArticleService extends TypeOrmCrudService<Article> {
@@ -175,6 +175,49 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     }
     return null;
   }
+
+  async articleSearchPaginationByStockId(stockId: number, perPage: number, offset: number, query: string) {
+    const queryBuilder = this.article
+      .createQueryBuilder('article')
+      .leftJoin('article.user', 'user')
+      .where('article.stockId = :stockId', { stockId })
+      .andWhere(qb => {
+        qb.where('user.fullname LIKE :query', { query: `%${query}%` })
+          .orWhere('article.serialNumber LIKE :query', { query: `%${query}%` })
+          .orWhere('article.invNumber LIKE :query', { query: `%${query}%` })
+          .orWhere('article.status LIKE :query', { query: `%${query}%` });
+      });
+  
+    const [results, totalResults] = await queryBuilder
+      .select(['article', 'user.fullname'])
+      .take(perPage)
+      .skip(offset)
+      .getManyAndCount();
+  
+    return {
+      results,
+      total: totalResults,
+    };
+  }
+  
+  
+  
+  
+
+  async articlePaginationByStockId(id: number, perPage: number, offset: number) {
+    const [results, totalResults] = await this.article.findAndCount({
+      where: { stockId: id },
+      take: perPage,
+      skip: offset,
+      relations: ['user', 'stock', 'documents'],
+    });
+  
+    return {
+      results,
+      total: totalResults,
+    };
+  }
+  
 
 //   async editArticle(
 //     articleId: number,
