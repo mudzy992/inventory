@@ -22,6 +22,7 @@ import { ArticleTimelineService } from 'src/services/articleTimeline/article.tim
       },
       user: {
         eager: true,
+        exclude:['passwordHash']
       },
       document: {
         eager: true,
@@ -30,15 +31,17 @@ import { ArticleTimelineService } from 'src/services/articleTimeline/article.tim
   },
 })
 export class ArticleTimelineController {
-  constructor(private readonly articleTimelineService: ArticleTimelineService) {}
+  constructor(public articleTimelineService: ArticleTimelineService) {}
 
-  @Get('/:id')
-  async findPaginatedArticlesTimeline(
-    @Param('id') id: number,
-    @Query('perPage') perPage: number = 10,
-    @Query('offset') offset: number = 0,
+  @Get(':id')
+  async getById(
+    @Param('id') id: string,
   ) {
-    return this.articleTimelineService.findPaginatedArticlesTimeline(id, perPage, offset);
+    return this.articleTimelineService.getById(id);
   }
 
+  @Get()
+  async getAll(){
+    return this.articleTimelineService.getAll();
+  }
 } 

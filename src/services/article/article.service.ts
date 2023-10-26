@@ -171,7 +171,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     /* Mehanizam pronalaženja artikla u skladištu po sap broju */
     const serialnumber = await this.article.findOne(
       {where:{serialNumber : serialNumber},
-      relations: ['user', 'user.job', 'user.department', 'user.location', 'stock', 'category', 'articleFeatures', 'articleFeatures.feature', 'articleTimelines', 'documents', 'upgradeFeatures']
+      relations: ['user', 'user.job', 'user.department', 'user.location', 'stock', 'category', 'articleFeatures', 'articleFeatures.feature', 'articleTimelines', 'articleTimelines.document', 'articleTimelines.user', 'documents', 'upgradeFeatures']
     });
     if (serialnumber) {
       return serialnumber;

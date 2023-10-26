@@ -14,17 +14,20 @@ export class ArticleTimelineService extends TypeOrmCrudService<ArticleTimeline> 
     super(articleTimelineRepository);
   }
 
-  async findPaginatedArticlesTimeline(id: number, perPage: number, offset: number) {
-    const [results, totalResults] = await this.articleTimelineRepository.findAndCount({
-      where: { articleId: id },
-      take: perPage,
-      skip: offset,
-      relations: ['article', 'document', 'user'],
-    });
-  
-    return {
-      results,
-      total: totalResults,
-    };
-  }  
+  async getById(id) {
+    return await this.articleTimelineRepository.findOne(
+      {
+        where: {articleTimelineId: id}, 
+        relations:['article', 'user', 'document']
+      }
+      );
+  }
+
+  async getAll(){
+    return await this.articleTimelineRepository.find(
+      {
+        relations:['article', 'user', 'document']
+      }
+    )
+  }
 }

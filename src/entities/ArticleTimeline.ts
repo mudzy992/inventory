@@ -21,11 +21,11 @@ export class ArticleTimeline {
   @Column("int", { name: "article_id" })
   articleId: number;
 
-  @Column("int", { name: "user_id" })
-  userId: number;
+  @Column("int", { name: "user_id", nullable: true })
+  userId: number | null;
 
-  @Column("int", { name: "document_id", })
-  documentId: number;
+  @Column("int", { name: "document_id", nullable: true })
+  documentId: number | null;
 
   @Column("varchar", { name: "serial_number", nullable: true, length: 50 })
   serialNumber: string | null;
