@@ -11,7 +11,7 @@ import { Documents } from 'src/entities/Documents';
 import { Stock } from 'src/entities/Stock';
 import { User } from 'src/entities/User';
 import { ApiResponse } from 'src/misc/api.response.class';
-import { Like, Repository, MoreThanOrEqual, LessThanOrEqual, Brackets } from 'typeorm';
+import { Repository, Brackets } from 'typeorm';
 
 @Injectable()
 export class ArticleService extends TypeOrmCrudService<Article> {
@@ -162,16 +162,19 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       /* Vrati artikal na prikaz */
       return await this.findOne({ 
         where: { articleId: savedArticle.articleId },
-        relations: ['user', 'stock', 'category', 'articleFeatures', 'articleTimelines', 'documents', 'upgradeFeatures'],
+        relations: ['user', 'stock', 'category', 'articleFeatures', 'articleFeatures.features', 'articleTimelines', 'documents', 'upgradeFeatures'],
       });
     }
   } /* Kraj metoda za kreiranje novog artikla */
 
-  async getBySapNumber(sapNumber: string): Promise<Stock | null> {
+  async getBySerialNumber(serialNumber: string): Promise<Article | null> {
     /* Mehanizam pronalaženja artikla u skladištu po sap broju */
-    const sapnumber = await this.stock.findOne({where:{ sapNumber: sapNumber }});
-    if (sapnumber) {
-      return sapnumber;
+    const serialnumber = await this.article.findOne(
+      {where:{serialNumber : serialNumber},
+      relations: ['user', 'user.job', 'user.department', 'user.location', 'stock', 'category', 'articleFeatures', 'articleFeatures.feature', 'articleTimelines', 'documents', 'upgradeFeatures']
+    });
+    if (serialnumber) {
+      return serialnumber;
     }
     return null;
   }

@@ -20,29 +20,20 @@ import { UserService } from 'src/services/user/user.service';
   },
   query: {
     join: {
-      department: {
+      articles: {
+        eager: true,
+      },
+      articleTimelines: {
         eager: true,
       },
       job: {
         eager: true,
       },
+      department: {
+        eager: true,
+      },
       location: {
         eager: true,
-      },
-      articles: {
-        eager: true,
-      },
-      userArticles: {
-        eager: true,
-      },
-      responsibilities: {
-        eager: false,
-      },
-      debtItems: {
-        eager: false,
-      },
-      destroyeds: {
-        eager: false,
       },
     },
   },

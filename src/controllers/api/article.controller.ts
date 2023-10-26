@@ -67,6 +67,13 @@ export class ArticleController {
     return this.service.articleSearchPaginationByStockId(stockId, perPage, offset, query);
   }
 
+  @Get('sb/:serialNumber')
+  async getBySerialNumber(
+    @Param('serialNumber') serialNumber: string,
+  ) {
+    return this.service.getBySerialNumber(serialNumber);
+  }
+
   // @Patch(':id')
   // async editFullArticleController(
   //   @Param('id') id: number,

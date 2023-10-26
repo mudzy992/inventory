@@ -20,10 +20,10 @@ import { ArticleTimelineService } from 'src/services/articleTimeline/article.tim
       article: {
         eager: true,
       },
-      document: {
+      user: {
         eager: true,
       },
-      user: {
+      document: {
         eager: true,
       },
     },
