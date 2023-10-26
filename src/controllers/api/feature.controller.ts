@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
 import { Feature } from 'src/entities/Feature';
 import { FeatureService } from 'src/services/feature/feature.service';
@@ -20,7 +20,7 @@ import { EditFeatureDto } from 'src/dtos/features/edit.feature.dto';
   },
   query: {
     join: {
-      articleFeature: {
+      articleFeatures: {
         eager: true,
       },
       category: {
@@ -40,10 +40,18 @@ export class FeatureController {
   ): Promise<Feature | ApiResponse> {
     return await this.service.createNewFeature(data);
   }
+
   @Patch()
   async editFeatures(
     @Body() data: EditFeatureDto,
   ): Promise<Feature | ApiResponse> {
     return await this.service.editFeatures(data)
+  }
+
+  @Get('cat/:catId')
+  async getByCategoryId(
+    @Param('catId') catId: number,
+  ) {
+    return this.service.getByCategoryId(catId);
   }
 }

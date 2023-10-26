@@ -13,6 +13,7 @@ import { Job } from "./Job";
 import { Department } from "./Department";
 import { Location } from "./Location";
 import { UserToken } from "./UserToken";
+import { Exclude } from "class-transformer";
 
 @Index("local_number", ["localNumber"], { unique: true })
 @Index("job_id", ["jobId"], {})
@@ -41,6 +42,7 @@ export class User {
   @Column("varchar", { name: "email", nullable: true, length: 255 })
   email: string | null;
 
+  @Exclude()
   @Column("varchar", { name: "password_hash", length: 255 })
   passwordHash: string;
 

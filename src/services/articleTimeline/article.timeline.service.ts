@@ -30,4 +30,18 @@ export class ArticleTimelineService extends TypeOrmCrudService<ArticleTimeline> 
       }
     )
   }
+
+  async findPaginatedArticlesTimeline(id: number, perPage: number, offset: number) {
+    const [results, totalResults] = await this.articleTimelineRepository.findAndCount({
+      where: { articleId: id },
+      take: perPage,
+      skip: offset,
+      relations: ['article', 'document', 'user'],
+    });
+  
+    return {
+      results,
+      total: totalResults,
+    };
+  } 
 }

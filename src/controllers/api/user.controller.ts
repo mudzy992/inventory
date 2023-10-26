@@ -36,6 +36,7 @@ import { UserService } from 'src/services/user/user.service';
         eager: true,
       },
     },
+    exclude:['passwordHash'],
   },
 })
 export class UserController {

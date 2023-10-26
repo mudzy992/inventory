@@ -35,10 +35,19 @@ export class FeatureService extends TypeOrmCrudService<Feature> {
 
   async editFeatures(data: EditFeatureDto): Promise<Feature | ApiResponse> {
     const newFeature: Feature = new Feature();
-
-
     return await this.findOne( {
       relations: ['articleFeatures',' category',]
     })
+  }
+
+  async getByCategoryId(catId: number): Promise<Feature[] | null> {
+    const categoryid = await this.feature.find(
+      {where:{categoryId : catId},
+      relations: ['category', 'articleFeatures']
+    });
+    if (categoryid) {
+      return categoryid;
+    }
+    return null;
   }
 }

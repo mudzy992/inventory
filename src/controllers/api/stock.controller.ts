@@ -16,7 +16,7 @@ import { StockService } from 'src/services/stock/stock.service';
     join: {
       articles: {
         eager: true,
-      }, 
+      },
       category: {
         eager: true,
       },

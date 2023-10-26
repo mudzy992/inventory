@@ -49,7 +49,11 @@ export class StockService extends TypeOrmCrudService<Stock> {
   }
 
   async getStockById(stockId: number): Promise<Stock | ApiResponse> {
-    const stock = await this.stockRepository.findOne({ where: { stockId } });
+    const stock = await this.stockRepository.findOne(
+      { 
+        where: { stockId : stockId },
+        relations: ['articles', 'articles.user', 'articles.articleFeatures','articles.articleFeatures.feature', 'category']
+      });
     if (!stock) {
         return new ApiResponse('error', -1003, 'Skladište artikla nije pronađeno. Moguće da artikal ne postoji na skladištu.');
     }

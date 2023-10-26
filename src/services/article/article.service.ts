@@ -148,21 +148,21 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       /* sada kada imamo articleId smješteno u savedArticle možemo za taj artikal dodati feature i njih snimiti isto u neku konstantu
         pošto je features jedan niz podataka (tako smo naveli u Dto, ali i planirali u bazi, artikal može imati više features-a) 
         tu se koristi for petlja konstrukcije za svaki varijantu feature dodaj određeni podatak i vrti u krug */
-
-      for (const feature of data.features) {
-        /* Ali kao što je i slučaj iznad features-e smještamo isto u jednu konstantu */
-        const newArticleFeatures: ArticleFeature = new ArticleFeature();
-        newArticleFeatures.articleId = savedArticle.articleId;
-        newArticleFeatures.featureId = feature.featureId;
-        newArticleFeatures.value = feature.value;
-        /* Uraditi snimanje tog articleFeatures */
-        await this.articleFeature.save(newArticleFeatures);
-      }
+        /* za svaki slučaj je ovaj if, iako je u DTO postavljen kao opcionalan */
+        if (data.features) {
+          for (const feature of data.features) {
+            const newArticleFeatures = new ArticleFeature();
+            newArticleFeatures.articleId = savedArticle.articleId;
+            newArticleFeatures.featureId = feature.featureId;
+            newArticleFeatures.value = feature.value;
+            await this.articleFeature.save(newArticleFeatures);
+          }
+        }
 
       /* Vrati artikal na prikaz */
       return await this.findOne({ 
         where: { articleId: savedArticle.articleId },
-        relations: ['user', 'stock', 'category', 'articleFeatures', 'articleFeatures.features', 'articleTimelines', 'documents', 'upgradeFeatures'],
+        relations: ['user', 'stock', 'category', 'articleFeatures', 'articleFeatures.feature', 'articleTimelines', 'documents', 'upgradeFeatures'],
       });
     }
   } /* Kraj metoda za kreiranje novog artikla */

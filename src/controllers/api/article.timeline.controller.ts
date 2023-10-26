@@ -44,4 +44,13 @@ export class ArticleTimelineController {
   async getAll(){
     return this.articleTimelineService.getAll();
   }
+
+  @Get('p/:id')
+  async findPaginatedArticlesTimeline(
+    @Param('id') id: number,
+    @Query('perPage') perPage: number = 10,
+    @Query('offset') offset: number = 0,
+  ) {
+    return this.articleTimelineService.findPaginatedArticlesTimeline(id, perPage, offset);
+  }
 } 

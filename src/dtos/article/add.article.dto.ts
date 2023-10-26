@@ -7,5 +7,5 @@ export class AddArticleDto {
   status: "zaduženo" | "razduženo" | "otpisano";
   stockId: number;
   comment: string;
-  features: ArticleFeatureComponentDto[];
+  features?: ArticleFeatureComponentDto[];
 }

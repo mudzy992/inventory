@@ -43,6 +43,7 @@ import { ArticleService } from 'src/services/article/article.service';
         eager: false,
       }
     },
+    
   },
   routes: { exclude: ['updateOneBase'] },
 })
