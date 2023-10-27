@@ -75,6 +75,14 @@ export class ArticleController {
     return this.service.getBySerialNumber(serialNumber);
   }
 
+  @Patch('status/:id')
+  async changeStatus(
+    @Param('id') id: number,
+    @Body() data: AddArticleDto,
+  ) {
+    return await this.service.changeStatus(id, data);
+  }
+
   // @Patch(':id')
   // async editFullArticleController(
   //   @Param('id') id: number,

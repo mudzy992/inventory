@@ -1,11 +1,12 @@
 import { ArticleFeatureComponentDto } from './article.feature.component.dto';
 
 export class AddArticleDto {
-  serialNumber: string;
-  invNumber: string;
+  serialNumber?: string;
+  invNumber?: string;
   userId: number;
+  categoryId?: number;
   status: "zaduženo" | "razduženo" | "otpisano";
-  stockId: number;
+  stockId?: number;
   comment: string;
   features?: ArticleFeatureComponentDto[];
 }

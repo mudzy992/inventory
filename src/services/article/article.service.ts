@@ -12,6 +12,7 @@ import { Stock } from 'src/entities/Stock';
 import { User } from 'src/entities/User';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository, Brackets } from 'typeorm';
+import { ArticleTimeline } from 'src/entities/ArticleTimeline';
 
 @Injectable()
 export class ArticleService extends TypeOrmCrudService<Article> {
@@ -30,6 +31,9 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
     @InjectRepository(User)
     private readonly user: Repository<User>,
+
+    @InjectRepository(ArticleTimeline)
+    private readonly articleTimeline: Repository<ArticleTimeline>,
   ) {
     super(article);
   }
@@ -56,64 +60,6 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
     let predao: string;
     let preuzeo: string;
-    if (existingArticle){
-      if (data.status === 'zaduženo' && existingArticle.status === 'zaduženo') {
-        predao = existingArticle.user.fullname;
-        const preuzeoKorisnik = await this.user.findOne({ where: { userId: data.userId } });
-        preuzeo = preuzeoKorisnik.fullname;
-
-        await this.article.update(existingArticle.articleId, { userId: data.userId, status: 'zaduženo' });
-        await this.createDocument( 
-          existingArticle.articleId, 
-          data.comment, 
-          existingStock.name,
-          data.invNumber,
-          predao,
-          preuzeo)
-
-          return await this.findOne({ 
-            where: { articleId: existingArticle.articleId },
-          });
-      } else if (data.status === 'razduženo' && existingArticle.status === 'zaduženo') {
-        predao = existingArticle.user.fullname;
-        preuzeo = 'Skladište';
-
-        await this.article.update(existingArticle.articleId, { userId: null, status: 'razduženo'});
-        await this.createDocument( 
-          existingArticle.articleId, 
-          data.comment, 
-          existingStock.name,
-          data.invNumber,
-          predao,
-          preuzeo);
-
-          existingStock.valueAvailable = existingStock.valueAvailable +1;
-          await this.stock.save(existingStock);  
-
-          return await this.findOne({ 
-            where: { articleId: existingArticle.articleId },
-          });
-      }
-    
-      if (data.status === 'zaduženo' && existingArticle.status === 'razduženo') {
-        predao = 'Skladište';
-        const preuzeoKorisnik = await this.user.findOne({ where: { userId: data.userId } });
-        preuzeo = preuzeoKorisnik.fullname;
-
-        await this.article.update(existingArticle.articleId, { userId: data.userId, status: 'zaduženo' });
-        await this.createDocument( 
-          existingArticle.articleId, 
-          data.comment, 
-          existingStock.name,
-          data.invNumber,
-          predao,
-          preuzeo)
-
-          return await this.findOne({ 
-            where: { articleId: existingArticle.articleId },
-          });
-      }
-    }
   
     if (!existingArticle && data.status === 'zaduženo') {
       predao = 'Skladište';
@@ -122,6 +68,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
 
       const newArticle: Article = new Article();
+      newArticle.categoryId = existingStock.categoryId;
       newArticle.serialNumber = data.serialNumber;
       newArticle.invNumber = data.invNumber;
       newArticle.userId = data.userId;
@@ -132,6 +79,8 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         to radimo u ovom trenutku jer ćemo tako dobiti articleId, već ovdje artikal ide u bazu podataka (na returnu)*/
 
       const savedArticle = await this.article.save(newArticle);
+
+      await this.changeStatus(savedArticle.articleId, data)
 
       existingStock.valueAvailable = existingStock.valueAvailable -1;
       await this.stock.save(existingStock);  
@@ -166,6 +115,79 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       });
     }
   } /* Kraj metoda za kreiranje novog artikla */
+
+
+  async changeStatus(articleId: number, data: AddArticleDto): Promise<Article | ApiResponse> {
+    const existingArticle = await this.article.findOne({ 
+      where:{articleId : articleId},
+      relations: ['user', 'stock', 'articleTimelines'] 
+    });
+
+    let predao: string;
+    let preuzeo: string;
+    if (existingArticle){
+      if (data.status === 'zaduženo' && existingArticle.status === 'zaduženo') {
+        predao = existingArticle.user.fullname;
+        const preuzeoKorisnik = await this.user.findOne({ where: { userId: data.userId } });
+        preuzeo = preuzeoKorisnik.fullname;
+
+        await this.article.update(existingArticle.articleId, { userId: data.userId, status: 'zaduženo', comment:data.comment });
+        await this.articleTimeline.update([existingArticle.articleId, existingArticle.userId, existingArticle.documentId], {status: "razduženo"})
+        await this.createDocument( 
+          existingArticle.articleId, 
+          data.comment, 
+          existingArticle.stock.name,
+          data.invNumber,
+          predao,
+          preuzeo)
+
+          return await this.findOne({ 
+            where: { articleId: existingArticle.articleId },
+          });
+      } else if (data.status === 'razduženo' && existingArticle.status === 'zaduženo') {
+        predao = existingArticle.user.fullname;
+        preuzeo = 'Skladište';
+
+        await this.article.update(existingArticle.articleId, { userId: null, status: 'razduženo', comment: data.comment});
+        await this.articleTimeline.update([existingArticle.articleId, existingArticle.userId, existingArticle.documentId], {status: "razduženo"})
+        await this.createDocument( 
+          existingArticle.articleId, 
+          data.comment, 
+          existingArticle.stock.name,
+          data.invNumber,
+          predao,
+          preuzeo);
+
+          const newValueAvailable = await existingArticle.stock.valueAvailable +1;
+          await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable})
+  /*         existingStock.valueAvailable = existingStock.valueAvailable +1;
+          await this.stock.save(existingStock);   */
+
+          return await this.findOne({ 
+            where: { articleId: existingArticle.articleId },
+          });
+      }
+    
+      if (data.status === 'zaduženo' && existingArticle.status === 'razduženo') {
+        predao = 'Skladište';
+        const preuzeoKorisnik = await this.user.findOne({ where: { userId: data.userId } });
+        preuzeo = preuzeoKorisnik.fullname;
+
+        await this.article.update(existingArticle.articleId, { userId: data.userId, status: 'zaduženo', comment: data.comment });
+        await this.createDocument( 
+          existingArticle.articleId, 
+          data.comment, 
+          existingArticle.stock.name,
+          data.invNumber,
+          predao,
+          preuzeo)
+
+          return await this.findOne({ 
+            where: { articleId: existingArticle.articleId },
+          });
+      }
+    }
+  }
 
   async getBySerialNumber(serialNumber: string): Promise<Article | null> {
     /* Mehanizam pronalaženja artikla u skladištu po sap broju */
@@ -332,7 +354,7 @@ private async createDocument(
 
   const savedDocument = await this.document.save(newDoc);
 
-  await this.article.update(articleId, { documentId: savedDocument.documentsId });
+  await this.article.update(articleId, { documentId: savedDocument.documentsId});
 
   let komentar = comment;
   try {
