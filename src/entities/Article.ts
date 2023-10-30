@@ -10,7 +10,6 @@ import {
 import { User } from "./User";
 import { Stock } from "./Stock";
 import { Category } from "./Category";
-import { ArticleFeature } from "./ArticleFeature";
 import { ArticleTimeline } from "./ArticleTimeline";
 import { Documents } from "./Documents";
 import { UpgradeFeature } from "./UpgradeFeature";
@@ -23,24 +22,23 @@ export class Article {
   @PrimaryGeneratedColumn({ type: "int", name: "article_id" })
   articleId: number;
 
-  @Column("varchar", { name: "serial_number", nullable: true, length: 50 })
-  serialNumber: string | null;
+  @Column("varchar", { name: "serial_number", length: 50 })
+  serialNumber: string;
 
-  @Column("varchar", { name: "inv_number", nullable: true, length: 50 })
-  invNumber: string | null;
+  @Column("varchar", { name: "inv_number", length: 50 })
+  invNumber: string;
 
-  @Column("int", { name: "user_id" })
-  userId: number;
+  @Column("int", { name: "user_id", nullable: true })
+  userId: number | null;
 
-  @Column("int", { name: "document_id", nullable: true})
+  @Column("int", { name: "document_id", nullable: true })
   documentId: number | null;
 
   @Column("enum", {
     name: "status",
-    nullable: true,
     enum: ["zaduženo", "razduženo", "otpisano"],
   })
-  status: "zaduženo" | "razduženo" | "otpisano" | null;
+  status: "zaduženo" | "razduženo" | "otpisano";
 
   @Column("timestamp", {
     name: "timestamp",
@@ -49,10 +47,10 @@ export class Article {
   })
   timestamp: Date | null;
 
-  @Column("int", { name: "stock_id", nullable: true })
-  stockId: number | null;
+  @Column("int", { name: "stock_id" })
+  stockId: number;
 
-  @Column("varchar", { name: "comment", nullable: true, length: 500 })
+  @Column("text", { name: "comment", nullable: true })
   comment: string | null;
 
   @Column("int", { name: "category_id", nullable: true })
@@ -78,9 +76,6 @@ export class Article {
   })
   @JoinColumn([{ name: "category_id", referencedColumnName: "categoryId" }])
   category: Category;
-
-  @OneToMany(() => ArticleFeature, (articleFeature) => articleFeature.article)
-  articleFeatures: ArticleFeature[];
 
   @OneToMany(
     () => ArticleTimeline,

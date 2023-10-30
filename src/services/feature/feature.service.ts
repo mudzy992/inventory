@@ -29,21 +29,21 @@ export class FeatureService extends TypeOrmCrudService<Feature> {
 
     return await this.findOne({
       where: {featureId: savedFeature.featureId},
-      relations: ['articleFeatures', 'category'],
+      relations: ['stockFeatures', 'category'],
     })
   }
 
   async editFeatures(data: EditFeatureDto): Promise<Feature | ApiResponse> {
     const newFeature: Feature = new Feature();
     return await this.findOne( {
-      relations: ['articleFeatures',' category',]
+      relations: ['stockFeatures',' category',]
     })
   }
 
   async getByCategoryId(catId: number): Promise<Feature[] | null> {
     const categoryid = await this.feature.find(
       {where:{categoryId : catId},
-      relations: ['category', 'articleFeatures']
+      relations: ['category', 'stockFeatures']
     });
     if (categoryid) {
       return categoryid;

@@ -7,8 +7,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { ArticleFeature } from "./ArticleFeature";
 import { Category } from "./Category";
+import { StockFeature } from "./StockFeature";
 
 @Index("category_id", ["categoryId"], {})
 @Entity("feature", { schema: "inventory_v2" })
@@ -22,13 +22,13 @@ export class Feature {
   @Column("int", { name: "category_id" })
   categoryId: number;
 
-  @OneToMany(() => ArticleFeature, (articleFeature) => articleFeature.feature)
-  articleFeatures: ArticleFeature[];
-
   @ManyToOne(() => Category, (category) => category.features, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "category_id", referencedColumnName: "categoryId" }])
   category: Category;
+
+  @OneToMany(() => StockFeature, (stockFeature) => stockFeature.feature)
+  stockFeatures: StockFeature[];
 }

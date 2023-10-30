@@ -1,7 +1,17 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Article } from "./Article";
 import { Category } from "./Category";
+import { StockFeature } from "./StockFeature";
 
+@Index("FK_stock_category", ["categoryId"], {})
 @Entity("stock", { schema: "inventory_v2" })
 export class Stock {
   @PrimaryGeneratedColumn({ type: "int", name: "stock_id" })
@@ -25,10 +35,10 @@ export class Stock {
   @Column("varchar", { name: "sap_number", length: 50 })
   sapNumber: string;
 
-  @Column("int", { name: "value_on_contract" })
+  @Column("int", { name: "value_on_contract", default: () => "'0'" })
   valueOnContract: number;
 
-  @Column("int", { name: "value_available" })
+  @Column("int", { name: "value_available", default: () => "'0'" })
   valueAvailable: number;
 
   @Column("timestamp", { name: "timestamp", default: () => "'now()'" })
@@ -38,9 +48,12 @@ export class Stock {
   articles: Article[];
 
   @ManyToOne(() => Category, (category) => category.stocks, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "category_id", referencedColumnName: "categoryId" }])
   category: Category;
+
+  @OneToMany(() => StockFeature, (stockFeature) => stockFeature.stock)
+  stockFeatures: StockFeature[];
 }

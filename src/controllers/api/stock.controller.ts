@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Put, Delete, Patch } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
 import { AddStockDto } from 'src/dtos/stock/add.stock.dto';
 import { UpdateStockDto } from 'src/dtos/stock/edit.stock.dto';
@@ -18,6 +18,9 @@ import { StockService } from 'src/services/stock/stock.service';
         eager: true,
       },
       category: {
+        eager: true,
+      },
+      stockFeatures: {
         eager: true,
       },
     },
@@ -50,7 +53,7 @@ export class StockController {
   async updateStock(
     @Param('id') stockId: number,
     @Body() updatedStock: UpdateStockDto,
-  ): Promise<ApiResponse> {
+  ): Promise<Stock | ApiResponse> {
     return this.stockService.updateStock(stockId, updatedStock);
   }
 

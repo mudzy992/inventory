@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseConfiguration } from 'config/database.configuration';
 import { Article } from 'src/entities/Article';
 import { ArticleService } from 'src/services/article/article.service';
-import { ArticleFeature } from 'src/entities/ArticleFeature';
+import { StockFeature } from 'src/entities/StockFeature';
 import { Category } from 'src/entities/Category';
 import { Feature } from 'src/entities/Feature';
 import { Stock } from 'src/entities/Stock';
@@ -62,7 +62,7 @@ import { WebhookFrontendController } from './controllers/api/web.hook.frontend.c
       entities: [
         Article,
         ArticleTimeline,
-        ArticleFeature,
+        StockFeature,
         Category,
         Feature,
         Stock,
@@ -80,7 +80,7 @@ import { WebhookFrontendController } from './controllers/api/web.hook.frontend.c
     }),
     TypeOrmModule.forFeature([
       Article,
-      ArticleFeature,
+      StockFeature,
       ArticleTimeline,
       Category,
       Feature,

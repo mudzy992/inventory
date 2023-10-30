@@ -6,7 +6,7 @@ import { StorageConfig } from 'config/storage.config';
 import createReport from 'docx-templates';
 import { writeFileSync, readFileSync } from 'fs';
 import { Article } from 'src/entities/Article';
-import { ArticleFeature } from 'src/entities/ArticleFeature';
+import { StockFeature } from 'src/entities/StockFeature';
 import { Documents } from 'src/entities/Documents';
 import { Stock } from 'src/entities/Stock';
 import { User } from 'src/entities/User';
@@ -20,8 +20,8 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     @InjectRepository(Article)
     private readonly article: Repository<Article>,
 
-    @InjectRepository(ArticleFeature)
-    private readonly articleFeature: Repository<ArticleFeature>,
+    @InjectRepository(StockFeature)
+    private readonly stockFeature: Repository<StockFeature>,
 
     @InjectRepository(Stock)
     private readonly stock: Repository<Stock>,
@@ -100,18 +100,18 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         /* za svaki slučaj je ovaj if, iako je u DTO postavljen kao opcionalan */
         if (data.features) {
           for (const feature of data.features) {
-            const newArticleFeatures = new ArticleFeature();
-            newArticleFeatures.articleId = savedArticle.articleId;
-            newArticleFeatures.featureId = feature.featureId;
-            newArticleFeatures.value = feature.value;
-            await this.articleFeature.save(newArticleFeatures);
+            const newStockFeatures = new StockFeature();
+            newStockFeatures.stockId = stockId;
+            newStockFeatures.featureId = feature.featureId;
+            newStockFeatures.value = feature.value;
+            await this.stockFeature.save(newStockFeatures);
           }
         }
 
       /* Vrati artikal na prikaz */
       return await this.findOne({ 
         where: { articleId: savedArticle.articleId },
-        relations: ['user', 'stock', 'category', 'articleFeatures', 'articleFeatures.feature', 'articleTimelines', 'documents', 'upgradeFeatures'],
+        relations: ['user', 'stock', 'category', 'stockFeatures', 'stockFeatures.feature', 'articleTimelines', 'documents', 'upgradeFeatures'],
       });
     }
   } /* Kraj metoda za kreiranje novog artikla */
@@ -193,7 +193,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     /* Mehanizam pronalaženja artikla u skladištu po sap broju */
     const serialnumber = await this.article.findOne(
       {where:{serialNumber : serialNumber},
-      relations: ['user', 'user.job', 'user.department', 'user.location', 'stock', 'category', 'articleFeatures', 'articleFeatures.feature', 'articleTimelines', 'articleTimelines.document', 'articleTimelines.user', 'documents', 'upgradeFeatures']
+      relations: ['user', 'user.job', 'user.department', 'user.location', 'stock', 'category', 'stockFeatures', 'stockFeatures.feature', 'articleTimelines', 'articleTimelines.document', 'articleTimelines.user', 'documents', 'upgradeFeatures']
     });
     if (serialnumber) {
       return serialnumber;

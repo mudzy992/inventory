@@ -1,10 +1,15 @@
 export class UpdateStockDto {
-  name?: string; // Novo ime artikla u skladištu
-  excerpt?: string | null; // Novi sažetak
-  description?: string | null; // Nova opis
-  contract?: string | null; // Novi ugovor
-  categoryId?: number; // Nova kategorija (ako se mijenja)
-  sapNumber?: string; // Novi SAP broj
-  valueOnContract?: number; // Nova vrijednost na ugovoru
-  valueAvailable?: number; // Nova dostupna vrijednost
+  name?: string;
+  excerpt?: string | null;
+  description?: string | null;
+  contract?: string | null;
+  categoryId?: number | null;
+  sapNumber?: string | null;
+  valueOnContract?: number | null;
+  valueAvailable?: number | null;
+  features?: UpdateFeatureDto[] | null;
+}
+export class UpdateFeatureDto {
+  featureId?: number;
+  value?: string;
 }

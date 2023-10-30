@@ -30,7 +30,7 @@ import { ArticleService } from 'src/services/article/article.service';
       category: {
         eager: true,
       },
-      articleFeatures: {
+      stockFeatures: {
         eager: true,
       },
       articleTimelines: {

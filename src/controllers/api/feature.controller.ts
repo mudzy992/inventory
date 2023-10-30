@@ -20,7 +20,7 @@ import { EditFeatureDto } from 'src/dtos/features/edit.feature.dto';
   },
   query: {
     join: {
-      articleFeatures: {
+      stockFeatures: {
         eager: true,
       },
       category: {

@@ -7,9 +7,9 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Article } from "./Article";
 import { Feature } from "./Feature";
 import { Stock } from "./Stock";
-import { Article } from "./Article";
 
 @Index("parent_category_id", ["parentCategoryId"], {})
 @Entity("category", { schema: "inventory_v2" })
