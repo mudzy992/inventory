@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
 import { AddNewEmployeDto } from 'src/dtos/user/add.new.employe.dto';
 import { EditEmployeeDto } from 'src/dtos/user/edit.employee.dto';
@@ -41,6 +41,11 @@ import { UserService } from 'src/services/user/user.service';
 })
 export class UserController {
   constructor(public service: UserService) {}
+
+  @Get(':id')
+  async getStockById(@Param('id') userId: number): Promise<User | ApiResponse> {
+    return this.service.getById(userId);
+  }
 
   @Post('/add/')
   async createNewUser(

@@ -80,7 +80,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
       const savedArticle = await this.article.save(newArticle);
 
-      await this.changeStatus(savedArticle.articleId, data)
+      /* await this.changeStatus(savedArticle.articleId, data) */
 
       existingStock.valueAvailable = existingStock.valueAvailable -1;
       await this.stock.save(existingStock);  
@@ -111,13 +111,13 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       /* Vrati artikal na prikaz */
       return await this.findOne({ 
         where: { articleId: savedArticle.articleId },
-        relations: ['user', 'stock', 'category', 'stockFeatures', 'stockFeatures.feature', 'articleTimelines', 'documents', 'upgradeFeatures'],
+        relations: ['user', 'stock', 'category', 'stock.stockFeatures', 'stock.stockFeatures.feature', 'articleTimelines', 'documents', 'upgradeFeatures'],
       });
     }
   } /* Kraj metoda za kreiranje novog artikla */
 
 
-  async changeStatus(articleId: number, data: AddArticleDto): Promise<Article | ApiResponse> {
+  async changeStatus(articleId: number, data: AddArticleDto): Promise<Article | ArticleTimeline | ApiResponse> {
     const existingArticle = await this.article.findOne({ 
       where:{articleId : articleId},
       relations: ['user', 'stock', 'articleTimelines'] 
@@ -131,8 +131,10 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         const preuzeoKorisnik = await this.user.findOne({ where: { userId: data.userId } });
         preuzeo = preuzeoKorisnik.fullname;
 
+        const existingArticleTimeline = await this.articleTimeline.findOne({ where: {articleId: existingArticle.articleId, userId: existingArticle.userId, documentId:existingArticle.documentId}})
+        await this.articleTimeline.update(existingArticleTimeline, {status: "razduženo"})
         await this.article.update(existingArticle.articleId, { userId: data.userId, status: 'zaduženo', comment:data.comment });
-        await this.articleTimeline.update([existingArticle.articleId, existingArticle.userId, existingArticle.documentId], {status: "razduženo"})
+        
         await this.createDocument( 
           existingArticle.articleId, 
           data.comment, 
@@ -147,9 +149,10 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       } else if (data.status === 'razduženo' && existingArticle.status === 'zaduženo') {
         predao = existingArticle.user.fullname;
         preuzeo = 'Skladište';
-
+        const existingArticleTimeline = await this.articleTimeline.findOne({ where: {articleId: existingArticle.articleId, userId: existingArticle.userId, documentId:existingArticle.documentId}})
+        await this.articleTimeline.update(existingArticleTimeline, {status: "razduženo"})
         await this.article.update(existingArticle.articleId, { userId: null, status: 'razduženo', comment: data.comment});
-        await this.articleTimeline.update([existingArticle.articleId, existingArticle.userId, existingArticle.documentId], {status: "razduženo"})
+        
         await this.createDocument( 
           existingArticle.articleId, 
           data.comment, 
@@ -160,8 +163,6 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
           const newValueAvailable = await existingArticle.stock.valueAvailable +1;
           await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable})
-  /*         existingStock.valueAvailable = existingStock.valueAvailable +1;
-          await this.stock.save(existingStock);   */
 
           return await this.findOne({ 
             where: { articleId: existingArticle.articleId },
@@ -182,6 +183,8 @@ export class ArticleService extends TypeOrmCrudService<Article> {
           predao,
           preuzeo)
 
+          const newValueAvailable = await existingArticle.stock.valueAvailable -1;
+          await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable})
           return await this.findOne({ 
             where: { articleId: existingArticle.articleId },
           });
@@ -193,7 +196,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     /* Mehanizam pronalaženja artikla u skladištu po sap broju */
     const serialnumber = await this.article.findOne(
       {where:{serialNumber : serialNumber},
-      relations: ['user', 'user.job', 'user.department', 'user.location', 'stock', 'category', 'stockFeatures', 'stockFeatures.feature', 'articleTimelines', 'articleTimelines.document', 'articleTimelines.user', 'documents', 'upgradeFeatures']
+      relations: ['user', 'user.job', 'user.department', 'user.location', 'stock', 'category', 'stock.stockFeatures', 'stock.stockFeatures.feature', 'articleTimelines', 'articleTimelines.document', 'articleTimelines.user', 'documents', 'upgradeFeatures']
     });
     if (serialnumber) {
       return serialnumber;
@@ -353,8 +356,13 @@ private async createDocument(
   newDoc.articleId = articleId;
 
   const savedDocument = await this.document.save(newDoc);
-
+  
+  const updateArticleTimeline:ArticleTimeline = await this.articleTimeline.findOne({where:{articleId:articleId}});
+  console.log(updateArticleTimeline)
+  
   await this.article.update(articleId, { documentId: savedDocument.documentsId});
+
+  await this.articleTimeline.update(updateArticleTimeline.articleTimelineId, { documentId: savedDocument.documentsId})
 
   let komentar = comment;
   try {
