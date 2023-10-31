@@ -14,8 +14,14 @@ REPO_PATH="Documents/GitHub/inventory/"
 
 # Navigirajte do repozitorija
 cd $REPO_PATH
-git pull
-npm run build --production
+
+# Premjestite se na master granu
+git checkout master
+
+# Povucite izmjene sa master grane
+git pull origin master
+
+npm run build
 
 # Provjerite status PM2 instance za vašu aplikaciju
 if pm2 info inventory-backend >/dev/null 2>&1; then
@@ -32,3 +38,4 @@ fi
 
 # Skripta je uspješno završena
 echo "Ažuriranje i ponovno pokretanje uspješno završeno za BackEnd"
+
