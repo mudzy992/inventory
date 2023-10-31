@@ -7,6 +7,7 @@ import { ApiResponse } from 'src/misc/api.response.class';
 import { AddStockDto } from 'src/dtos/stock/add.stock.dto';
 import { UpdateStockDto } from 'src/dtos/stock/edit.stock.dto';
 import { StockFeature } from 'src/entities/StockFeature';
+import { CreateStockDto } from 'src/dtos/stock/CreateStock.dto';
 
 
 @Injectable()
@@ -21,14 +22,39 @@ export class StockService extends TypeOrmCrudService<Stock> {
     super(stockRepository);
   }
 
-  async addStock(newStock: AddStockDto): Promise<Stock | ApiResponse> {
+  async createStock(newStock: CreateStockDto): Promise<Stock | ApiResponse> {
     try {
-      const stock = this.stockRepository.create(newStock);
-      await this.stockRepository.save(stock);
-      new ApiResponse('ok', 200, 'Artikal uspješno dodan na skladište.');
-      return stock
+      const stock = new Stock();
+      stock.name = newStock.name;
+      stock.excerpt = newStock.excerpt;
+      stock.description = newStock.description;
+      stock.contract = newStock.contract;
+      stock.categoryId = newStock.categoryId;
+      stock.sapNumber = newStock.sapNumber;
+      stock.valueAvailable = newStock.valueAvailable;
+      stock.valueOnContract = newStock.valueOnContract;
+
+      // Ako koristite TypeORM, možete koristiti `save` za čuvanje novog stock-a
+      const createdStock = await this.stockRepository.save(stock);
+
+      // Dodavanje vrednosti za stock, pretpostavimo da imate odgovarajući DTO
+      if (newStock.features) {
+        for (const feature of newStock.features) {
+          const stockFeature = new StockFeature();
+          stockFeature.featureId = feature.featureId;
+          stockFeature.value = feature.value;
+          stockFeature.stock = createdStock; // Postavljanje veze sa stock-om
+
+          // Ako koristite TypeORM, možete koristiti `save` za čuvanje novog stock feature-a
+          await this.stockFeatureRepository.save(stockFeature);
+        }
+      }
+
+      return createdStock;
+      /* Prilagoditi malo povratni stock sa relacijama kako bi bio prikazan full (mada i ne treba) */
     } catch (error) {
-      return new ApiResponse('error', -1000, 'Greška prilikom dodavanja artikla na skladište.');
+      // Obrada greške ako je potrebno
+      throw new ApiResponse('error', -1000, 'Greška prilikom dodavanja artikla na skladište.');
     }
   }
 

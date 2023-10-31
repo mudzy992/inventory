@@ -1,5 +1,6 @@
 import { Controller, Get, Param, Post, Body, Put, Delete, Patch } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
+import { CreateStockDto } from 'src/dtos/stock/CreateStock.dto';
 import { AddStockDto } from 'src/dtos/stock/add.stock.dto';
 import { UpdateStockDto } from 'src/dtos/stock/edit.stock.dto';
 import { Stock } from 'src/entities/Stock';
@@ -45,8 +46,8 @@ export class StockController {
   }
 
   @Post()
-  async addStock(@Body() newStock: AddStockDto): Promise<Stock | ApiResponse> {
-    return this.stockService.addStock(newStock);
+  async addStock(@Body() newStock: CreateStockDto): Promise<Stock | ApiResponse> {
+    return this.stockService.createStock(newStock);
   }
 
   @Put(':id')

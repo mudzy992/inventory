@@ -6,7 +6,7 @@ import { User } from 'src/entities/User';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { UserService } from 'src/services/user/user.service';
 
-@Controller('api/user')
+@Controller('api/user/')
 @Crud({
   model: {
     type: User,
@@ -37,6 +37,7 @@ import { UserService } from 'src/services/user/user.service';
       },
     },
     exclude:['passwordHash'],
+    sort: [{ field: 'fullname', order: 'ASC' }],
   },
 })
 export class UserController {
