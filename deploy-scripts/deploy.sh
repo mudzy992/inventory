@@ -16,10 +16,10 @@ REPO_PATH="Documents/GitHub/inventory/"
 cd $REPO_PATH
 
 # Premjestite se na master granu
-git checkout master
+git checkout nova-verzija
 
 # Povucite izmjene sa master grane
-git pull origin master
+git pull origin nova-verzija
 
 npm run build
 
