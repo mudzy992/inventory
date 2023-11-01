@@ -208,8 +208,9 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     const resultsQuery = this.article
       .createQueryBuilder('article')
       .leftJoin('article.user', 'user')
+      .leftJoin('article.documents', 'documents')
       .where('article.stockId = :stockId', { stockId: stockId })
-      .select(['article', 'user.fullname', 'user.userId'])
+      .select(['article', 'user.fullname', 'user.userId', 'documents.path'])
       .take(perPage)
       .skip(offset);
 
