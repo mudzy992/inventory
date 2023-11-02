@@ -28,6 +28,7 @@ git pull
 
 # Instalirajte sve ovisnosti pomoću npm
 npm install
+npm run build
 
 # Pokrenite ili restartajte aplikaciju koristeći PM2
 # Ovdje zamijenite 'your_app_name' s odgovarajućim imenom za vašu aplikaciju
