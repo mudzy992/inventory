@@ -32,7 +32,7 @@ npm install
 # Pokrenite ili restartajte aplikaciju koristeći PM2
 # Ovdje zamijenite 'your_app_name' s odgovarajućim imenom za vašu aplikaciju
 # pm2 startOrRestart /home/administrator/Documents/GitHub/frontend-inventory/deploy-scripts/ecosystem.config.js --env production
-server /home/administrator/Documents/GitHub/frontend-inventory/build -s -p 4001
+serve /home/administrator/Documents/GitHub/frontend-inventory/build -s -p 4001
 
 # Skripta je uspješno završena
 echo "Ažuriranje i ponovno pokretanje uspješno završeno za FrontEnd."
