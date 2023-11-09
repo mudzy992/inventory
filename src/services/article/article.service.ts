@@ -63,6 +63,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
   
     if (!existingArticle && data.status === 'zaduženo') {
       const skladiste = await this.user.findOne({where:{userId: 390}})
+      console.log("Skladište:" + skladiste.userId + " " + skladiste.fullname)
       predao = skladiste.fullname;
       const preuzeoKorisnik = await this.user.findOne({ where: { userId: data.userId } });
       preuzeo = preuzeoKorisnik.fullname;
