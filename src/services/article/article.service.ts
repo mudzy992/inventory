@@ -62,7 +62,8 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     let preuzeo: string;
   
     if (!existingArticle && data.status === 'zaduženo') {
-      predao = 'Skladište';
+      const skladiste = await this.user.findOne({where:{userId: 390}})
+      predao = skladiste.fullname;
       const preuzeoKorisnik = await this.user.findOne({ where: { userId: data.userId } });
       preuzeo = preuzeoKorisnik.fullname;
 
@@ -123,6 +124,8 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       relations: ['user', 'stock', 'articleTimelines'] 
     });
 
+    const skladiste = await this.user.findOne({ where: {userId : 360}})
+
     let predao: string;
     let preuzeo: string;
     if (existingArticle){
@@ -148,10 +151,10 @@ export class ArticleService extends TypeOrmCrudService<Article> {
           });
       } else if (data.status === 'razduženo' && existingArticle.status === 'zaduženo') {
         predao = existingArticle.user.fullname;
-        preuzeo = 'Skladište';
+        preuzeo = skladiste.fullname;
         const existingArticleTimeline = await this.articleTimeline.findOne({ where: {articleId: existingArticle.articleId, userId: existingArticle.userId, documentId:existingArticle.documentId}})
         await this.articleTimeline.update(existingArticleTimeline, {status: "razduženo"})
-        await this.article.update(existingArticle.articleId, { userId: null, status: 'razduženo', comment: data.comment});
+        await this.article.update(existingArticle.articleId, { userId: skladiste.userId, status: 'razduženo', comment: data.comment});
         
         await this.createDocument( 
           existingArticle.articleId, 
@@ -170,7 +173,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       }
     
       if (data.status === 'zaduženo' && existingArticle.status === 'razduženo') {
-        predao = 'Skladište';
+        predao = skladiste.fullname;
         const preuzeoKorisnik = await this.user.findOne({ where: { userId: data.userId } });
         preuzeo = preuzeoKorisnik.fullname;
 
@@ -359,11 +362,14 @@ private async createDocument(
   const savedDocument = await this.document.save(newDoc);
   
   const updateArticleTimeline:ArticleTimeline = await this.articleTimeline.findOne({where:{articleId:articleId}});
-  console.log(updateArticleTimeline)
   
   await this.article.update(articleId, { documentId: savedDocument.documentsId});
 
   await this.articleTimeline.update(updateArticleTimeline.articleTimelineId, { documentId: savedDocument.documentsId})
+
+  const direktor = await this.user.findOne({where:{jobId: 12}})
+
+  const godina:number = new Date().getFullYear();
 
   let komentar = comment;
   try {
@@ -380,6 +386,8 @@ private async createDocument(
         inv_broj: invNumber,
         naziv: name,
         komentar: komentar,
+        direktor: direktor.fullname,
+        godina: godina
       },
     });
     writeFileSync(
