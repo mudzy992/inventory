@@ -25,11 +25,11 @@ export class WebhookFrontendController {
     exec('sh ./deploy-scripts/deploy-frontend.sh', (error, stdout, stderr) => {
       if (error) {
         console.error(`Greška prilikom izvršavanja deploy.sh: ${error}`);
-        res.status(500).send('Greška prilikom izvršavanja deploy.sh!');
+        res.status(500).send(`Greška prilikom izvršavanja deploy.sh! Greška: ${error} ili ${stderr}`);
         return;
       }
       console.log(`Skripta frontend-deploy.sh je uspješno izvršena: ${stdout}`);
-      res.status(200).send('Webhook primljen i deployiran za FrontEnd.');
+      res.status(200).send(`Webhook primljen i deployiran za FrontEnd. Stanje: ${stdout}`);
     });
   }
 
