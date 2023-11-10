@@ -130,7 +130,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       relations: ['user', 'stock', 'articleTimelines'] 
     });
 
-    const skladiste = await this.user.findOne({ where: {userId : 360}})
+    const skladiste = await this.user.findOne({ where: {userId : 390}})
 
     let predao: string;
     let preuzeo: string;
@@ -143,13 +143,10 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         //Da bi postavili status "razduženo", u vremenskoj liniji za artikal koji već ima status "zaduženo" jer ga zadužujem na drugo korisnika, moram da pronađem taj red u vremenskoj liniji
         //koji odgovara articleId, userId, documentId
         const existingArticleTimeline = await this.articleTimeline.findOne({ where: {articleId: existingArticle.articleId, userId: existingArticle.userId, documentId:existingArticle.documentId}})
-        const snimljenavremenskalinijia = await this.articleTimeline.update(existingArticleTimeline, {status: "razduženo"}) // i u tom redu mjenjamo samo status "zaduženo" u "razduženo"
         
-        console.log("Uspješno izmjenjena vremenska linija: " + snimljenavremenskalinijia)
-        const artikal = await this.article.update(existingArticle.articleId, { userId: data.userId, status: 'zaduženo', comment:data.comment });
-          if(artikal){
-            console.log("Artikal unutar zaduženo -> zaduženo uspješno snimljen")
-          }
+        await this.articleTimeline.update(existingArticleTimeline, {status: "razduženo"}) // i u tom redu mjenjamo samo status "zaduženo" u "razduženo"
+
+        await this.article.update(existingArticle.articleId, { userId: data.userId, status: 'zaduženo', comment:data.comment }); // vršimo izmjenu postojećeg artikla za stanje
           
         await this.createDocument( 
           existingArticle.articleId, 
@@ -157,18 +154,20 @@ export class ArticleService extends TypeOrmCrudService<Article> {
           existingArticle.stock.name,
           data.invNumber,
           predao,
-          preuzeo)
-
+          preuzeo) // Čekamo da se artikal ažurira i da prebaci uredna stanja u ovu funkciju
           
           return await this.findOne({ 
             where: { articleId: existingArticle.articleId },
           });
-      } else if (data.status === 'razduženo' && existingArticle.status === 'zaduženo') { // Ako je postojeći status "zadužueno", a šaljemo "razduženo" - tj. RAZDUŽUJEMO ARTIKAL
+      } else if (data.status === 'razduženo' && existingArticle.status === 'zaduženo') { // Ako je postojeći status "zadužueno", a šaljemo "razduženo" - tj. RAZDUŽUJEMO ARTIKAL. (SA KREIRANJEM KORISNIKA ZA SKLADIŠTE, TJ. PODRUŽNICU DO OVOG STANJA NIKADA DOĆI NEĆE)
         predao = existingArticle.user.fullname;
         preuzeo = skladiste.fullname;
         const existingArticleTimeline = await this.articleTimeline.findOne({ where: {articleId: existingArticle.articleId, userId: existingArticle.userId, documentId:existingArticle.documentId}})
+
         await this.articleTimeline.update(existingArticleTimeline, {status: "razduženo"})
-        
+
+        await this.article.update(existingArticle.articleId, { userId: skladiste.userId, status: 'razduženo', comment: data.comment});
+
         await this.createDocument( 
           existingArticle.articleId, 
           data.comment, 
@@ -177,10 +176,6 @@ export class ArticleService extends TypeOrmCrudService<Article> {
           predao,
           preuzeo);
 
-          const artikal = await this.article.update(existingArticle.articleId, { userId: skladiste.userId, status: 'razduženo', comment: data.comment});
-          if(artikal){
-            console.log("Artikal unutar zaduženo -> razduženo uspješno snimljen")
-          }
           const newValueAvailable = await existingArticle.stock.valueAvailable +1;
           await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable})
 
@@ -194,10 +189,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         const preuzeoKorisnik = await this.user.findOne({ where: { userId: data.userId } });
         preuzeo = preuzeoKorisnik.fullname;
 
-        const artikal = await this.article.update(existingArticle.articleId, { userId: data.userId, status: 'zaduženo', comment: data.comment });
-          if(artikal){
-            console.log("Artikal unutar razduženo -> zaduženo uspješno snimljen")
-          }
+        this.article.update(existingArticle.articleId, { userId: data.userId, status: 'zaduženo', comment: data.comment });
 
         await this.createDocument( 
           existingArticle.articleId, 
@@ -382,32 +374,33 @@ private async createDocument(
   newDoc.articleId = articleId;
 
   const savedDocument = await this.document.save(newDoc);
-
-  if(savedDocument) {
-    console.log("dokument uspješno snimljen")
-  }
-  
-  const artiTimeline:ArticleTimeline = await this.articleTimeline.findOne({where:{articleId:articleId}});
-
-  if (artiTimeline) {
-    console.log("Vremenska linija: " + artiTimeline)
-  }
-  
-  const artikal = await this.article.update(articleId, { documentId: savedDocument.documentsId});
-  if(artikal){
-    console.log("Artikal unutar changestatus uspjeno izmjenjen")
+  if(!savedDocument){
+    new ApiResponse("error", -9001, "Greška prilikom snimanja Dokumenta. Desila se u Article servisu u funkciju za promjenu status.") // Ako se desi greška prilikom snimanja, povuću grešku
   }
 
-  const updateArticleTimeline = this.articleTimeline.update(artiTimeline.articleTimelineId, { documentId: savedDocument.documentsId})
-  if (updateArticleTimeline) {
-    console.log("Vremenska linija unutr changestatus uspješno izmjenjena")
+  const preuzeoKorisnik = await this.user.findOne({where:{fullname: preuzeo}}) // Za porebe articleTimeline da izvučem userId (šanse us minimalne da dođe do neke zabune)
+  const artikal = await this.article.findOne({where: {articleId: articleId}}) // Za potrebe articleTimeline da izvučem serialNumber, status i invNumber (iako inv imam proslijeđen)
+
+  const newArticleTimeline: ArticleTimeline = new ArticleTimeline()
+  newArticleTimeline.articleId = articleId; // articleId koji prosljeđujemo je logično uvijek taj
+  newArticleTimeline.userId = preuzeoKorisnik.userId; // userId koji smo izvukli iz preuzeoKorisnik
+  newArticleTimeline.documentId = savedDocument.documentsId; // nova prenosnica koja je kreirana u koraku ispred
+  newArticleTimeline.serialNumber = artikal.serialNumber; // izvukli iz konstante artikal
+  newArticleTimeline.status = artikal.status; // obzirom da vršim update status za taj artikal u tabeli article sa await, znači da je taj status mjerodavan uvijek za novi articleTimeline
+  newArticleTimeline.invNumber = artikal.invNumber; // Inventurni broj je vezan samo za taj artikal
+  newArticleTimeline.comment = comment; // razlog za promjenu statusa
+
+  const savedArticleTimline = await this.articleTimeline.save(newArticleTimeline) // Snimanje nove vremenske linije
+  if(!savedArticleTimline){
+    new ApiResponse("error", -9000, "Greška prilikom snimanja ArticleTimeline. Desila se u Article servisu u funkciju za promjenu status.") // Ako se desi greška prilikom snimanja, povuću grešku
   }
 
-  const direktor = await this.user.findOne({where:{jobId: 12}})
+  await this.article.update(articleId, { documentId: savedDocument.documentsId}); // U bilo kojem slučaju kada dodje do ove funkcije za kreiranje dokumenta, artikal uvijek postoji pod tim articleId, vrši se update njegovog documentId jer je dobijem tak u ovoj funkciju
 
-  const godina:number = new Date().getFullYear();
+  const direktor: User = await this.user.findOne({where:{jobId: 12}}) // Pronalazimo u tabeli user direktora jer je jobId za direktora 12 i smještamo ga u ovu konstantu
 
-  let komentar = comment;
+  const godina:number = new Date().getFullYear(); // Za potrebe godine na prenosnici smještamo tekuću godinu u ovu konstantu
+
   try {
     const template = readFileSync(
       StorageConfig.prenosnica.template,
@@ -421,7 +414,7 @@ private async createDocument(
         preuzeo_korisnik: preuzeo,
         inv_broj: invNumber,
         naziv: name,
-        komentar: komentar,
+        komentar: comment,
         direktor: direktor.fullname,
         godina: godina
       },
