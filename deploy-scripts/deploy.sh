@@ -35,9 +35,22 @@ git checkout "$SELECTED_BRANCH"
 echo "Povlačenje izmjena sa branch-a: $SELECTED_BRANCH"
 git pull origin "$SELECTED_BRANCH"
 
-echo "Prije izvršavanja npm install."
-npm install
-echo "Nakon izvršenja npm install"
+# Provjerite postoji li datoteka package-lock.json
+if [ -f "package-lock.json" ]; then
+  # Ako postoji, provjerite ima li promjena u paketima
+  if npm ci --dry-run; then
+    echo "Nema promjena u paketima. Preskakanje npm install."
+  else
+    echo "Detektirane promjene u paketima. Izvršavanje npm install."
+    # Instalirajte sve ovisnosti pomoću npm
+    npm install
+  fi
+else
+  # Ako ne postoji, instalirajte sve ovisnosti pomoću npm
+  echo "package-lock.json ne postoji. Izvršavanje npm install."
+  npm install
+fi
+
 # Izvršite build projekta
 echo "Prije izvršavanja npm run build."
 npm run build
