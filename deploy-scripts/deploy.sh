@@ -21,6 +21,12 @@ REPO_PATH="/home/administrator/Documents/GitHub/inventory/"
 # Navigirajte do repozitorija
 cd "$REPO_PATH" || exit
 
+# Dodajte ispis trenutnog radnog direktorija
+echo "Trenutni radni direktorij: $(pwd)"
+
+# Dodajte ispis sadržaja trenutnog radnog direktorija
+echo "Sadržaj trenutnog radnog direktorija: $(ls -l)"
+
 # Premjestite se na odabrani branch
 echo "Premještanje na branch: $SELECTED_BRANCH"
 git checkout "$SELECTED_BRANCH"
@@ -45,9 +51,14 @@ else
   npm install
 fi
 
+# Dodajte ispis prije izvršavanja npm run build
+echo "Prije izvršavanja npm run build."
+
 # Izvršite build projekta
-echo "Izvršavanje npm run build."
 npm run build
+
+# Dodajte ispis nakon izvršavanja npm run build
+echo "Nakon izvršavanja npm run build."
 
 # Provjerite status PM2 instance za vašu aplikaciju
 if pm2 info inventory-backend >/dev/null 2>&1; then
@@ -57,8 +68,12 @@ if pm2 info inventory-backend >/dev/null 2>&1; then
 else
   # Ako PM2 instanca ne postoji, pokrenite novu
   echo "PM2 instanca ne postoji. Pokretanje nove instance."
+  # Dodajte ispis prije izvršavanja PM2 komandi
+  echo "Prije izvršavanja PM2 komandi."
   # Pokrenite aplikaciju pomoću PM2
   pm2 start dist/src/main.js --name inventory-backend --watch
+  # Dodajte ispis nakon izvršavanja PM2 komandi
+  echo "Nakon izvršavanja PM2 komandi."
 fi
 
 # Skripta je uspješno završena
