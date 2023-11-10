@@ -51,30 +51,35 @@ else
   npm install
 fi
 
-# Dodajte ispis prije izvršavanja npm run build
-echo "Prije izvršavanja npm run build."
-
 # Izvršite build projekta
+echo "Prije izvršavanja npm run build."
 npm run build
+build_exit_code=$?
+echo "Nakon izvršavanja npm run build. Exit code: $build_exit_code"
 
-# Dodajte ispis nakon izvršavanja npm run build
-echo "Nakon izvršavanja npm run build."
+# Provjerite rezultat izgradnje
+if [ $build_exit_code -eq 0 ]; then
+  # Izgradnja je uspješno završena, nastavite s ostatkom skripte
 
-# Provjerite status PM2 instance za vašu aplikaciju
-if pm2 info inventory-backend >/dev/null 2>&1; then
-  # Ako PM2 instanca već postoji, izvršite restart
-  echo "PM2 instanca postoji. Izvršavanje pm2 restart."
-  pm2 restart inventory-backend --watch
+  # Provjerite status PM2 instance za vašu aplikaciju
+  if pm2 info inventory-backend >/dev/null 2>&1; then
+    # Ako PM2 instanca već postoji, izvršite restart
+    echo "PM2 instanca postoji. Izvršavanje pm2 restart."
+    pm2 restart inventory-backend --watch
+  else
+    # Ako PM2 instanca ne postoji, pokrenite novu
+    echo "PM2 instanca ne postoji. Pokretanje nove instance."
+    # Dodajte ispis prije izvršavanja PM2 komandi
+    echo "Prije izvršavanja PM2 komandi."
+    # Pokrenite aplikaciju pomoću PM2
+    pm2 start dist/src/main.js --name inventory-backend --watch
+    # Dodajte ispis nakon izvršavanja PM2 komandi
+    echo "Nakon izvršavanja PM2 komandi."
+  fi
+
+  # Skripta je uspješno završena
+  echo "Ažuriranje i ponovno pokretanje uspješno završeno za BackEnd."
 else
-  # Ako PM2 instanca ne postoji, pokrenite novu
-  echo "PM2 instanca ne postoji. Pokretanje nove instance."
-  # Dodajte ispis prije izvršavanja PM2 komandi
-  echo "Prije izvršavanja PM2 komandi."
-  # Pokrenite aplikaciju pomoću PM2
-  pm2 start dist/src/main.js --name inventory-backend --watch
-  # Dodajte ispis nakon izvršavanja PM2 komandi
-  echo "Nakon izvršavanja PM2 komandi."
+  # Izgradnja nije uspješno završena, ispišite odgovarajuću poruku
+  echo "Greška tijekom izvršavanja npm run build. Provjerite izlaz za više informacija."
 fi
-
-# Skripta je uspješno završena
-echo "Ažuriranje i ponovno pokretanje uspješno završeno za BackEnd."
