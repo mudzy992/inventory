@@ -77,6 +77,7 @@ export class UserService extends TypeOrmCrudService<User> {
     existingUser.jobId = data.jobId;
     existingUser.departmentId = data.departmentId;
     existingUser.locationId = data.locationId;
+    existingUser.status = data.status;
 
     const saveEditedUser = await this.user.save(existingUser)
     if(!saveEditedUser){

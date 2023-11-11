@@ -40,4 +40,8 @@ export class EditEmployeeDto {
   @Validator.IsString()
   @Validator.Length(6, 12)
   password: string;
+
+  @Validator.IsString()
+  @Validator.Length(2, 64)
+  status: "aktivan" | "neaktivan";
 }
