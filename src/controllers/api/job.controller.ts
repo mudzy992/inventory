@@ -24,7 +24,7 @@ import { JobService } from 'src/services/job/job.service';
         eager: true,
       },
       users: {
-        eager: true,
+        eager: false,
      }, 
     },
   },

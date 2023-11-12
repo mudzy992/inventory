@@ -4,12 +4,12 @@ export class EditEmployeeDto {
   @Validator.IsNotEmpty()
   @Validator.IsString()
   @Validator.Length(2, 64)
-  surename: string;
+  surename?: string;
 
   @Validator.IsNotEmpty()
   @Validator.IsString()
   @Validator.Length(2, 64)
-  forname: string;
+  forname?: string;
 
   @Validator.IsNotEmpty()
   @Validator.IsEmail({
@@ -17,31 +17,31 @@ export class EditEmployeeDto {
     allow_utf8_local_part: true,
     require_tld: true,
   })
-  email: string;
+  email?: string;
 
   @Validator.IsString()
   @Validator.Length(2, 64)
-  localNumber: string;
+  localNumber?: string;
 
   @Validator.IsString()
   @Validator.Length(2, 64)
-  telephone: string;
+  telephone?: string;
 
   @Validator.IsNumber()
-  departmentId: number;
+  departmentId?: number;
 
   @Validator.IsNumber()
-  jobId: number;
+  jobId?: number;
 
   @Validator.IsNumber()
-  locationId: number;
+  locationId?: number;
 
   @Validator.IsNotEmpty()
   @Validator.IsString()
   @Validator.Length(6, 12)
-  password: string;
+  password?: string;
 
   @Validator.IsString()
   @Validator.Length(2, 64)
-  status: "aktivan" | "neaktivan";
+  status?: "aktivan" | "neaktivan";
 }

@@ -67,9 +67,11 @@ export class UserService extends TypeOrmCrudService<User> {
     const passwordHashString = passwordHash.digest('hex').toUpperCase();
 
     const existingUser = await this.user.findOne({where:{ userId : userId }})
+    const fullname = data.surename + ' ' + data.forname;
 
     existingUser.forname = data.forname;
     existingUser.surname = data.surename;
+    existingUser.fullname = fullname;
     existingUser.email = data.email;
     existingUser.passwordHash = passwordHashString;
     existingUser.localNumber = data.localNumber;
@@ -81,7 +83,7 @@ export class UserService extends TypeOrmCrudService<User> {
 
     const saveEditedUser = await this.user.save(existingUser)
     if(!saveEditedUser){
-      return new ApiResponse('error', -6002, 'User cannot be edited. Please try again later.')
+      return new ApiResponse('error', -6002, 'Korisnik ne može biti izmjenjen')
     }
     }
 
