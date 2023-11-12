@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
 import { UpgradeFeatureDto } from 'src/dtos/upgradeFeature/upgrade.feature.dto';
 import { UpgradeFeature } from 'src/entities/UpgradeFeature';
@@ -34,5 +34,12 @@ export class UpgradeFeatureController {
     @Param('sb') sb: string,
   ) {
     return this.service.newUpgradeFeature(sb, data)
+  }
+
+  @Delete('/delete/:id')
+  async deleteUpgradeFeature(
+    @Param('id') id: number,
+  ) {
+    return this.service.deleteUpgradeFeature(id)
   }
 }
