@@ -17,8 +17,8 @@ export class UpgradeFeature {
   @Column("varchar", { name: "name", length: 255 })
   name: string;
 
-  @Column({type:'int', name: "value"})
-  value: number;
+  @Column("varchar", {name: "value", length: 50})
+  value: string;
 
   @Column("timestamp", {
     name: "timestamp",

@@ -1,6 +1,6 @@
 export class UpgradeFeatureDto {
     name: string;
-    value: number;
+    value: string;
     comment: string;
     articleId: number;
 }
