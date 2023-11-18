@@ -4,7 +4,7 @@ import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { AddArticleDto } from 'src/dtos/article/add.article.dto';
 import { StorageConfig } from 'config/storage.config';
 import createReport from 'docx-templates';
-import { writeFileSync, readFileSync } from 'fs';
+import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
 import { Article } from 'src/entities/Article';
 import { StockFeature } from 'src/entities/StockFeature';
 import { Documents } from 'src/entities/Documents';
@@ -178,6 +178,31 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
           const newValueAvailable = await existingArticle.stock.valueAvailable +1;
           await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable})
+
+          return await this.findOne({ 
+            where: { articleId: existingArticle.articleId },
+          });
+      } else if (data.status === 'otpisano'){
+        predao = existingArticle.user.fullname;
+        preuzeo = skladiste.fullname;
+        const existingArticleTimeline = await this.articleTimeline.findOne({ where: {articleId: existingArticle.articleId, userId: existingArticle.userId, documentId:existingArticle.documentId}})
+
+        await this.articleTimeline.update(existingArticleTimeline, {status: "razduženo"})
+
+        await this.article.update(existingArticle.articleId, { userId: skladiste.userId, status: 'otpisano', comment: 'OTPIS: ' + data.comment});
+
+        await this.createDocument( 
+          existingArticle.articleId, 
+          data.comment, 
+          existingArticle.stock.name,
+          data.invNumber,
+          predao,
+          preuzeo);
+
+          if(existingArticle.status === 'razduženo') {
+            const newValueAvailable = await existingArticle.stock.valueAvailable -1;
+            await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable})
+          }
 
           return await this.findOne({ 
             where: { articleId: existingArticle.articleId },
@@ -369,7 +394,7 @@ private async createDocument(
   
 
   const newDoc : Documents = new Documents();
-  newDoc.path = 'prenosnica' + documentNumber + '.docx';
+  newDoc.path = currentYear + '/prenosnica' + documentNumber + '.docx';
   newDoc.documentNumber = documentNumber;
   newDoc.articleId = articleId;
 
@@ -388,7 +413,7 @@ private async createDocument(
   newArticleTimeline.serialNumber = artikal.serialNumber; // izvukli iz konstante artikal
   newArticleTimeline.status = artikal.status; // obzirom da vršim update status za taj artikal u tabeli article sa await, znači da je taj status mjerodavan uvijek za novi articleTimeline
   newArticleTimeline.invNumber = artikal.invNumber; // Inventurni broj je vezan samo za taj artikal
-  newArticleTimeline.comment = comment; // razlog za promjenu statusa
+  newArticleTimeline.comment = artikal.comment; // razlog za promjenu statusa
 
   const savedArticleTimline = await this.articleTimeline.save(newArticleTimeline) // Snimanje nove vremenske linije
   if(!savedArticleTimline){
@@ -402,10 +427,22 @@ private async createDocument(
   const godina:number = new Date().getFullYear(); // Za potrebe godine na prenosnici smještamo tekuću godinu u ovu konstantu
 
   try {
+    console.log('Prolazi kroz try blok');
+  
     const template = readFileSync(
       StorageConfig.prenosnica.template,
-      /* StorageConfig.prenosnica.fullPath + 'templates/prenosnica.docx', */
     );
+    
+    const folderPath = StorageConfig.prenosnica.destination + currentYear + '/';
+  
+    if (!existsSync(folderPath)) {
+      try {
+        mkdirSync(folderPath, { recursive: true });
+      } catch (mkdirErr) {
+        return new ApiResponse("error", -9008, "Greška prilikom kreiranja novog foldera za prenosnice. Error: " + mkdirErr)
+      }
+    }
+  
     const buffer = await createReport({
       template,
       data: {
@@ -416,19 +453,17 @@ private async createDocument(
         naziv: name,
         komentar: comment,
         direktor: direktor.fullname,
-        godina: godina
+        godina: godina,
       },
     });
+  
     writeFileSync(
-      StorageConfig.prenosnica.destination +
-        'prenosnica' +
-        documentNumber +
-        '.docx',
+      folderPath + 'prenosnica' + documentNumber + '.docx',
       buffer,
     );
   } catch (err) {
-    console.log(err);
+    console.log('Greška u try bloku:', err);
   }
+  
 }
-
 } /* Kraj koda */
