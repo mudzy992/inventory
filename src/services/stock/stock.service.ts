@@ -62,54 +62,60 @@ export class StockService extends TypeOrmCrudService<Stock> {
 
   async updateStock(stockId: number, updatedStock: UpdateStockDto): Promise<Stock | ApiResponse> {
     const stock = await this.stockRepository.findOne({ where: { stockId }, relations: ['stockFeatures', 'stockFeatures.feature'] });
-    try {       
-        if (updatedStock.features) {
-          for (const updatedFeature of updatedStock.features) {
-            const feature = stock.stockFeatures.find((f) => f.feature.featureId === updatedFeature.featureId);
-            
-            if (feature) {
-                const stockFeatures = stock.stockFeatures.find(
-                  (af) => af.featureId === updatedFeature.featureId
-                );
-
-                if(!stockFeatures){
-                  const newStockFeature = new StockFeature()
-                  newStockFeature.featureId = updatedFeature.featureId;
-                  newStockFeature.value = updatedFeature.value;
-
-                  await this.stockRepository.save(newStockFeature)
-                }
-                
-                if (stockFeatures) {
-                  if (updatedFeature.value !== undefined) {
-                    stockFeatures.value = updatedFeature.value;
-                    await this.stockFeatureRepository.save(stockFeatures);
-                    /* await this.stockFeatureRepository.update(stockFeatures.stockFeatureId, {value: updatedFeature.value}); */
-                  }
-                }
+    try {
+      if (updatedStock.features) {
+        // Provjeriti koji stockFeature nedostaju u payload-u
+        const stockFeaturesToRemove = stock.stockFeatures.filter(existingFeature =>
+          !updatedStock.features.some(updatedFeature => updatedFeature.featureId === existingFeature.featureId)
+        );
+  
+        // Obriši StockFeature entitete koji nisu prisutni u payload-u
+        await Promise.all(stockFeaturesToRemove.map(async (featureToRemove) => {
+          await this.stockFeatureRepository.remove(featureToRemove);
+          console.log("Obrisan feature:", featureToRemove);
+        }));
+  
+        // Iteriraj kroz feature-ove u payload-u
+        for (const updatedFeature of updatedStock.features) {
+          const feature = stock.stockFeatures.find((f) => f.feature.featureId === updatedFeature.featureId);
+  
+          if (!feature) {
+            // Ako ne postoji, kreirajte novi StockFeature i dodajte ga u stock.stockFeatures
+            const newStockFeature = new StockFeature()
+            newStockFeature.stockId = stockId;
+            newStockFeature.featureId = updatedFeature.featureId;
+            newStockFeature.value = updatedFeature.value;
+  
+            stock.stockFeatures.push(newStockFeature);  // Dodajte novi StockFeature u stock.stockFeatures
+  
+            const savedFeature = await this.stockFeatureRepository.save(newStockFeature);
+          } else {
+            // Ako postoji, izvršite ažuriranje
+            if (updatedFeature.value !== undefined) {
+              feature.value = updatedFeature.value;
+              const savedFeature = await this.stockFeatureRepository.save(feature);
             }
           }
         }
-
-        // Ažuriraj "core" podatke za artikal
-        stock.name = updatedStock.name;
-        stock.excerpt = updatedStock.excerpt;
-        stock.description = updatedStock.description;
-        stock.contract = updatedStock.contract;
-        stock.categoryId = updatedStock.categoryId;
-        stock.sapNumber = updatedStock.sapNumber;
-        stock.valueAvailable = updatedStock.valueAvailable;
-        stock.valueOnContract = updatedStock.valueOnContract;
-
-        await this.stockRepository.save(stock);
-
-        new ApiResponse('ok', 200, 'Artikal uspješno izmjenjen na skladištu.');
-        
-        return stock
+      }
+  
+      // Ažuriraj "core" podatke za artikal
+      stock.name = updatedStock.name;
+      stock.excerpt = updatedStock.excerpt;
+      stock.description = updatedStock.description;
+      stock.contract = updatedStock.contract;
+      stock.categoryId = updatedStock.categoryId;
+      stock.sapNumber = updatedStock.sapNumber;
+      stock.valueAvailable = updatedStock.valueAvailable;
+      stock.valueOnContract = updatedStock.valueOnContract;
+  
+      await this.stockRepository.save(stock);
+  
+      return stock;  
     } catch (error) {
-        return new ApiResponse('error', -1001, 'Greška prilikom izmjene artikla na skladištu. Greška: ' + error);
+      return new ApiResponse('error', -1001, 'Greška prilikom izmjene artikla na skladištu. Greška: ' + error);
     }
-}
+  }
 
 
   async deleteStock(stockId: number): Promise<ApiResponse> {
