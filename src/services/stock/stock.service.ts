@@ -72,13 +72,12 @@ export class StockService extends TypeOrmCrudService<Stock> {
         // Obriši StockFeature entitete koji nisu prisutni u payload-u
         await Promise.all(stockFeaturesToRemove.map(async (featureToRemove) => {
           await this.stockFeatureRepository.remove(featureToRemove);
-          console.log("Obrisan feature:", featureToRemove);
         }));
   
         // Iteriraj kroz feature-ove u payload-u
         for (const updatedFeature of updatedStock.features) {
           const feature = stock.stockFeatures.find((f) => f.feature.featureId === updatedFeature.featureId);
-  
+
           if (!feature) {
             // Ako ne postoji, kreirajte novi StockFeature i dodajte ga u stock.stockFeatures
             const newStockFeature = new StockFeature()

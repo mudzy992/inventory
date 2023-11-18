@@ -65,8 +65,6 @@ export class ArticleService extends TypeOrmCrudService<Article> {
   
     if (!existingArticle && data.status === 'zaduženo') { //Ako artikal na postoji
       
-      console.log("Skladište:" + skladiste.userId + " " + skladiste.fullname)
-
       predao = skladiste.fullname;
 
       const preuzeoKorisnik = await this.user.findOne({ where: { userId: data.userId } });
@@ -275,84 +273,6 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     };
   }
 
-  
-
-//   async editArticle(
-//     articleId: number,
-//     data: EditFullArticleDto,
-//   ): Promise<Article | ApiResponse> {
-//     const existingArticle: Article = await this.article.findOne({where:{articleId: articleId}})
-//     if (!existingArticle) {
-//       return new ApiResponse('error', -1001, 'Artikal ne postoji u skladištu');
-//     }
-//     if (data.details !== null) {
-//       this.article.update(existingArticle, {
-//           name : data.details.name,
-//           categoryId : data.categoryId,
-//           excerpt : data.details.excerpt,
-//           description : data.details.description,
-//           concract : data.details.concract,
-//         })
-//         const savedArticle = await this.article.save(existingArticle);
-
-//         if (!savedArticle) {
-//           return new ApiResponse('error', -1002, 'Artikal nije moguće spasiti');
-//         }
-//     }
-    
-//     if (data.stock !== null) {
-//       const existingArticleInStock = await this.stock.findOne({where:{articleId : articleId}})
-//       this.stock.update(existingArticleInStock, {
-//         valueOnConcract : data.stock.valueOnConcract,
-//         valueAvailable : data.stock.valueAvailable,
-//         sapNumber : data.stock.sap_number,
-//       })
-//     }
-
-//      if (data.features !== null) {
-//        await this.articleFeature.remove(await this.articleFeature.findOne({where:{articleId : articleId}}));
-//       for (const feature of data.features) {
-//         const newArticleFeature: ArticleFeature = new ArticleFeature();
-//         newArticleFeature.articleId = articleId;
-//         newArticleFeature.featureId = feature.featureId;
-//         newArticleFeature.value = feature.value;
-//         await this.articleFeature.save(newArticleFeature);
-//       } 
-//     }
-
-//     return await this.findOne(
-//       {where:{articleId:articleId},
-//       relations: [
-//         'category',
-//         'articleFeature',
-//         'features',
-//         'articlesInStock',
-//       ],
-//     });
-  
-//   }
-//  async changeStockExistArticle(
-//     articleId: number,
-//     data: AddArticleDto,
-//   ): Promise<Stock> {
-//     const existingStockArticle = await this.stock.findOne({where:{
-//       articleId: articleId,
-//     }});
-//     if (existingStockArticle) {
-//       await this.stock.remove(
-//         await this.stock.findOne({where:{ articleId: articleId }}),
-//       );
-//       const newArticleStock: Stock = new Stock();
-//       newArticleStock.articleId = articleId;
-//       newArticleStock.valueOnConcract = data.stock.valueOnConcract;
-//       newArticleStock.valueAvailable = data.stock.valueAvailable;
-//       newArticleStock.sapNumber = data.sap_number;
-//       await this.stock.save(newArticleStock);
-//       return newArticleStock;
-//     }
-//   }
-
-
 private async createDocument(
   articleId: number,
   comment: string,
@@ -426,9 +346,7 @@ private async createDocument(
 
   const godina:number = new Date().getFullYear(); // Za potrebe godine na prenosnici smještamo tekuću godinu u ovu konstantu
 
-  try {
-    console.log('Prolazi kroz try blok');
-  
+  try { 
     const template = readFileSync(
       StorageConfig.prenosnica.template,
     );
@@ -462,7 +380,7 @@ private async createDocument(
       buffer,
     );
   } catch (err) {
-    console.log('Greška u try bloku:', err);
+    return new ApiResponse('error', -9009, "Greška prilikom pravljenja prenosnice. Greška: " + err)
   }
   
 }
