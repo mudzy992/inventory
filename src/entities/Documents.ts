@@ -22,6 +22,9 @@ export class Documents {
   @Column("varchar", { name: "path", nullable: true, length: 255 })
   path: string | null;
 
+  @Column("varchar", { name: "signed_path", nullable: true, length: 255 })
+  signed_path: string | null;
+
   @Column({type:'int', name: "document_number"})
   documentNumber: number;
 
