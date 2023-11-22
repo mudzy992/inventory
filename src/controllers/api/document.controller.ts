@@ -1,4 +1,4 @@
-import { Controller, Post, Param, UploadedFile, UseInterceptors, Get } from '@nestjs/common';
+import { Controller, Post, Param, UploadedFile, UseInterceptors, Get, Query } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Crud } from '@nestjsx/crud';
 import { Documents } from 'src/entities/Documents';
@@ -45,13 +45,26 @@ export class DocumentController {
     }
   }
 
-  /* @Get()
+  @Get()
   async getAll(){
     return this.service.getAll();
-  } */
+  } 
 
-  @Get()
-  async getAllTen() {
-    return this.service.getAllTen(5);
+  @Get('p')
+  async paginedDocuments(
+    @Query('perPage') perPage: number = 10,
+    @Query('offset') offset: number = 0,
+  ) {
+    return this.service.paginedDocuments(perPage, offset);
+  }
+
+  @Get('s')
+  async articleSearchPaginationByStockId(
+    @Query('perPage') perPage: number = 10,
+    @Query('page') page: number = 1,
+    @Query('query') query: string = '',
+  ) {
+    const offset = (page - 1) * perPage;
+    return this.service.documentSearchPagination(perPage, offset, query);
   }
 }

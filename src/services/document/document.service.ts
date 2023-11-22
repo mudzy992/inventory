@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { Documents } from 'src/entities/Documents';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import multer from 'multer';
@@ -65,16 +65,54 @@ export class DocumentService extends TypeOrmCrudService<Documents> {
 
   async getAll(){
     return await this.document.find(
-      {
-        relations:['article','article.stock', 'article.user','articleTimelines']
+      { 
+        relations: ['article', 'article.stock', 'article.user', 'articleTimelines'],
       }
     )
   }
 
-  async getAllTen(limit: number = 10) {
-    return await this.document.find({
-        relations: ['article', 'article.stock', 'article.user', 'articleTimelines'],
-        take: limit, // Ovde postavljamo ograničenje na broj rezultata
+  async paginedDocuments(perPage: number, offset: number) {
+    const [results, totalResults] = await this.document.findAndCount({
+      take: perPage,
+      skip: offset,
+      relations: ['article', 'article.stock', 'article.user', 'articleTimelines'],
     });
-}
+  
+    return {
+      results,
+      total: totalResults,
+    };
+  }
+
+
+  async documentSearchPagination(perPage: number, offset: number, query: string) {
+    const resultsQuery = this.document
+      .createQueryBuilder('document')
+      .leftJoinAndSelect('document.article', 'article')
+      .leftJoinAndSelect('article.stock', 'stock')
+      .leftJoinAndSelect('article.user', 'user')
+      .leftJoinAndSelect('document.articleTimelines', 'articleTimelines')
+      .where((qb) => {
+        if (query) {
+          qb.andWhere(
+            new Brackets((qb) => {
+              qb.where('user.fullname LIKE :query', { query: `%${query}%` });
+              qb.orWhere('document.documentNumber LIKE :query', { query: `%${query}%` });
+              qb.orWhere('article.serialNumber LIKE :query', { query: `%${query}%` });
+              qb.orWhere('article.invNumber LIKE :query', { query: `%${query}%` });
+              qb.orWhere('stock.name LIKE :query', { query: `%${query}%` });
+            }),
+          );
+        }
+      })
+      .take(perPage)
+      .skip(offset);
+  
+    const [results, totalResults] = await resultsQuery.getManyAndCount();
+  
+    return {
+      results,
+      total: totalResults,
+    };
+  }  
 }

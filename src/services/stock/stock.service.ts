@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { ApiResponse } from 'src/misc/api.response.class';
-import { AddStockDto } from 'src/dtos/stock/add.stock.dto';
 import { UpdateStockDto } from 'src/dtos/stock/edit.stock.dto';
 import { StockFeature } from 'src/entities/StockFeature';
 import { CreateStockDto } from 'src/dtos/stock/CreateStock.dto';
