@@ -4,7 +4,7 @@
 SECRET_KEY="tajniključzawebhook"
 
 # Odabrani branch
-SELECTED_BRANCH="nova-verzija"
+SELECTED_BRANCH="master"
 
 # Dobijanje trenutnog branch-a
 #CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
