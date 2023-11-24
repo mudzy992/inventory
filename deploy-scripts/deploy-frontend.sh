@@ -51,7 +51,8 @@ cd "$REPO_PATH" || exit
 
 # Resetirajte repozitorij na najnoviju verziju na produkcioni grani
 # Dobijte informacije o trenutnom branch-u iz webhook događaja
-BRANCH=$(echo "$2" | cut -d/ -f3)
+# BRANCH=$(echo "$2" | cut -d/ -f3)
+BRANCH="Novi-dizajn-userprofila"
 
 # Ispis trenutnog radnog direktorija
 echo "Trenutni radni direktorij: $(pwd)"
