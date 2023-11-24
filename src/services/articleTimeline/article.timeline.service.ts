@@ -12,9 +12,9 @@ export class ArticleTimelineService extends TypeOrmCrudService<ArticleTimeline> 
   ) {
     super(articleTimelineRepository);
   }
-  async getAll() {
+  /* async getAll() {
     return this.articleTimelineRepository.find(); 
-  }
+  } */
 
   async getBySerialNumber(serialNumber: string): Promise<ArticleTimeline[] | null> {
     const serialnumber = await this.articleTimelineRepository.find(
