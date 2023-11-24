@@ -6,44 +6,54 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Article } from './Article';
+} from "typeorm";
+import { Article } from "./Article";
+import { Category } from "./Category";
+import { StockFeature } from "./StockFeature";
 
-@Index('article_id', ['articleId'], { unique: true })
-@Entity('stock', { schema: 'inventory' })
+@Index("FK_stock_category", ["categoryId"], {})
+@Entity("stock", { schema: "inventory_v2" })
 export class Stock {
-  @PrimaryGeneratedColumn({ type: 'int', name: 'stock_id', unsigned: true })
+  @PrimaryGeneratedColumn({ type: "int", name: "stock_id" })
   stockId: number;
 
-  @Column('timestamp', {
-    name: 'timestamp',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  timestamp: Date;
+  @Column("varchar", { name: "name", length: 255 })
+  name: string;
 
-  @Column('int', { name: 'article_id', unsigned: true })
-  articleId: number;
+  @Column("text", { name: "excerpt", nullable: true })
+  excerpt: string | null;
 
-  @Column('int', { name: 'value_on_concract' })
-  valueOnConcract: number;
+  @Column("text", { name: "description", nullable: true })
+  description: string | null;
 
-  @Column('int', { name: 'value_available' })
-  valueAvailable: number;
+  @Column("varchar", { name: "contract", nullable: true, length: 255 })
+  contract: string | null;
 
-  @Column('varchar', { name: 'sap_number', nullable: false })
+  @Column("int", { name: "category_id" })
+  categoryId: number;
+
+  @Column("varchar", { name: "sap_number", length: 50 })
   sapNumber: string;
 
-  /* @OneToMany(() => Stock, (stock) => stock.articles)
-  articlesInStock: Article[]; */
+  @Column("int", { name: "value_on_contract", default: () => "'0'" })
+  valueOnContract: number;
 
-  /* @ManyToOne(() => Article, (article) => article.articlesInStock, {
-    onDelete: 'RESTRICT',
-    onUpdate: 'CASCADE',
+  @Column("int", { name: "value_available", default: () => "'0'" })
+  valueAvailable: number;
+
+  @Column("timestamp", { name: "timestamp", default: () => "'now()'" })
+  timestamp: Date;
+
+  @OneToMany(() => Article, (article) => article.stock)
+  articles: Article[];
+
+  @ManyToOne(() => Category, (category) => category.stocks, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
   })
-  @JoinColumn([{ name: 'article_id', referencedColumnName: 'articleId' }])
-  articles: Article; */
+  @JoinColumn([{ name: "category_id", referencedColumnName: "categoryId" }])
+  category: Category;
 
-  @OneToMany(() => Article, (article) => article.articlesInStock)
-  stockArticle: Article[];
+  @OneToMany(() => StockFeature, (stockFeature) => stockFeature.stock)
+  stockFeatures: StockFeature[];
 }

@@ -29,7 +29,7 @@ export class UserService extends TypeOrmCrudService<User> {
     const passwordHashString = passwordHash.digest('hex').toUpperCase();
 
     const newUser: User = new User();
-    newUser.surname = data.surename;
+    newUser.surname = data.surname;
     newUser.forname = data.forname;
     newUser.email = data.email;
     newUser.localNumber = data.localNumber;
@@ -56,7 +56,7 @@ export class UserService extends TypeOrmCrudService<User> {
       return new ApiResponse(
         'error',
         -6001,
-        'This user account cannot be created.',
+        'This user account cannot be created.' + e.message,
       );
     }
   }
@@ -67,9 +67,11 @@ export class UserService extends TypeOrmCrudService<User> {
     const passwordHashString = passwordHash.digest('hex').toUpperCase();
 
     const existingUser = await this.user.findOne({where:{ userId : userId }})
+    const fullname = data.surename + ' ' + data.forname;
 
     existingUser.forname = data.forname;
     existingUser.surname = data.surename;
+    existingUser.fullname = fullname;
     existingUser.email = data.email;
     existingUser.passwordHash = passwordHashString;
     existingUser.localNumber = data.localNumber;
@@ -77,21 +79,30 @@ export class UserService extends TypeOrmCrudService<User> {
     existingUser.jobId = data.jobId;
     existingUser.departmentId = data.departmentId;
     existingUser.locationId = data.locationId;
+    existingUser.status = data.status;
 
     const saveEditedUser = await this.user.save(existingUser)
     if(!saveEditedUser){
-      return new ApiResponse('error', -6002, 'User cannot be edited. Please try again later.')
+      return new ApiResponse('error', -6002, 'Korisnik ne može biti izmjenjen')
     }
     }
 
   async getById(id) {
-    return await this.user.findOne(id);
+    return await this.user.findOne(
+      {
+        where: {userId: id},
+        relations: ['department', 'job', 'location', 'articles.stock', 'articles.documents']
+      }
+    )
   }
 
   async getByEmail(email: string): Promise<User | null> {
-    const user = await this.user.findOne({where:{
-      email: email,
-    }});
+    const user = await this.user.findOne(
+      {
+        where:{
+          email: email,
+        },
+      });
     if (user) {
       return user;
     }
@@ -143,4 +154,5 @@ export class UserService extends TypeOrmCrudService<User> {
 
     return results;
   }
+
 }

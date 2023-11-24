@@ -10,43 +10,27 @@ import {
 import { DepartmentJob } from "./DepartmentJob";
 import { User } from "./User";
 
-@Index("FK_department_department", ["parentDepartmentId"], {})
-@Entity("department", { schema: "inventory" })
+@Index("parent_department_id", ["parentDepartmentId"], {})
+@Entity("department", { schema: "inventory_v2" })
 export class Department {
-  @PrimaryGeneratedColumn({
-    type: "int",
-    name: "department_id",
-    unsigned: true,
-  })
+  @PrimaryGeneratedColumn({ type: "int", name: "department_id" })
   departmentId: number;
 
-  @Column("varchar", {
-    name: "title",
-    length: 250,
-    default: () => "'undefined'",
-  })
+  @Column("varchar", { name: "title", length: 255 })
   title: string;
 
-  @Column("varchar", { name: "description", nullable: true, length: 250 })
+  @Column("text", { name: "description", nullable: true })
   description: string | null;
 
-  @Column("varchar", {
-    name: "departmend_code",
-    length: 50,
-    default: () => "'undefined'",
-  })
-  departmendCode: string;
+  @Column("varchar", { name: "departmend_code", nullable: true, length: 50 })
+  departmendCode: string | null;
 
-  @Column("int", {
-    name: "parent_department_id",
-    nullable: true,
-    unsigned: true,
-  })
+  @Column("int", { name: "parent_department_id", nullable: true })
   parentDepartmentId: number | null;
 
   @ManyToOne(() => Department, (department) => department.departments, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
   })
   @JoinColumn([
     { name: "parent_department_id", referencedColumnName: "departmentId" },

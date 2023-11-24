@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
 import { AddArticleDto } from 'src/dtos/article/add.article.dto';
-import { EditFullArticleDto } from 'src/dtos/article/edit.full.article.dto';
+import { EditArticleDto } from 'src/dtos/article/edit.full.article.dto';
 import { Article } from 'src/entities/Article';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { ArticleService } from 'src/services/article/article.service';
@@ -20,71 +20,84 @@ import { ArticleService } from 'src/services/article/article.service';
   },
   query: {
     join: {
-      category: {
-        eager: true,
-      },
-      userDetails: {
+      user: {
         eager: true,
         exclude:['passwordHash']
       },
-      articleFeature: {
+      stock: {
         eager: true,
       },
-      features: {
+      category: {
         eager: true,
       },
-      articlesInStock: {
+      stockFeatures: {
         eager: true,
       },
-      userArticles: {
-        eager: false,
-      },
-      responsibilities: {
-        eager: false,
-      },
-      debtItems: {
-        eager: false,
-      },
-      destroyeds: {
-        eager: false,
+      articleTimelines: {
+        eager: true,
       },
       documents: {
         eager: false,
       },
+      upgradeFeatures: {
+        eager: false,
+      },
     },
+    
   },
   routes: { exclude: ['updateOneBase'] },
 })
 export class ArticleController {
   constructor(public service: ArticleService) {}
-  @Post()
-  async createFullArticle(
+  @Post(':stockId')
+  async addNewArticle(
+    @Param('stockId') id: number,
     @Body() data: AddArticleDto,
   ): Promise<Article | ApiResponse> {
-    const sapnumber = await this.service.getBySapNumber(data.sap_number);
-    /* Ako artikal po sap broju već postoji u skladištu, isti ne dodavati ponovo */
-    if (sapnumber) {
-      /* Implementirati mehanizam, ako artikal postoji promjeniti mu količinu, tj. dodati novu količinu na postojeću */
-      return new ApiResponse('error', -1000, 'Artikal već postoji u skladištu');
-    }
-    return await this.service.createNewArticleInStock(data);
+    return await this.service.addNewArticle(id, data);
   }
 
-  @Patch(':id')
-  async editFullArticleController(
-    @Param('id') id: number,
-    @Body() data: EditFullArticleDto,
+  @Get('s/:stockId')
+  async articleSearchPaginationByStockId(
+    @Param('stockId') stockId: number,
+    @Query('perPage') perPage: number = 10,
+    @Query('page') page: number = 1,
+    @Query('query') query: string = '',
   ) {
-    return await this.service.editFullArticle(id, data);
+    const offset = (page - 1) * perPage;
+    return this.service.articleSearchPaginationByStockId(stockId, perPage, offset, query);
   }
 
-  @Patch('/stock/:id')
-  async changeStockExistArticle(
+  @Get('sb/:serialNumber')
+  async getBySerialNumber(
+    @Param('serialNumber') serialNumber: string,
+  ) {
+    return this.service.getBySerialNumber(serialNumber);
+  }
+
+  @Patch('status/:id')
+  async changeStatus(
     @Param('id') id: number,
     @Body() data: AddArticleDto,
   ) {
-    return await this.service.changeStockExistArticle(id, data);
+    return await this.service.changeStatus(id, data);
   }
+
+  // @Patch(':id')
+  // async editFullArticleController(
+  //   @Param('id') id: number,
+  //   @Body() data: EditArticleDto,
+  // ) {
+  //   return await this.service.editArticle(id, data);
+  // }
+
+  // @Patch('/stock/:id')
+  // async changeStockExistArticle(
+  //   @Param('id') id: number,
+  //   @Body() data: AddArticleDto,
+  // ) {
+  //   return await this.service.changeStockExistArticle(id, data);
+  // }
 
   
 } /* Kraj koda */

@@ -10,27 +10,28 @@ import {
 import { DepartmentJob } from "./DepartmentJob";
 import { User } from "./User";
 
-@Index("FK_location_location", ["parentLocationId"], {})
-@Entity("location", { schema: "inventory" })
+@Index("code", ["code"], { unique: true })
+@Index("parent_location_id", ["parentLocationId"], {})
+@Entity("location", { schema: "inventory_v2" })
 export class Location {
-  @PrimaryGeneratedColumn({ type: "int", name: "location_id", unsigned: true })
+  @PrimaryGeneratedColumn({ type: "int", name: "location_id" })
   locationId: number;
 
-  @Column("varchar", { name: "name", length: 50 })
+  @Column("varchar", { name: "name", length: 255 })
   name: string;
 
-  @Column("varchar", { name: "code", length: 50 })
-  code: string;
+  @Column("varchar", { name: "code", nullable: true, unique: true, length: 50 })
+  code: string | null;
 
-  @Column("int", { name: "parent_location_id", nullable: true, unsigned: true })
+  @Column("int", { name: "parent_location_id", nullable: true })
   parentLocationId: number | null;
 
   @OneToMany(() => DepartmentJob, (departmentJob) => departmentJob.location)
   departmentJobs: DepartmentJob[];
 
   @ManyToOne(() => Location, (location) => location.locations, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
   })
   @JoinColumn([
     { name: "parent_location_id", referencedColumnName: "locationId" },

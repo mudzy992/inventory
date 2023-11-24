@@ -32,4 +32,12 @@ export class UpgradeFeatureService extends TypeOrmCrudService<UpgradeFeature> {
       return new ApiResponse('error', -9000, 'Došlo je do greške, nadogradnja nije sačuvana')
     }
   }
+
+  async deleteUpgradeFeature(upgradeFeatureId: number): Promise <UpgradeFeature | ApiResponse> {
+    const deletedUpgradeFeature = await this.upgradeFeature.delete(upgradeFeatureId);
+    if(!deletedUpgradeFeature) {
+      return new ApiResponse('error', -10001, "Došlo je do greške prilikom brisanja nadogradnje!")
+    }
+    return
+  }
 }

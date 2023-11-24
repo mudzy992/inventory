@@ -1,18 +1,20 @@
-import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { AdministratorToken } from "./AdministratorToken";
 
-@Index('administrator_username', ['username'], { unique: true })
-@Entity('administrator')
+@Entity("administrator", { schema: "inventory_v2" })
 export class Administrator {
-  @PrimaryGeneratedColumn({
-    type: 'int',
-    name: 'administrator_id',
-    unsigned: true,
-  })
+  @PrimaryGeneratedColumn({ type: "int", name: "administrator_id" })
   administratorId: number;
 
-  @Column('varchar', { name: 'username', unique: true, length: 32 })
+  @Column("varchar", { name: "username", length: 255 })
   username: string;
 
-  @Column('varchar', { name: 'password_hash', length: 128 })
+  @Column("varchar", { name: "password_hash", length: 255 })
   passwordHash: string;
+
+  @OneToMany(
+    () => AdministratorToken,
+    (administratorToken) => administratorToken.administrator
+  )
+  administratorTokens: AdministratorToken[];
 }

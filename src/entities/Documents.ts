@@ -8,31 +8,31 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { ArticleTimeline } from "./ArticleTimeline";
-import { DebtItems } from "./DebtItems";
-import { Destroyed } from "./Destroyed";
 import { Article } from "./Article";
-import { Responsibility } from "./Responsibility";
-import { UserArticle } from "./UserArticle";
 
-@Index("fk_documents_article_id", ["articleId"], {})
-@Entity("documents", { schema: "inventory" })
+@Index("article_id", ["articleId"], {})
+@Entity("documents", { schema: "inventory_v2" })
 export class Documents {
-  @PrimaryGeneratedColumn({ type: "int", name: "documents_id", unsigned: true })
+  @PrimaryGeneratedColumn({ type: "int", name: "documents_id" })
   documentsId: number;
 
-  @Column("int", { name: "article_id", unsigned: true })
+  @Column("int", { name: "article_id" })
   articleId: number;
 
-  @Column("varchar", { name: "path", length: 255 })
-  path: string;
+  @Column("varchar", { name: "path", nullable: true, length: 255 })
+  path: string | null;
 
-  @Column("int", { name: "document_number", default: () => "'0'" })
+  @Column("varchar", { name: "signed_path", nullable: true, length: 255 })
+  signed_path: string | null;
+
+  @Column({type:'int', name: "document_number"})
   documentNumber: number;
 
-  @Column("datetime", {
+  @Column("timestamp", {
     name: "created_date",
+    default: () => "CURRENT_TIMESTAMP",
   })
-  created_date: Date;
+  createdDate: Date;
 
   @OneToMany(
     () => ArticleTimeline,
@@ -40,22 +40,10 @@ export class Documents {
   )
   articleTimelines: ArticleTimeline[];
 
-  @OneToMany(() => DebtItems, (debtItems) => debtItems.document)
-  debtItems: DebtItems[];
-
-  @OneToMany(() => Destroyed, (destroyed) => destroyed.document)
-  destroyeds: Destroyed[];
-
   @ManyToOne(() => Article, (article) => article.documents, {
-    onDelete: "RESTRICT",
-    onUpdate: "CASCADE",
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "article_id", referencedColumnName: "articleId" }])
   article: Article;
-
-  @OneToMany(() => Responsibility, (responsibility) => responsibility.document)
-  responsibilities: Responsibility[];
-
-  @OneToMany(() => UserArticle, (userArticle) => userArticle.document)
-  userArticles: UserArticle[];
 }

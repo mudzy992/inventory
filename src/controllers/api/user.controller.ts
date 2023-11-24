@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { Crud } from '@nestjsx/crud';
 import { AddNewEmployeDto } from 'src/dtos/user/add.new.employe.dto';
 import { EditEmployeeDto } from 'src/dtos/user/edit.employee.dto';
@@ -6,7 +6,7 @@ import { User } from 'src/entities/User';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { UserService } from 'src/services/user/user.service';
 
-@Controller('api/user')
+@Controller('api/user/')
 @Crud({
   model: {
     type: User,
@@ -20,35 +20,33 @@ import { UserService } from 'src/services/user/user.service';
   },
   query: {
     join: {
-      department: {
+      articles: {
+        eager: true,
+      },
+      articleTimelines: {
         eager: true,
       },
       job: {
         eager: true,
       },
+      department: {
+        eager: true,
+      },
       location: {
         eager: true,
       },
-      articles: {
-        eager: true,
-      },
-      userArticles: {
-        eager: true,
-      },
-      responsibilities: {
-        eager: false,
-      },
-      debtItems: {
-        eager: false,
-      },
-      destroyeds: {
-        eager: false,
-      },
     },
+    exclude:['passwordHash'],
+    sort: [{ field: 'fullname', order: 'ASC' }],
   },
 })
 export class UserController {
   constructor(public service: UserService) {}
+
+  @Get(':id')
+  async getStockById(@Param('id') userId: number): Promise<User | ApiResponse> {
+    return this.service.getById(userId);
+  }
 
   @Post('/add/')
   async createNewUser(

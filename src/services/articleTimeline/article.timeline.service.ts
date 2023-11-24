@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { ArticleTimeline } from 'src/entities/ArticleTimeline';
-import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -28,6 +27,23 @@ export class ArticleTimelineService extends TypeOrmCrudService<ArticleTimeline> 
     return null;
   }
 
+  async getById(id) {
+    return await this.articleTimelineRepository.findOne(
+      {
+        where: {articleTimelineId: id}, 
+        relations:['article', 'user', 'document']
+      }
+      );
+  }
+
+  async getAll(){
+    return await this.articleTimelineRepository.find(
+      {
+        relations:['article', 'user', 'document']
+      }
+    )
+  }
+
   async findPaginatedArticlesTimeline(id: number, perPage: number, offset: number) {
     const [results, totalResults] = await this.articleTimelineRepository.findAndCount({
       where: { articleId: id },
@@ -40,5 +56,5 @@ export class ArticleTimelineService extends TypeOrmCrudService<ArticleTimeline> 
       results,
       total: totalResults,
     };
-  }  
+  } 
 }

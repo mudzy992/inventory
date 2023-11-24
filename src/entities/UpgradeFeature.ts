@@ -8,35 +8,32 @@ import {
 } from "typeorm";
 import { Article } from "./Article";
 
-@Index("upgrade_feature_article_id_article_article_id", ["articleId"], {})
-@Entity("upgrade_feature", { schema: "inventory" })
+@Index("article_id", ["articleId"], {})
+@Entity("upgrade_feature", { schema: "inventory_v2" })
 export class UpgradeFeature {
-  @PrimaryGeneratedColumn({
-    type: "int",
-    name: "upgrade_feature_id",
-    unsigned: true,
-  })
+  @PrimaryGeneratedColumn({ type: "int", name: "upgrade_feature_id" })
   upgradeFeatureId: number;
 
-  @Column("varchar", { name: "name", length: 50 })
+  @Column("varchar", { name: "name", length: 255 })
   name: string;
 
-  @Column("varchar", { name: "value", length: 50 })
+  @Column("varchar", {name: "value", length: 50})
   value: string;
 
   @Column("timestamp", {
     name: "timestamp",
+    nullable: true,
     default: () => "CURRENT_TIMESTAMP",
   })
-  timestamp: Date;
+  timestamp: Date | null;
 
-  @Column("varchar", { name: "comment", length: 255 })
-  comment: string;
+  @Column("text", { name: "comment", nullable: true })
+  comment: string | null;
 
-  @Column("varchar", { name: "serial_number", length: 50 })
-  serialNumber: string;
+  @Column("varchar", { name: "serial_number", nullable: true, length: 50 })
+  serialNumber: string | null;
 
-  @Column("int", { name: "article_id", unsigned: true })
+  @Column("int", { name: "article_id" })
   articleId: number;
 
   @ManyToOne(() => Article, (article) => article.upgradeFeatures, {
