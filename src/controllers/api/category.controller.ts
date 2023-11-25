@@ -29,10 +29,10 @@ import { CategoryService } from 'src/services/category/category.service';
         eager: true,
       },
       features: {
-        eager: true,
+        eager: false,
       },
       articles: {
-        eager: true,
+        eager: false,
       },
       
     },

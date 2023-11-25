@@ -141,7 +141,7 @@ export class StockService extends TypeOrmCrudService<Stock> {
   async getStockByCategoryId(categoryId: number): Promise<Stock[] | ApiResponse> {
     const stock = await this.stockRepository.find
     ({ where: { categoryId: categoryId },
-       relations: ['articles', 'category'], });
+       relations: [ 'category'], });
     if (!stock) {
         return new ApiResponse('error', -1004, 'Skladište artikla za tu kategoriju nije pronađeno. Moguće da artikal ne postoji na skladištu.');
     }
