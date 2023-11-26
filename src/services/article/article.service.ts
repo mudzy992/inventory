@@ -175,7 +175,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
           preuzeo);
 
           const newValueAvailable = await existingArticle.stock.valueAvailable +1;
-          await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable})
+          await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable, timestamp: Date.now()})
 
           return await this.findOne({ 
             where: { articleId: existingArticle.articleId },
@@ -199,7 +199,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
           if(existingArticle.status === 'razduženo') {
             const newValueAvailable = await existingArticle.stock.valueAvailable -1;
-            await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable})
+            await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable, timestamp: Date.now()})
           }
 
           return await this.findOne({ 
@@ -224,7 +224,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
           
           const newValueAvailable = await existingArticle.stock.valueAvailable -1;
-          await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable})
+          await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable, timestamp: Date.now()});
           return await this.findOne({ 
             where: { articleId: existingArticle.articleId },
           });

@@ -48,6 +48,8 @@ import { ArticleTimelineService } from './services/articleTimeline/article.timel
 import { WebhookController } from './controllers/api/web.hook.controller';
 import { SkipAuthMiddleware } from './middlewares/skip.auth.middleware';
 import { WebhookFrontendController } from './controllers/api/web.hook.frontend.controller';
+import { AdministratorDashboardController } from './controllers/api/administrator.dashboard.controller';
+import { AdministratorDashboardService } from './services/administrator.dashboard/administrator.dashboard.service';
 
 @Module({
   imports: [
@@ -114,6 +116,7 @@ import { WebhookFrontendController } from './controllers/api/web.hook.frontend.c
     DepartmentJobController,
     WebhookController,
     WebhookFrontendController,
+    AdministratorDashboardController,
   ],
   providers: [
     ArticleService,
@@ -130,6 +133,7 @@ import { WebhookFrontendController } from './controllers/api/web.hook.frontend.c
     JobService,
     LocationService,
     DepartmentJobService,
+    AdministratorDashboardService,
   ],
   exports: [
     // zbog middleware potrebno je exportovati servis
