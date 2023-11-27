@@ -41,20 +41,8 @@ export class AdministratorDashboardService {
    return article
  }
 
- async paginedArticles(perPage: number, offset: number) {
-  const [results, totalResults] = await this.article.findAndCount({
-    take: perPage,
-    skip: offset,
-    relations: ['stock', 'category', 'user',],
-  });
 
-  return {
-    results,
-    total: totalResults,
-  };
-}
-
-async searchPaginationArticle(perPage: number, offset: number, query: string) {
+ async searchPaginationArticle(perPage: number, offset: number, query: string) {
   const resultsQuery = this.article
     .createQueryBuilder('article')
     .leftJoinAndSelect('article.stock', 'stock')
@@ -64,10 +52,10 @@ async searchPaginationArticle(perPage: number, offset: number, query: string) {
       if (query) {
         qb.andWhere(
           new Brackets((qb) => {
-            qb.where('user.fullname LIKE :query', { query: `%${query}%` });
-            qb.orWhere('article.serialNumber LIKE :query', { query: `%${query}%` });
-            qb.orWhere('article.invNumber LIKE :query', { query: `%${query}%` });
-            qb.orWhere('stock.name LIKE :query', { query: `%${query}%` });
+            qb.where('LOWER(user.fullname) LIKE LOWER(:query)', { query: `%${query}%` });
+            qb.orWhere('LOWER(article.serialNumber) LIKE LOWER(:query)', { query: `%${query}%` });
+            qb.orWhere('LOWER(article.invNumber) LIKE LOWER(:query)', { query: `%${query}%` });
+            qb.orWhere('LOWER(stock.name) LIKE LOWER(:query)', { query: `%${query}%` });
           }),
         );
       }
@@ -81,7 +69,8 @@ async searchPaginationArticle(perPage: number, offset: number, query: string) {
     results,
     total: totalResults,
   };
-} 
+}
+
 
  /* Stocks */
   async getAllStocks(): Promise<Stock[]> {
@@ -124,7 +113,7 @@ async searchPaginationArticle(perPage: number, offset: number, query: string) {
   async getUnsignedDocuments(): Promise<[Documents[], number]> {
     const documents = await this.documents.findAndCount({
     where: { signed_path: IsNull() },
-    relations:['article', 'article.stock','article.category']
+    relations:['article', 'article.stock','article.user','article.category']
     })
 
   return documents

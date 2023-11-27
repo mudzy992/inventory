@@ -30,14 +30,6 @@ export class AdministratorDashboardController {
     return this.service.getLastArticle()
   }
 
-  //Pagined articles
-  @Get('articles/p')
-  async paginedArticles(
-    @Query('perPage') perPage: number = 10,
-    @Query('offset') offset: number = 0,
-  ) {
-    return this.service.paginedArticles(perPage, offset);
-  }
 
   //Search article
   @Get('articles/s')
