@@ -44,6 +44,9 @@ export class Stock {
   @Column("timestamp", { name: "timestamp", default: () => "'now()'" })
   timestamp: Date;
 
+  @Column("timestamp", { name: "created_at", default: () => "'now()'" })
+  createdAt: Date;
+
   @OneToMany(() => Article, (article) => article.stock)
   articles: Article[];
 
