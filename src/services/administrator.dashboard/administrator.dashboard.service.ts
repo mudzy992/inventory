@@ -22,7 +22,7 @@ export class AdministratorDashboardService {
   /* Articles */
   async getAllArticles(): Promise<Article[]> {
      const articles = await this.article.find({
-      relations:['stock']
+      relations:['stock', 'user', 'category']
      })
 
     return articles
