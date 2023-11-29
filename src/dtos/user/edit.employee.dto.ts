@@ -44,4 +44,10 @@ export class EditEmployeeDto {
   @Validator.IsString()
   @Validator.Length(2, 64)
   status?: "aktivan" | "neaktivan";
+
+  @Validator.IsNumber()
+  code: number;
+
+  @Validator.IsIn(['muško', 'žensko'])
+  gender: 'muško' | 'žensko';
 }

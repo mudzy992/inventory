@@ -38,6 +38,9 @@ export class UserService extends TypeOrmCrudService<User> {
     newUser.departmentId = data.departmentId;
     newUser.jobId = data.jobId;
     newUser.locationId = data.locationId;
+    newUser.status = data.status;
+    newUser.code = data.code;
+    newUser.gender = data.gender;
 
  /*    const newDepartmentJob: DepartmentJob = new DepartmentJob();
     newDepartmentJob.departmentId = data.departmentId;
@@ -80,6 +83,8 @@ export class UserService extends TypeOrmCrudService<User> {
     existingUser.departmentId = data.departmentId;
     existingUser.locationId = data.locationId;
     existingUser.status = data.status;
+    existingUser.code = data.code;
+    existingUser.gender = data.gender;
 
     const saveEditedUser = await this.user.save(existingUser)
     if(!saveEditedUser){

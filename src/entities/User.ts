@@ -72,6 +72,16 @@ export class User {
   })
   status: "aktivan" | "neaktivan";
 
+  @Column("int", { name: "code" })
+  code: number;
+
+  @Column("enum", {
+    name: "gender",
+    enum: ["muško", "žensko"],
+    default: () => "'muško'",
+  })
+  gender: "muško" | "žensko";
+
   @OneToMany(() => Article, (article) => article.user)
   articles: Article[];
 
