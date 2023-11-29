@@ -75,7 +75,7 @@ export class DocumentService extends TypeOrmCrudService<Documents> {
     const [results, totalResults] = await this.document.findAndCount({
       take: perPage,
       skip: offset,
-      relations: ['article', 'article.stock', 'article.user', 'articleTimelines'],
+      relations: ['article', 'article.stock', 'articleTimelines.user', 'articleTimelines'],
     });
   
     return {
@@ -90,8 +90,8 @@ export class DocumentService extends TypeOrmCrudService<Documents> {
       .createQueryBuilder('document')
       .leftJoinAndSelect('document.article', 'article')
       .leftJoinAndSelect('article.stock', 'stock')
-      .leftJoinAndSelect('article.user', 'user')
       .leftJoinAndSelect('document.articleTimelines', 'articleTimelines')
+      .leftJoinAndSelect('articleTimelines.user', 'user')
       .where((qb) => {
         if (query) {
           qb.andWhere(
