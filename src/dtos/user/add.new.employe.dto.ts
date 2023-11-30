@@ -43,5 +43,10 @@ export class AddNewEmployeDto {
   @Validator.IsIn(['aktivan', 'neaktivan'])
   status: 'aktivan' | 'neaktivan';
 
-  // You can include additional fields if needed
+  @Validator.IsNumber()
+  code: number;
+
+  @Validator.IsIn(['muško', 'žensko'])
+  gender: 'muško' | 'žensko';
+
 }
