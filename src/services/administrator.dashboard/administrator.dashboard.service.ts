@@ -113,7 +113,7 @@ export class AdministratorDashboardService {
   async getUnsignedDocuments(): Promise<[Documents[], number]> {
     const documents = await this.documents.findAndCount({
     where: { signed_path: IsNull() },
-    relations:['article', 'article.stock','article.user','article.category']
+    relations:['articleTimelines','article', 'article.stock','article.user','article.category']
     })
 
   return documents
