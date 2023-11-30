@@ -47,31 +47,34 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     stockId: number,
     data: AddArticleDto,
   ): Promise<Article | ApiResponse> {
+    //Tražimo skladište artikla, i smještamo u konstantu za daljnju upotrebu
     const existingStock = await this.stock.findOne({where:{stockId: stockId}});
 
+    //Ako ne postoji u skladištu vrati poruku
     if(!existingStock) {
       return new ApiResponse('error', -2000, 'Artikal ne postoji u skladištu.')
     }
 
+    //Tražimo da li postoji artikla koji odgovara našem serijskom broju (serijski broj je unikatan)
     const existingArticle = await this.article.findOne({ 
       where:{serialNumber : data.serialNumber},
       relations: ['user', 'stock'] 
     });
 
+    //Pošto je skladište definisano kao korisnik, njegov id je 390, tražimo ga i smještamo u konstatu
     const skladiste = await this.user.findOne({where:{userId: 390}})
 
-    let predao: string;
-    let preuzeo: string;
-  
+    let predao: number;
+    let preuzeo: number;
+
+    //PRVO ZADUŽENJE ARTIKLA SA SKLADIŠTA (ako artikla ne postoji a šaljemo status zaduženo - znači zadužujemo na nekoga prvi put)
     if (!existingArticle && data.status === 'zaduženo') { //Ako artikal na postoji
       
-      predao = skladiste.fullname;
+      predao = 390;
 
-      const preuzeoKorisnik = await this.user.findOne({ where: { userId: data.userId } });
+      preuzeo = data.userId
 
-      preuzeo = preuzeoKorisnik.fullname;
-
-
+      //Kreiram novi artikal u tabeli article
       const newArticle: Article = new Article();
       newArticle.categoryId = existingStock.categoryId;
       newArticle.serialNumber = data.serialNumber;
@@ -85,7 +88,6 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
       const savedArticle = await this.article.save(newArticle);
 
-      /* await this.changeStatus(savedArticle.articleId, data) */
 
       existingStock.valueAvailable = existingStock.valueAvailable -1;
       await this.stock.save(existingStock);  
@@ -128,15 +130,14 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       relations: ['user', 'stock', 'articleTimelines'] 
     });
 
-    const skladiste = await this.user.findOne({ where: {userId : 390}})
+    const skladiste = 390
 
-    let predao: string;
-    let preuzeo: string;
+    let predao: number;
+    let preuzeo: number;
     if (existingArticle){
       if (data.status === 'zaduženo' && existingArticle.status === 'zaduženo') { // Ako zadužujemo artikla sa korisnika na korisnika tj. ako mu šaljemo status "zaduženo" i postojeći status je "zaduženo"
-        predao = existingArticle.user.fullname; // Predao postojeći korisnik koji je onaj kojeg smo smjestili u existingArticle (za potrebe prenosnice)
-        const preuzeoKorisnik = await this.user.findOne({ where: { userId: data.userId } }); //Tražimo korisnika kojeg za kojeg ID prosljeđujemo u data
-        preuzeo = preuzeoKorisnik.fullname; // Uzimamo fullname od tog pronađenog korisnika (za potrebe prenosnice)
+        predao = existingArticle.userId; // Predao postojeći korisnik koji je onaj kojeg smo smjestili u existingArticle (za potrebe prenosnice)
+        preuzeo = data.userId; // Uzimamo fullname od tog pronađenog korisnika (za potrebe prenosnice)
 
         //Da bi postavili status "razduženo", u vremenskoj liniji za artikal koji već ima status "zaduženo" jer ga zadužujem na drugo korisnika, moram da pronađem taj red u vremenskoj liniji
         //koji odgovara articleId, userId, documentId
@@ -158,13 +159,13 @@ export class ArticleService extends TypeOrmCrudService<Article> {
             where: { articleId: existingArticle.articleId },
           });
       } else if (data.status === 'razduženo' && existingArticle.status === 'zaduženo') { // Ako je postojeći status "zadužueno", a šaljemo "razduženo" - tj. RAZDUŽUJEMO ARTIKAL. (SA KREIRANJEM KORISNIKA ZA SKLADIŠTE, TJ. PODRUŽNICU DO OVOG STANJA NIKADA DOĆI NEĆE)
-        predao = existingArticle.user.fullname;
-        preuzeo = skladiste.fullname;
+        predao = existingArticle.userId;
+        preuzeo = skladiste;
         const existingArticleTimeline = await this.articleTimeline.findOne({ where: {articleId: existingArticle.articleId, userId: existingArticle.userId, documentId:existingArticle.documentId}})
 
         await this.articleTimeline.update(existingArticleTimeline, {status: "razduženo"})
 
-        await this.article.update(existingArticle.articleId, { userId: skladiste.userId, status: 'razduženo', comment: data.comment});
+        await this.article.update(existingArticle.articleId, { userId: skladiste, status: 'razduženo', comment: data.comment});
 
         await this.createDocument( 
           existingArticle.articleId, 
@@ -175,19 +176,19 @@ export class ArticleService extends TypeOrmCrudService<Article> {
           preuzeo);
 
           const newValueAvailable = await existingArticle.stock.valueAvailable +1;
-          await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable, timestamp: Date.now()})
+          await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable, timestamp: new Date()})
 
           return await this.findOne({ 
             where: { articleId: existingArticle.articleId },
           });
       } else if (data.status === 'otpisano'){
-        predao = existingArticle.user.fullname;
-        preuzeo = skladiste.fullname;
+        predao = existingArticle.userId;
+        preuzeo = skladiste;
         const existingArticleTimeline = await this.articleTimeline.findOne({ where: {articleId: existingArticle.articleId, userId: existingArticle.userId, documentId:existingArticle.documentId}})
 
         await this.articleTimeline.update(existingArticleTimeline, {status: "razduženo"})
 
-        await this.article.update(existingArticle.articleId, { userId: skladiste.userId, status: 'otpisano', comment: 'OTPIS: ' + data.comment});
+        await this.article.update(existingArticle.articleId, { userId: skladiste, status: 'otpisano', comment: 'OTPIS: ' + data.comment});
 
         await this.createDocument( 
           existingArticle.articleId, 
@@ -199,7 +200,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
           if(existingArticle.status === 'razduženo') {
             const newValueAvailable = await existingArticle.stock.valueAvailable -1;
-            await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable, timestamp: Date.now()})
+            await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable, timestamp: new Date()})
           }
 
           return await this.findOne({ 
@@ -208,9 +209,8 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       }
     
       if (data.status === 'zaduženo' && existingArticle.status === 'razduženo') { // Razduženi ponovo zadužujemo
-        predao = skladiste.fullname;
-        const preuzeoKorisnik = await this.user.findOne({ where: { userId: data.userId } });
-        preuzeo = preuzeoKorisnik.fullname;
+        predao = skladiste;
+        preuzeo = data.userId;
 
         this.article.update(existingArticle.articleId, { userId: data.userId, status: 'zaduženo', comment: data.comment });
 
@@ -224,7 +224,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
           
           const newValueAvailable = await existingArticle.stock.valueAvailable -1;
-          await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable, timestamp: Date.now()});
+          await this.stock.update(existingArticle.stock.stockId, {valueAvailable: newValueAvailable, timestamp: new Date()});
           return await this.findOne({ 
             where: { articleId: existingArticle.articleId },
           });
@@ -236,7 +236,9 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     /* Mehanizam pronalaženja artikla u skladištu po sap broju */
     const serialnumber = await this.article.findOne(
       {where:{serialNumber : serialNumber},
-      relations: ['user', 'user.job', 'user.department', 'user.location', 'stock', 'category', 'stock.stockFeatures', 'stock.stockFeatures.feature', 'articleTimelines', 'articleTimelines.document', 'articleTimelines.user', 'documents', 'upgradeFeatures']
+      relations: ['user', 'user.job', 'user.department', 'user.location', 'stock', 'category', 
+      'stock.stockFeatures', 'stock.stockFeatures.feature', 'articleTimelines', 
+      'articleTimelines.document', 'articleTimelines.user', 'documents', 'upgradeFeatures']
     });
     if (serialnumber) {
       return serialnumber;
@@ -278,9 +280,10 @@ private async createDocument(
   comment: string,
   name: string,
   invNumber: string,
-  predao: string,
-  preuzeo: string,
+  predao: number,
+  preuzeo: number,
 ) {
+
   let documentNumber: number;
 
   const lastRecord: Documents | undefined = await this.document.findOne({
@@ -323,12 +326,12 @@ private async createDocument(
     new ApiResponse("error", -9001, "Greška prilikom snimanja Dokumenta. Desila se u Article servisu u funkciju za promjenu status.") // Ako se desi greška prilikom snimanja, povuću grešku
   }
 
-  const preuzeoKorisnik = await this.user.findOne({where:{fullname: preuzeo}}) // Za porebe articleTimeline da izvučem userId (šanse us minimalne da dođe do neke zabune)
   const artikal = await this.article.findOne({where: {articleId: articleId}}) // Za potrebe articleTimeline da izvučem serialNumber, status i invNumber (iako inv imam proslijeđen)
 
   const newArticleTimeline: ArticleTimeline = new ArticleTimeline()
   newArticleTimeline.articleId = articleId; // articleId koji prosljeđujemo je logično uvijek taj
-  newArticleTimeline.userId = preuzeoKorisnik.userId; // userId koji smo izvukli iz preuzeoKorisnik
+  newArticleTimeline.userId = preuzeo; // userId koji smo izvukli iz preuzeoKorisnik
+  newArticleTimeline.subbmitedId = predao; // Onaj koji predaje artikal
   newArticleTimeline.documentId = savedDocument.documentsId; // nova prenosnica koja je kreirana u koraku ispred
   newArticleTimeline.serialNumber = artikal.serialNumber; // izvukli iz konstante artikal
   newArticleTimeline.status = artikal.status; // obzirom da vršim update status za taj artikal u tabeli article sa await, znači da je taj status mjerodavan uvijek za novi articleTimeline
@@ -343,6 +346,10 @@ private async createDocument(
   await this.article.update(articleId, { documentId: savedDocument.documentsId}); // U bilo kojem slučaju kada dodje do ove funkcije za kreiranje dokumenta, artikal uvijek postoji pod tim articleId, vrši se update njegovog documentId jer je dobijem tak u ovoj funkciju
 
   const direktor: User = await this.user.findOne({where:{jobId: 12}}) // Pronalazimo u tabeli user direktora jer je jobId za direktora 12 i smještamo ga u ovu konstantu
+
+  const preuzeoFullname = await this.user.findOne({where:{userId: preuzeo}}) // Za porebe articleTimeline da izvučem userId (šanse us minimalne da dođe do neke zabune)
+
+  const predaoFullname = await this.user.findOne({where:{userId: predao}}) // Za porebe articleTimeline da izvučem userId (šanse us minimalne da dođe do neke zabune)
 
   const godina:number = new Date().getFullYear(); // Za potrebe godine na prenosnici smještamo tekuću godinu u ovu konstantu
 
@@ -365,8 +372,8 @@ private async createDocument(
       template,
       data: {
         broj_prenosnice: documentNumber,
-        predao_korisnik: predao,
-        preuzeo_korisnik: preuzeo,
+        predao_korisnik: predaoFullname.fullname,
+        preuzeo_korisnik: preuzeoFullname.fullname,
         inv_broj: invNumber,
         naziv: name,
         komentar: comment,
