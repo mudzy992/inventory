@@ -13,7 +13,8 @@ import { Documents } from "./Documents";
 @Index("article_id", ["articleId"], {})
 @Index("user_id", ["userId"], {})
 @Index("document_id", ["documentId"], {})
-@Entity("article_timeline", { schema: "inventory_v2" })
+@Index("article_timeline_ivfk_3", ["subbmitedId"], {})
+@Entity("article_timeline", { schema: "inventory_test" })
 export class ArticleTimeline {
   @PrimaryGeneratedColumn({ type: "int", name: "article_timeline_id" })
   articleTimelineId: number;
@@ -23,6 +24,9 @@ export class ArticleTimeline {
 
   @Column("int", { name: "user_id", nullable: true })
   userId: number | null;
+
+  @Column("int", { name: "subbmited_id", nullable: true })
+  subbmitedId: number | null;
 
   @Column("int", { name: "document_id", nullable: true })
   documentId: number | null;
@@ -70,4 +74,11 @@ export class ArticleTimeline {
   })
   @JoinColumn([{ name: "document_id", referencedColumnName: "documentsId" }])
   document: Documents;
+
+  @ManyToOne(() => User, (user) => user.articleTimelines2, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
+  @JoinColumn([{ name: "subbmited_id", referencedColumnName: "userId" }])
+  subbmited: User;
 }

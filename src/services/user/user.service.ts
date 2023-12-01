@@ -8,7 +8,6 @@ import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository } from 'typeorm';
 import * as crypto from 'crypto';
 import { EditEmployeeDto } from 'src/dtos/user/edit.employee.dto';
-/* import { DepartmentJob } from 'src/entities/DepartmentJob'; */
 
 @Injectable()
 export class UserService extends TypeOrmCrudService<User> {
@@ -17,8 +16,6 @@ export class UserService extends TypeOrmCrudService<User> {
     private readonly user: Repository<User>,
     @InjectRepository(UserToken)
     private readonly userToken: Repository<UserToken>,
-/*     @InjectRepository(DepartmentJob)
-    private readonly departmentJob: Repository<DepartmentJob>, */
   ) {
     super(user);
   }
@@ -42,13 +39,6 @@ export class UserService extends TypeOrmCrudService<User> {
     newUser.code = data.code;
     newUser.gender = data.gender;
 
- /*    const newDepartmentJob: DepartmentJob = new DepartmentJob();
-    newDepartmentJob.departmentId = data.departmentId;
-    newDepartmentJob.jobId = data.jobId;
-    newDepartmentJob.locationId = data.locationId;
-
-    await this.departmentJob.save(newDepartmentJob) */
-
     try {
       const savedUser = await this.user.save(newUser);
       if (!savedUser) {
@@ -70,7 +60,7 @@ export class UserService extends TypeOrmCrudService<User> {
     const passwordHashString = passwordHash.digest('hex').toUpperCase();
 
     const existingUser = await this.user.findOne({where:{ userId : userId }})
-    const fullname = data.surename + ' ' + data.forname;
+    const fullname = data.forname + ' ' + data.surename;
 
     existingUser.forname = data.forname;
     existingUser.surname = data.surename;

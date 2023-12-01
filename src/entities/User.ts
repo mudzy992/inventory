@@ -13,13 +13,11 @@ import { Job } from "./Job";
 import { Department } from "./Department";
 import { Location } from "./Location";
 import { UserToken } from "./UserToken";
-import { Exclude } from "class-transformer";
 
-@Index("local_number", ["localNumber"], { unique: true })
 @Index("job_id", ["jobId"], {})
 @Index("department_id", ["departmentId"], {})
 @Index("location_id", ["locationId"], {})
-@Entity("user", { schema: "inventory_v2" })
+@Entity("user", { schema: "inventory_test" })
 export class User {
   @PrimaryGeneratedColumn({ type: "int", name: "user_id" })
   userId: number;
@@ -30,10 +28,10 @@ export class User {
   @Column("varchar", { name: "forname", length: 255 })
   forname: string;
 
-  @Column("varchar", { name: "fullname", length: 255 })
-  fullname: string;
+  @Column("varchar", { name: "fullname", nullable: true, length: 255 })
+  fullname: string | null;
 
-  @Column("varchar", { name: "local_number", unique: true, length: 50 })
+  @Column("varchar", { name: "local_number", length: 50 })
   localNumber: string;
 
   @Column("varchar", { name: "telephone", nullable: true, length: 50 })
@@ -42,7 +40,6 @@ export class User {
   @Column("varchar", { name: "email", nullable: true, length: 255 })
   email: string | null;
 
-  @Exclude()
   @Column("varchar", { name: "password_hash", length: 255 })
   passwordHash: string;
 
@@ -62,8 +59,8 @@ export class User {
   })
   registrationDate: Date | null;
 
-  @Column("timestamp", { name: "last_login_date", nullable: true })
-  lastLoginDate: Date | null;
+  @Column("bigint", { name: "last_login_date", nullable: true })
+  lastLoginDate: string | null;
 
   @Column("enum", {
     name: "status",
@@ -77,16 +74,23 @@ export class User {
 
   @Column("enum", {
     name: "gender",
+    nullable: true,
     enum: ["muško", "žensko"],
     default: () => "'muško'",
   })
-  gender: "muško" | "žensko";
+  gender: "muško" | "žensko" | null;
 
   @OneToMany(() => Article, (article) => article.user)
   articles: Article[];
 
   @OneToMany(() => ArticleTimeline, (articleTimeline) => articleTimeline.user)
   articleTimelines: ArticleTimeline[];
+
+  @OneToMany(
+    () => ArticleTimeline,
+    (articleTimeline) => articleTimeline.subbmited
+  )
+  articleTimelines2: ArticleTimeline[];
 
   @ManyToOne(() => Job, (job) => job.users, {
     onDelete: "NO ACTION",

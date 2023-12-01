@@ -27,7 +27,7 @@ export class AdministratorToken {
   @Column("varchar", { name: "token", length: 255 })
   token: string;
 
-  @Column("timestamp", { name: "expire_at", nullable: true })
+  @Column("bigint", { name: "expire_at", nullable: true })
   expireAt: string | null;
 
   @Column("tinyint", { name: "is_valid", nullable: true, width: 1 })
