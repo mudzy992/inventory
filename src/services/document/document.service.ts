@@ -92,6 +92,7 @@ export class DocumentService extends TypeOrmCrudService<Documents> {
       .leftJoinAndSelect('article.stock', 'stock')
       .leftJoinAndSelect('document.articleTimelines', 'articleTimelines')
       .leftJoinAndSelect('articleTimelines.user', 'user')
+      .leftJoinAndSelect('articleTimelines.subbmited', 'subbmited')
       .where((qb) => {
         if (query) {
           qb.andWhere(
