@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
@@ -59,7 +60,7 @@ export class UserService extends TypeOrmCrudService<User> {
     passwordHash.update(data.password);
     const passwordHashString = passwordHash.digest('hex').toUpperCase();
 
-    const existingUser = await this.user.findOne({where:{ userId : userId }})
+    const existingUser = await this.user.findOne({ where: { userId: userId } });
     const fullname = data.forname + ' ' + data.surename;
 
     existingUser.forname = data.forname;
@@ -76,28 +77,32 @@ export class UserService extends TypeOrmCrudService<User> {
     existingUser.code = data.code;
     existingUser.gender = data.gender;
 
-    const saveEditedUser = await this.user.save(existingUser)
-    if(!saveEditedUser){
-      return new ApiResponse('error', -6002, 'Korisnik ne može biti izmjenjen')
+    const saveEditedUser = await this.user.save(existingUser);
+    if (!saveEditedUser) {
+      return new ApiResponse('error', -6002, 'Korisnik ne može biti izmjenjen');
     }
-    }
+  }
 
   async getById(id) {
-    return await this.user.findOne(
-      {
-        where: {userId: id},
-        relations: ['department', 'job', 'location', 'articles.stock', 'articles.documents']
-      }
-    )
+    return await this.user.findOne({
+      where: { userId: id },
+      relations: [
+        'department',
+        'job',
+        'location',
+        'articles.stock',
+        'articles.documents',
+        'articles.category',
+      ],
+    });
   }
 
   async getByEmail(email: string): Promise<User | null> {
-    const user = await this.user.findOne(
-      {
-        where:{
-          email: email,
-        },
-      });
+    const user = await this.user.findOne({
+      where: {
+        email: email,
+      },
+    });
     if (user) {
       return user;
     }
@@ -113,15 +118,19 @@ export class UserService extends TypeOrmCrudService<User> {
   }
 
   async getUserToken(token: string): Promise<UserToken> {
-    return await this.userToken.findOne({where:{
-      token: token,
-    }});
+    return await this.userToken.findOne({
+      where: {
+        token: token,
+      },
+    });
   }
 
   async invalidateToken(token: string): Promise<UserToken | ApiResponse> {
-    const userToken = await this.userToken.findOne({where:{
-      token: token,
-    }});
+    const userToken = await this.userToken.findOne({
+      where: {
+        token: token,
+      },
+    });
 
     if (!userToken) {
       return new ApiResponse('error', -10001, 'No such refresh token!');
@@ -137,9 +146,11 @@ export class UserService extends TypeOrmCrudService<User> {
   async invalidateUserTokens(
     userId: number,
   ): Promise<(UserToken | ApiResponse)[]> {
-    const userTokens = await this.userToken.find({where:{
-      userId: userId,
-    }});
+    const userTokens = await this.userToken.find({
+      where: {
+        userId: userId,
+      },
+    });
 
     const results = [];
 
@@ -149,5 +160,4 @@ export class UserService extends TypeOrmCrudService<User> {
 
     return results;
   }
-
 }
