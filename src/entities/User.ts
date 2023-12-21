@@ -14,10 +14,12 @@ import { Job } from "./Job";
 import { Department } from "./Department";
 import { Location } from "./Location";
 import { UserToken } from "./UserToken";
+import { UserRole } from "./UserRole";
 
 @Index("job_id", ["jobId"], {})
 @Index("department_id", ["departmentId"], {})
 @Index("location_id", ["locationId"], {})
+@Index("FK_user_user_role", ["roleId"], {})
 @Entity("user", { schema: "inventory_test" })
 export class User {
   @PrimaryGeneratedColumn({ type: "int", name: "user_id" })
@@ -80,6 +82,16 @@ export class User {
     default: () => "'muško'",
   })
   gender: "muško" | "žensko" | null;
+
+  @Column("int", { name: "role_id", default: () => "'1'" })
+  roleId: number;
+
+  @ManyToOne(() => UserRole, (userRole) => userRole.users, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
+  @JoinColumn([{ name: "role_id", referencedColumnName: "roleId" }])
+  role: UserRole;
 
   @OneToMany(() => Article, (article) => article.user)
   articles: Article[];

@@ -102,12 +102,16 @@ export class UserService extends TypeOrmCrudService<User> {
       where: {
         email: email,
       },
+      relations: [
+        'role'
+      ]
     });
     if (user) {
       return user;
     }
     return null;
   }
+
   async addToken(userId: number, token: string, expiresAt: string) {
     const userToken = new UserToken();
     userToken.userId = userId;
@@ -117,13 +121,23 @@ export class UserService extends TypeOrmCrudService<User> {
     return await this.userToken.save(userToken);
   }
 
-  async getUserToken(token: string): Promise<UserToken> {
-    return await this.userToken.findOne({
-      where: {
-        token: token,
-      },
-    });
+  async getUserToken(token: string): Promise<UserToken | null> {
+    try {
+      const userToken = await this.userToken.findOne({
+        where: {
+          token: token,
+        },
+      });
+  
+      console.log('UserToken:', userToken);
+  
+      return userToken || null;
+    } catch (error) {
+      console.error('Error fetching user token:', error);
+      return null;
+    }
   }
+  
 
   async invalidateToken(token: string): Promise<UserToken | ApiResponse> {
     const userToken = await this.userToken.findOne({

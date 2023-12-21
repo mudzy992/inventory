@@ -50,6 +50,7 @@ import { SkipAuthMiddleware } from './middlewares/skip.auth.middleware';
 import { WebhookFrontendController } from './controllers/api/web.hook.frontend.controller';
 import { AdministratorDashboardController } from './controllers/api/administrator.dashboard.controller';
 import { AdministratorDashboardService } from './services/administrator.dashboard/administrator.dashboard.service';
+import { UserRole } from './entities/UserRole';
 
 @Module({
   imports: [
@@ -78,6 +79,7 @@ import { AdministratorDashboardService } from './services/administrator.dashboar
         DepartmentJob,
         Job,
         Location,
+        UserRole,
       ],
     }),
     TypeOrmModule.forFeature([
@@ -97,6 +99,7 @@ import { AdministratorDashboardService } from './services/administrator.dashboar
       DepartmentJob,
       Job,
       Location,
+      UserRole,
     ]),
   ],
   controllers: [
