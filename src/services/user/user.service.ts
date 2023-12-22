@@ -1,14 +1,14 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
-import { AddNewEmployeDto } from 'src/dtos/user/add.new.employe.dto';
-import { User } from 'src/entities/User';
-import { UserToken } from 'src/entities/UserToken';
-import { ApiResponse } from 'src/misc/api.response.class';
-import { Repository } from 'typeorm';
-import * as crypto from 'crypto';
-import { EditEmployeeDto } from 'src/dtos/user/edit.employee.dto';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
+import { AddNewEmployeDto } from "src/dtos/user/add.new.employe.dto";
+import { User } from "src/entities/User";
+import { UserToken } from "src/entities/UserToken";
+import { ApiResponse } from "src/misc/api.response.class";
+import { Repository } from "typeorm";
+import * as crypto from "crypto";
+import { EditEmployeeDto } from "src/dtos/user/edit.employee.dto";
 
 @Injectable()
 export class UserService extends TypeOrmCrudService<User> {
@@ -16,15 +16,24 @@ export class UserService extends TypeOrmCrudService<User> {
     @InjectRepository(User)
     private readonly user: Repository<User>,
     @InjectRepository(UserToken)
-    private readonly userToken: Repository<UserToken>,
+    private readonly userToken: Repository<UserToken>
   ) {
     super(user);
   }
 
+  async getAll(): Promise<User[] | ApiResponse> {
+    try{
+      const user = await this.user.find()
+      return user
+    } catch (err) {
+      return new ApiResponse("error", -6060, 'Greška prilikom dohvaćanja korisnika: ' + err.message )
+    }
+  }
+
   async createNewUser(data: AddNewEmployeDto): Promise<User | ApiResponse> {
-    const passwordHash = crypto.createHash('sha512');
+    const passwordHash = crypto.createHash("sha512");
     passwordHash.update(data.password);
-    const passwordHashString = passwordHash.digest('hex').toUpperCase();
+    const passwordHashString = passwordHash.digest("hex").toUpperCase();
 
     const newUser: User = new User();
     newUser.surname = data.surname;
@@ -43,25 +52,25 @@ export class UserService extends TypeOrmCrudService<User> {
     try {
       const savedUser = await this.user.save(newUser);
       if (!savedUser) {
-        throw new Error('');
+        throw new Error("");
       }
       return savedUser;
     } catch (e) {
       return new ApiResponse(
-        'error',
+        "error",
         -6001,
-        'This user account cannot be created.' + e.message,
+        "This user account cannot be created." + e.message
       );
     }
   }
 
   async editUser(userId: number, data: EditEmployeeDto) {
-    const passwordHash = crypto.createHash('sha512');
+    const passwordHash = crypto.createHash("sha512");
     passwordHash.update(data.password);
-    const passwordHashString = passwordHash.digest('hex').toUpperCase();
+    const passwordHashString = passwordHash.digest("hex").toUpperCase();
 
     const existingUser = await this.user.findOne({ where: { userId: userId } });
-    const fullname = data.forname + ' ' + data.surename;
+    const fullname = data.forname + " " + data.surename;
 
     existingUser.forname = data.forname;
     existingUser.surname = data.surename;
@@ -79,7 +88,7 @@ export class UserService extends TypeOrmCrudService<User> {
 
     const saveEditedUser = await this.user.save(existingUser);
     if (!saveEditedUser) {
-      return new ApiResponse('error', -6002, 'Korisnik ne može biti izmjenjen');
+      return new ApiResponse("error", -6002, "Korisnik ne može biti izmjenjen");
     }
   }
 
@@ -87,12 +96,12 @@ export class UserService extends TypeOrmCrudService<User> {
     return await this.user.findOne({
       where: { userId: id },
       relations: [
-        'department',
-        'job',
-        'location',
-        'articles.stock',
-        'articles.documents',
-        'articles.category',
+        "department",
+        "job",
+        "location",
+        "articles.stock",
+        "articles.documents",
+        "articles.category",
       ],
     });
   }
@@ -102,12 +111,14 @@ export class UserService extends TypeOrmCrudService<User> {
       where: {
         email: email,
       },
+      relations: ["role"],
     });
     if (user) {
       return user;
     }
     return null;
   }
+
   async addToken(userId: number, token: string, expiresAt: string) {
     const userToken = new UserToken();
     userToken.userId = userId;
@@ -117,12 +128,19 @@ export class UserService extends TypeOrmCrudService<User> {
     return await this.userToken.save(userToken);
   }
 
-  async getUserToken(token: string): Promise<UserToken> {
-    return await this.userToken.findOne({
-      where: {
-        token: token,
-      },
-    });
+  async getUserToken(token: string): Promise<UserToken | null> {
+    try {
+      const userToken = await this.userToken.findOne({
+        where: {
+          token: token,
+        },
+      });
+
+      return userToken || null;
+    } catch (error) {
+      console.error("Error fetching user token:", error);
+      return null;
+    }
   }
 
   async invalidateToken(token: string): Promise<UserToken | ApiResponse> {
@@ -133,7 +151,7 @@ export class UserService extends TypeOrmCrudService<User> {
     });
 
     if (!userToken) {
-      return new ApiResponse('error', -10001, 'No such refresh token!');
+      return new ApiResponse("error", -10001, "No such refresh token!");
     }
 
     userToken.isValid = 0;
@@ -144,7 +162,7 @@ export class UserService extends TypeOrmCrudService<User> {
   }
 
   async invalidateUserTokens(
-    userId: number,
+    userId: number
   ): Promise<(UserToken | ApiResponse)[]> {
     const userTokens = await this.userToken.find({
       where: {

@@ -1,7 +1,13 @@
 // create-stock.dto.ts
 
-import { IsString, IsNumber, IsOptional, IsArray, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsArray,
+  ValidateNested,
+} from "class-validator";
+import { Type } from "class-transformer";
 
 export class CreateStockFeatureDto {
   @IsNumber()

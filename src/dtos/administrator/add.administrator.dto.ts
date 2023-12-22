@@ -1,4 +1,4 @@
-import * as Validator from 'class-validator';
+import * as Validator from "class-validator";
 export class AddAdministratorDto {
   @Validator.IsNotEmpty()
   @Validator.IsString()

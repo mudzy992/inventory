@@ -1,5 +1,5 @@
 // subbmited.dto.ts
-import { Exclude } from 'class-transformer';
+import { Exclude } from "class-transformer";
 
 export class SubbmitedDto {
   userId: number;
@@ -14,9 +14,9 @@ export class SubbmitedDto {
   locationId: number;
   registrationDate: Date;
   lastLoginDate: Date;
-  status: 'aktivan' | 'neaktivan';
+  status: "aktivan" | "neaktivan";
   code: number;
-  gender: 'muško' | 'žensko';
+  gender: "muško" | "žensko";
 
   @Exclude()
   passwordHash: string;

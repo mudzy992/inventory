@@ -1,6 +1,6 @@
-import { JWTDataDto } from 'src/dtos/auth/jwt.data.dto';
+import { JWTDataDto } from "src/dtos/auth/jwt.data.dto";
 
-declare module 'express' {
+declare module "express" {
   interface Request {
     token: JWTDataDto;
   }

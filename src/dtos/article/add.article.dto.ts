@@ -1,4 +1,4 @@
-import { ArticleFeatureComponentDto } from './article.feature.component.dto';
+import { ArticleFeatureComponentDto } from "./article.feature.component.dto";
 
 export class AddArticleDto {
   serialNumber?: string;

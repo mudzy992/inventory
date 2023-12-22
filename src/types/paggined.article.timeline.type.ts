@@ -1,8 +1,8 @@
 import ArticleTimelineType from "./article.timeline.type";
 
 interface PaginatedArticleTimelineType {
-    results: ArticleTimelineType[];
-    total: number;
-  }
+  results: ArticleTimelineType[];
+  total: number;
+}
 
-  export default PaginatedArticleTimelineType;
+export default PaginatedArticleTimelineType;

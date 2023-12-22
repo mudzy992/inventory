@@ -1,5 +1,5 @@
 // user.dto.ts
-import { Exclude } from 'class-transformer';
+import { Exclude } from "class-transformer";
 
 export class UserDto {
   userId: number;
@@ -14,9 +14,9 @@ export class UserDto {
   locationId: number;
   registrationDate: Date;
   lastLoginDate: Date;
-  status: 'aktivan' | 'neaktivan';
+  status: "aktivan" | "neaktivan";
   code: number;
-  gender: 'muško' | 'žensko';
+  gender: "muško" | "žensko";
 
   @Exclude()
   passwordHash: string;

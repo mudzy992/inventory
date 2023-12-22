@@ -1,4 +1,4 @@
-import * as Validator from 'class-validator';
+import * as Validator from "class-validator";
 
 export class AddNewEmployeDto {
   @Validator.IsNotEmpty()
@@ -40,13 +40,12 @@ export class AddNewEmployeDto {
   @Validator.Length(6, 12)
   password: string;
 
-  @Validator.IsIn(['aktivan', 'neaktivan'])
-  status: 'aktivan' | 'neaktivan';
+  @Validator.IsIn(["aktivan", "neaktivan"])
+  status: "aktivan" | "neaktivan";
 
   @Validator.IsNumber()
   code: number;
 
-  @Validator.IsIn(['muško', 'žensko'])
-  gender: 'muško' | 'žensko';
-
+  @Validator.IsIn(["muško", "žensko"])
+  gender: "muško" | "žensko";
 }

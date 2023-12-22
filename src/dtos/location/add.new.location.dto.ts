@@ -1,5 +1,5 @@
 export class AddNewLocationDto {
-    name: string;
-    code: string
-    parentLocationId: number;
+  name: string;
+  code: string;
+  parentLocationId: number;
 }

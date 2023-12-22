@@ -14,17 +14,17 @@ jobs:
       - run:
           name: Install Dependencies
           command: npm install
-      - run: npm install --save-dev firebase-tools    
+      - run: npm install --save-dev firebase-tools
       - save_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
       - run:
           name: Build application for production
-          command: npm run build 
+          command: npm run build
       #- run:
-          #name: Deploy app to Firebase
-          #command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN  
+      #name: Deploy app to Firebase
+      #command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN
 workflows:
   build-and-deploy:
     jobs:
