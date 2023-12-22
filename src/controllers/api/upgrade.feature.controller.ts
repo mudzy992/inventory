@@ -3,6 +3,7 @@ import { Crud } from "@nestjsx/crud";
 import { UpgradeFeatureDto } from "src/dtos/upgradeFeature/upgrade.feature.dto";
 import { UpgradeFeature } from "src/entities/UpgradeFeature";
 import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
+import { ApiResponse } from "src/misc/api.response.class";
 import { RoleCheckedGuard } from "src/misc/role.checker.guard";
 import { UpgradeFeatureService } from "src/services/upgradeFeature/upgrade.features.service";
 
@@ -28,14 +29,25 @@ import { UpgradeFeatureService } from "src/services/upgradeFeature/upgrade.featu
 })
 export class UpgradeFeatureController {
   constructor(public service: UpgradeFeatureService) {}
-  @Get()
+
+  @Get("/get/:serial")
   @UseGuards(RoleCheckedGuard)
-  @AllowToRoles("user", "administrator", "moderator")
-  async getAll(): Promise<UpgradeFeature[]>{
-    return await this.service.getAll()
+  @AllowToRoles("administrator", "moderator", "user")
+  getById(
+    @Param("serial") serialNumber: string
+  ): Promise<UpgradeFeature[] | ApiResponse> {
+    return new Promise(async (resolve) => {
+      const features = await this.service.getFeaturesByArticleSerialNumber(serialNumber);
+      if (features === undefined) {
+        resolve(new ApiResponse("error", -9001));
+      }
+      resolve(features);
+    });
   }
 
   @Post("/add/:sb")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator", "moderator")
   async doChangeStatus(
     @Body() data: UpgradeFeatureDto,
     @Param("sb") sb: string
@@ -44,6 +56,8 @@ export class UpgradeFeatureController {
   }
 
   @Delete("/delete/:id")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator", "moderator")
   async deleteUpgradeFeature(@Param("id") id: number) {
     return this.service.deleteUpgradeFeature(id);
   }

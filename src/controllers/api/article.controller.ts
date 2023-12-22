@@ -69,11 +69,20 @@ export class ArticleController {
     return await this.service.addNewArticle(id, data);
   }
 
-  @Get()
+  /* Ovoj ruti imaju pristup svi i obični korisnik, administrator, moderator */
+  @Get("/user/:userId")
   @UseGuards(RoleCheckedGuard)
-  @AllowToRoles("user", "administrator", "moderator")
-  async getAll(): Promise<Article[]>{
-    return await this.service.getAll()
+  @AllowToRoles("administrator", "moderator", "user")
+  getById(
+    @Param("userId") userId: number
+  ): Promise<Article[] | ApiResponse> {
+    return new Promise(async (resolve) => {
+      const articleByUserId = await this.service.getByUserId(userId);
+      if (articleByUserId === undefined) {
+        resolve(new ApiResponse("error", -8002));
+      }
+      resolve(articleByUserId);
+    });
   }
 
   @Get("s/:stockId")
@@ -94,6 +103,7 @@ export class ArticleController {
     );
   }
 
+  /* Ovoj ruti imaju pristup svi */
   @Get("sb/:serialNumber")
   @UseGuards(RoleCheckedGuard)
   @AllowToRoles("user", "administrator", "moderator")

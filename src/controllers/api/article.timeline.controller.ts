@@ -4,10 +4,13 @@ import {
   Get,
   Param,
   Query,
+  UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
 import { Crud } from "@nestjsx/crud";
 import { ArticleTimeline } from "src/entities/ArticleTimeline";
+import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
+import { RoleCheckedGuard } from "src/misc/role.checker.guard";
 import { ArticleTimelineService } from "src/services/articleTimeline/article.timeline.service";
 import ArticleTimelineType from "src/types/article.timeline.type";
 import PaginatedArticleTimelineType from "src/types/paggined.article.timeline.type";
@@ -39,6 +42,8 @@ export class ArticleTimelineController {
   constructor(public articleTimelineService: ArticleTimelineService) {}
 
   @Get(":id")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator", "moderator")
   async getById(@Param("id") id: string) {
     const article: ArticleTimeline = await this.articleTimelineService.getById(
       id
@@ -48,6 +53,8 @@ export class ArticleTimelineController {
 
   @Get()
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator", "moderator")
   async getAll() {
     const articles = await this.articleTimelineService.getAll();
     const mappedArticles = articles.map((article) => ({
@@ -59,6 +66,8 @@ export class ArticleTimelineController {
   }
 
   @Get("p/:id")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator", "moderator")
   async findPaginatedArticlesTimeline(
     @Param("id") id: number,
     @Query("perPage") perPage: number = 10,

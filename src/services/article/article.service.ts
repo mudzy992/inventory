@@ -43,8 +43,18 @@ export class ArticleService extends TypeOrmCrudService<Article> {
   Kao što vidimo vraća nam full artikal, a mi znamo da u tom full artiklu imamo cijenu, features, slike koji nam trebaju
   I to nije problem, jer ćemo dobiti articleId koji će biti na awaitu, i na osnovu tog articleId ćemo pridružiti cijenu, features, slike */
 
-  async getAll(): Promise<Article[]> {
-    return await this.article.find()
+  async getByUserId(userId: number): Promise<Article[] | null> {
+    const article = await this.article.find({
+      where: {
+        userId: userId,
+      },
+      relations: ["category", "stock.stockFeatures",
+      "stock.stockFeatures.feature"]
+    });
+    if (article) {
+      return article;
+    }
+    return null;
   }
 
   async addNewArticle(
