@@ -1,20 +1,22 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
-import { Crud } from '@nestjsx/crud';
-import { AddNewEmployeDto } from 'src/dtos/user/add.new.employe.dto';
-import { EditEmployeeDto } from 'src/dtos/user/edit.employee.dto';
-import { User } from 'src/entities/User';
-import { ApiResponse } from 'src/misc/api.response.class';
-import { UserService } from 'src/services/user/user.service';
+import { Body, Controller, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { Crud } from "@nestjsx/crud";
+import { AddNewEmployeDto } from "src/dtos/user/add.new.employe.dto";
+import { EditEmployeeDto } from "src/dtos/user/edit.employee.dto";
+import { User } from "src/entities/User";
+import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
+import { ApiResponse } from "src/misc/api.response.class";
+import { RoleCheckedGuard } from "src/misc/role.checker.guard";
+import { UserService } from "src/services/user/user.service";
 
-@Controller('api/user/')
+@Controller("api/user/")
 @Crud({
   model: {
     type: User,
   },
   params: {
     id: {
-      field: 'userId',
-      type: 'number',
+      field: "userId",
+      type: "number",
       primary: true,
     },
   },
@@ -36,38 +38,46 @@ import { UserService } from 'src/services/user/user.service';
         eager: true,
       },
     },
-    exclude:['passwordHash'],
-    sort: [{ field: 'fullname', order: 'ASC' }],
+    exclude: ["passwordHash"],
+    sort: [{ field: "fullname", order: "ASC" }],
   },
 })
 export class UserController {
   constructor(public service: UserService) {}
 
-  @Get(':id')
-  async getStockById(@Param('id') userId: number): Promise<User | ApiResponse> {
+  @Get()
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("user", "administrator", "moderator")
+  async getAll(): Promise<User[] | ApiResponse> {
+    return await this.service.getAll()
+  }
+
+  @Get(":id")
+  async getStockById(@Param("id") userId: number): Promise<User | ApiResponse> {
     return this.service.getById(userId);
   }
 
-  @Post('/add/')
+  @Post("/add/")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("user", "administrator", "moderator")
   async createNewUser(
-    @Body() data: AddNewEmployeDto,
+    @Body() data: AddNewEmployeDto
   ): Promise<User | ApiResponse> {
     const email = await this.service.getByEmail(data.email);
     if (email) {
       return new ApiResponse(
-        'error',
+        "error",
         -2001,
-        'Radnik već postoji u bazi podataka',
+        "Radnik već postoji u bazi podataka"
       );
     }
     return await this.service.createNewUser(data);
   }
 
-  @Patch('/edit/:id')
-  async editUser(
-    @Param('id') id: number,
-    @Body() data: EditEmployeeDto,
-  ) {
+  @Patch("/edit/:id")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("user", "administrator", "moderator")
+  async editUser(@Param("id") id: number, @Body() data: EditEmployeeDto) {
     return await this.service.editUser(id, data);
   }
 } /* Kraj koda */

@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Administrator } from 'src/entities/Administrator';
-import { Repository } from 'typeorm';
-import * as crypto from 'crypto';
-import { ApiResponse } from 'src/misc/api.response.class';
-import { AddAdministratorDto } from 'src/dtos/administrator/add.administrator.dto';
-import { EditAdministratorDto } from './edit.administrator.dto';
-import { AdministratorToken } from 'src/entities/AdministratorToken';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Administrator } from "src/entities/Administrator";
+import { Repository } from "typeorm";
+import * as crypto from "crypto";
+import { ApiResponse } from "src/misc/api.response.class";
+import { AddAdministratorDto } from "src/dtos/administrator/add.administrator.dto";
+import { EditAdministratorDto } from "./edit.administrator.dto";
+import { AdministratorToken } from "src/entities/AdministratorToken";
 
 @Injectable()
 export class AdministratorService {
@@ -14,16 +14,18 @@ export class AdministratorService {
     @InjectRepository(Administrator)
     private readonly administrator: Repository<Administrator>,
     @InjectRepository(AdministratorToken)
-    private readonly administratorToken: Repository<AdministratorToken>,
+    private readonly administratorToken: Repository<AdministratorToken>
   ) {}
   getAll(): Promise<Administrator[]> {
     return this.administrator.find();
   }
 
   async getByUsername(username: string): Promise<Administrator | null> {
-    const admin = await this.administrator.findOne({where:{
-      username: username,
-    }});
+    const admin = await this.administrator.findOne({
+      where: {
+        username: username,
+      },
+    });
     if (admin) {
       return admin;
     }
@@ -31,13 +33,13 @@ export class AdministratorService {
   }
 
   getById(id: number): Promise<Administrator> {
-    return this.administrator.findOne({where:{administratorId:id}});
+    return this.administrator.findOne({ where: { administratorId: id } });
   }
 
   add(data: AddAdministratorDto): Promise<Administrator | ApiResponse> {
-    const passwordHash = crypto.createHash('sha512');
+    const passwordHash = crypto.createHash("sha512");
     passwordHash.update(data.password);
-    const passwordHashString = passwordHash.digest('hex').toUpperCase();
+    const passwordHashString = passwordHash.digest("hex").toUpperCase();
     const newAdmin: Administrator = new Administrator();
     newAdmin.username = data.username;
     newAdmin.passwordHash = passwordHashString;
@@ -46,7 +48,7 @@ export class AdministratorService {
         .save(newAdmin)
         .then((data) => resolve(data))
         .catch((error) => {
-          const response: ApiResponse = new ApiResponse('error', -8001);
+          const response: ApiResponse = new ApiResponse("error", -8001);
           resolve(response);
         });
     });
@@ -54,17 +56,19 @@ export class AdministratorService {
 
   async editById(
     id: number,
-    data: EditAdministratorDto,
+    data: EditAdministratorDto
   ): Promise<Administrator | ApiResponse> {
-    const admin: Administrator = await this.administrator.findOne({where:{administratorId: id}});
+    const admin: Administrator = await this.administrator.findOne({
+      where: { administratorId: id },
+    });
     if (admin === undefined) {
       return new Promise((resolve) => {
-        resolve(new ApiResponse('error', -8002));
+        resolve(new ApiResponse("error", -8002));
       });
     }
-    const passwordHash = crypto.createHash('sha512');
+    const passwordHash = crypto.createHash("sha512");
     passwordHash.update(data.password);
-    const passwordHashString = passwordHash.digest('hex').toUpperCase();
+    const passwordHashString = passwordHash.digest("hex").toUpperCase();
     admin.passwordHash = passwordHashString;
     return this.administrator.save(admin);
   }
@@ -78,19 +82,23 @@ export class AdministratorService {
   }
 
   async getAdministratorToken(token: string): Promise<AdministratorToken> {
-    return await this.administratorToken.findOne({where:{
-      token: token,
-    }});
+    return await this.administratorToken.findOne({
+      where: {
+        token: token,
+      },
+    });
   }
 
   async invalidateToken(
-    token: string,
+    token: string
   ): Promise<AdministratorToken | ApiResponse> {
-    const administratorToken = await this.administratorToken.findOne({where:{
-      token: token,
-    }});
+    const administratorToken = await this.administratorToken.findOne({
+      where: {
+        token: token,
+      },
+    });
     if (!administratorToken) {
-      return new ApiResponse('error', -10001, 'Neispravan osvježavajući token');
+      return new ApiResponse("error", -10001, "Neispravan osvježavajući token");
     }
     administratorToken.isValid = 0;
     await this.administratorToken.save(administratorToken);
@@ -98,11 +106,13 @@ export class AdministratorService {
   }
 
   async invalidateAdministratorTokens(
-    administratorId: number,
+    administratorId: number
   ): Promise<(AdministratorToken | ApiResponse)[]> {
-    const administratorTokens = await this.administratorToken.find({where:{
-      administratorId: administratorId,
-    }});
+    const administratorTokens = await this.administratorToken.find({
+      where: {
+        administratorId: administratorId,
+      },
+    });
     const results = [];
     for (const administratorToken of administratorTokens) {
       results.push(this.invalidateToken(administratorToken.token));

@@ -1,5 +1,5 @@
 export class AddNewCategoryDto {
-    name: string;
-    imagePath: string
-    parentCategoryId: number;
+  name: string;
+  imagePath: string;
+  parentCategoryId: number;
 }

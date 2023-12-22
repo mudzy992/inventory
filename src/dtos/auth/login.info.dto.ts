@@ -12,7 +12,7 @@ export class LoginInfoDto {
     identity: string,
     jwt: string,
     refreshToken: string,
-    refreshTokenExpiresAt: string,
+    refreshTokenExpiresAt: string
   ) {
     this.id = id;
     this.role = role;

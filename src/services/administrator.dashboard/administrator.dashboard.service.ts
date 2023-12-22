@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Administrator } from 'src/entities/Administrator';
-import { Brackets, IsNull, Repository } from 'typeorm';
-import { ApiResponse } from 'src/misc/api.response.class';
-import { Article } from 'src/entities/Article';
-import { Stock } from 'src/entities/Stock';
-import { Documents } from 'src/entities/Documents';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Administrator } from "src/entities/Administrator";
+import { Brackets, IsNull, Repository } from "typeorm";
+import { ApiResponse } from "src/misc/api.response.class";
+import { Article } from "src/entities/Article";
+import { Stock } from "src/entities/Stock";
+import { Documents } from "src/entities/Documents";
 
 @Injectable()
 export class AdministratorDashboardService {
@@ -17,106 +17,122 @@ export class AdministratorDashboardService {
     @InjectRepository(Stock)
     private readonly stock: Repository<Stock>,
     @InjectRepository(Documents)
-    private readonly documents: Repository<Documents>,
+    private readonly documents: Repository<Documents>
   ) {}
   /* Articles */
   async getAllArticles(): Promise<Article[]> {
-     const articles = await this.article.find({
-      relations:['stock', 'user', 'category']
-     })
+    const articles = await this.article.find({
+      relations: ["stock", "user", "category"],
+    });
 
-    return articles
+    return articles;
   }
 
   async getLastArticle(): Promise<Article> {
     const article = await this.article
-        .createQueryBuilder('article')
-        .leftJoinAndSelect('article.stock', 'stock')
-        .leftJoinAndSelect('article.category', 'category')
-        .leftJoinAndSelect('article.user', 'user')
-        .orderBy('article.timestamp', 'DESC') 
-        .take(1)
-        .getOne();
+      .createQueryBuilder("article")
+      .leftJoinAndSelect("article.stock", "stock")
+      .leftJoinAndSelect("article.category", "category")
+      .leftJoinAndSelect("article.user", "user")
+      .orderBy("article.timestamp", "DESC")
+      .take(1)
+      .getOne();
 
-   return article
- }
+    return article;
+  }
 
+  async searchPaginationArticle(
+    perPage: number,
+    offset: number,
+    query: string
+  ) {
+    const resultsQuery = this.article
+      .createQueryBuilder("article")
+      .leftJoinAndSelect("article.stock", "stock")
+      .leftJoinAndSelect("article.user", "user")
+      .leftJoinAndSelect("article.category", "category")
+      .where((qb) => {
+        if (query) {
+          qb.andWhere(
+            new Brackets((qb) => {
+              qb.where("LOWER(user.fullname) LIKE LOWER(:query)", {
+                query: `%${query}%`,
+              });
+              qb.orWhere("LOWER(article.serialNumber) LIKE LOWER(:query)", {
+                query: `%${query}%`,
+              });
+              qb.orWhere("LOWER(article.invNumber) LIKE LOWER(:query)", {
+                query: `%${query}%`,
+              });
+              qb.orWhere("LOWER(stock.name) LIKE LOWER(:query)", {
+                query: `%${query}%`,
+              });
+            })
+          );
+        }
+      })
+      .take(perPage)
+      .skip(offset);
 
- async searchPaginationArticle(perPage: number, offset: number, query: string) {
-  const resultsQuery = this.article
-    .createQueryBuilder('article')
-    .leftJoinAndSelect('article.stock', 'stock')
-    .leftJoinAndSelect('article.user', 'user')
-    .leftJoinAndSelect('article.category', 'category')
-    .where((qb) => {
-      if (query) {
-        qb.andWhere(
-          new Brackets((qb) => {
-            qb.where('LOWER(user.fullname) LIKE LOWER(:query)', { query: `%${query}%` });
-            qb.orWhere('LOWER(article.serialNumber) LIKE LOWER(:query)', { query: `%${query}%` });
-            qb.orWhere('LOWER(article.invNumber) LIKE LOWER(:query)', { query: `%${query}%` });
-            qb.orWhere('LOWER(stock.name) LIKE LOWER(:query)', { query: `%${query}%` });
-          }),
-        );
-      }
-    })
-    .take(perPage)
-    .skip(offset);
+    const [results, totalResults] = await resultsQuery.getManyAndCount();
 
-  const [results, totalResults] = await resultsQuery.getManyAndCount();
+    return {
+      results,
+      total: totalResults,
+    };
+  }
 
-  return {
-    results,
-    total: totalResults,
-  };
-}
-
-
- /* Stocks */
+  /* Stocks */
   async getAllStocks(): Promise<Stock[]> {
     const stocks = await this.stock.find({
-    relations:[]
-    })
+      relations: [],
+    });
 
-  return stocks
+    return stocks;
   }
 
   async getLastStock(): Promise<Stock> {
-  const stock = await this.stock
-      .createQueryBuilder('stock')
-      .leftJoinAndSelect('stock.category', 'category')
-      .orderBy('stock.createdAt', 'DESC') 
+    const stock = await this.stock
+      .createQueryBuilder("stock")
+      .leftJoinAndSelect("stock.category", "category")
+      .orderBy("stock.createdAt", "DESC")
       .take(1)
       .getOne();
-  return stock
+    return stock;
   }
 
   /* Documents */
   async getAllDocuments(): Promise<Documents[]> {
     const documents = await this.documents.find({
-    relations:[]
-    })
+      relations: [],
+    });
 
-  return documents
+    return documents;
   }
 
   async getLastDocument(): Promise<Documents> {
-  const document = await this.documents
-      .createQueryBuilder('documents')
-      .leftJoinAndSelect('documents.article', 'article') 
-      .orderBy('documents.createdDate', 'DESC')
+    const document = await this.documents
+      .createQueryBuilder("documents")
+      .leftJoinAndSelect("documents.article", "article")
+      .orderBy("documents.createdDate", "DESC")
       .take(1)
       .getOne();
-  return document
+    return document;
   }
 
   async getUnsignedDocuments(): Promise<[Documents[], number]> {
     const documents = await this.documents.findAndCount({
-    where: { signed_path: IsNull() },
-    relations:['articleTimelines','article', 'article.stock','article.user','article.category']
-    })
+      where: { signed_path: IsNull() },
+      relations: [
+        "articleTimelines",
+        "article",
+        "article.stock",
+        "article.user",
+        "article.category",
+      ],
+    });
 
-  return documents
+    return documents;
   }
 
   /* Administrator */
@@ -124,9 +140,7 @@ export class AdministratorDashboardService {
     return this.administrator.find();
   }
 
-
   getById(id: number): Promise<Administrator> {
-    return this.administrator.findOne({where:{administratorId:id}});
+    return this.administrator.findOne({ where: { administratorId: id } });
   }
-
 } /* Kraj koda */

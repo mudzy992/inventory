@@ -6,7 +6,7 @@ export class ApiResponse {
   constructor(
     status: string,
     statusCode: number,
-    message: string | null = null,
+    message: string | null = null
   ) {
     this.status = status;
     this.statusCode = statusCode;

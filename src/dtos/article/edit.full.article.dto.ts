@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsInt, IsEnum } from 'class-validator';
+import { IsOptional, IsString, IsInt, IsEnum } from "class-validator";
 
 export class EditArticleDto {
   @IsString()
@@ -17,9 +17,9 @@ export class EditArticleDto {
   @IsOptional()
   documentId?: number;
 
-  @IsEnum(['zaduženo', 'razduženo', 'otpisano'], { each: true })
+  @IsEnum(["zaduženo", "razduženo", "otpisano"], { each: true })
   @IsOptional()
-  status?: 'zaduženo' | 'razduženo' | 'otpisano';
+  status?: "zaduženo" | "razduženo" | "otpisano";
 
   @IsOptional()
   features?: Array<{ featureId: number; value: string }>;

@@ -25,7 +25,7 @@ export class Documents {
   @Column("varchar", { name: "signed_path", nullable: true, length: 255 })
   signed_path: string | null;
 
-  @Column({type:'int', name: "document_number"})
+  @Column({ type: "int", name: "document_number" })
   documentNumber: number;
 
   @Column("timestamp", {

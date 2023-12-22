@@ -1,4 +1,4 @@
-import * as Validator from 'class-validator';
+import * as Validator from "class-validator";
 
 export class EditEmployeeDto {
   @Validator.IsNotEmpty()
@@ -48,6 +48,6 @@ export class EditEmployeeDto {
   @Validator.IsNumber()
   code: number;
 
-  @Validator.IsIn(['muško', 'žensko'])
-  gender: 'muško' | 'žensko';
+  @Validator.IsIn(["muško", "žensko"])
+  gender: "muško" | "žensko";
 }

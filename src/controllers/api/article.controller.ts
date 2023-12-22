@@ -1,20 +1,31 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { Crud } from '@nestjsx/crud';
-import { AddArticleDto } from 'src/dtos/article/add.article.dto';
-import { EditArticleDto } from 'src/dtos/article/edit.full.article.dto';
-import { Article } from 'src/entities/Article';
-import { ApiResponse } from 'src/misc/api.response.class';
-import { ArticleService } from 'src/services/article/article.service';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
+import { Crud } from "@nestjsx/crud";
+import { AddArticleDto } from "src/dtos/article/add.article.dto";
+import { EditArticleDto } from "src/dtos/article/edit.full.article.dto";
+import { Article } from "src/entities/Article";
+import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
+import { ApiResponse } from "src/misc/api.response.class";
+import { RoleCheckedGuard } from "src/misc/role.checker.guard";
+import { ArticleService } from "src/services/article/article.service";
 
-@Controller('api/article')
+@Controller("api/article")
 @Crud({
   model: {
     type: Article,
   },
   params: {
     id: {
-      field: 'articleId',
-      type: 'number',
+      field: "articleId",
+      type: "number",
       primary: true,
     },
   },
@@ -22,7 +33,7 @@ import { ArticleService } from 'src/services/article/article.service';
     join: {
       user: {
         eager: true,
-        exclude:['passwordHash']
+        exclude: ["passwordHash"],
       },
       stock: {
         eager: true,
@@ -43,43 +54,55 @@ import { ArticleService } from 'src/services/article/article.service';
         eager: false,
       },
     },
-    
   },
-  routes: { exclude: ['updateOneBase'] },
+  routes: { exclude: ["updateOneBase"] },
 })
 export class ArticleController {
   constructor(public service: ArticleService) {}
-  @Post(':stockId')
+  @Post(":stockId")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator", "moderator")
   async addNewArticle(
-    @Param('stockId') id: number,
-    @Body() data: AddArticleDto,
+    @Param("stockId") id: number,
+    @Body() data: AddArticleDto
   ): Promise<Article | ApiResponse> {
     return await this.service.addNewArticle(id, data);
   }
 
-  @Get('s/:stockId')
-  async articleSearchPaginationByStockId(
-    @Param('stockId') stockId: number,
-    @Query('perPage') perPage: number = 10,
-    @Query('page') page: number = 1,
-    @Query('query') query: string = '',
-  ) {
-    const offset = (page - 1) * perPage;
-    return this.service.articleSearchPaginationByStockId(stockId, perPage, offset, query);
+  @Get()
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("user", "administrator", "moderator")
+  async getAll(): Promise<Article[]>{
+    return await this.service.getAll()
   }
 
-  @Get('sb/:serialNumber')
-  async getBySerialNumber(
-    @Param('serialNumber') serialNumber: string,
+  @Get("s/:stockId")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator", "moderator")
+  async articleSearchPaginationByStockId(
+    @Param("stockId") stockId: number,
+    @Query("perPage") perPage: number = 10,
+    @Query("page") page: number = 1,
+    @Query("query") query: string = ""
   ) {
+    const offset = (page - 1) * perPage;
+    return this.service.articleSearchPaginationByStockId(
+      stockId,
+      perPage,
+      offset,
+      query
+    );
+  }
+
+  @Get("sb/:serialNumber")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("user", "administrator", "moderator")
+  async getBySerialNumber(@Param("serialNumber") serialNumber: string) {
     return this.service.getBySerialNumber(serialNumber);
   }
 
-  @Patch('status/:id')
-  async changeStatus(
-    @Param('id') id: number,
-    @Body() data: AddArticleDto,
-  ) {
+  @Patch("status/:id")
+  async changeStatus(@Param("id") id: number, @Body() data: AddArticleDto) {
     return await this.service.changeStatus(id, data);
   }
 
@@ -98,6 +121,4 @@ export class ArticleController {
   // ) {
   //   return await this.service.changeStockExistArticle(id, data);
   // }
-
-  
 } /* Kraj koda */

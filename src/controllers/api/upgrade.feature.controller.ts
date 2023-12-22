@@ -1,18 +1,20 @@
-import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
-import { Crud } from '@nestjsx/crud';
-import { UpgradeFeatureDto } from 'src/dtos/upgradeFeature/upgrade.feature.dto';
-import { UpgradeFeature } from 'src/entities/UpgradeFeature';
-import { UpgradeFeatureService } from 'src/services/upgradeFeature/upgrade.features.service';
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from "@nestjs/common";
+import { Crud } from "@nestjsx/crud";
+import { UpgradeFeatureDto } from "src/dtos/upgradeFeature/upgrade.feature.dto";
+import { UpgradeFeature } from "src/entities/UpgradeFeature";
+import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
+import { RoleCheckedGuard } from "src/misc/role.checker.guard";
+import { UpgradeFeatureService } from "src/services/upgradeFeature/upgrade.features.service";
 
-@Controller('api/upgradeFeature')
+@Controller("api/upgradeFeature")
 @Crud({
   model: {
     type: UpgradeFeature,
   },
   params: {
     id: {
-      field: 'upgradeFeatureId',
-      type: 'number',
+      field: "upgradeFeatureId",
+      type: "number",
       primary: true,
     },
   },
@@ -25,21 +27,24 @@ import { UpgradeFeatureService } from 'src/services/upgradeFeature/upgrade.featu
   },
 })
 export class UpgradeFeatureController {
-  constructor(
-    public service: UpgradeFeatureService,
-  ) {}
-  @Post('/add/:sb')
-  async doChangeStatus(
-    @Body() data: UpgradeFeatureDto,
-    @Param('sb') sb: string,
-  ) {
-    return this.service.newUpgradeFeature(sb, data)
+  constructor(public service: UpgradeFeatureService) {}
+  @Get()
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("user", "administrator", "moderator")
+  async getAll(): Promise<UpgradeFeature[]>{
+    return await this.service.getAll()
   }
 
-  @Delete('/delete/:id')
-  async deleteUpgradeFeature(
-    @Param('id') id: number,
+  @Post("/add/:sb")
+  async doChangeStatus(
+    @Body() data: UpgradeFeatureDto,
+    @Param("sb") sb: string
   ) {
-    return this.service.deleteUpgradeFeature(id)
+    return this.service.newUpgradeFeature(sb, data);
+  }
+
+  @Delete("/delete/:id")
+  async deleteUpgradeFeature(@Param("id") id: number) {
+    return this.service.deleteUpgradeFeature(id);
   }
 }
