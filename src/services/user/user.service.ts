@@ -23,7 +23,11 @@ export class UserService extends TypeOrmCrudService<User> {
 
   async getAll(): Promise<User[] | ApiResponse> {
     try{
-      const user = await this.user.find()
+      const user = await this.user.find({
+        relations:["department",
+        "job",
+        "location",]
+      })
       return user
     } catch (err) {
       return new ApiResponse("error", -6060, 'Greška prilikom dohvaćanja korisnika: ' + err.message )

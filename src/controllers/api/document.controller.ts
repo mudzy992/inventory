@@ -6,10 +6,13 @@ import {
   UseInterceptors,
   Get,
   Query,
+  UseGuards,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Crud } from "@nestjsx/crud";
 import { Documents } from "src/entities/Documents";
+import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
+import { RoleCheckedGuard } from "src/misc/role.checker.guard";
 import { DocumentService } from "src/services/document/document.service";
 
 @Controller("api/document")
@@ -39,6 +42,8 @@ export class DocumentController {
   constructor(public service: DocumentService) {}
 
   @Post(":id/upload")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator", "moderator")
   @UseInterceptors(FileInterceptor("file"))
   async uploadPdf(
     @Param("id") documentId: number,
@@ -54,11 +59,15 @@ export class DocumentController {
   }
 
   @Get()
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator", "moderator")
   async getAll() {
     return this.service.getAll();
   }
 
   @Get("p")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator", "moderator")
   async paginedDocuments(
     @Query("perPage") perPage: number = 10,
     @Query("offset") offset: number = 0
@@ -67,6 +76,8 @@ export class DocumentController {
   }
 
   @Get("s")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator", "moderator")
   async articleSearchPaginationByStockId(
     @Query("perPage") perPage: number = 10,
     @Query("page") page: number = 1,

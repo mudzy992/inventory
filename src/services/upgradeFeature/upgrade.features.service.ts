@@ -15,8 +15,14 @@ export class UpgradeFeatureService extends TypeOrmCrudService<UpgradeFeature> {
     super(upgradeFeature);
   }
 
-  async getAll(): Promise<UpgradeFeature[]> {
-    return await this.upgradeFeature.find()
+  getFeaturesByArticleSerialNumber(serial:string): Promise<UpgradeFeature[] | null> {
+    const features = this.upgradeFeature.find({
+      where: { serialNumber: serial}
+    })
+    if(features){
+      return features
+    }
+    return null
   }
 
   async newUpgradeFeature(
