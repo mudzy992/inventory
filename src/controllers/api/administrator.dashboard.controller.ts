@@ -1,14 +1,10 @@
 import {
-  Body,
   Controller,
   Get,
   Param,
-  Patch,
-  Post,
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { Administrator } from "src/entities/Administrator";
 import { Article } from "src/entities/Article";
 import { Documents } from "src/entities/Documents";
 import { Stock } from "src/entities/Stock";
@@ -85,28 +81,5 @@ export class AdministratorDashboardController {
   @AllowToRoles("administrator")
   getUnsignedDocuments(): Promise<[Documents[], number]> {
     return this.service.getUnsignedDocuments();
-  }
-
-  /* Svi administratori */
-  @Get()
-  @UseGuards(RoleCheckedGuard)
-  @AllowToRoles("administrator")
-  getAll(): Promise<Administrator[]> {
-    return this.service.getAll();
-  }
-  /* Administrator po ID */
-  @Get(":id")
-  @UseGuards(RoleCheckedGuard)
-  @AllowToRoles("administrator")
-  getById(
-    @Param("id") administratorId: number
-  ): Promise<Administrator | ApiResponse> {
-    return new Promise(async (resolve) => {
-      const admin = await this.service.getById(administratorId);
-      if (admin === undefined) {
-        resolve(new ApiResponse("error", -8002));
-      }
-      resolve(admin);
-    });
   }
 }

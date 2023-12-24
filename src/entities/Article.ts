@@ -13,6 +13,7 @@ import { Category } from "./Category";
 import { ArticleTimeline } from "./ArticleTimeline";
 import { Documents } from "./Documents";
 import { UpgradeFeature } from "./UpgradeFeature";
+import { HelpdeskTickets } from "./HelpdeskTickets";
 
 @Index("user_id", ["userId"], {})
 @Index("fk_article_stock", ["stockId"], {})
@@ -85,6 +86,12 @@ export class Article {
 
   @OneToMany(() => Documents, (documents) => documents.article)
   documents: Documents[];
+
+  @OneToMany(
+    () => HelpdeskTickets,
+    (helpdeskTickets) => helpdeskTickets.article
+  )
+  helpdeskTickets: HelpdeskTickets[];
 
   @OneToMany(() => UpgradeFeature, (upgradeFeature) => upgradeFeature.article)
   upgradeFeatures: UpgradeFeature[];

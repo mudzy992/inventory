@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { DepartmentJob } from "./DepartmentJob";
 import { User } from "./User";
+import { TicketGroup } from "./TicketGroup";
 
 @Index("code", ["code"], { unique: true })
 @Index("parent_location_id", ["parentLocationId"], {})
@@ -43,4 +44,7 @@ export class Location {
 
   @OneToMany(() => User, (user) => user.location)
   users: User[];
+
+  @OneToMany(() => TicketGroup, (ticketGroup) => ticketGroup.location)
+  ticketGroups: TicketGroup[];
 }

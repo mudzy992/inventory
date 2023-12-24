@@ -17,12 +17,8 @@ import { StockService } from "./services/stock/stock.service";
 import { StockController } from "./controllers/api/stock.controller";
 import { FeatureService } from "./services/feature/feature.service";
 import { FeatureController } from "./controllers/api/feature.controller";
-import { AdministratorService } from "./services/administrator/administrator.service";
-import { Administrator } from "./entities/Administrator";
-import { AdministratorController } from "./controllers/api/administrator.controller";
 import { AuthMiddleware } from "./middlewares/auth.middleware";
 import { UserToken } from "./entities/UserToken";
-import { AdministratorToken } from "./entities/AdministratorToken";
 import { AuthController } from "./controllers/api/auth.controller";
 import { Documents } from "./entities/Documents";
 import { DocumentService } from "./services/document/document.service";
@@ -51,6 +47,15 @@ import { WebhookFrontendController } from "./controllers/api/web.hook.frontend.c
 import { AdministratorDashboardController } from "./controllers/api/administrator.dashboard.controller";
 import { AdministratorDashboardService } from "./services/administrator.dashboard/administrator.dashboard.service";
 import { UserRole } from "./entities/UserRole";
+import { HelpdeskTickets } from "./entities/HelpdeskTickets";
+import { ModeratorGroupMapping } from "./entities/ModeratorGroupMapping";
+import { TicketGroup } from "./entities/TicketGroup";
+import { HelpdeskTicketsController } from "./controllers/api/helpdesk.tickets.controller";
+import { HelpdeskTicketService } from "./services/helpdesk.tickets/helpdesk.tickets.service";
+import { TicketGroupController } from "./controllers/api/ticket.group.controller";
+import { TicketGroupService } from "./services/ticket.group/ticket.group.service";
+import { ModeratorGroupMappingController } from "./controllers/api/moderator.group.mapping.controller";
+import { ModeratorGroupMappingService } from "./services/moderator.group.mapping/moderator.group.mapping";
 
 @Module({
   imports: [
@@ -70,9 +75,7 @@ import { UserRole } from "./entities/UserRole";
         Feature,
         Stock,
         User,
-        Administrator,
         UserToken,
-        AdministratorToken,
         Documents,
         UpgradeFeature,
         Department,
@@ -80,6 +83,9 @@ import { UserRole } from "./entities/UserRole";
         Job,
         Location,
         UserRole,
+        HelpdeskTickets,
+        ModeratorGroupMapping,
+        TicketGroup
       ],
     }),
     TypeOrmModule.forFeature([
@@ -90,9 +96,7 @@ import { UserRole } from "./entities/UserRole";
       Feature,
       Stock,
       User,
-      Administrator,
       UserToken,
-      AdministratorToken,
       Documents,
       UpgradeFeature,
       Department,
@@ -100,6 +104,9 @@ import { UserRole } from "./entities/UserRole";
       Job,
       Location,
       UserRole,
+      HelpdeskTickets,
+      ModeratorGroupMapping,
+      TicketGroup
     ]),
   ],
   controllers: [
@@ -109,7 +116,6 @@ import { UserRole } from "./entities/UserRole";
     CategoryController,
     StockController,
     FeatureController,
-    AdministratorController,
     AuthController,
     DocumentController,
     UpgradeFeatureController,
@@ -120,6 +126,9 @@ import { UserRole } from "./entities/UserRole";
     WebhookController,
     WebhookFrontendController,
     AdministratorDashboardController,
+    HelpdeskTicketsController,
+    TicketGroupController,
+    ModeratorGroupMappingController,
   ],
   providers: [
     ArticleService,
@@ -128,7 +137,6 @@ import { UserRole } from "./entities/UserRole";
     CategoryService,
     StockService,
     FeatureService,
-    AdministratorService,
     UserService,
     DocumentService,
     UpgradeFeatureService,
@@ -137,11 +145,13 @@ import { UserRole } from "./entities/UserRole";
     LocationService,
     DepartmentJobService,
     AdministratorDashboardService,
+    HelpdeskTicketService,
+    TicketGroupService,
+    ModeratorGroupMappingService,
   ],
   exports: [
     // zbog middleware potrebno je exportovati servis
     // da bi svi ostali elementi koji se nalaze van okvira modula
-    AdministratorService,
     UserService,
   ],
 })

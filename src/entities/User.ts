@@ -15,6 +15,8 @@ import { Department } from "./Department";
 import { Location } from "./Location";
 import { UserToken } from "./UserToken";
 import { UserRole } from "./UserRole";
+import { HelpdeskTickets } from "./HelpdeskTickets";
+import { ModeratorGroupMapping } from "./ModeratorGroupMapping";
 
 @Index("job_id", ["jobId"], {})
 @Index("department_id", ["departmentId"], {})
@@ -43,7 +45,7 @@ export class User {
   @Column("varchar", { name: "email", nullable: true, length: 255 })
   email: string | null;
 
-  @Column("varchar", { name: "password_hash", length: 255 })
+  @Column("varchar", { name: "password_hash", length: 255}, )
   passwordHash: string;
 
   @Column("int", { name: "job_id" })
@@ -104,6 +106,21 @@ export class User {
     (articleTimeline) => articleTimeline.subbmited
   )
   articleTimelines2: ArticleTimeline[];
+
+  @OneToMany(
+    () => HelpdeskTickets,
+    (helpdeskTickets) => helpdeskTickets.assignedTo2
+  )
+  helpdeskTickets: HelpdeskTickets[];
+
+  @OneToMany(() => HelpdeskTickets, (helpdeskTickets) => helpdeskTickets.user)
+  helpdeskTickets2: HelpdeskTickets[];
+
+  @OneToMany(
+    () => ModeratorGroupMapping,
+    (moderatorGroupMapping) => moderatorGroupMapping.user
+  )
+  moderatorGroupMappings: ModeratorGroupMapping[];
 
   @ManyToOne(() => Job, (job) => job.users, {
     onDelete: "NO ACTION",
