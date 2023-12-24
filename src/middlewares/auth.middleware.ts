@@ -5,7 +5,6 @@ import {
   NestMiddleware,
 } from "@nestjs/common";
 import { NextFunction, Request, Response } from "express";
-import { AdministratorService } from "src/services/administrator/administrator.service";
 import * as jwt from "jsonwebtoken";
 import { jwtSecret } from "config/jwt.secret";
 import { UserService } from "src/services/user/user.service";
@@ -14,7 +13,6 @@ import { JWTDataDto } from "src/dtos/auth/jwt.data.dto";
 @Injectable() // Ni pod razno ovo zaboraviti
 export class AuthMiddleware implements NestMiddleware {
   constructor(
-    public administratorService: AdministratorService,
     public userService: UserService
   ) {}
   async use(req: Request, res: Response, next: NextFunction) {

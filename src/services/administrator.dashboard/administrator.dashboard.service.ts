@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Administrator } from "src/entities/Administrator";
 import { Brackets, IsNull, Repository } from "typeorm";
 import { ApiResponse } from "src/misc/api.response.class";
 import { Article } from "src/entities/Article";
@@ -10,8 +9,6 @@ import { Documents } from "src/entities/Documents";
 @Injectable()
 export class AdministratorDashboardService {
   constructor(
-    @InjectRepository(Administrator)
-    private readonly administrator: Repository<Administrator>,
     @InjectRepository(Article)
     private readonly article: Repository<Article>,
     @InjectRepository(Stock)
@@ -133,14 +130,5 @@ export class AdministratorDashboardService {
     });
 
     return documents;
-  }
-
-  /* Administrator */
-  getAll(): Promise<Administrator[]> {
-    return this.administrator.find();
-  }
-
-  getById(id: number): Promise<Administrator> {
-    return this.administrator.findOne({ where: { administratorId: id } });
   }
 } /* Kraj koda */
