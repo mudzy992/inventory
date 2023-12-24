@@ -85,7 +85,9 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
   }
 
   async getTicketById(ticketId: number): Promise<HelpdeskTickets | ApiResponse> {
-    const ticket = await this.helpDeskTickets.findOne({where: {ticketId: ticketId}});
+    const ticket = await this.helpDeskTickets.findOne({
+        where: {ticketId: ticketId},
+        relations: ["user", "group", "assignedTo2", "article", "article.stock"]});
   
     if (!ticket) {
       return new ApiResponse('error', -11002, 'Ticket not found.');
