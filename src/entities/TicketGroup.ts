@@ -12,7 +12,8 @@ import { ModeratorGroupMapping } from "./ModeratorGroupMapping";
 import { Location } from "./Location";
 
 @Index("location_id", ["locationId"], {})
-@Entity("ticket_group", { schema: "inventory_test" })
+@Index("fk2_parent_group_id_group_id", ["parentGroupId"], {})
+@Entity("ticket_group", { schema: "inventory_v2" })
 export class TicketGroup {
   @PrimaryGeneratedColumn({ type: "int", name: "group_id" })
   groupId: number;
@@ -23,14 +24,33 @@ export class TicketGroup {
   @Column("int", { name: "location_id", nullable: true })
   locationId: number | null;
 
+  @Column("int", { name: "parent_group_id", nullable: true })
+  parentGroupId: number | null;
+
   @OneToMany(() => HelpdeskTickets, (helpdeskTickets) => helpdeskTickets.group)
   helpdeskTickets: HelpdeskTickets[];
+
+  @OneToMany(
+    () => HelpdeskTickets,
+    (helpdeskTickets) => helpdeskTickets.groupPartent
+  )
+  helpdeskTickets2: HelpdeskTickets[];
 
   @OneToMany(
     () => ModeratorGroupMapping,
     (moderatorGroupMapping) => moderatorGroupMapping.group
   )
   moderatorGroupMappings: ModeratorGroupMapping[];
+
+  @ManyToOne(() => TicketGroup, (ticketGroup) => ticketGroup.ticketGroups, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
+  @JoinColumn([{ name: "parent_group_id", referencedColumnName: "parentGroupId" }])
+  parentGroup: TicketGroup;
+
+  @OneToMany(() => TicketGroup, (ticketGroup) => ticketGroup.parentGroup)
+  ticketGroups: TicketGroup[];
 
   @ManyToOne(() => Location, (location) => location.ticketGroups, {
     onDelete: "NO ACTION",
