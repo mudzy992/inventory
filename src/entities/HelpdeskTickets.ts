@@ -136,7 +136,7 @@ export class HelpdeskTickets {
     onUpdate: "NO ACTION",
   })
   @JoinColumn([
-    { name: "group_partent_id", referencedColumnName: "parentGroupId" },
+    { name: "group_partent_id", referencedColumnName: "groupId" },
   ])
   groupPartent: TicketGroup;
 
