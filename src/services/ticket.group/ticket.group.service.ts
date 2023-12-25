@@ -23,7 +23,6 @@ export class TicketGroupService extends TypeOrmCrudService<TicketGroup> {
             "location",
             "moderatorGroupMappings",
             "helpdeskTickets", 
-            "helpdeskTickets", 
             "helpdeskTickets.user", 
             "helpdeskTickets.article.stock"]
     });

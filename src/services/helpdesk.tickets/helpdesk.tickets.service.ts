@@ -25,10 +25,8 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
     newTicket.userId = data.userId;
     newTicket.articleId = data.articleId;
     newTicket.groupId = data.groupId;
-    newTicket.title = data.title;
     newTicket.description = data.description;
-    newTicket.dueDate = data.duoDate;
-    newTicket.assignedTo = data.assignedTo;
+    newTicket.clientDuoDate = data.clientDuoDate;
 
     try {
         const savedTicket = await this.helpDeskTickets.save(newTicket);
@@ -51,15 +49,15 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
     }
   
     // Ažurirajte atribute tiketa na osnovu DTO objekta
-    existingTicket.userId = editTicketDto.userId;
-    existingTicket.articleId = editTicketDto.articleId;
     existingTicket.groupId = editTicketDto.groupId;
-    existingTicket.title = editTicketDto.title;
-    existingTicket.description = editTicketDto.description;
     existingTicket.resolveDescription = editTicketDto.resolveDescription;
     existingTicket.dueDate = editTicketDto.duoDate;
-    existingTicket.status = editTicketDto.status;
+    existingTicket.resolveDate = editTicketDto.resolveDate;
+    existingTicket.resolveTimespand = editTicketDto.resolveTimespand;
     existingTicket.assignedTo = editTicketDto.assignedTo;
+    existingTicket.status = editTicketDto.status;
+    existingTicket.priority = editTicketDto.priority;
+    existingTicket.resolveResolution = editTicketDto.resolveResolution;
   
     try {
       await this.helpDeskTickets.save(existingTicket);
@@ -87,7 +85,15 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
   async getTicketById(ticketId: number): Promise<HelpdeskTickets | ApiResponse> {
     const ticket = await this.helpDeskTickets.findOne({
         where: {ticketId: ticketId},
-        relations: ["user", "group", "assignedTo2", "article", "article.stock"]});
+        relations: [
+        "user",
+        "user.department",
+        "user.location", 
+        "group", 
+        "groupPartent", 
+        "assignedTo2", 
+        "article", 
+        "article.stock"]});
   
     if (!ticket) {
       return new ApiResponse('error', -11002, 'Ticket not found.');
