@@ -51,7 +51,7 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
     // Ažurirajte atribute tiketa na osnovu DTO objekta
     existingTicket.groupId = editTicketDto.groupId;
     existingTicket.resolveDescription = editTicketDto.resolveDescription;
-    existingTicket.dueDate = editTicketDto.duoDate;
+    existingTicket.duoDate = editTicketDto.duoDate;
     existingTicket.resolveDate = editTicketDto.resolveDate;
     existingTicket.resolveTimespand = editTicketDto.resolveTimespand;
     existingTicket.assignedTo = editTicketDto.assignedTo;
@@ -63,7 +63,7 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
       await this.helpDeskTickets.save(existingTicket);
       return new ApiResponse('success', -11003, 'Ticket edited successfully.');
     } catch (error) {
-      return new ApiResponse('error', -11004, 'Failed to edit ticket.');
+      return new ApiResponse('error', -11004, 'Failed to edit ticket.' + error);
     }
   }
 
