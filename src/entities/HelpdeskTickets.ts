@@ -45,8 +45,8 @@ export class HelpdeskTickets {
   })
   createdAt: Date | null;
 
-  @Column("timestamp", { name: "due_date", nullable: true })
-  dueDate: Date | null;
+  @Column("timestamp", { name: "duo_date", nullable: true })
+  duoDate: Date | null;
 
   @Column("enum", {
     name: "status",
