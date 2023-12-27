@@ -17,6 +17,16 @@ export class TicketGroupService extends TypeOrmCrudService<TicketGroup> {
     super(ticketGroup);
   }
 
+  async getGroupByParentGroupId(groupId: number): Promise<TicketGroup[] | ApiResponse> {
+    const ticket = await this.ticketGroup.find({where: {parentGroupId: groupId }})
+
+    if(!ticket) {
+      return new ApiResponse('error', -11002, 'Ticket not found.');
+    }
+
+    return ticket
+  }
+
   async getAllTickets(): Promise<TicketGroup[] | ApiResponse> {
     const ticket = await this.ticketGroup.find({
         relations: [

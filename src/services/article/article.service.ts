@@ -327,7 +327,6 @@ export class ArticleService extends TypeOrmCrudService<Article> {
   }
 
   async getBySerialNumber(serialNumber: string): Promise<Article | null> {
-    /* Mehanizam pronalaženja artikla u skladištu po sap broju */
     const serialnumber = await this.article.findOne({
       where: { serialNumber: serialNumber },
       relations: [
@@ -337,6 +336,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         "user.location",
         "stock",
         "category",
+        "category.group",
         "stock.stockFeatures",
         "stock.stockFeatures.feature",
         "articleTimelines",
