@@ -1,5 +1,5 @@
 export const DatabaseConfiguration = {
-  hostname: '77.221.31.121',
+  hostname: 'inventory.hopto.org',
   database: 'inventory_v2',
   username: 'mudzy',
   password: 'nije,kikiriki',
