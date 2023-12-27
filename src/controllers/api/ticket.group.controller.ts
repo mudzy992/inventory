@@ -42,6 +42,13 @@ export class TicketGroupController {
     return await this.service.getAllTickets();
   }
 
+  @Get("/parent/:groupId")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator", "moderator", "user")
+  async getGroupByParentGroupId(@Param("groupId") groupId: number): Promise<TicketGroup[] | ApiResponse> {
+    return await this.service.getGroupByParentGroupId(groupId);
+  }
+
   @Get("/user/:userId")
   @UseGuards(RoleCheckedGuard)
   @AllowToRoles("administrator", "moderator")

@@ -10,6 +10,7 @@ import {
 import { Article } from "./Article";
 import { Feature } from "./Feature";
 import { Stock } from "./Stock";
+import { TicketGroup } from "./TicketGroup";
 
 @Index("parent_category_id", ["parentCategoryId"], {})
 @Entity("category", { schema: "inventory_v2" })
@@ -26,8 +27,18 @@ export class Category {
   @Column("int", { name: "parent_category_id", nullable: true })
   parentCategoryId: number | null;
 
+  @Column("int", { name: "groupId" })
+  groupId: number;
+
   @OneToMany(() => Article, (article) => article.category)
   articles: Article[];
+
+  @ManyToOne(() => TicketGroup, (ticketGroup) => ticketGroup.categories, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
+  @JoinColumn([{ name: "groupId", referencedColumnName: "groupId" }])
+  group: TicketGroup;
 
   @ManyToOne(() => Category, (category) => category.categories, {
     onDelete: "NO ACTION",

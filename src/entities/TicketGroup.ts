@@ -10,6 +10,7 @@ import {
 import { HelpdeskTickets } from "./HelpdeskTickets";
 import { ModeratorGroupMapping } from "./ModeratorGroupMapping";
 import { Location } from "./Location";
+import { Category } from "./Category";
 
 @Index("location_id", ["locationId"], {})
 @Index("fk2_parent_group_id_group_id", ["parentGroupId"], {})
@@ -26,6 +27,9 @@ export class TicketGroup {
 
   @Column("int", { name: "parent_group_id", nullable: true })
   parentGroupId: number | null;
+
+  @OneToMany(() => Category, (category) => category.group)
+  categories: Category[];
 
   @OneToMany(() => HelpdeskTickets, (helpdeskTickets) => helpdeskTickets.group)
   helpdeskTickets: HelpdeskTickets[];

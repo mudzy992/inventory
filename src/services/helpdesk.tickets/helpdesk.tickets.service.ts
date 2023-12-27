@@ -20,11 +20,11 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
   }
 
   async addTicket(data: AddNewTicketDto): Promise<HelpdeskTickets | ApiResponse> {
-    console.log('Received request with data:', data);
     const newTicket: HelpdeskTickets = new HelpdeskTickets();
     newTicket.userId = data.userId;
     newTicket.articleId = data.articleId;
     newTicket.groupId = data.groupId;
+    newTicket.groupPartentId = data.groupPartentId;
     newTicket.description = data.description;
     newTicket.clientDuoDate = data.clientDuoDate;
 
