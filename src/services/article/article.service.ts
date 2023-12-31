@@ -344,6 +344,11 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         "articleTimelines.user",
         "documents",
         "upgradeFeatures",
+        "helpdeskTickets",
+        "helpdeskTickets.user",
+        "helpdeskTickets.group",
+        "helpdeskTickets.groupPartent",
+        "helpdeskTickets.assignedTo2"
       ],
     });
     if (serialnumber) {
