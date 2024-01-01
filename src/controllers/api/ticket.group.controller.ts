@@ -1,5 +1,6 @@
 import { Controller, Get, Param, UseGuards } from "@nestjs/common";
 import { Crud } from "@nestjsx/crud";
+import { TicketGroupDTO } from "src/dtos/ticket.group/ticket.group.dto";
 import { TicketGroup } from "src/entities/TicketGroup";
 import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
 import { ApiResponse } from "src/misc/api.response.class";
@@ -52,7 +53,7 @@ export class TicketGroupController {
   @Get("/user/:userId")
   @UseGuards(RoleCheckedGuard)
   @AllowToRoles("administrator", "moderator")
-  async getAllTicketsByUserLocation(@Param("userId") userId: number): Promise<TicketGroup[] | ApiResponse> {
+  async getAllTicketsByUserLocation(@Param("userId") userId: number): Promise<TicketGroupDTO[] | ApiResponse> {
     return await this.service.getAllTicketsByUserLocation(userId);
   }
 }

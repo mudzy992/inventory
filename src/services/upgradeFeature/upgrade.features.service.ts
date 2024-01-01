@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
-import { UpgradeFeatureDto } from "src/dtos/upgradeFeature/upgrade.feature.dto";
+import { UpgradeFeatureDTO } from "src/dtos/upgradeFeature/upgrade.feature.dto";
 import { UpgradeFeature } from "src/entities/UpgradeFeature";
 import { ApiResponse } from "src/misc/api.response.class";
 import { Repository } from "typeorm";
@@ -15,19 +15,27 @@ export class UpgradeFeatureService extends TypeOrmCrudService<UpgradeFeature> {
     super(upgradeFeature);
   }
 
-  getFeaturesByArticleSerialNumber(serial:string): Promise<UpgradeFeature[] | null> {
-    const features = this.upgradeFeature.find({
+  async getFeaturesByArticleSerialNumber(serial:string): Promise<UpgradeFeatureDTO[] | null> {
+    const featuresData = await this.upgradeFeature.find({
       where: { serialNumber: serial}
     })
-    if(features){
-      return features
+
+    const response: UpgradeFeatureDTO[] = await featuresData.map((feature) => ({
+      comment: feature.comment,
+      timestamp: feature.timestamp,
+      name: feature.name,
+      value: feature.value,
+      upgradeFeatureId: feature.upgradeFeatureId
+    }))
+    if(response){
+      return response
     }
     return null
   }
 
   async newUpgradeFeature(
     serialNumber: string,
-    data: UpgradeFeatureDto
+    data: UpgradeFeatureDTO
   ): Promise<UpgradeFeature | ApiResponse> {
     const newFeature: UpgradeFeature = new UpgradeFeature();
     newFeature.name = data.name;

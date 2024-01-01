@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { AddNewJobDto } from "src/dtos/job/add.new.job.dto";
 import { EditJobDto } from "src/dtos/job/edit.job.dto";
+import { JobDTO } from "src/dtos/job/job.dto";
 import { DepartmentJob } from "src/entities/DepartmentJob";
 import { Job } from "src/entities/Job";
 import { ApiResponse } from "src/misc/api.response.class";
@@ -17,6 +18,20 @@ export class JobService extends TypeOrmCrudService<Job> {
     private readonly departmentJob: Repository<DepartmentJob>
   ) {
     super(job);
+  }
+  async getAllJobs(): Promise<JobDTO[] | ApiResponse>{
+    const jobsData = await this.job.find()
+    const response: JobDTO[] = await jobsData.map((item) => ({
+      jobId: item.jobId,
+      title: item.title,
+      jobCode: item.jobCode,
+      description: item.description,
+    }))
+
+    if(response){
+      return response
+    }
+    return new ApiResponse("error", -10005, "Lista radnih mjesta nije pronađena");
   }
   async createNewJob(data: AddNewJobDto): Promise<Job | ApiResponse> {
     const newJob: Job = new Job();

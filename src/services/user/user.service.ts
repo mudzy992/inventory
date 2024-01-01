@@ -9,6 +9,7 @@ import { ApiResponse } from "src/misc/api.response.class";
 import { Repository } from "typeorm";
 import * as crypto from "crypto";
 import { EditEmployeeDto } from "src/dtos/user/edit.employee.dto";
+import { UserDTO } from "src/dtos/user/user.dto";
 
 @Injectable()
 export class UserService extends TypeOrmCrudService<User> {
@@ -21,14 +22,40 @@ export class UserService extends TypeOrmCrudService<User> {
     super(user);
   }
 
-  async getAll(): Promise<User[] | ApiResponse> {
+  async getAll(): Promise<UserDTO[] | ApiResponse> {
     try{
-      const user = await this.user.find({
-        relations:["department",
+      const users = await this.user.find({
+        relations:[
+        "department",
         "job",
-        "location",]
+        "location",
+        "location.parentLocation"
+      ]
       })
-      return user
+      const userDtos: UserDTO[] = await users.map((user) => ({
+        userId: user.userId,
+        fullname: user.fullname,
+        department: {
+          title: user.department.title
+        },
+        job: {
+          title: user.job.title,
+        },
+        location: {
+          name: user.location.name,
+          parentLocation: {
+            name: user.location.parentLocation.name,
+          },
+        },
+        email: user.email,
+        localNumber: user.localNumber,
+        telephone: user.telephone,
+        gender: user.gender,
+        status: user.status,
+        forname: user.forname,
+        surname: user.surname,
+      }))
+      return userDtos
     } catch (err) {
       return new ApiResponse("error", -6060, 'Greška prilikom dohvaćanja korisnika: ' + err.message )
     }
@@ -96,8 +123,8 @@ export class UserService extends TypeOrmCrudService<User> {
     }
   }
 
-  async getById(id) {
-    return await this.user.findOne({
+  async getById(id): Promise<UserDTO | ApiResponse> {
+    const userData = await this.user.findOne({
       where: { userId: id },
       relations: [
         "department",
@@ -108,6 +135,47 @@ export class UserService extends TypeOrmCrudService<User> {
         "articles.category",
       ],
     });
+
+    const response: UserDTO = {
+      userId: userData.userId,
+      forname: userData.forname,
+      surname: userData.surname,
+      fullname: userData.fullname,
+      email: userData.email,
+      localNumber: userData.localNumber,
+      telephone: userData.telephone,
+      departmentId: userData.departmentId,
+      department: {
+        title: userData.department.title,
+      },
+      jobId: userData.jobId,
+      job: {
+        title: userData.job.title,
+      },
+      locationId: userData.locationId,
+      location: {
+        name: userData.location.name,
+      },
+      status: userData.status,
+      code: userData.code,
+      gender: userData.gender,
+      lastLoginDate: userData.lastLoginDate,
+      articles: userData.articles.map((item) => ({
+        articleId: item.articleId,
+        serialNumber: item.serialNumber,
+        invNumber: item.invNumber,
+        documents: item.documents.map((doc) => ({
+          path: doc.path
+        })),
+        stock: {
+          name: item.stock.name,
+        },
+        category: {
+          name: item.category.name,
+        }
+      }))
+    }
+    return response
   }
 
   async getByEmail(email: string): Promise<User | null> {

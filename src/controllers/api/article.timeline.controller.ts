@@ -8,8 +8,10 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { Crud } from "@nestjsx/crud";
+import { ArticleTimelineDTO } from "src/dtos/article.timeline/article.timeline.dto";
 import { ArticleTimeline } from "src/entities/ArticleTimeline";
 import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
+import { ApiResponse } from "src/misc/api.response.class";
 import { RoleCheckedGuard } from "src/misc/role.checker.guard";
 import { ArticleTimelineService } from "src/services/articleTimeline/article.timeline.service";
 import ArticleTimelineType from "src/types/article.timeline.type";
@@ -44,11 +46,8 @@ export class ArticleTimelineController {
   @Get(":id")
   @UseGuards(RoleCheckedGuard)
   @AllowToRoles("administrator", "moderator")
-  async getById(@Param("id") id: string) {
-    const article: ArticleTimeline = await this.articleTimelineService.getById(
-      id
-    );
-    return this.articleWithoutPasswordHash(article);
+  async getById(@Param("id") id: string): Promise<ArticleTimelineDTO | ApiResponse> {
+    return await this.articleTimelineService.getById(id)
   }
 
   @Get()

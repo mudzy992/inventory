@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Patch, Post, UseGuards } from "@nestjs/co
 import { Crud } from "@nestjsx/crud";
 import { AddNewEmployeDto } from "src/dtos/user/add.new.employe.dto";
 import { EditEmployeeDto } from "src/dtos/user/edit.employee.dto";
+import { UserDTO } from "src/dtos/user/user.dto";
 import { User } from "src/entities/User";
 import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
 import { ApiResponse } from "src/misc/api.response.class";
@@ -48,12 +49,12 @@ export class UserController {
   @Get()
   @UseGuards(RoleCheckedGuard)
   @AllowToRoles("user", "administrator", "moderator")
-  async getAll(): Promise<User[] | ApiResponse> {
+  async getAll(): Promise<UserDTO[] | ApiResponse> {
     return await this.service.getAll()
   }
 
   @Get(":id")
-  async getStockById(@Param("id") userId: number): Promise<User | ApiResponse> {
+  async getStockById(@Param("id") userId: number): Promise<UserDTO | ApiResponse> {
     return this.service.getById(userId);
   }
 

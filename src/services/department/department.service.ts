@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { AddNewDepartmentDto } from "src/dtos/department/add.new.department.dto";
+import { DepartmentDTO } from "src/dtos/department/department.dto";
 import { EditDepartmentDto } from "src/dtos/department/edit.department.dto";
 import { Department } from "src/entities/Department";
 import { ApiResponse } from "src/misc/api.response.class";
@@ -14,6 +15,24 @@ export class DepartmentService extends TypeOrmCrudService<Department> {
     private readonly department: Repository<Department>
   ) {
     super(department);
+  }
+  async getAllDepartments(): Promise<DepartmentDTO[] | ApiResponse> {
+    const departmentData = await this.department.find()
+    const response: DepartmentDTO[] = await departmentData.map((item) => ({
+      departmentId: item.departmentId,
+      title: item.title,
+      description: item.description,
+      departmendCode: item.departmendCode,
+      parentDepartmentId: item.parentDepartmentId
+    }))
+    if(response){
+      return response
+    }
+    return new ApiResponse(
+      "error",
+      -4010,
+      "Lista sektora/odjeljena nije prođanena"
+    );
   }
   async createNewDepartment(
     data: AddNewDepartmentDto

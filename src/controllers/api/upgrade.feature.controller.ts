@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { Crud } from "@nestjsx/crud";
-import { UpgradeFeatureDto } from "src/dtos/upgradeFeature/upgrade.feature.dto";
+import { UpgradeFeatureDTO } from "src/dtos/upgradeFeature/upgrade.feature.dto";
 import { UpgradeFeature } from "src/entities/UpgradeFeature";
 import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
 import { ApiResponse } from "src/misc/api.response.class";
@@ -35,7 +35,7 @@ export class UpgradeFeatureController {
   @AllowToRoles("administrator", "moderator", "user")
   getById(
     @Param("serial") serialNumber: string
-  ): Promise<UpgradeFeature[] | ApiResponse> {
+  ): Promise<UpgradeFeatureDTO[] | ApiResponse> {
     return new Promise(async (resolve) => {
       const features = await this.service.getFeaturesByArticleSerialNumber(serialNumber);
       if (features === undefined) {
@@ -49,7 +49,7 @@ export class UpgradeFeatureController {
   @UseGuards(RoleCheckedGuard)
   @AllowToRoles("administrator", "moderator")
   async doChangeStatus(
-    @Body() data: UpgradeFeatureDto,
+    @Body() data: UpgradeFeatureDTO,
     @Param("sb") sb: string
   ) {
     return this.service.newUpgradeFeature(sb, data);

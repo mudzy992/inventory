@@ -13,6 +13,7 @@ import { User } from "src/entities/User";
 import { ApiResponse } from "src/misc/api.response.class";
 import { Repository, Brackets } from "typeorm";
 import { ArticleTimeline } from "src/entities/ArticleTimeline";
+import { ArticleDTO } from "src/dtos/article/article.dto";
 
 @Injectable()
 export class ArticleService extends TypeOrmCrudService<Article> {
@@ -37,13 +38,8 @@ export class ArticleService extends TypeOrmCrudService<Article> {
   ) {
     super(article);
   }
-  /* dodavanje novog artikla (koristi add.article.dto.ts)
-  Kreiranje novog metoda async je zbog toga što imamo rezultate koji su na await
-  PRVI KORAK:createFullArticle(će uzimati podatke koji su tipa AddArtucleDto): vraćat će rezultat obećanje <Artikal ili grešku>
-  Kao što vidimo vraća nam full artikal, a mi znamo da u tom full artiklu imamo cijenu, features, slike koji nam trebaju
-  I to nije problem, jer ćemo dobiti articleId koji će biti na awaitu, i na osnovu tog articleId ćemo pridružiti cijenu, features, slike */
 
-  async getByUserId(userId: number): Promise<Article[] | null> {
+  async getByUserId(userId: number): Promise<ArticleDTO[] | null> {
     const article = await this.article.find({
       where: {
         userId: userId,
@@ -51,8 +47,21 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       relations: ["category", "stock.stockFeatures",
       "stock.stockFeatures.feature"]
     });
-    if (article) {
-      return article;
+
+    const response: ArticleDTO[] = article.map((item) => ({
+      articleId: item.articleId,
+      category: {
+        name: item.category.name,
+        imagePath: item.category.imagePath,
+      },
+      stock:{
+        name: item.stock.name,
+        stockFeatures: item.stock.stockFeatures,
+      }
+    }))
+
+    if (response) {
+      return response;
     }
     return null;
   }
@@ -326,8 +335,8 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     }
   }
 
-  async getBySerialNumber(serialNumber: string): Promise<Article | null> {
-    const serialnumber = await this.article.findOne({
+  async getBySerialNumber(serialNumber: string): Promise<ArticleDTO | null> {
+    const articleData = await this.article.findOne({
       where: { serialNumber: serialNumber },
       relations: [
         "user",
@@ -351,8 +360,68 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         "helpdeskTickets.assignedTo2"
       ],
     });
-    if (serialnumber) {
-      return serialnumber;
+
+    const response: ArticleDTO = {
+      invNumber: articleData.invNumber,
+      serialNumber: articleData.serialNumber,
+      status: articleData.status,
+      timestamp: articleData.timestamp,
+      category: {
+        imagePath: articleData.category.imagePath
+      },
+      user: {
+        userId: articleData.user.userId,
+        fullname: articleData.user.fullname,
+        surname: articleData.user.surname,
+        forname: articleData.user.forname,
+        email: articleData.user.email,
+        department: {
+          title: articleData.user.department.title,
+        },
+        job: {
+          title: articleData.user.job.title,
+        },
+        location: {
+          name: articleData.user.location.name
+        },
+      },
+      stock:{
+        name: articleData.stock.name,
+        description: articleData.stock.description,
+        valueOnContract: articleData.stock.valueOnContract,
+        valueAvailable: articleData.stock.valueAvailable,
+        sapNumber: articleData.stock.sapNumber,
+        timestamp: articleData.stock.timestamp,
+        stockFeatures: articleData.stock.stockFeatures.map((item) => ({
+          value: item.value,
+          feature: {
+            featureId: item.feature.featureId,
+            name: item.feature.name,
+          }
+        }))
+      },
+      articleTimelines: articleData.articleTimelines.map((item) => ({
+        articleTimelineId: item.articleTimelineId,
+        userId: item.userId,
+        status: item.status,
+        comment: item.comment,
+        timestamp: item.timestamp,
+        document: {
+          path: item.document.path,
+        },
+        user: {
+          fullname: item.user.fullname,
+        }
+      })),
+      helpdeskTickets: articleData.helpdeskTickets.map((item) =>({
+        ticketId: item.ticketId,
+        description: item.description,
+        createdAt: item.createdAt,
+        status: item.status,
+      }))
+    }
+    if (response) {
+      return response;
     }
     return null;
   }

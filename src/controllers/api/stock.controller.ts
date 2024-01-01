@@ -13,6 +13,7 @@ import { Crud } from "@nestjsx/crud";
 import { CreateStockDto } from "src/dtos/stock/CreateStock.dto";
 import { AddStockDto } from "src/dtos/stock/add.stock.dto";
 import { UpdateStockDto } from "src/dtos/stock/edit.stock.dto";
+import { StockDTO } from "src/dtos/stock/stocks.dto";
 import { Stock } from "src/entities/Stock";
 import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
 import { ApiResponse } from "src/misc/api.response.class";
@@ -53,7 +54,7 @@ export class StockController {
   @AllowToRoles("administrator", "moderator")
   async getStockById(
     @Param("id") stockId: number
-  ): Promise<Stock | ApiResponse> {
+  ): Promise<StockDTO | ApiResponse> {
     return this.stockService.getStockById(stockId);
   }
 
@@ -62,7 +63,7 @@ export class StockController {
   @AllowToRoles("administrator", "moderator")
   async getStockByCategoryId(
     @Param("id") categoryId: number
-  ): Promise<Stock[] | ApiResponse> {
+  ): Promise<StockDTO[] | ApiResponse> {
     return this.stockService.getStockByCategoryId(categoryId);
   }
 

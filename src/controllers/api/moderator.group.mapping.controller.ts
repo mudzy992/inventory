@@ -1,5 +1,6 @@
 import { Controller, Get, UseGuards } from "@nestjs/common";
 import { Crud } from "@nestjsx/crud";
+import { ModeratorGroupMappingDTO } from "src/dtos/moderator.group.mapping/moderator.group.mapping.dto";
 import { ModeratorGroupMapping } from "src/entities/ModeratorGroupMapping";
 import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
 import { ApiResponse } from "src/misc/api.response.class";
@@ -35,7 +36,7 @@ export class ModeratorGroupMappingController {
   @Get()
   @UseGuards(RoleCheckedGuard)
   @AllowToRoles("administrator", "moderator")
-  async getAllTickets(): Promise<ModeratorGroupMapping[] | ApiResponse> {
+  async getAllTickets(): Promise<ModeratorGroupMappingDTO[] | ApiResponse> {
     return await this.service.getAllGroupModerators();
   }
 }

@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { Crud } from "@nestjsx/crud";
 import { AddArticleDto } from "src/dtos/article/add.article.dto";
-import { EditArticleDto } from "src/dtos/article/edit.full.article.dto";
+import { ArticleDTO } from "src/dtos/article/article.dto";
 import { Article } from "src/entities/Article";
 import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
 import { ApiResponse } from "src/misc/api.response.class";
@@ -75,7 +75,7 @@ export class ArticleController {
   @AllowToRoles("administrator", "moderator", "user")
   getById(
     @Param("userId") userId: number
-  ): Promise<Article[] | ApiResponse> {
+  ): Promise<ArticleDTO[] | ApiResponse> {
     return new Promise(async (resolve) => {
       const articleByUserId = await this.service.getByUserId(userId);
       if (articleByUserId === undefined) {
@@ -107,7 +107,7 @@ export class ArticleController {
   @Get("sb/:serialNumber")
   @UseGuards(RoleCheckedGuard)
   @AllowToRoles("user", "administrator", "moderator")
-  async getBySerialNumber(@Param("serialNumber") serialNumber: string) {
+  async getBySerialNumber(@Param("serialNumber") serialNumber: string): Promise<ArticleDTO> {
     return this.service.getBySerialNumber(serialNumber);
   }
 

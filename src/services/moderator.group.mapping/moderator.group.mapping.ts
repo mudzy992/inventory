@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
+import { ModeratorGroupMappingDTO } from "src/dtos/moderator.group.mapping/moderator.group.mapping.dto";
 import { ModeratorGroupMapping } from "src/entities/ModeratorGroupMapping";
 import { ApiResponse } from "src/misc/api.response.class";
 import { Repository } from "typeorm";
@@ -14,7 +15,7 @@ export class ModeratorGroupMappingService extends TypeOrmCrudService<ModeratorGr
     super(moderatorGroup);
   }
 
-  async getAllGroupModerators(): Promise<ModeratorGroupMapping[] | ApiResponse> {
+  async getAllGroupModerators(): Promise<ModeratorGroupMappingDTO[] | ApiResponse> {
     const moderators = await this.moderatorGroup.find({
         relations: [
             "user",
@@ -22,10 +23,22 @@ export class ModeratorGroupMappingService extends TypeOrmCrudService<ModeratorGr
             "group.location"
         ]
     });
+
+    const response: ModeratorGroupMappingDTO[] = await moderators.map((item) => ({
+      group: {
+        groupId: item.group.groupId,
+        groupName: item.group.groupName,
+        location: item.group.location,
+      },
+      user: {
+        userId: item.user.userId,
+        fullname: item.user.fullname,
+      }
+    }))
   
-    if (!moderators) {
+    if (!response) {
       return new ApiResponse('error', -11002, 'Ticket not found.');
     }
-    return moderators;
+    return response;
   }
 }
