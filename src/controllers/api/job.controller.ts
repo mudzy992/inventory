@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { Crud } from "@nestjsx/crud";
 import { AddNewJobDto } from "src/dtos/job/add.new.job.dto";
 import { EditJobDto } from "src/dtos/job/edit.job.dto";
+import { JobDTO } from "src/dtos/job/job.dto";
 import { Job } from "src/entities/Job";
 import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
 import { ApiResponse } from "src/misc/api.response.class";
@@ -33,6 +34,13 @@ import { JobService } from "src/services/job/job.service";
 })
 export class JobController {
   constructor(public service: JobService) {}
+  @Get()
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles('administrator', 'moderator')
+  async getAllJobs(): Promise<JobDTO[] | ApiResponse> {
+    return this.service.getAllJobs()
+  }
+  
   @Post()
   @UseGuards(RoleCheckedGuard)
   @AllowToRoles("administrator", "moderator")

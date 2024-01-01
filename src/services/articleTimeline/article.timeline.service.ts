@@ -1,7 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
+import { ArticleTimelineDTO } from "src/dtos/article.timeline/article.timeline.dto";
 import { ArticleTimeline } from "src/entities/ArticleTimeline";
+import { ApiResponse } from "src/misc/api.response.class";
 import PaginatedArticleTimelineType from "src/types/paggined.article.timeline.type";
 import { Repository } from "typeorm";
 
@@ -26,11 +28,32 @@ export class ArticleTimelineService extends TypeOrmCrudService<ArticleTimeline> 
     return null;
   }
 
-  async getById(id) {
-    return await this.articleTimelineRepository.findOne({
+  async getById(id): Promise<ArticleTimelineDTO | ApiResponse> {
+    const articleTimlineData = await this.articleTimelineRepository.findOne({
       where: { articleTimelineId: id },
       relations: ["article", "article.stock", "user", "subbmited", "document"],
     });
+    
+    const response: ArticleTimelineDTO = {
+      invNumber: articleTimlineData.invNumber,
+      user: {
+        gender: articleTimlineData.user.gender,
+        fullname: articleTimlineData.user.fullname,
+      },
+      subbmited: {
+        gender: articleTimlineData.user.gender,
+        fullname: articleTimlineData.user.fullname,
+      },
+      article: {
+        stock: {
+          name: articleTimlineData.article.stock.name,
+        }
+      }
+    }
+    if(response){
+      return response
+    }
+    return new ApiResponse("error", -11000, "Vremenska linija nije pronađena!")
   }
 
   async getAll() {

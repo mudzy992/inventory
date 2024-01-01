@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { Crud } from "@nestjsx/crud";
 import { AddNewDepartmentDto } from "src/dtos/department/add.new.department.dto";
+import { DepartmentDTO } from "src/dtos/department/department.dto";
 import { EditDepartmentDto } from "src/dtos/department/edit.department.dto";
 import { Department } from "src/entities/Department";
 import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
@@ -39,6 +40,14 @@ import { DepartmentService } from "src/services/department/department.service";
 })
 export class DepartmentController {
   constructor(public service: DepartmentService) {}
+
+  @Get()
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator", "moderator")
+  async getAllDepartments(): Promise<DepartmentDTO[] | ApiResponse>
+  {
+    return await this.service.getAllDepartments()
+  }
 
   @Post()
   @UseGuards(RoleCheckedGuard)

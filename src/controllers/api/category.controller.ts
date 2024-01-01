@@ -1,6 +1,7 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { Crud } from "@nestjsx/crud";
 import { AddNewCategoryDto } from "src/dtos/category/add.new.category.dto";
+import { CategoryDTO } from "src/dtos/category/category.dto";
 import { Category } from "src/entities/Category";
 import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
 import { ApiResponse } from "src/misc/api.response.class";
@@ -41,6 +42,23 @@ import { CategoryService } from "src/services/category/category.service";
 })
 export class CategoryController {
   constructor(public service: CategoryService) {}
+
+  @Get()
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles('administrator', 'moderator')
+  async getAllCategories(): Promise<CategoryDTO[] | ApiResponse>{
+    return this.service.getAllCategories()
+  }
+
+  @Get(":id")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles('administrator', 'moderator')
+  async getCategoryById(
+    @Param("id") id: number
+  ): Promise<CategoryDTO | ApiResponse>{
+    return this.service.getCategoryById(id)
+  }
+
   @Post()
   @UseGuards(RoleCheckedGuard)
   @AllowToRoles("administrator", "moderator")

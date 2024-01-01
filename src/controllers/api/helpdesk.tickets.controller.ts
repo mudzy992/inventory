@@ -7,6 +7,7 @@ import { RoleCheckedGuard } from "src/misc/role.checker.guard";
 import { HelpdeskTicketService } from "src/services/helpdesk.tickets/helpdesk.tickets.service";
 import { AddNewTicketDto } from "src/dtos/helpdesk.tickets/add.ticket.dto";
 import { EdiTicketDto } from "src/dtos/helpdesk.tickets/edit.ticket.dto";
+import { HelpdeskTicketsDTO } from "src/dtos/helpdesk.tickets/helpdesk.tickets.dto";
 
 @Controller("api/helpdesk")
 @Crud({
@@ -67,7 +68,7 @@ export class HelpdeskTicketsController {
   @Get("/ticket/:id")
   @UseGuards(RoleCheckedGuard)
   @AllowToRoles("administrator", "moderator")
-  async getTicketById(@Param("id") ticketId: number): Promise<HelpdeskTickets | ApiResponse> {
+  async getTicketById(@Param("id") ticketId: number): Promise<HelpdeskTicketsDTO | ApiResponse> {
     return await this.service.getTicketById(ticketId);
   }
 

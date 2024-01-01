@@ -7,6 +7,7 @@ import { ApiResponse } from "src/misc/api.response.class";
 import { UpdateStockDto } from "src/dtos/stock/edit.stock.dto";
 import { StockFeature } from "src/entities/StockFeature";
 import { CreateStockDto } from "src/dtos/stock/CreateStock.dto";
+import { StockDTO } from "src/dtos/stock/stocks.dto";
 
 @Injectable()
 export class StockService extends TypeOrmCrudService<Stock> {
@@ -158,7 +159,7 @@ export class StockService extends TypeOrmCrudService<Stock> {
     }
   }
 
-  async getStockById(stockId: number): Promise<Stock | ApiResponse> {
+  async getStockById(stockId: number): Promise<StockDTO | ApiResponse> {
     const stock = await this.stockRepository.findOne({
       where: { stockId: stockId },
       relations: [
@@ -169,31 +170,53 @@ export class StockService extends TypeOrmCrudService<Stock> {
         "stockFeatures.feature",
       ],
     });
-    if (!stock) {
+
+    const response: StockDTO = {
+      stockId: stock.stockId,
+      name: stock.name,
+      description: stock.description,
+      valueAvailable: stock.valueAvailable,
+      valueOnContract: stock.valueOnContract,
+      sapNumber: stock.sapNumber,
+      timestamp: stock.timestamp,
+      category: {
+        imagePath: stock.category.imagePath,
+      },
+      stockFeatures: stock.stockFeatures,
+    }
+    if (!response) {
       return new ApiResponse(
         "error",
         -1003,
         "Skladište artikla nije pronađeno. Moguće da artikal ne postoji na skladištu."
       );
     }
-    return stock;
+    return response;
   }
 
   async getStockByCategoryId(
     categoryId: number
-  ): Promise<Stock[] | ApiResponse> {
+  ): Promise<StockDTO[] | ApiResponse> {
     const stock = await this.stockRepository.find({
       where: { categoryId: categoryId },
       relations: ["category"],
     });
-    if (!stock) {
+    const response:StockDTO[] = await stock.map((item) => ({
+      stockId: item.stockId,
+      name: item.name,
+      valueAvailable: item.valueAvailable,
+      valueOnContract: item.valueOnContract,
+      sapNumber: item.sapNumber,
+    }))
+
+    if (!response) {
       return new ApiResponse(
         "error",
         -1004,
         "Skladište artikla za tu kategoriju nije pronađeno. Moguće da artikal ne postoji na skladištu."
       );
     }
-    return stock;
+    return response;
   }
 
   async getAllStocks(): Promise<Stock[] | ApiResponse> {

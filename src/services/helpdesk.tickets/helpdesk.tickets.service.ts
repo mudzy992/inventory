@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { AddNewTicketDto } from "src/dtos/helpdesk.tickets/add.ticket.dto";
 import { EdiTicketDto } from "src/dtos/helpdesk.tickets/edit.ticket.dto";
+import { HelpdeskTicketsDTO } from "src/dtos/helpdesk.tickets/helpdesk.tickets.dto";
 import { HelpdeskTickets } from "src/entities/HelpdeskTickets";
 import { User } from "src/entities/User";
 import { ApiResponse } from "src/misc/api.response.class";
@@ -82,7 +83,7 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
     }
   }
 
-  async getTicketById(ticketId: number): Promise<HelpdeskTickets | ApiResponse> {
+  async getTicketById(ticketId: number): Promise<HelpdeskTicketsDTO | ApiResponse> {
     const ticket = await this.helpDeskTickets.findOne({
         where: {ticketId: ticketId},
         relations: [
@@ -94,12 +95,47 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
         "assignedTo2", 
         "article", 
         "article.stock"]});
+    
+    const response: HelpdeskTicketsDTO = {
+      ticketId: ticket.ticketId,
+      articleId: ticket.articleId,
+      userId: ticket.userId,
+      description: ticket.description,
+      createdAt: ticket.createdAt,
+      duoDate: ticket.duoDate,
+      clientDuoDate: ticket.clientDuoDate,
+      assignedTo: ticket.assignedTo,
+      groupId: ticket.groupId,
+      resolveDescription: ticket.resolveDescription,
+      resolveDate: ticket.resolveDate,
+      resolveResolution: ticket.resolveResolution,
+      resolveTimespand: ticket.resolveTimespand,
+      status: ticket.status,
+      priority: ticket.priority,
+      user: {
+        fullname: ticket.user.fullname,
+        localNumber: ticket.user.localNumber,
+        department: {
+          title: ticket.user.department.title,
+        },
+        location: {
+          name: ticket.user.location.name,
+        },
+      },
+      article: ticket.article,
+      group: {
+        groupName: ticket.group.groupName,
+      },
+      groupPartent: {
+        groupName: ticket.groupPartent.groupName
+      }
+    }
   
-    if (!ticket) {
+    if (!response) {
       return new ApiResponse('error', -11002, 'Ticket not found.');
     }
   
-    return ticket;
+    return response;
   }
 
   async getAllTickets(): Promise<HelpdeskTickets[] | ApiResponse> {
