@@ -122,13 +122,12 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
           name: ticket.user.location.name,
         },
       },
-      article: ticket.article,
-      group: {
-        groupName: ticket.group.groupName,
+      assignedTo2:{
+        fullname: ticket.assignedTo2.fullname,
       },
-      groupPartent: {
-        groupName: ticket.groupPartent.groupName
-      }
+      article: ticket.article,
+      group: ticket.group,
+      groupPartent: ticket.groupPartent,
     }
   
     if (!response) {

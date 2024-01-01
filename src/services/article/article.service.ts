@@ -413,11 +413,21 @@ export class ArticleService extends TypeOrmCrudService<Article> {
           fullname: item.user.fullname,
         }
       })),
-      helpdeskTickets: articleData.helpdeskTickets.map((item) =>({
+      helpdeskTickets: (articleData.helpdeskTickets || []).map((item) =>({
         ticketId: item.ticketId,
         description: item.description,
         createdAt: item.createdAt,
+        clientDuoDate:item.clientDuoDate,
+        resolveDate: item.resolveDate,
+        resolveDescription: item.resolveDescription,
         status: item.status,
+        assignedTo2: item.assignedTo2 ? { fullname: item.assignedTo2.fullname } : null,
+        group:{
+          groupName: item.group.groupName
+        },
+        groupPartent: {
+          groupName: item.groupPartent.groupName
+        }
       }))
     }
     if (response) {
