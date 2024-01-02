@@ -1,10 +1,10 @@
-import { Category } from "src/entities/Category";
 import { Documents } from "src/entities/Documents";
 import { UpgradeFeature } from "src/entities/UpgradeFeature";
 import { StockDTO } from "../stock/stocks.dto";
 import { UserDTO } from "../user/user.dto";
 import { ArticleTimelineDTO } from "../article.timeline/article.timeline.dto";
 import { HelpdeskTicketsDTO } from "../helpdesk.tickets/helpdesk.tickets.dto";
+import { CategoryDTO } from "../category/category.dto";
 
 // article.dto.ts
 export class ArticleDTO {
@@ -20,7 +20,7 @@ export class ArticleDTO {
     categoryId?: number | null;
     user?: Partial<UserDTO>;
     stock?: Partial<StockDTO>;
-    category?: Partial<Category>;
+    category?: Partial<CategoryDTO>;
     articleTimelines?: Partial<ArticleTimelineDTO>[];
     documents?: Partial<Documents>[];
     helpdeskTickets?: Partial<HelpdeskTicketsDTO>[];

@@ -19,6 +19,7 @@ export class JobService extends TypeOrmCrudService<Job> {
   ) {
     super(job);
   }
+
   async getAllJobs(): Promise<JobDTO[] | ApiResponse>{
     const jobsData = await this.job.find()
     const response: JobDTO[] = await jobsData.map((item) => ({
@@ -33,6 +34,22 @@ export class JobService extends TypeOrmCrudService<Job> {
     }
     return new ApiResponse("error", -10005, "Lista radnih mjesta nije pronađena");
   }
+
+  async getJobsByDepartmentId(departmentId: number): Promise<JobDTO[] | ApiResponse>{
+    const jobsData = await this.job.find({where:{departmentJobs: {departmentId: departmentId}}, relations:["departmentJobs"]})
+    const response: JobDTO[] = await jobsData.map((item) => ({
+      jobId: item.jobId,
+      title: item.title,
+      jobCode: item.jobCode,
+      description: item.description,
+    }))
+
+    if(response){
+      return response
+    }
+    return new ApiResponse("error", -10005, "Lista radnih mjesta nije pronađena");
+  }
+
   async createNewJob(data: AddNewJobDto): Promise<Job | ApiResponse> {
     const newJob: Job = new Job();
     newJob.title = data.title;

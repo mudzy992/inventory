@@ -362,12 +362,18 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     });
 
     const response: ArticleDTO = {
+      articleId: articleData.articleId,
       invNumber: articleData.invNumber,
       serialNumber: articleData.serialNumber,
       status: articleData.status,
       timestamp: articleData.timestamp,
+      userId: articleData.userId,
       category: {
-        imagePath: articleData.category.imagePath
+        imagePath: articleData.category.imagePath,
+        group:{
+          groupId: articleData.category.group.groupId,
+          groupName: articleData.category.group.groupName,
+        }
       },
       user: {
         userId: articleData.user.userId,
@@ -421,7 +427,9 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         resolveDate: item.resolveDate,
         resolveDescription: item.resolveDescription,
         status: item.status,
-        assignedTo2: item.assignedTo2 ? { fullname: item.assignedTo2.fullname } : null,
+        assignedTo2: {
+          fullname: item.assignedTo2 ? item.assignedTo2.fullname : null,
+        },
         group:{
           groupName: item.group.groupName
         },

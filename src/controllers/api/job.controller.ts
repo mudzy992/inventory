@@ -36,9 +36,18 @@ export class JobController {
   constructor(public service: JobService) {}
   @Get()
   @UseGuards(RoleCheckedGuard)
-  @AllowToRoles('administrator', 'moderator')
+  @AllowToRoles('administrator', 'moderator', 'user')
   async getAllJobs(): Promise<JobDTO[] | ApiResponse> {
     return this.service.getAllJobs()
+  }
+
+  @Get("department/:id")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles('administrator', 'moderator', 'user')
+  async getJobsByDepartmentId(
+    @Param('id') departmentId: number
+  ): Promise<JobDTO[] | ApiResponse> {
+    return this.service.getJobsByDepartmentId(departmentId)
   }
   
   @Post()

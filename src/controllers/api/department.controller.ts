@@ -43,7 +43,7 @@ export class DepartmentController {
 
   @Get()
   @UseGuards(RoleCheckedGuard)
-  @AllowToRoles("administrator", "moderator")
+  @AllowToRoles("administrator", "moderator", "user")
   async getAllDepartments(): Promise<DepartmentDTO[] | ApiResponse>
   {
     return await this.service.getAllDepartments()

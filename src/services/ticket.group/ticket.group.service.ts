@@ -55,11 +55,31 @@ export class TicketGroupService extends TypeOrmCrudService<TicketGroup> {
             "helpdeskTickets.user",
             "helpdeskTickets.assignedTo2", 
             "helpdeskTickets.article.stock"]
-    });    
+    });
+
+    const response: TicketGroupDTO[] = ticket.map((item) => ({
+      helpdeskTickets: (item.helpdeskTickets || []).map((ticket) => ({
+        ticketId: ticket.ticketId,
+        createdAt: ticket.createdAt,
+        duoDate: ticket.duoDate,
+        status: ticket.status,
+        description: ticket.description,
+        assignedTo: ticket.assignedTo,
+        assignedTo2: {
+          fullname: ticket.assignedTo2 ? ticket.assignedTo2.fullname : null,
+        },
+        group: {
+          groupName: ticket.group.groupName,
+        },
+        user: {
+          fullname: ticket.user.fullname,
+        },
+      }))
+    }))
   
-    if (!ticket) {
+    if (!response) {
       return new ApiResponse('error', -11002, 'Ticket not found.');
     }
-    return ticket;
+    return response;
   }
 }
