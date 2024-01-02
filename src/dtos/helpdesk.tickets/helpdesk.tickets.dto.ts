@@ -35,7 +35,7 @@ export class HelpdeskTicketsDTO {
     | null;
 
   article?: Partial<ArticleDTO>;
-  assignedTo2: Partial<UserDTO>;
+  assignedTo2?: Partial<UserDTO>;
   group?: Partial<TicketGroup>;
   groupPartent?: Partial<TicketGroup>;
   user?: Partial<UserDTO>;

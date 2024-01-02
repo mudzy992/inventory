@@ -123,9 +123,15 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
         },
       },
       assignedTo2:{
-        fullname: ticket.assignedTo2.fullname,
+        fullname: ticket.assignedTo2 ? ticket.assignedTo2.fullname : null,
       },
-      article: ticket.article,
+      article: {
+        invNumber: ticket.article.invNumber,
+        serialNumber: ticket.article.serialNumber,
+        stock: {
+          name: ticket.article.stock.name,
+        }
+      },
       group: ticket.group,
       groupPartent: ticket.groupPartent,
     }

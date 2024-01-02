@@ -39,7 +39,7 @@ export class LocationController {
   
   @Get()
   @UseGuards(RoleCheckedGuard)
-  @AllowToRoles("administrator", "moderator")
+  @AllowToRoles("administrator", "moderator", "user")
   async getAllLocation(): Promise<LocationDTO[] | ApiResponse>
   {
     return await this.service.getAllLocation()
