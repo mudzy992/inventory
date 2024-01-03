@@ -130,6 +130,10 @@ export class UserService extends TypeOrmCrudService<User> {
         "department",
         "job",
         "location",
+        "helpdeskTickets",
+        "helpdeskTickets.group",
+        "helpdeskTickets.groupPartent",
+        "helpdeskTickets.assignedTo2",
         "articles.stock",
         "articles.documents",
         "articles.category",
@@ -173,6 +177,26 @@ export class UserService extends TypeOrmCrudService<User> {
         category: {
           name: item.category.name,
         }
+      })),
+      helpdeskTickets: (userData.helpdeskTickets || []).map((ticket) => ({
+        ticketId: ticket.ticketId,
+        createdAt: ticket.createdAt,
+        duoDate: ticket.duoDate,
+        clientDuoDate: ticket.clientDuoDate,
+        description: ticket.description,
+        resolveDescription: ticket.description,
+        resolveDate: ticket.resolveDate,
+        status: ticket.status,
+        assignedTo2: {
+          fullname: ticket.assignedTo2 ? ticket.assignedTo2.fullname : null,
+        },
+        group: {
+          groupName: ticket.group ? ticket.group.groupName : null,
+        },
+        groupPartent: {
+          groupName: ticket.groupPartent ? ticket.groupPartent.groupName : null,
+        }
+
       }))
     }
     return response
