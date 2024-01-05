@@ -33,7 +33,7 @@ export class UserDTO {
   articleTimelines?: Partial<ArticleTimeline>[];
   articleTimelines2?: Partial<ArticleTimeline>[];
   helpdeskTickets?: Partial<HelpdeskTicketsDTO>[];
-  helpdeskTickets2?: Partial<HelpdeskTickets>[];
+  helpdeskTickets2?: Partial<HelpdeskTicketsDTO>[];
   moderatorGroupMappings?: Partial<ModeratorGroupMapping>[];
   job?: Partial<JobDTO>;
   department?: Partial<DepartmentDTO>;
