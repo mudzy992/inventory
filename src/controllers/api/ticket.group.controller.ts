@@ -22,22 +22,42 @@ import { TicketGroupService } from "src/services/ticket.group/ticket.group.servi
   },
   query: {
     join: {
+        categories: {
+        eager: true,
+      },
         helpdeskTickets: {
+        eager: true,
+      },
+        helpdeskTickets2: {
         eager: true,
       },
         moderatorGroupMappings: {
         eager: true,
       },
+        parentGroup: {
+        eager: true,
+      },
+        ticketGroups: {
+        eager: true,
+      },
         location: {
         eager: true,
       },
+
     },
   },
 })
 export class TicketGroupController {
   constructor(public service: TicketGroupService) {}
-  
+
   @Get()
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator", "moderator", "user")
+  async getAllGroups(): Promise<TicketGroup[] | ApiResponse> {
+    return await this.service.getAllGroups();
+  }
+  
+  @Get("/tikets")
   @UseGuards(RoleCheckedGuard)
   @AllowToRoles("administrator", "moderator")
   async getAllTickets(): Promise<TicketGroup[] | ApiResponse> {
@@ -49,12 +69,5 @@ export class TicketGroupController {
   @AllowToRoles("administrator", "moderator", "user")
   async getGroupByParentGroupId(@Param("groupId") groupId: number): Promise<TicketGroup[] | ApiResponse> {
     return await this.service.getGroupByParentGroupId(groupId);
-  }
-
-  @Get("/user/:userId")
-  @UseGuards(RoleCheckedGuard)
-  @AllowToRoles("administrator", "moderator")
-  async getAllTicketsByUserLocation(@Param("userId") userId: number): Promise<TicketGroupDTO[] | ApiResponse> {
-    return await this.service.getAllTicketsByUserLocation(userId);
   }
 }

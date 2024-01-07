@@ -126,10 +126,10 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
         fullname: ticket.assignedTo2 ? ticket.assignedTo2.fullname : null,
       },
       article: {
-        invNumber: ticket.article.invNumber,
-        serialNumber: ticket.article.serialNumber,
+        invNumber: ticket.article ? ticket.article.invNumber : null,
+        serialNumber: ticket.article ? ticket.article.serialNumber : null,
         stock: {
-          name: ticket.article.stock.name,
+          name: ticket.article ? ticket.article.stock.name : null,
         }
       },
       group: ticket.group,
@@ -196,27 +196,20 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
         new Brackets((qb) => {
           qb.where("user.fullname LIKE :query", { query: `%${query}%` });
           qb.orWhere("ticket.description LIKE :query", { query: `%${query}%` });
-          qb.orWhere("article.serialNumber LIKE :query", { query: `%${query}%` });
-          qb.orWhere("article.invNumber LIKE :query", { query: `%${query}%` });
+          qb.orWhere("ticket.ticketId LIKE :query", { query: `%${query}%` });
           qb.orWhere("article.status LIKE :query", { query: `%${query}%` });
           qb.orWhere("group.groupName LIKE :query", { query: `%${query}%` });
         })
       );
     }
-/* 
-    console.log(assignedTo)
-    console.log(status)
+
     if (assignedTo !== undefined && assignedTo !== null) {
-      ticketsQuery.andWhere("ticket.assignedTo = :assignedTo", { assignedTo });
-    } else if (assignedTo === null) {
       ticketsQuery.andWhere("ticket.assignedTo = :assignedTo", { assignedTo });
     }
   
     if (status !== undefined) {
       ticketsQuery.andWhere("ticket.status = :status", { status });
     }
-
-     */
   
     const [results, totalResults] = await ticketsQuery.getManyAndCount();
 

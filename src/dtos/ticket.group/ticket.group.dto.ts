@@ -2,6 +2,7 @@ import { Category } from "src/entities/Category";
 import { ModeratorGroupMapping } from "src/entities/ModeratorGroupMapping";
 import { LocationDTO } from "../location/location.dto";
 import { HelpdeskTicketsDTO } from "../helpdesk.tickets/helpdesk.tickets.dto";
+import { TicketGroup } from "src/entities/TicketGroup";
 
 export class TicketGroupDTO {
   groupId?: number;
