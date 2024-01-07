@@ -140,6 +140,7 @@ export class UserService extends TypeOrmCrudService<User> {
         "helpdeskTickets2.group",
         "helpdeskTickets2.groupPartent",
         "helpdeskTickets2.assignedTo2",
+        "articles",
         "articles.stock",
         "articles.documents",
         "articles.category",
@@ -225,9 +226,9 @@ export class UserService extends TypeOrmCrudService<User> {
         article: {
           invNumber: ticket.article ? ticket.article.invNumber : null,
           serialNumber: ticket.article ? ticket.article.serialNumber : null,
-          stock:{
-            name: ticket.article.stock ? ticket.article.stock.name : null,
-          }
+          stock: ticket.article && ticket.article.stock ? {
+              name: ticket.article.stock.name,
+          } : null,
         }
 
       })),

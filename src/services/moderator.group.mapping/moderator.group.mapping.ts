@@ -20,6 +20,8 @@ export class ModeratorGroupMappingService extends TypeOrmCrudService<ModeratorGr
         relations: [
             "user",
             "group",
+            "group.parentGroup",
+            "group.ticketGroups",
             "group.location"
         ]
     });

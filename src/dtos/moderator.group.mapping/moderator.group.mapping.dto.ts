@@ -1,11 +1,11 @@
-import { TicketGroup } from "src/entities/TicketGroup";
 import { User } from "src/entities/User";
+import { TicketGroupDTO } from "../ticket.group/ticket.group.dto";
 
 export class ModeratorGroupMappingDTO {
   mappingId?: number;
   userId?: number;
   groupId?: number;
 
-  group?: Partial<TicketGroup>;
+  group?: Partial<TicketGroupDTO>;
   user?: Partial<User>;
 }
