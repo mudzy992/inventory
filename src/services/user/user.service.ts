@@ -210,7 +210,7 @@ export class UserService extends TypeOrmCrudService<User> {
         duoDate: ticket.duoDate,
         clientDuoDate: ticket.clientDuoDate,
         description: ticket.description,
-        resolveDescription: ticket.description,
+        resolveDescription: ticket.resolveDescription,
         resolveDate: ticket.resolveDate,
         status: ticket.status,
         assignedTo2: {

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Put, Delete, Param, Get, UseGuards } from "@nestjs/common";
+import { Body, Controller, Post, Put, Delete, Param, Get, UseGuards, Query } from "@nestjs/common";
 import { Crud } from "@nestjsx/crud";
 import { HelpdeskTickets } from "src/entities/HelpdeskTickets";
 import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
@@ -84,5 +84,27 @@ export class HelpdeskTicketsController {
   @AllowToRoles("administrator", "moderator")
   async getAllTicketsByGroupLocation(@Param("userId") userId: number): Promise<HelpdeskTickets[] | ApiResponse> {
     return await this.service.getAllTicketsByGroupLocation(userId);
+  }
+
+  @Get("/s/:userId")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator", "moderator")
+  async getAllTicketsByGroupLocationPagginedSearch(
+    @Param("userId") userId: number,
+    @Query("perPage") perPage: number = 10,
+    @Query("page") page: number = 1,
+    @Query("query") query: string = "",
+    @Query("assignedTo") assignedTo?: number, 
+    @Query("status") status?: string,
+    ) {
+    const offset = (page - 1) * perPage;
+    return await this.service.getAllTicketsByGroupLocationPagginedSearch(
+      userId, 
+      perPage, 
+      offset, 
+      query,
+      assignedTo,
+      status
+      );
   }
 }

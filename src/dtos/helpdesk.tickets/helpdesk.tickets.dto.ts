@@ -12,7 +12,7 @@ export class HelpdeskTicketsDTO {
   resolveDescription?: string | null;
   createdAt?: Date | null;
   duoDate?: Date | null;
-  status?: "otvoren" | "izvršenje" | "zatvoren";
+  status?: string;
   assignedTo?: number | null;
   clientDuoDate?: Date | null;
   resolveDate?: Date | null;
