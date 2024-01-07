@@ -462,12 +462,10 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     if (query) {
       resultsQuery.andWhere(
         new Brackets((qb) => {
-          qb.where("user.fullname LIKE :query", { query: `%${query}%` });
-          qb.orWhere("article.serialNumber LIKE :query", {
-            query: `%${query}%`,
-          });
-          qb.orWhere("article.invNumber LIKE :query", { query: `%${query}%` });
-          qb.orWhere("article.status LIKE :query", { query: `%${query}%` });
+          qb.where("user.fullname LIKE :query", { query: `%${query}%`});
+          qb.orWhere("article.serialNumber LIKE :query", {query: `%${query}%`});
+          qb.orWhere("article.invNumber LIKE :query", { query: `%${query}%`});
+          qb.orWhere("article.status LIKE :query", { query: `%${query}%`});
         })
       );
     }

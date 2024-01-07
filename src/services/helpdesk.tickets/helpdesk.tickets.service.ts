@@ -7,7 +7,7 @@ import { HelpdeskTicketsDTO } from "src/dtos/helpdesk.tickets/helpdesk.tickets.d
 import { HelpdeskTickets } from "src/entities/HelpdeskTickets";
 import { User } from "src/entities/User";
 import { ApiResponse } from "src/misc/api.response.class";
-import { Repository } from "typeorm";
+import { Brackets, Repository } from "typeorm";
 
 @Injectable()
 export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
@@ -167,5 +167,80 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
     }
   
     return ticket;
+  }
+
+  async getAllTicketsByGroupLocationPagginedSearch(
+    userId: number,
+    perPage: number,
+    offset: number,
+    query: string,
+    assignedTo?: number | null,
+    status?: string
+  ) {
+    const user = await this.user.findOne({ where: { userId: userId }, relations: ["location"] });
+    const ticketsQuery = this.helpDeskTickets
+      .createQueryBuilder("ticket")
+      .leftJoin("ticket.user", "user")
+      .leftJoin("ticket.group", "group")
+      .leftJoin("ticket.assignedTo2", "assignedTo2")
+      .leftJoin("ticket.article", "article")
+      .leftJoin("article.stock", "stock")
+      .where("group.locationId = :locationId", { locationId: user.location.parentLocationId })
+      .select(["ticket", "user", "group", "assignedTo2", "article", "stock"])
+      .take(perPage)
+      .skip(offset)
+      .orderBy('ticket.createdAt', 'DESC');
+  
+    if (query) {
+      ticketsQuery.andWhere(
+        new Brackets((qb) => {
+          qb.where("user.fullname LIKE :query", { query: `%${query}%` });
+          qb.orWhere("ticket.description LIKE :query", { query: `%${query}%` });
+          qb.orWhere("article.serialNumber LIKE :query", { query: `%${query}%` });
+          qb.orWhere("article.invNumber LIKE :query", { query: `%${query}%` });
+          qb.orWhere("article.status LIKE :query", { query: `%${query}%` });
+          qb.orWhere("group.groupName LIKE :query", { query: `%${query}%` });
+        })
+      );
+    }
+/* 
+    console.log(assignedTo)
+    console.log(status)
+    if (assignedTo !== undefined && assignedTo !== null) {
+      ticketsQuery.andWhere("ticket.assignedTo = :assignedTo", { assignedTo });
+    } else if (assignedTo === null) {
+      ticketsQuery.andWhere("ticket.assignedTo = :assignedTo", { assignedTo });
+    }
+  
+    if (status !== undefined) {
+      ticketsQuery.andWhere("ticket.status = :status", { status });
+    }
+
+     */
+  
+    const [results, totalResults] = await ticketsQuery.getManyAndCount();
+
+    const mappedResults: HelpdeskTicketsDTO[] = results.map((ticket) => ({
+      ticketId: ticket.ticketId,
+      createdAt: ticket.createdAt,
+      duoDate: ticket.duoDate,
+      status: ticket.status,
+      description: ticket.description,
+      assignedTo: ticket.assignedTo,
+      assignedTo2: {
+        fullname: ticket.assignedTo2 ? ticket.assignedTo2.fullname : null,
+      },
+      group: {
+        groupName: ticket.group.groupName,
+      },
+      user: {
+        fullname: ticket.user.fullname,
+      },
+    }));
+  
+    return {
+      results: mappedResults,
+      total: totalResults,
+    };
   }
 }

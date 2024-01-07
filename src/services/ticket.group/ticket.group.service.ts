@@ -1,11 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
+import { HelpdeskTicketsDTO } from "src/dtos/helpdesk.tickets/helpdesk.tickets.dto";
 import { TicketGroupDTO } from "src/dtos/ticket.group/ticket.group.dto";
 import { TicketGroup } from "src/entities/TicketGroup";
 import { User } from "src/entities/User";
 import { ApiResponse } from "src/misc/api.response.class";
-import { Repository } from "typeorm";
+import { Brackets, Repository } from "typeorm";
 
 @Injectable()
 export class TicketGroupService extends TypeOrmCrudService<TicketGroup> {
