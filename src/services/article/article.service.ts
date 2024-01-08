@@ -431,10 +431,10 @@ export class ArticleService extends TypeOrmCrudService<Article> {
           fullname: item.assignedTo2 ? item.assignedTo2.fullname : null,
         },
         group:{
-          groupName: item.group.groupName
+          groupName: item.group ? item.group.groupName : null,
         },
         groupPartent: {
-          groupName: item.groupPartent.groupName
+          groupName: item.groupPartent ? item.groupPartent.groupName : null,
         }
       }))
     }

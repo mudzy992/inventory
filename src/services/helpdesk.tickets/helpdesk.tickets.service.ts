@@ -51,6 +51,7 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
   
     // Ažurirajte atribute tiketa na osnovu DTO objekta
     existingTicket.groupId = editTicketDto.groupId;
+    existingTicket.groupPartentId = editTicketDto.groupPartentId;
     existingTicket.resolveDescription = editTicketDto.resolveDescription;
     existingTicket.duoDate = editTicketDto.duoDate;
     existingTicket.resolveDate = editTicketDto.resolveDate;

@@ -1,5 +1,6 @@
 export class EdiTicketDto {
     groupId: number;
+    groupPartentId: number;
     resolveDescription:string;
     duoDate: Date;
     resolveDate: Date;
