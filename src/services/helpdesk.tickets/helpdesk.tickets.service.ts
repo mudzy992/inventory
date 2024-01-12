@@ -8,6 +8,7 @@ import { HelpdeskTickets } from "src/entities/HelpdeskTickets";
 import { User } from "src/entities/User";
 import { ApiResponse } from "src/misc/api.response.class";
 import { Brackets, Repository } from "typeorm";
+import { sendEmail } from '../email/send.email.service';
 
 @Injectable()
 export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
@@ -31,15 +32,24 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
 
     try {
         const savedTicket = await this.helpDeskTickets.save(newTicket);
+        const clientEmailSubject = 'Uspješno kreiran tiket';
+        const clientEmailText = `Vaš tiket (ID: ${savedTicket.ticketId}) je uspješno kreiran. Hvala što ste nas kontaktirali!`;
+        await sendEmail(savedTicket.user.email, clientEmailSubject, clientEmailText);
+
+        // Slanje emaila administratorima grupe tiketa
+        const groupEmailSubject = 'Novi tiket je otvoren';
+        const groupEmailText = `Novi tiket (ID: ${savedTicket.ticketId}) je otvoren u grupi ${savedTicket.group.groupName}.\nOpis: ${savedTicket.description}\nPrijavio: ${savedTicket.user.fullname}`;
+        const adminEmails = savedTicket.group.moderatorGroupMappings.map(admin => admin.user.email);
+        await Promise.all(adminEmails.map(email => sendEmail(email, groupEmailSubject, groupEmailText)));
+
         const response = new ApiResponse('success', -11000, 'Ticket added successfully.');
         return await this.findOne({
             where: { ticketId: savedTicket.ticketId },
-            relations: ["article", "assignedTo2", "group", "user"],
+            relations: ["article", "assignedTo2", "group","group.moderatorGroupMappings","group.moderatorGroupMappings.user", "user"],
         });
     } catch (error) {
         return new ApiResponse('error', -11001, 'Failed to add ticket.' + error.message);
     }
-    
   }
 
   async editTicket(ticketId: number, editTicketDto: EdiTicketDto): Promise<ApiResponse> {
