@@ -4,17 +4,19 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { CommentHelpdeskTickets } from "./CommentHelpdeskTickets";
 import { Article } from "./Article";
 import { User } from "./User";
 import { TicketGroup } from "./TicketGroup";
 
-@Index("user_id", ["userId"], {})
 @Index("article_id", ["articleId"], {})
-@Index("group_id", ["groupId"], {})
 @Index("assigned_to", ["assignedTo"], {})
 @Index("fk_ticket_parent_group", ["groupPartentId"], {})
+@Index("group_id", ["groupId"], {})
+@Index("user_id", ["userId"], {})
 @Entity("helpdesk_tickets", { schema: "inventory_v2" })
 export class HelpdeskTickets {
   @PrimaryGeneratedColumn({ type: "int", name: "ticket_id" })
@@ -38,6 +40,9 @@ export class HelpdeskTickets {
   @Column("text", { name: "resolve_description", nullable: true })
   resolveDescription: string | null;
 
+  @Column("timestamp", { name: "client_duo_date", nullable: true })
+  clientDuoDate: Date | null;
+
   @Column("timestamp", {
     name: "created_at",
     nullable: true,
@@ -58,9 +63,6 @@ export class HelpdeskTickets {
   @Column("int", { name: "assigned_to", nullable: true })
   assignedTo: number | null;
 
-  @Column("timestamp", { name: "client_duo_date", nullable: true })
-  clientDuoDate: Date | null;
-
   @Column("timestamp", { name: "resolve_date", nullable: true })
   resolveDate: Date | null;
 
@@ -77,7 +79,6 @@ export class HelpdeskTickets {
       "Zahtjevi za izmjenu/doradu manje složenosti",
       "Zahtjevi za izmjenu/doradu veće složenosti",
     ],
-    default: () => "'Problem u radu servisa (za sve korisnike u firmi)'",
   })
   priority:
     | "Problem veće hitnosti ili VIP korisnik"
@@ -110,6 +111,12 @@ export class HelpdeskTickets {
     | "Zahtjev je povučen od strane korisnika"
     | null;
 
+  @OneToMany(
+    () => CommentHelpdeskTickets,
+    (commentHelpdeskTickets) => commentHelpdeskTickets.ticket
+  )
+  commentHelpdeskTickets: CommentHelpdeskTickets[];
+
   @ManyToOne(() => Article, (article) => article.helpdeskTickets, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
@@ -135,9 +142,7 @@ export class HelpdeskTickets {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })
-  @JoinColumn([
-    { name: "group_partent_id", referencedColumnName: "groupId" },
-  ])
+  @JoinColumn([{ name: "group_partent_id", referencedColumnName: "groupId" }])
   groupPartent: TicketGroup;
 
   @ManyToOne(() => User, (user) => user.helpdeskTickets2, {

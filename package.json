@@ -53,6 +53,7 @@
     "@types/file-saver": "^2.0.5",
     "@types/jest": "27.5.2",
     "@types/node": "^16.18.58",
+    "@types/nodemailer": "^6.4.14",
     "@types/pizzip": "^3.0.3",
     "@types/supertest": "^2.0.14",
     "@typescript-eslint/eslint-plugin": "^5.62.0",

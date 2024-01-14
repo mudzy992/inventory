@@ -1,5 +1,4 @@
 import { ArticleTimeline } from "src/entities/ArticleTimeline";
-import { HelpdeskTickets } from "src/entities/HelpdeskTickets";
 import { ModeratorGroupMapping } from "src/entities/ModeratorGroupMapping";
 import { UserRole } from "src/entities/UserRole";
 import { UserToken } from "src/entities/UserToken";
@@ -8,6 +7,7 @@ import { DepartmentDTO } from "../department/department.dto";
 import { JobDTO } from "../job/job.dto";
 import { ArticleDTO } from "../article/article.dto";
 import { HelpdeskTicketsDTO } from "../helpdesk.tickets/helpdesk.tickets.dto";
+import { CommentHelpdeskTicketsDTO } from "../comment.helpdesk.tickets/comment.helpdesk.ticket.dto";
 
 // user.dto.ts
 export class UserDTO {
@@ -39,4 +39,5 @@ export class UserDTO {
   department?: Partial<DepartmentDTO>;
   location?: Partial<LocationDTO>;
   userTokens?: Partial<UserToken>[];
+  commentHelpdeskTickets?: Partial<CommentHelpdeskTicketsDTO>[];
 }

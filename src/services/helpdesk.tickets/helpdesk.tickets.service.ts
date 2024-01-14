@@ -31,22 +31,21 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
     newTicket.clientDuoDate = data.clientDuoDate;
 
     try {
-        const savedTicket = await this.helpDeskTickets.save(newTicket);
-        const clientEmailSubject = 'Uspješno kreiran tiket';
+        const tiket = await this.helpDeskTickets.save(newTicket);
+        const savedTicket = await this.findOne({
+          where: { ticketId: tiket.ticketId },
+          relations: ["article", "assignedTo2", "group","group.moderatorGroupMappings","group.moderatorGroupMappings.user", "user"],
+      });
+        const clientEmailSubject = `[#${savedTicket.ticketId}] Uspješno kreiran tiket`;
         const clientEmailText = `Vaš tiket (ID: ${savedTicket.ticketId}) je uspješno kreiran. Hvala što ste nas kontaktirali!`;
         await sendEmail(savedTicket.user.email, clientEmailSubject, clientEmailText);
-
         // Slanje emaila administratorima grupe tiketa
-        const groupEmailSubject = 'Novi tiket je otvoren';
+        const groupEmailSubject = `[#${savedTicket.ticketId}] Novi tiket otvoren`;
         const groupEmailText = `Novi tiket (ID: ${savedTicket.ticketId}) je otvoren u grupi ${savedTicket.group.groupName}.\nOpis: ${savedTicket.description}\nPrijavio: ${savedTicket.user.fullname}`;
         const adminEmails = savedTicket.group.moderatorGroupMappings.map(admin => admin.user.email);
         await Promise.all(adminEmails.map(email => sendEmail(email, groupEmailSubject, groupEmailText)));
-
         const response = new ApiResponse('success', -11000, 'Ticket added successfully.');
-        return await this.findOne({
-            where: { ticketId: savedTicket.ticketId },
-            relations: ["article", "assignedTo2", "group","group.moderatorGroupMappings","group.moderatorGroupMappings.user", "user"],
-        });
+        return savedTicket
     } catch (error) {
         return new ApiResponse('error', -11001, 'Failed to add ticket.' + error.message);
     }
@@ -105,8 +104,14 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
         "groupPartent", 
         "assignedTo2", 
         "article", 
-        "article.stock"]});
-    
+        "article.stock",
+        "commentHelpdeskTickets", 
+        "commentHelpdeskTickets.comment", 
+        "commentHelpdeskTickets.comment.user", 
+        "commentHelpdeskTickets.comment.comments", 
+        "commentHelpdeskTickets.comment.comments.user",
+        "commentHelpdeskTickets.ticket"]});
+
     const response: HelpdeskTicketsDTO = {
       ticketId: ticket.ticketId,
       articleId: ticket.articleId,
@@ -145,6 +150,25 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
       },
       group: ticket.group,
       groupPartent: ticket.groupPartent,
+      commentHelpdeskTickets: (ticket.commentHelpdeskTickets || []).map((commentItem) => ({
+        comment: {
+          commentId: commentItem.comment.commentId,
+          text: commentItem.comment.text,
+          createdAt: commentItem.comment.createdAt,
+          user: {
+            fullname: commentItem.comment.user.fullname,
+          },
+          comments: (commentItem.comment.comments || []).map((replies) => ({
+            commentId: replies.commentId,
+            parentCommentId: replies.parentCommentId,
+            text: replies.text,
+            createdAt: replies.createdAt,
+            user: {
+              fullname: replies.user.fullname,
+            }
+          }))
+        },
+      }))
     }
   
     if (!response) {

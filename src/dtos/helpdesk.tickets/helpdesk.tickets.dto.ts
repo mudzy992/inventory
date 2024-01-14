@@ -1,6 +1,7 @@
 import { TicketGroup } from "src/entities/TicketGroup";
 import { UserDTO } from "../user/user.dto";
 import { ArticleDTO } from "../article/article.dto";
+import { CommentHelpdeskTicketsDTO } from "../comment.helpdesk.tickets/comment.helpdesk.ticket.dto";
 
 export class HelpdeskTicketsDTO {
   ticketId?: number;
@@ -39,4 +40,5 @@ export class HelpdeskTicketsDTO {
   group?: Partial<TicketGroup>;
   groupPartent?: Partial<TicketGroup>;
   user?: Partial<UserDTO>;
+  commentHelpdeskTickets?: Partial<CommentHelpdeskTicketsDTO>[]
 }

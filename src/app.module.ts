@@ -56,6 +56,10 @@ import { TicketGroupController } from "./controllers/api/ticket.group.controller
 import { TicketGroupService } from "./services/ticket.group/ticket.group.service";
 import { ModeratorGroupMappingController } from "./controllers/api/moderator.group.mapping.controller";
 import { ModeratorGroupMappingService } from "./services/moderator.group.mapping/moderator.group.mapping";
+import { CommentsService } from "./services/comment/comment.service";
+import { CommentsController } from "./controllers/api/comment.controller";
+import { Comments } from "./entities/Comments";
+import { CommentHelpdeskTickets } from "./entities/CommentHelpdeskTickets";
 
 @Module({
   imports: [
@@ -85,7 +89,9 @@ import { ModeratorGroupMappingService } from "./services/moderator.group.mapping
         UserRole,
         HelpdeskTickets,
         ModeratorGroupMapping,
-        TicketGroup
+        TicketGroup,
+        Comments,
+        CommentHelpdeskTickets,
       ],
     }),
     TypeOrmModule.forFeature([
@@ -106,7 +112,9 @@ import { ModeratorGroupMappingService } from "./services/moderator.group.mapping
       UserRole,
       HelpdeskTickets,
       ModeratorGroupMapping,
-      TicketGroup
+      TicketGroup,
+      Comments,
+      CommentHelpdeskTickets,
     ]),
   ],
   controllers: [
@@ -129,6 +137,7 @@ import { ModeratorGroupMappingService } from "./services/moderator.group.mapping
     HelpdeskTicketsController,
     TicketGroupController,
     ModeratorGroupMappingController,
+    CommentsController,
   ],
   providers: [
     ArticleService,
@@ -148,6 +157,7 @@ import { ModeratorGroupMappingService } from "./services/moderator.group.mapping
     HelpdeskTicketService,
     TicketGroupService,
     ModeratorGroupMappingService,
+    CommentsService,
   ],
   exports: [
     // zbog middleware potrebno je exportovati servis
