@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Column,
   Entity,
@@ -17,6 +16,7 @@ import { UserToken } from "./UserToken";
 import { UserRole } from "./UserRole";
 import { HelpdeskTickets } from "./HelpdeskTickets";
 import { ModeratorGroupMapping } from "./ModeratorGroupMapping";
+import { Comments } from "./Comments";
 
 @Index("job_id", ["jobId"], {})
 @Index("department_id", ["departmentId"], {})
@@ -87,6 +87,9 @@ export class User {
 
   @Column("int", { name: "role_id", default: () => "'1'" })
   roleId: number;
+
+  @OneToMany(() => Comments, (comments) => comments.user)
+  comments: Comments[];
 
   @ManyToOne(() => UserRole, (userRole) => userRole.users, {
     onDelete: "NO ACTION",
