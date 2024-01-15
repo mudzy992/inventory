@@ -105,12 +105,11 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
         "assignedTo2", 
         "article", 
         "article.stock",
-        "commentHelpdeskTickets", 
-        "commentHelpdeskTickets.comment", 
-        "commentHelpdeskTickets.comment.user", 
-        "commentHelpdeskTickets.comment.comments", 
-        "commentHelpdeskTickets.comment.comments.user",
-        "commentHelpdeskTickets.ticket"]});
+        "comments",
+        "comments.user",
+        "comments.comments", 
+        "comments.comments.user",
+      ]});
 
     const response: HelpdeskTicketsDTO = {
       ticketId: ticket.ticketId,
@@ -150,15 +149,15 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
       },
       group: ticket.group,
       groupPartent: ticket.groupPartent,
-      commentHelpdeskTickets: (ticket.commentHelpdeskTickets || []).map((commentItem) => ({
-        comment: {
-          commentId: commentItem.comment.commentId,
-          text: commentItem.comment.text,
-          createdAt: commentItem.comment.createdAt,
+      comments: (ticket.comments || []).map((commentItem) => ({
+          commentId: commentItem.commentId,
+          text: commentItem.text,
+          createdAt: commentItem.createdAt,
+          parentCommentId: commentItem.parentCommentId,
           user: {
-            fullname: commentItem.comment.user.fullname,
+            fullname: commentItem.user.fullname,
           },
-          comments: (commentItem.comment.comments || []).map((replies) => ({
+          comments: (commentItem.comments || []).map((replies) => ({
             commentId: replies.commentId,
             parentCommentId: replies.parentCommentId,
             text: replies.text,
@@ -167,7 +166,6 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
               fullname: replies.user.fullname,
             }
           }))
-        },
       }))
     }
   

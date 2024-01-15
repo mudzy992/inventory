@@ -59,7 +59,7 @@ export class CommentsController {
 
   @Post()
   @UseGuards(RoleCheckedGuard)
-  @AllowToRoles("administrator", "moderator", "user")
+  @AllowToRoles("administrator", "moderator")
   async createNewComment(
     @Body() data: NewCommentDTO
   ): Promise<Comments | ApiResponse> {

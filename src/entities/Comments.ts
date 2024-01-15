@@ -7,9 +7,10 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { CommentHelpdeskTickets } from "./CommentHelpdeskTickets";
+import { HelpdeskTickets } from "./HelpdeskTickets";
 import { User } from "./User";
 
+@Index("fk_helpdesk_ticket_id", ["ticketId"], {})
 @Index("fk_parent_comment_id", ["parentCommentId"], {})
 @Index("fk_user_user_id", ["userId"], {})
 @Entity("comments", { schema: "inventory_v2" })
@@ -32,11 +33,16 @@ export class Comments {
   @Column("int", { name: "parent_comment_id", nullable: true })
   parentCommentId: number | null;
 
-  @OneToMany(
-    () => CommentHelpdeskTickets,
-    (commentHelpdeskTickets) => commentHelpdeskTickets.comment
+  @Column("int", { name: "ticket_id" })
+  ticketId: number;
+
+  @ManyToOne(
+    () => HelpdeskTickets,
+    (helpdeskTickets) => helpdeskTickets.comments,
+    { onDelete: "NO ACTION", onUpdate: "NO ACTION" }
   )
-  commentHelpdeskTickets: CommentHelpdeskTickets[];
+  @JoinColumn([{ name: "ticket_id", referencedColumnName: "ticketId" }])
+  ticket: HelpdeskTickets;
 
   @ManyToOne(() => Comments, (comments) => comments.comments, {
     onDelete: "NO ACTION",

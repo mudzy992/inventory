@@ -59,7 +59,6 @@ import { ModeratorGroupMappingService } from "./services/moderator.group.mapping
 import { CommentsService } from "./services/comment/comment.service";
 import { CommentsController } from "./controllers/api/comment.controller";
 import { Comments } from "./entities/Comments";
-import { CommentHelpdeskTickets } from "./entities/CommentHelpdeskTickets";
 
 @Module({
   imports: [
@@ -91,7 +90,6 @@ import { CommentHelpdeskTickets } from "./entities/CommentHelpdeskTickets";
         ModeratorGroupMapping,
         TicketGroup,
         Comments,
-        CommentHelpdeskTickets,
       ],
     }),
     TypeOrmModule.forFeature([
@@ -114,7 +112,6 @@ import { CommentHelpdeskTickets } from "./entities/CommentHelpdeskTickets";
       ModeratorGroupMapping,
       TicketGroup,
       Comments,
-      CommentHelpdeskTickets,
     ]),
   ],
   controllers: [

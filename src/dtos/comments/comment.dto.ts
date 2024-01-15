@@ -1,4 +1,4 @@
-import { CommentHelpdeskTicketsDTO } from "../comment.helpdesk.tickets/comment.helpdesk.ticket.dto";
+import { HelpdeskTicketService } from "src/services/helpdesk.tickets/helpdesk.tickets.service";
 import { UserDTO } from "../user/user.dto";
 
 export class CommentsDTO {
@@ -7,8 +7,9 @@ export class CommentsDTO {
   userId?: number;
   createdAt?: Date;
   parentCommentId?: number | null;
+  ticketId?: number;
 
-  commentHelpdeskTickets?: Partial<CommentHelpdeskTicketsDTO>[];
+  ticket?: Partial<HelpdeskTicketService>;
   parentComment?: Partial<CommentsDTO>;
   comments?: Partial<CommentsDTO>[];
   user?: Partial<UserDTO>;

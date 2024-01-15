@@ -7,7 +7,7 @@ import { DepartmentDTO } from "../department/department.dto";
 import { JobDTO } from "../job/job.dto";
 import { ArticleDTO } from "../article/article.dto";
 import { HelpdeskTicketsDTO } from "../helpdesk.tickets/helpdesk.tickets.dto";
-import { CommentHelpdeskTicketsDTO } from "../comment.helpdesk.tickets/comment.helpdesk.ticket.dto";
+import { CommentsDTO } from "../comments/comment.dto";
 
 // user.dto.ts
 export class UserDTO {
@@ -39,5 +39,5 @@ export class UserDTO {
   department?: Partial<DepartmentDTO>;
   location?: Partial<LocationDTO>;
   userTokens?: Partial<UserToken>[];
-  commentHelpdeskTickets?: Partial<CommentHelpdeskTicketsDTO>[];
+  comments?: Partial<CommentsDTO>[];
 }
