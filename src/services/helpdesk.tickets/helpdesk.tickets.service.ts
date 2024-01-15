@@ -22,6 +22,7 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
   }
 
   async addTicket(data: AddNewTicketDto): Promise<HelpdeskTickets | ApiResponse> {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' };
     const newTicket: HelpdeskTickets = new HelpdeskTickets();
     newTicket.userId = data.userId;
     newTicket.articleId = data.articleId;
@@ -34,14 +35,25 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
         const tiket = await this.helpDeskTickets.save(newTicket);
         const savedTicket = await this.findOne({
           where: { ticketId: tiket.ticketId },
-          relations: ["article", "assignedTo2", "group","group.moderatorGroupMappings","group.moderatorGroupMappings.user", "user"],
+          relations: ["article", "assignedTo2", "group", "groupPartent", "group.moderatorGroupMappings","group.moderatorGroupMappings.user", "user"],
       });
         const clientEmailSubject = `[#${savedTicket.ticketId}] Uspješno kreiran tiket`;
-        const clientEmailText = `Vaš tiket (ID: ${savedTicket.ticketId}) je uspješno kreiran. Hvala što ste nas kontaktirali!`;
+        const clientEmailText = `Vaš tiket (ID: ${savedTicket.ticketId}) je uspješno kreiran. Hvala što ste nas kontaktirali!\n
+        \nGrupa: ${savedTicket.group.groupName}
+        \nVrsta zahtjeva: ${savedTicket.groupPartent.groupName}
+        \nDatum prijave:${savedTicket.createdAt.toLocaleDateString(undefined, options)}
+        \nŽeljeni rok:${savedTicket.clientDuoDate.toLocaleDateString(undefined, options)}
+        \n\nOpis: ${savedTicket.description}`;
         await sendEmail(savedTicket.user.email, clientEmailSubject, clientEmailText);
         // Slanje emaila administratorima grupe tiketa
         const groupEmailSubject = `[#${savedTicket.ticketId}] Novi tiket otvoren`;
-        const groupEmailText = `Novi tiket (ID: ${savedTicket.ticketId}) je otvoren u grupi ${savedTicket.group.groupName}.\nOpis: ${savedTicket.description}\nPrijavio: ${savedTicket.user.fullname}`;
+        const groupEmailText = `Novi tiket (ID: ${savedTicket.ticketId}) je otvoren u grupi ${savedTicket.group.groupName}.
+        \nPrijavio: ${savedTicket.user.fullname}
+        \nGrupa: ${savedTicket.group.groupName}
+        \nVrsta zahtjeva: ${savedTicket.groupPartent.groupName}
+        \nDatum prijave:${savedTicket.createdAt.toLocaleDateString(undefined, options)}
+        \nŽeljeni rok:${savedTicket.clientDuoDate.toLocaleDateString(undefined, options)}
+        \n\nOpis: ${savedTicket.description}`;
         const adminEmails = savedTicket.group.moderatorGroupMappings.map(admin => admin.user.email);
         await Promise.all(adminEmails.map(email => sendEmail(email, groupEmailSubject, groupEmailText)));
         const response = new ApiResponse('success', -11000, 'Ticket added successfully.');
@@ -156,6 +168,9 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
           parentCommentId: commentItem.parentCommentId,
           user: {
             fullname: commentItem.user.fullname,
+            forname: commentItem.user.forname,
+            surname: commentItem.user.surname,
+            email: commentItem.user.email,
           },
           comments: (commentItem.comments || []).map((replies) => ({
             commentId: replies.commentId,
@@ -164,6 +179,9 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
             createdAt: replies.createdAt,
             user: {
               fullname: replies.user.fullname,
+              forname: replies.user.forname,
+              surname: replies.user.surname,
+              email: replies.user.email,
             }
           }))
       }))
