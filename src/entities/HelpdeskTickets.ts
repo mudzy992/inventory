@@ -7,7 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { CommentHelpdeskTickets } from "./CommentHelpdeskTickets";
+import { Comments } from "./Comments";
 import { Article } from "./Article";
 import { User } from "./User";
 import { TicketGroup } from "./TicketGroup";
@@ -111,11 +111,8 @@ export class HelpdeskTickets {
     | "Zahtjev je povučen od strane korisnika"
     | null;
 
-  @OneToMany(
-    () => CommentHelpdeskTickets,
-    (commentHelpdeskTickets) => commentHelpdeskTickets.ticket
-  )
-  commentHelpdeskTickets: CommentHelpdeskTickets[];
+  @OneToMany(() => Comments, (comments) => comments.ticket)
+  comments: Comments[];
 
   @ManyToOne(() => Article, (article) => article.helpdeskTickets, {
     onDelete: "NO ACTION",

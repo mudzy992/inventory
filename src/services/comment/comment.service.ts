@@ -2,18 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentsDTO } from 'src/dtos/comments/comment.dto';
 import { NewCommentDTO } from 'src/dtos/comments/new.comment.dto';
-import { CommentHelpdeskTickets } from 'src/entities/CommentHelpdeskTickets';
 import { Comments } from 'src/entities/Comments';
+import { HelpdeskTickets } from 'src/entities/HelpdeskTickets';
 import { ApiResponse } from 'src/misc/api.response.class';
 import { Repository } from 'typeorm';
+import { sendEmail } from '../email/send.email.service';
 
 @Injectable()
 export class CommentsService {
   constructor(
     @InjectRepository(Comments)
     private commentsrepo: Repository<Comments>,
-    @InjectRepository(CommentHelpdeskTickets)
-    private comenthelpdeskrepo: Repository<CommentHelpdeskTickets>,
+    @InjectRepository(HelpdeskTickets)
+    private ticketRepo: Repository<HelpdeskTickets>,
   ) {}
 
   async getAllComments(): Promise<CommentsDTO[] | ApiResponse> {
@@ -21,13 +22,14 @@ export class CommentsService {
         relations: [
             "comments",
             "comments.user",
-            "commentHelpdeskTickets"
+            "comments.ticket",
         ]})
     const response: CommentsDTO[] = commentData.map((comment) => ({
         commentId: comment.commentId,
         text: comment.text,
         parentCommentId: comment.parentCommentId,
         createdAt: comment.createdAt,
+        ticketId: comment.ticketId,
         comments: (comment.comments || []).map((parentComment) => ({
             text: parentComment.text,
             createdAt: parentComment.createdAt,
@@ -44,21 +46,21 @@ export class CommentsService {
         const newComment: Comments = new Comments();
         newComment.text = commentDTO.text;
         newComment.userId = commentDTO.userId;
+        newComment.ticketId = commentDTO.ticketId;
+
+        const ticket = await this.ticketRepo.findOne({
+          where: {ticketId: commentDTO.ticketId},
+          relations:["user"]
+        })
+
+        const clientEmailSubject = `[#${commentDTO.ticketId}] - Traži se informacija`;
+        const clientEmailText = `Traži se informacija: ${commentDTO.text}`;
+        await sendEmail(ticket.user.email, clientEmailSubject, clientEmailText);
 
         const savedComment = await this.commentsrepo.save(newComment);
 
         if (!savedComment) {
         throw new Error('Greška prilikom spašavanja komentara');
-        }
-
-        const newCommentHelpdeskTicket: CommentHelpdeskTickets = new CommentHelpdeskTickets();
-        newCommentHelpdeskTicket.commentId = savedComment.commentId;
-        newCommentHelpdeskTicket.ticketId = commentDTO.ticketId;
-
-        const savedCommentHelpdeskTicket = await this.comenthelpdeskrepo.save(newCommentHelpdeskTicket);
-
-        if (!savedCommentHelpdeskTicket) {
-        throw new Error('Greška prilikom spašavanja veze komentara sa tiketom');
         }
           
         return await this.commentsrepo.findOne({
@@ -66,9 +68,7 @@ export class CommentsService {
             relations: [
                 'comments',
                 'comments.user',
-                'commentHelpdeskTickets',
-                'commentHelpdeskTickets.comment',
-                'commentHelpdeskTickets.ticket',
+                'comments.ticket',
             ],
         });
       } catch (error) {
@@ -83,6 +83,7 @@ export class CommentsService {
             newComment.text = commentDTO.text;
             newComment.parentCommentId = commentId;
             newComment.userId = commentDTO.userId;
+            newComment.ticketId = commentDTO.ticketId;
     
             const savedComment = await this.commentsrepo.save(newComment);
     
@@ -95,9 +96,7 @@ export class CommentsService {
                 relations: [
                     'comments',
                     'comments.user',
-                    'commentHelpdeskTickets',
-                    'commentHelpdeskTickets.comment',
-                    'commentHelpdeskTickets.ticket',
+                    'comments.ticket',
                 ],
             });
           } catch (error) {
