@@ -140,6 +140,10 @@ export class UserService extends TypeOrmCrudService<User> {
         "helpdeskTickets2.group",
         "helpdeskTickets2.groupPartent",
         "helpdeskTickets2.assignedTo2",
+        "helpdeskTickets2.comments",
+        "helpdeskTickets2.comments.user",
+        "helpdeskTickets2.comments.comments", 
+        "helpdeskTickets2.comments.comments.user",
         "articles",
         "articles.stock",
         "articles.documents",
@@ -229,8 +233,31 @@ export class UserService extends TypeOrmCrudService<User> {
           stock: ticket.article && ticket.article.stock ? {
               name: ticket.article.stock.name,
           } : null,
-        }
-
+        },
+        comments: (ticket.comments || []).map((commentItem) => ({
+          commentId: commentItem.commentId,
+          text: commentItem.text,
+          createdAt: commentItem.createdAt,
+          parentCommentId: commentItem.parentCommentId,
+          user: {
+            fullname: commentItem.user.fullname,
+            forname: commentItem.user.forname,
+            surname: commentItem.user.surname,
+            email: commentItem.user.email,
+          },
+          comments: (commentItem.comments || []).map((replies) => ({
+            commentId: replies.commentId,
+            parentCommentId: replies.parentCommentId,
+            text: replies.text,
+            createdAt: replies.createdAt,
+            user: {
+              fullname: replies.user.fullname,
+              forname: replies.user.forname,
+              surname: replies.user.surname,
+              email: replies.user.email,
+            }
+          }))
+      }))
       })),
 
     }

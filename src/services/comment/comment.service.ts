@@ -42,6 +42,7 @@ export class CommentsService {
   }
 
   async createComment(commentDTO: NewCommentDTO): Promise<Comments | ApiResponse> {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' };
     try {
         const newComment: Comments = new Comments();
         newComment.text = commentDTO.text;
@@ -53,9 +54,13 @@ export class CommentsService {
           relations:["user"]
         })
 
-        const clientEmailSubject = `[#${commentDTO.ticketId}] - Traži se informacija`;
-        const clientEmailText = `Traži se informacija: ${commentDTO.text}`;
-        await sendEmail(ticket.user.email, clientEmailSubject, clientEmailText);
+        const emailSubject = `[#${commentDTO.ticketId}] - Agent potražuje informaciju`;
+        const emailText = `
+        Poštovani, \nvezano za Vaš zahtjev [#${commentDTO.ticketId}] koji ste prijavili ${ticket.createdAt.toLocaleDateString(undefined, options)}. godine.
+        \nOpis zahtjeva: ${ticket.description}.
+
+        \nAgent potražuje informaciju: ${commentDTO.text}`;
+        await sendEmail(ticket.user.email, emailSubject, emailText);
 
         const savedComment = await this.commentsrepo.save(newComment);
 
@@ -78,12 +83,22 @@ export class CommentsService {
     }
 
     async createReply(commentId: number, commentDTO: NewCommentDTO): Promise<Comments | ApiResponse> {
+      const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+      const masterComment = await this.commentsrepo.findOne({where: { commentId: commentId}, relations:['user']})
         try {
             const newComment: Comments = new Comments();
             newComment.text = commentDTO.text;
             newComment.parentCommentId = commentId;
             newComment.userId = commentDTO.userId;
             newComment.ticketId = commentDTO.ticketId;
+
+            const emailSubject = `[#${commentDTO.ticketId}] - Odgovor na traženu informaciju`;
+            const emailText = `
+            Poštovani, \nvezano za Vaš potraživanje informacije na dan ${masterComment.createdAt.toLocaleDateString(undefined, options)}. godine.
+            \Tražena informacija: ${masterComment.text}.
+
+            \Klijent je odgovorio informaciju: ${commentDTO.text}`;
+            await sendEmail(masterComment.user.email, emailSubject, emailText);
     
             const savedComment = await this.commentsrepo.save(newComment);
     
