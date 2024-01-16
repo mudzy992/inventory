@@ -357,7 +357,11 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         "helpdeskTickets.user",
         "helpdeskTickets.group",
         "helpdeskTickets.groupPartent",
-        "helpdeskTickets.assignedTo2"
+        "helpdeskTickets.assignedTo2",
+        "helpdeskTickets.comments",
+        "helpdeskTickets.comments.user",
+        "helpdeskTickets.comments.comments", 
+        "helpdeskTickets.comments.comments.user",
       ],
     });
 
@@ -435,7 +439,31 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         },
         groupPartent: {
           groupName: item.groupPartent ? item.groupPartent.groupName : null,
-        }
+        },
+        comments: (item.comments || []).map((commentItem) => ({
+          commentId: commentItem.commentId,
+          text: commentItem.text,
+          createdAt: commentItem.createdAt,
+          parentCommentId: commentItem.parentCommentId,
+          user: {
+            fullname: commentItem.user.fullname,
+            forname: commentItem.user.forname,
+            surname: commentItem.user.surname,
+            email: commentItem.user.email,
+          },
+          comments: (commentItem.comments || []).map((replies) => ({
+            commentId: replies.commentId,
+            parentCommentId: replies.parentCommentId,
+            text: replies.text,
+            createdAt: replies.createdAt,
+            user: {
+              fullname: replies.user.fullname,
+              forname: replies.user.forname,
+              surname: replies.user.surname,
+              email: replies.user.email,
+            }
+          }))
+      }))
       }))
     }
     if (response) {
