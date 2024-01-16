@@ -173,8 +173,11 @@ export class StockService extends TypeOrmCrudService<Stock> {
 
     const response: StockDTO = {
       stockId: stock.stockId,
+      categoryId: stock.categoryId,
       name: stock.name,
       description: stock.description,
+      excerpt: stock.excerpt,
+      contract: stock.contract,
       valueAvailable: stock.valueAvailable,
       valueOnContract: stock.valueOnContract,
       sapNumber: stock.sapNumber,
