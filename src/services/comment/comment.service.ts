@@ -58,9 +58,9 @@ export class CommentsService {
         const emailText = `
         Poštovani, \nvezano za Vaš zahtjev [#${commentDTO.ticketId}] koji ste prijavili ${ticket.createdAt.toLocaleDateString(undefined, options)}. godine.
         \nOpis zahtjeva: ${ticket.description}.
-
-        \nAgent potražuje informaciju: ${commentDTO.text}`;
+        \nAgent potražuje: ${commentDTO.text}`;
         await sendEmail(ticket.user.email, emailSubject, emailText);
+        console.log(ticket.user.email)
 
         const savedComment = await this.commentsrepo.save(newComment);
 
@@ -96,10 +96,9 @@ export class CommentsService {
             const emailText = `
             Poštovani, \nvezano za Vaš potraživanje informacije na dan ${masterComment.createdAt.toLocaleDateString(undefined, options)}. godine.
             \Tražena informacija: ${masterComment.text}.
-
             \Klijent je odgovorio informaciju: ${commentDTO.text}`;
             await sendEmail(masterComment.user.email, emailSubject, emailText);
-    
+            console.log(masterComment.user.email)
             const savedComment = await this.commentsrepo.save(newComment);
     
             if (!savedComment) {
