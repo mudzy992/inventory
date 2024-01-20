@@ -1,33 +1,32 @@
+import { MailerConfig } from 'config/mailer.config';
 import * as nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp-mail.outlook.com',
-  port: 587,
-  secure: false,
+  service: "Gmail",
   auth: {
-    user: 'fixedboy@live.com',
-    pass: 'Mojalozinka!5'
-  },
-  tls: {
-    ciphers: 'SSLv3',
+    user: MailerConfig.user,
+    pass: MailerConfig.pass,
   },
 });
 
 export const sendEmail = async (to, subject, text) => {
   try {
     const mailOptions = {
-      from: 'fixedboy@live.com',
+      from: {
+        name: "Service Desk",
+        address: MailerConfig.user
+      },
       to: to,
       subject: subject,
       text: text
     };
     const result = await transporter.sendMail(mailOptions);
+    console.log(result)
     return result;
   } catch (error) {
     console.error('Error sending email:', error);
     throw error;
   }
 };
-
 
 module.exports = { sendEmail };
