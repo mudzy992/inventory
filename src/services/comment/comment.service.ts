@@ -90,14 +90,13 @@ export class CommentsService {
             newComment.parentCommentId = commentId;
             newComment.userId = commentDTO.userId;
             newComment.ticketId = commentDTO.ticketId;
-
-            const emailSubject = `[#${commentDTO.ticketId}] - Odgovor na traženu informaciju`;
+            console.log(commentDTO.ticketId)
+            const emailSubject = `[#${masterComment.ticketId}] - Odgovor na traženu informaciju`;
             const emailText = `
             Poštovani, \nvezano za Vaš potraživanje informacije na dan ${masterComment.createdAt.toLocaleDateString(undefined, options)}. godine.
             \Tražena informacija: ${masterComment.text}.
-            \Klijent je odgovorio informaciju: ${commentDTO.text}`;
+            \Klijent je odgovorio: ${commentDTO.text}`;
             await sendEmail(masterComment.user.email, emailSubject, emailText);
-            console.log(masterComment.user.email)
             const savedComment = await this.commentsrepo.save(newComment);
     
             if (!savedComment) {

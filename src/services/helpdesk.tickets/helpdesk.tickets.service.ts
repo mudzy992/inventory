@@ -161,7 +161,9 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
       },
       group: ticket.group,
       groupPartent: ticket.groupPartent,
-      comments: (ticket.comments || []).map((commentItem) => ({
+      comments: (ticket.comments || [])
+      .filter((commentItem) => commentItem.parentCommentId === null)
+      .map((commentItem) => ({
           commentId: commentItem.commentId,
           text: commentItem.text,
           createdAt: commentItem.createdAt,
