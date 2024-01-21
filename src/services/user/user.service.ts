@@ -234,7 +234,9 @@ export class UserService extends TypeOrmCrudService<User> {
               name: ticket.article.stock.name,
           } : null,
         },
-        comments: (ticket.comments || []).map((commentItem) => ({
+        comments: (ticket.comments || [])
+        .filter((commentItem) => commentItem.parentCommentId === null)
+        .map((commentItem) => ({
           commentId: commentItem.commentId,
           text: commentItem.text,
           createdAt: commentItem.createdAt,
