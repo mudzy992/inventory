@@ -60,7 +60,6 @@ export class CommentsService {
         \nOpis zahtjeva: ${ticket.description}.
         \nAgent potražuje: ${commentDTO.text}`;
         await sendEmail(ticket.user.email, emailSubject, emailText);
-        console.log(ticket.user.email)
 
         const savedComment = await this.commentsrepo.save(newComment);
 

@@ -55,7 +55,6 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
         \nŽeljeni rok:${savedTicket.clientDuoDate.toLocaleDateString(undefined, options)}
         \n\nOpis: ${savedTicket.description}`;
         const adminEmails = savedTicket.group.moderatorGroupMappings.map(admin => admin.user.email);
-        console.log(adminEmails)
         await Promise.all(adminEmails.map(email => sendEmail(email, groupEmailSubject, groupEmailText)));
         const response = new ApiResponse('success', -11000, 'Ticket added successfully.');
         return savedTicket
