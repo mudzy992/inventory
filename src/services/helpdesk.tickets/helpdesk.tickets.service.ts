@@ -87,7 +87,7 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
       if(editTicketDto.status === 'zatvoren'){
         const clientEmailSubject = `[#${ticketId}] Vaš tiket je završen`;
         const clientEmailText = `Vaš tiket (ID: ${ticketId}) je uspješno završen. Hvala što ste nas kontaktirali!\n
-        \n\nRješenje zahtjeva: ${editTicketDto.resolveDescription}`;
+        Rješenje zahtjeva: ${editTicketDto.resolveDescription}`;
         await sendEmail(existingTicket.user.email, clientEmailSubject, clientEmailText);
       }
       return new ApiResponse('success', -11003, 'Ticket edited successfully.');
