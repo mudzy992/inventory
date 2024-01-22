@@ -228,6 +228,7 @@ export class UserService extends TypeOrmCrudService<User> {
           groupName: ticket.groupPartent ? ticket.groupPartent.groupName : null,
         },
         article: {
+          articleId: ticket.article ? ticket.article.articleId : null,
           invNumber: ticket.article ? ticket.article.invNumber : null,
           serialNumber: ticket.article ? ticket.article.serialNumber : null,
           stock: ticket.article && ticket.article.stock ? {
