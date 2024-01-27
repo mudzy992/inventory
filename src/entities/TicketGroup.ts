@@ -50,7 +50,7 @@ export class TicketGroup {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })
-  @JoinColumn([{ name: "parent_group_id", referencedColumnName: "parentGroupId" }])
+  @JoinColumn([{ name: "parent_group_id", referencedColumnName: "groupId" }])
   parentGroup: TicketGroup;
 
   @OneToMany(() => TicketGroup, (ticketGroup) => ticketGroup.parentGroup)
