@@ -228,13 +228,16 @@ export class UserService extends TypeOrmCrudService<User> {
           groupName: ticket.groupPartent ? ticket.groupPartent.groupName : null,
         },
         article: {
+          articleId: ticket.article ? ticket.article.articleId : null,
           invNumber: ticket.article ? ticket.article.invNumber : null,
           serialNumber: ticket.article ? ticket.article.serialNumber : null,
           stock: ticket.article && ticket.article.stock ? {
               name: ticket.article.stock.name,
           } : null,
         },
-        comments: (ticket.comments || []).map((commentItem) => ({
+        comments: (ticket.comments || [])
+        .filter((commentItem) => commentItem.parentCommentId === null)
+        .map((commentItem) => ({
           commentId: commentItem.commentId,
           text: commentItem.text,
           createdAt: commentItem.createdAt,

@@ -64,7 +64,7 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
   }
 
   async editTicket(ticketId: number, editTicketDto: EdiTicketDto): Promise<ApiResponse> {
-    const existingTicket = await this.helpDeskTickets.findOne({where: {ticketId: ticketId}});
+    const existingTicket = await this.helpDeskTickets.findOne({where: {ticketId: ticketId}, relations:["user"]});
   
     if (!existingTicket) {
       return new ApiResponse('error', -11002, 'Ticket not found.');
@@ -84,6 +84,12 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
   
     try {
       await this.helpDeskTickets.save(existingTicket);
+      if(editTicketDto.status === 'zatvoren'){
+        const clientEmailSubject = `[#${ticketId}] Vaš tiket je završen`;
+        const clientEmailText = `Vaš tiket (ID: ${ticketId}) je uspješno završen. Hvala što ste nas kontaktirali!\n
+        Rješenje zahtjeva: ${editTicketDto.resolveDescription}`;
+        await sendEmail(existingTicket.user.email, clientEmailSubject, clientEmailText);
+      }
       return new ApiResponse('success', -11003, 'Ticket edited successfully.');
     } catch (error) {
       return new ApiResponse('error', -11004, 'Failed to edit ticket.' + error);
@@ -161,7 +167,9 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
       },
       group: ticket.group,
       groupPartent: ticket.groupPartent,
-      comments: (ticket.comments || []).map((commentItem) => ({
+      comments: (ticket.comments || [])
+      .filter((commentItem) => commentItem.parentCommentId === null)
+      .map((commentItem) => ({
           commentId: commentItem.commentId,
           text: commentItem.text,
           createdAt: commentItem.createdAt,
