@@ -21,10 +21,10 @@ import { ModeratorGroupMappingService } from "src/services/moderator.group.mappi
   },
   query: {
     join: {
-        group: {
+      group: {
         eager: true,
       },
-        user: {
+      user: {
         eager: true,
       },
     },
@@ -32,7 +32,7 @@ import { ModeratorGroupMappingService } from "src/services/moderator.group.mappi
 })
 export class ModeratorGroupMappingController {
   constructor(public service: ModeratorGroupMappingService) {}
-  
+
   @Get()
   @UseGuards(RoleCheckedGuard)
   @AllowToRoles("administrator", "moderator")

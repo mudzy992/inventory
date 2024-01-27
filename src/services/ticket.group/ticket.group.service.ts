@@ -18,14 +18,37 @@ export class TicketGroupService extends TypeOrmCrudService<TicketGroup> {
     super(ticketGroup);
   }
 
-  async getAllGroups(): Promise<TicketGroup[] | ApiResponse> {
-    const groups = await this.ticketGroup.find()
+  async getAllGroups(): Promise<TicketGroupDTO[] | ApiResponse> {
+    const groups = await this.ticketGroup.find({relations:["location", "ticketGroups", "ticketGroups.location", "moderatorGroupMappings", "moderatorGroupMappings.user"]})
 
-    if(!groups) {
+    const response: TicketGroupDTO[] = groups.map((group) => ({
+      groupId: group.groupId,
+      groupName: group.groupName,
+      location: group.location,
+      parentGroupId: group.parentGroupId,
+      ticketGroups: (group.ticketGroups || []).map((parent) => ({
+        groupId: parent.groupId,
+        parentGroupId: parent.parentGroupId,
+        groupName: parent.groupName,
+        location: parent.location,
+      })),
+      moderatorGroupMappings: (group.moderatorGroupMappings || []).map((moderator) => ({
+        mappingId: moderator.mappingId,
+        userId: moderator.userId,
+        groupId: moderator.groupId,
+        user: {
+          userId: moderator.user.userId,
+          fullname: moderator.user.fullname,
+          email: moderator.user.email,
+        }
+      }))
+    }))
+
+    if(!response) {
       return new ApiResponse('error', -11002, 'Groups not found.');
     }
 
-    return groups
+    return response
   }
 
   async getGroupByParentGroupId(groupId: number): Promise<TicketGroup[] | ApiResponse> {

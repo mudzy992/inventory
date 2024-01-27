@@ -53,7 +53,7 @@ export class TicketGroupController {
   @Get()
   @UseGuards(RoleCheckedGuard)
   @AllowToRoles("administrator", "moderator", "user")
-  async getAllGroups(): Promise<TicketGroup[] | ApiResponse> {
+  async getAllGroups(): Promise<TicketGroupDTO[] | ApiResponse> {
     return await this.service.getAllGroups();
   }
   
