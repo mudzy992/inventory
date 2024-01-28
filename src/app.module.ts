@@ -91,6 +91,10 @@ import { Comments } from "./entities/Comments";
         TicketGroup,
         Comments,
       ],
+      extra:{
+        connectionLimit: 10,
+        connectTimeout: 5000,
+      }
     }),
     TypeOrmModule.forFeature([
       Article,
