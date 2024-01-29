@@ -41,8 +41,8 @@ export class ArticleTimelineService extends TypeOrmCrudService<ArticleTimeline> 
         fullname: articleTimlineData.user.fullname,
       },
       subbmited: {
-        gender: articleTimlineData.user.gender,
-        fullname: articleTimlineData.user.fullname,
+        gender: articleTimlineData.subbmited.gender,
+        fullname: articleTimlineData.subbmited.fullname,
       },
       article: {
         stock: {
