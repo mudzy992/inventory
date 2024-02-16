@@ -33,7 +33,6 @@ import { ArticleService } from "src/services/article/article.service";
     join: {
       user: {
         eager: true,
-        exclude: ["passwordHash"],
       },
       stock: {
         eager: true,
@@ -41,13 +40,13 @@ import { ArticleService } from "src/services/article/article.service";
       category: {
         eager: true,
       },
-      stockFeatures: {
-        eager: true,
-      },
       articleTimelines: {
         eager: true,
       },
       documents: {
+        eager: true,
+      },
+      helpdeskTickets: {
         eager: false,
       },
       upgradeFeatures: {
@@ -67,6 +66,13 @@ export class ArticleController {
     @Body() data: AddArticleDto
   ): Promise<Article | ApiResponse> {
     return await this.service.addNewArticle(id, data);
+  }
+
+  @Get()
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator", "moderator")
+  async getAllStocks(): Promise<Article[] | ApiResponse> {
+    return this.service.getAllArticles();
   }
 
   /* Ovoj ruti imaju pristup svi i obični korisnik, administrator, moderator */
