@@ -54,8 +54,13 @@ export class UserController {
   }
 
   @Get(":id")
-  async getStockById(@Param("id") userId: number): Promise<UserDTO | ApiResponse> {
+  async getByUserId(@Param("id") userId: number): Promise<UserDTO | ApiResponse> {
     return this.service.getById(userId);
+  }
+
+  @Get("/:id/mainmenu")
+  async getByUserIdMainMenu(@Param("id") userId: number): Promise<UserDTO | ApiResponse> {
+    return this.service.getByUserIdForMainMenu(userId);
   }
 
   @Post("/add/")

@@ -267,6 +267,21 @@ export class UserService extends TypeOrmCrudService<User> {
     return response
   }
 
+  async getByUserIdForMainMenu(id:number): Promise<UserDTO | ApiResponse> {
+    const userData = await this.user.findOne({
+      where: { userId: id },
+    });
+
+    const response: UserDTO = {
+      userId: userData.userId,
+      forname: userData.forname,
+      surname: userData.surname,
+      fullname: userData.fullname,
+      gender: userData.gender
+    }
+    return response
+  }
+
   async getByEmail(email: string): Promise<User | null> {
     const user = await this.user.findOne({
       where: {

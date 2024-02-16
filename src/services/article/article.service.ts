@@ -39,6 +39,26 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     super(article);
   }
 
+  async getAllArticles(): Promise<Article[] | ApiResponse> {
+    const articles = await this.article.find({
+      relations: [
+        "stock",
+        "category",
+        "category.features",
+        "category.features.stockFeatures",
+      ],
+    });
+    if (!articles) {
+      return new ApiResponse(
+        "error",
+        -1005,
+        "Lista artikala nije pronađena. Moguće da ne postoji na skladištu."
+      );
+    }
+
+    return articles;
+  }
+
   async getByUserId(userId: number): Promise<ArticleDTO[] | null> {
     const article = await this.article.find({
       where: {
