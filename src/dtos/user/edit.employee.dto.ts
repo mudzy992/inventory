@@ -36,6 +36,9 @@ export class EditEmployeeDto {
   @Validator.IsNumber()
   locationId?: number;
 
+  @Validator.IsNumber()
+  organizationId?: number;
+
   @Validator.IsNotEmpty()
   @Validator.IsString()
   @Validator.Length(6, 12)

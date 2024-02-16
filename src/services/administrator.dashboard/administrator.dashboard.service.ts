@@ -19,7 +19,7 @@ export class AdministratorDashboardService {
   /* Articles */
   async getAllArticles(): Promise<Article[]> {
     const articles = await this.article.find({
-      relations: ["stock", "user", "category"],
+      relations: ["stock", "user", "category", "user.organization"],
     });
 
     return articles;
@@ -47,6 +47,7 @@ export class AdministratorDashboardService {
       .createQueryBuilder("article")
       .leftJoinAndSelect("article.stock", "stock")
       .leftJoinAndSelect("article.user", "user")
+      .leftJoinAndSelect("user.organization", "organization")
       .leftJoinAndSelect("article.category", "category")
       .where((qb) => {
         if (query) {
@@ -62,6 +63,9 @@ export class AdministratorDashboardService {
                 query: `%${query}%`,
               });
               qb.orWhere("LOWER(stock.name) LIKE LOWER(:query)", {
+                query: `%${query}%`,
+              });
+              qb.orWhere("LOWER(organization.name) LIKE LOWER(:query)", {
                 query: `%${query}%`,
               });
             })

@@ -59,6 +59,9 @@ import { ModeratorGroupMappingService } from "./services/moderator.group.mapping
 import { CommentsService } from "./services/comment/comment.service";
 import { CommentsController } from "./controllers/api/comment.controller";
 import { Comments } from "./entities/Comments";
+import { Organization } from "./entities/Organization";
+import { OrganizationService } from "./services/organization/organization.service";
+import { OrganizationController } from "./controllers/api/organization.controller";
 
 @Module({
   imports: [
@@ -90,6 +93,7 @@ import { Comments } from "./entities/Comments";
         ModeratorGroupMapping,
         TicketGroup,
         Comments,
+        Organization
       ],
       extra:{
         connectionLimit: 10,
@@ -116,6 +120,7 @@ import { Comments } from "./entities/Comments";
       ModeratorGroupMapping,
       TicketGroup,
       Comments,
+      Organization
     ]),
   ],
   controllers: [
@@ -139,6 +144,7 @@ import { Comments } from "./entities/Comments";
     TicketGroupController,
     ModeratorGroupMappingController,
     CommentsController,
+    OrganizationController
   ],
   providers: [
     ArticleService,
@@ -159,6 +165,7 @@ import { Comments } from "./entities/Comments";
     TicketGroupService,
     ModeratorGroupMappingService,
     CommentsService,
+    OrganizationService
   ],
   exports: [
     // zbog middleware potrebno je exportovati servis
