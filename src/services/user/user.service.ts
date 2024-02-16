@@ -29,6 +29,7 @@ export class UserService extends TypeOrmCrudService<User> {
         "department",
         "job",
         "location",
+        "organization",
         "location.parentLocation"
       ]
       })
@@ -40,6 +41,9 @@ export class UserService extends TypeOrmCrudService<User> {
         },
         job: {
           title: user.job.title,
+        },
+        organization: {
+          name: user.organization.name,
         },
         location: {
           name: user.location.name,
@@ -76,6 +80,7 @@ export class UserService extends TypeOrmCrudService<User> {
     newUser.departmentId = data.departmentId;
     newUser.jobId = data.jobId;
     newUser.locationId = data.locationId;
+    newUser.organizationId = data.organizationId;
     newUser.status = data.status;
     newUser.code = data.code;
     newUser.gender = data.gender;
@@ -113,6 +118,7 @@ export class UserService extends TypeOrmCrudService<User> {
     existingUser.jobId = data.jobId;
     existingUser.departmentId = data.departmentId;
     existingUser.locationId = data.locationId;
+    existingUser.organizationId = data.organizationId;
     existingUser.status = data.status;
     existingUser.code = data.code;
     existingUser.gender = data.gender;
@@ -130,6 +136,7 @@ export class UserService extends TypeOrmCrudService<User> {
         "department",
         "job",
         "location",
+        "organization",
         "helpdeskTickets",
         "helpdeskTickets.group",
         "helpdeskTickets.groupPartent",
@@ -171,6 +178,8 @@ export class UserService extends TypeOrmCrudService<User> {
       location: {
         name: userData.location.name,
       },
+      organizationId: userData.organizationId,
+      organization: userData.organization,
       status: userData.status,
       code: userData.code,
       gender: userData.gender,

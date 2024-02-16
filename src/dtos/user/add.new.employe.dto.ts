@@ -33,6 +33,9 @@ export class AddNewEmployeDto {
   jobId: number;
 
   @Validator.IsNumber()
+  organizationId: number;
+
+  @Validator.IsNumber()
   locationId: number;
 
   @Validator.IsNotEmpty()

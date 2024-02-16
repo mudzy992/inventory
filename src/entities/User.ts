@@ -9,20 +9,22 @@ import {
 } from "typeorm";
 import { Article } from "./Article";
 import { ArticleTimeline } from "./ArticleTimeline";
+import { Comments } from "./Comments";
+import { HelpdeskTickets } from "./HelpdeskTickets";
+import { ModeratorGroupMapping } from "./ModeratorGroupMapping";
+import { UserRole } from "./UserRole";
 import { Job } from "./Job";
 import { Department } from "./Department";
 import { Location } from "./Location";
+import { Organization } from "./Organization";
 import { UserToken } from "./UserToken";
-import { UserRole } from "./UserRole";
-import { HelpdeskTickets } from "./HelpdeskTickets";
-import { ModeratorGroupMapping } from "./ModeratorGroupMapping";
-import { Comments } from "./Comments";
 
-@Index("job_id", ["jobId"], {})
 @Index("department_id", ["departmentId"], {})
-@Index("location_id", ["locationId"], {})
 @Index("FK_user_user_role", ["roleId"], {})
-@Entity("user", { schema: "inventory_test" })
+@Index("job_id", ["jobId"], {})
+@Index("location_id", ["locationId"], {})
+@Index("user_ibfk_4", ["organizationId"], {})
+@Entity("user", { schema: "inventory_v2" })
 export class User {
   @PrimaryGeneratedColumn({ type: "int", name: "user_id" })
   userId: number;
@@ -45,7 +47,7 @@ export class User {
   @Column("varchar", { name: "email", nullable: true, length: 255 })
   email: string | null;
 
-  @Column("varchar", { name: "password_hash", length: 255}, )
+  @Column("varchar", { name: "password_hash", length: 255 })
   passwordHash: string;
 
   @Column("int", { name: "job_id" })
@@ -64,7 +66,7 @@ export class User {
   })
   registrationDate: Date | null;
 
-  @Column("bigint", { name: "last_login_date", nullable: true })
+  @Column("timestamp", { name: "last_login_date", nullable: true })
   lastLoginDate: string | null;
 
   @Column("enum", {
@@ -88,15 +90,8 @@ export class User {
   @Column("int", { name: "role_id", default: () => "'1'" })
   roleId: number;
 
-  @OneToMany(() => Comments, (comments) => comments.user)
-  comments: Comments[];
-
-  @ManyToOne(() => UserRole, (userRole) => userRole.users, {
-    onDelete: "NO ACTION",
-    onUpdate: "NO ACTION",
-  })
-  @JoinColumn([{ name: "role_id", referencedColumnName: "roleId" }])
-  role: UserRole;
+  @Column("int", { name: "organization_id", nullable: true })
+  organizationId: number | null;
 
   @OneToMany(() => Article, (article) => article.user)
   articles: Article[];
@@ -109,6 +104,9 @@ export class User {
     (articleTimeline) => articleTimeline.subbmited
   )
   articleTimelines2: ArticleTimeline[];
+
+  @OneToMany(() => Comments, (comments) => comments.user)
+  comments: Comments[];
 
   @OneToMany(
     () => HelpdeskTickets,
@@ -124,6 +122,13 @@ export class User {
     (moderatorGroupMapping) => moderatorGroupMapping.user
   )
   moderatorGroupMappings: ModeratorGroupMapping[];
+
+  @ManyToOne(() => UserRole, (userRole) => userRole.users, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
+  @JoinColumn([{ name: "role_id", referencedColumnName: "roleId" }])
+  role: UserRole;
 
   @ManyToOne(() => Job, (job) => job.users, {
     onDelete: "NO ACTION",
@@ -145,6 +150,15 @@ export class User {
   })
   @JoinColumn([{ name: "location_id", referencedColumnName: "locationId" }])
   location: Location;
+
+  @ManyToOne(() => Organization, (organization) => organization.users, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
+  @JoinColumn([
+    { name: "organization_id", referencedColumnName: "organizationId" },
+  ])
+  organization: Organization;
 
   @OneToMany(() => UserToken, (userToken) => userToken.user)
   userTokens: UserToken[];

@@ -8,6 +8,7 @@ import { JobDTO } from "../job/job.dto";
 import { ArticleDTO } from "../article/article.dto";
 import { HelpdeskTicketsDTO } from "../helpdesk.tickets/helpdesk.tickets.dto";
 import { CommentsDTO } from "../comments/comment.dto";
+import { OrganizationDTO } from "../organization/organization.dto";
 
 // user.dto.ts
 export class UserDTO {
@@ -21,6 +22,7 @@ export class UserDTO {
   jobId?: number;
   departmentId?: number;
   locationId?: number;
+  organizationId?: number;
   registrationDate?: Date | null;
   lastLoginDate?: string | null;
   status?: "aktivan" | "neaktivan";
@@ -38,6 +40,7 @@ export class UserDTO {
   job?: Partial<JobDTO>;
   department?: Partial<DepartmentDTO>;
   location?: Partial<LocationDTO>;
+  organization?: Partial<OrganizationDTO>;
   userTokens?: Partial<UserToken>[];
   comments?: Partial<CommentsDTO>[];
 }
