@@ -363,6 +363,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         "user.job",
         "user.department",
         "user.location",
+        "user.organization",
         "stock",
         "category",
         "category.group",
@@ -405,6 +406,9 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         surname: articleData.user.surname,
         forname: articleData.user.forname,
         email: articleData.user.email,
+        organization: {
+          name: articleData.user.organization.name,
+        },
         department: {
           title: articleData.user.department.title,
         },
@@ -421,6 +425,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         valueOnContract: articleData.stock.valueOnContract,
         valueAvailable: articleData.stock.valueAvailable,
         sapNumber: articleData.stock.sapNumber,
+        contract: articleData.stock.contract,
         timestamp: articleData.stock.timestamp,
         stockFeatures: articleData.stock.stockFeatures.map((item) => ({
           value: item.value,
