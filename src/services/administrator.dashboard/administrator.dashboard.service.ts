@@ -19,7 +19,7 @@ export class AdministratorDashboardService {
   /* Articles */
   async getAllArticles(): Promise<Article[]> {
     const articles = await this.article.find({
-      relations: ["stock", "user", "category", "user.organization"],
+      relations: ["stock", "user", "category", "upgradeFeatures", "user.organization"],
     });
 
     return articles;
@@ -46,6 +46,7 @@ export class AdministratorDashboardService {
     const resultsQuery = this.article
       .createQueryBuilder("article")
       .leftJoinAndSelect("article.stock", "stock")
+      .leftJoinAndSelect("article.upgradeFeatures", "upgradeFeatures")
       .leftJoinAndSelect("article.user", "user")
       .leftJoinAndSelect("user.organization", "organization")
       .leftJoinAndSelect("article.category", "category")
