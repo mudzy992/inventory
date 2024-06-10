@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
 import { Documents } from "src/entities/Documents";
-import { Brackets, Repository } from "typeorm";
+import { Brackets, IsNull, Repository } from "typeorm";
 import * as fs from "fs/promises";
 import * as path from "path";
 import multer from "multer";
@@ -134,5 +134,22 @@ export class DocumentService extends TypeOrmCrudService<Documents> {
       results,
       total: totalResults,
     };
+  }
+
+  async getUnsignedDocuments(): Promise<[Documents[], number]> {
+    const documents = await this.document.findAndCount({
+      where: { signed_path: IsNull() },
+      relations: [
+        "articleTimelines",
+        "articleTimelines.user",
+        "articleTimelines.subbmited",
+        "article",
+        "article.stock",
+        "article.user",
+        "article.category",
+      ],
+    });
+
+    return documents;
   }
 }
