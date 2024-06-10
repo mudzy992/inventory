@@ -86,4 +86,11 @@ export class DocumentController {
     const offset = (page - 1) * perPage;
     return this.service.documentSearchPagination(perPage, offset, query);
   }
+
+  @Get("unsigned")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator")
+  getUnsignedDocuments(): Promise<[Documents[], number]> {
+    return this.service.getUnsignedDocuments();
+  }
 }
