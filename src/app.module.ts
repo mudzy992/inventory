@@ -62,6 +62,18 @@ import { Comments } from "./entities/Comments";
 import { Organization } from "./entities/Organization";
 import { OrganizationService } from "./services/organization/organization.service";
 import { OrganizationController } from "./controllers/api/organization.controller";
+import { PrinterOid } from "./entities/PrinterOid";
+import { Printers } from "./entities/Printers";
+import { Oids } from "./entities/Oids";
+import { SnmpController } from "./controllers/api/snmp.controller";
+import { SnmpService } from "./services/snmp/snmp.service";
+import { Invoices } from "./entities/Invoices";
+import { InvoiceController } from "./controllers/api/invoice.controller";
+import { InvoiceService } from "./services/invoice/invoice.service";
+import { PagePrices } from "./entities/PagePrices";
+import { RentType } from "./entities/RentType";
+import { PrinterOidController } from "./controllers/api/printer.oid.controller";
+import { PrinterOidService } from "./services/printerOid/printer.oid.service";
 
 @Module({
   imports: [
@@ -93,7 +105,13 @@ import { OrganizationController } from "./controllers/api/organization.controlle
         ModeratorGroupMapping,
         TicketGroup,
         Comments,
-        Organization
+        Organization,
+        PrinterOid,
+        Printers,
+        Oids,
+        Invoices,
+        PagePrices,
+        RentType,
       ],
       extra:{
         connectionLimit: 10,
@@ -120,7 +138,13 @@ import { OrganizationController } from "./controllers/api/organization.controlle
       ModeratorGroupMapping,
       TicketGroup,
       Comments,
-      Organization
+      Organization,
+      PrinterOid,
+      Printers,
+      Oids,
+      Invoices,
+      PagePrices,
+      RentType,
     ]),
   ],
   controllers: [
@@ -144,7 +168,10 @@ import { OrganizationController } from "./controllers/api/organization.controlle
     TicketGroupController,
     ModeratorGroupMappingController,
     CommentsController,
-    OrganizationController
+    OrganizationController,
+    SnmpController,
+    InvoiceController,
+    PrinterOidController,
   ],
   providers: [
     ArticleService,
@@ -165,7 +192,10 @@ import { OrganizationController } from "./controllers/api/organization.controlle
     TicketGroupService,
     ModeratorGroupMappingService,
     CommentsService,
-    OrganizationService
+    OrganizationService,
+    SnmpService,
+    InvoiceService,
+    PrinterOidService
   ],
   exports: [
     // zbog middleware potrebno je exportovati servis
