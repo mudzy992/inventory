@@ -51,4 +51,11 @@ export class SnmpController {
   async updatePrinterData(@Param('id') id: number, @Body() updateData: any) {
     return await this.snmpService.updatePrinterData(id, updateData);
   }
+
+  @Put(':invoiceId/update')
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles('administrator', 'moderator')
+  async updateInvoiceData(@Param('invoiceId') invoiceId: number) {
+    return await this.snmpService.syncOidValues(invoiceId);
+  }
 }
