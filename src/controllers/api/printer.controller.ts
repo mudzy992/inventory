@@ -3,33 +3,11 @@ import { Crud } from '@nestjsx/crud';
 import { PrinterOid } from 'src/entities/PrinterOid';
 import { AllowToRoles } from 'src/misc/allow.to.roles.descriptor';
 import { RoleCheckedGuard } from 'src/misc/role.checker.guard';
-import { SnmpService } from 'src/services/snmp/snmp.service';
+import { PrinterService } from 'src/services/printer.service/printer.service';
 
-@Controller('api/snmp')
-@Crud({
-  model: {
-    type: PrinterOid,
-  },
-  params: {
-    id: {
-      field: 'printerOidId',
-      type: 'number',
-      primary: true,
-    },
-  },
-  query: {
-    join: {
-      printer: {
-        eager: true,
-      },
-      oid: {
-        eager: true,
-      },
-    },
-  },
-})
-export class SnmpController {
-  constructor(private readonly snmpService: SnmpService) {}
+@Controller('api/printer')
+export class PrinterController {
+  constructor(private readonly snmpService: PrinterService) {}
 
   @Get()
   @UseGuards(RoleCheckedGuard)

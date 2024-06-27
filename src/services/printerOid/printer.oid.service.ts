@@ -1,10 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
-import { UpgradeFeatureDTO } from "src/dtos/upgradeFeature/upgrade.feature.dto";
 import { PrinterOid } from "src/entities/PrinterOid";
-import { UpgradeFeature } from "src/entities/UpgradeFeature";
-import { ApiResponse } from "src/misc/api.response.class";
 import { Repository } from "typeorm";
 
 @Injectable()
