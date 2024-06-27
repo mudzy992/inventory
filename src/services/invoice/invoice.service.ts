@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Article } from 'src/entities/Article';
 import { PrinterDTO } from 'src/dtos/invoice/printer.dto';
 import { Invoices } from 'src/entities/Invoices';
 import { PagePrices } from 'src/entities/PagePrices';
 import { PrinterOid } from 'src/entities/PrinterOid';
-import { Printers } from 'src/entities/Printers';
 import { LessThan, Repository } from 'typeorm'
 
 @Injectable()
@@ -14,8 +14,8 @@ export class InvoiceService {
     private readonly invoiceRepository: Repository<Invoices>,
     @InjectRepository(PrinterOid)
     private readonly printerOidRepository: Repository<PrinterOid>,
-    @InjectRepository(Printers)
-    private readonly printersRepository: Repository<Printers>,
+    @InjectRepository(Article)
+    private readonly printersRepository: Repository<Article>,
     @InjectRepository(PagePrices)
     private readonly pagePricesRepository: Repository<PagePrices>,
   ) {}
@@ -50,19 +50,19 @@ export class InvoiceService {
         where: { invoiceId: lastExecutionInvoiceId }
       });
 
-      const printerIds = [...new Set(printerOids.map(oid => oid.printerId))];
+      const articleIds = [...new Set(printerOids.map(oid => oid.articleId))];
 
       // 4. Dodaj sve nove OID vrijednosti za trenutnu fakturu
-      const printerData = await Promise.all(printerIds.map(async (printerId) => {
+      const printerData = await Promise.all(articleIds.map(async (articleId) => {
         const currentOids = await this.printerOidRepository.find({
-          where: { printerId, invoiceId: lastExecutionInvoiceId }
+          where: { articleId, invoiceId: lastExecutionInvoiceId }
         });
         
         const previousOids = await this.printerOidRepository.find({
-          where: { printerId, invoiceId: lastPaidInvoiceId }
+          where: { articleId, invoiceId: lastPaidInvoiceId }
         });
 
-        const printerInfo = { printerId, newValues: {}, prevValues: {} };
+        const printerInfo = { articleId, newValues: {}, prevValues: {} };
 
         currentOids.forEach(oid => {
           if ([26, 27, 28, 29].includes(oid.oidId)) {
@@ -104,20 +104,32 @@ export class InvoiceService {
 
       
 
-      const activatedPrinters = await this.printersRepository.find({
-        where: { status: 'activated' },
-        relations: ['rentalType2'],
-      });
+      const activatedPrinters = await this.printersRepository.find(
+        {
+            relations:["articleFeatures","articleFeatures.feature", "stock"], 
+            where:{
+                categoryId: 11,
+            },
+        });
 
-      let totalRentPrice = 0;
-        for (const printer of activatedPrinters) {
-            totalRentPrice += printer.rentalType2.price || 0;
-        }
-        const totalAmount = totalRentPrice + totalPrintAmount;
+        let totalRentPrice = 0;
+        const filteredPrinters = activatedPrinters.filter(printer => 
+          printer.articleFeatures.some(af => af.featureValue === "activated")
+        );
+        for (const printer of filteredPrinters) {
+          const featureValues = printer.articleFeatures
+              .filter(af => af.feature.featureId === 101) 
+              .map(af => parseFloat(af.featureValue) || 0); 
+      
+          totalRentPrice += featureValues.reduce((acc, val) => acc + val, 0); 
+          console.log(totalRentPrice)
+      }
 
-        lastExecutionInvoice.rentPrice = totalRentPrice.toString();
-        lastExecutionInvoice.totalAmount = totalAmount.toString();
-        await this.invoiceRepository.save(lastExecutionInvoice);
+      const totalAmount = totalRentPrice + totalPrintAmount;
+
+      lastExecutionInvoice.rentPrice = totalRentPrice.toString();
+      lastExecutionInvoice.totalAmount = totalAmount.toString();
+      await this.invoiceRepository.save(lastExecutionInvoice);
 
       return { message: 'Obračun fakture uspješno izvršen.' };
     } catch (error) {
@@ -129,7 +141,7 @@ export class InvoiceService {
   async getPrintersForInvoice(invoiceId: number): Promise<PrinterDTO[]> {
     const invoice = await this.invoiceRepository.findOne({
       where: { invoiceId: invoiceId },
-      relations: ['printerOs', 'printerOs.printer', 'printerOs.printer.rentalType2'],
+      relations: ['printerOs', 'printerOs.article.stock', 'printerOs.article.user', 'printerOs.article', 'printerOs.article.articleFeatures'],
     });
   
     if (!invoice) {
@@ -139,12 +151,12 @@ export class InvoiceService {
     const printerMap = new Map<number, PrinterDTO>();
   
     for (const printerOid of invoice.printerOs) {
-      const printer = printerOid.printer;
+      const printer = printerOid.article;
   
-      if (printerMap.has(printer.printerId)) continue;
+      if (printerMap.has(printer.articleId)) continue;
   
       const currentOids = await this.printerOidRepository.find({
-        where: { invoice: { invoiceId: invoiceId }, printer: { printerId: printer.printerId } },
+        where: { invoice: { invoiceId: invoiceId }, article: { articleId: printer.articleId } },
       });
   
       const previousInvoice = await this.invoiceRepository.findOne({
@@ -157,20 +169,15 @@ export class InvoiceService {
   
       const previousOids = previousInvoice
         ? await this.printerOidRepository.find({
-            where: { invoice: { invoiceId: previousInvoice.invoiceId }, printer: { printerId: printer.printerId } },
+            where: { invoice: { invoiceId: previousInvoice.invoiceId }, article: { articleId: printer.articleId } },
           })
         : [];
   
       const dto = new PrinterDTO();
-      dto.printerId = printer.printerId;
-      dto.userCode = printer.userCode;
-      dto.connection = printer.connection;
-      dto.printerType = printer.printerType;
+      dto.printerId = printer.articleId;
+      dto.printerType = printer.stock.name;
       dto.serialNumber = printer.serialNumber;
-      dto.activity = printer.activity;
-      dto.rentalType = printer.rentalType2.name;
-      dto.ownership = printer.ownership;
-      dto.status = printer.status;
+      dto.ownership = printer.user.fullname;
   
       dto.counters = {
         oid27: this.getCounterData(currentOids, previousOids, 27),
@@ -178,7 +185,7 @@ export class InvoiceService {
         oid29: this.getCounterData(currentOids, previousOids, 29),
       };
   
-      printerMap.set(printer.printerId, dto);
+      printerMap.set(printer.articleId, dto);
     }
   
     return Array.from(printerMap.values());

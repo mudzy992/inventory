@@ -7,6 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { ArticleFeatures } from "./ArticleFeatures";
 import { Category } from "./Category";
 import { StockFeature } from "./StockFeature";
 
@@ -21,6 +22,12 @@ export class Feature {
 
   @Column("int", { name: "category_id" })
   categoryId: number;
+
+  @OneToMany(
+    () => ArticleFeatures,
+    (articleFeatures) => articleFeatures.feature
+  )
+  articleFeatures: ArticleFeatures[];
 
   @ManyToOne(() => Category, (category) => category.features, {
     onDelete: "NO ACTION",

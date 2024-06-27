@@ -372,6 +372,8 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         "articleTimelines",
         "articleTimelines.document",
         "articleTimelines.user",
+        "articleFeatures",
+        "articleFeatures.feature",
         "documents",
         "upgradeFeatures",
         "helpdeskTickets",
