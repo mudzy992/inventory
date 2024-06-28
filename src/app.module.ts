@@ -63,17 +63,21 @@ import { Organization } from "./entities/Organization";
 import { OrganizationService } from "./services/organization/organization.service";
 import { OrganizationController } from "./controllers/api/organization.controller";
 import { PrinterOid } from "./entities/PrinterOid";
-import { Printers } from "./entities/Printers";
 import { Oids } from "./entities/Oids";
 import { SnmpController } from "./controllers/api/snmp.controller";
 import { SnmpService } from "./services/snmp/snmp.service";
 import { Invoices } from "./entities/Invoices";
-import { InvoiceController } from "./controllers/api/invoice.controller";
 import { InvoiceService } from "./services/invoice/invoice.service";
-import { PagePrices } from "./entities/PagePrices";
-import { RentType } from "./entities/RentType";
+/* import { RentType } from "./entities/RentType"; */
 import { PrinterOidController } from "./controllers/api/printer.oid.controller";
 import { PrinterOidService } from "./services/printerOid/printer.oid.service";
+import { ArticleFeatures } from "./entities/ArticleFeatures";
+import { PagePrices } from "./entities/PagePrices";
+import { InvoiceController } from "./controllers/api/invoice.controller";
+import { PrinterController } from "./controllers/api/printer.controller";
+import { PrinterService } from "./services/printer.service/printer.service";
+import { ArticleFeaturesController } from "./controllers/api/article.features.controller";
+import { ArticleFeaturesService } from "./services/article.features/article.features.service";
 
 @Module({
   imports: [
@@ -107,11 +111,11 @@ import { PrinterOidService } from "./services/printerOid/printer.oid.service";
         Comments,
         Organization,
         PrinterOid,
-        Printers,
         Oids,
         Invoices,
         PagePrices,
-        RentType,
+/*         RentType, */
+        ArticleFeatures
       ],
       extra:{
         connectionLimit: 10,
@@ -140,11 +144,11 @@ import { PrinterOidService } from "./services/printerOid/printer.oid.service";
       Comments,
       Organization,
       PrinterOid,
-      Printers,
       Oids,
       Invoices,
       PagePrices,
-      RentType,
+/*       RentType, */
+      ArticleFeatures
     ]),
   ],
   controllers: [
@@ -172,6 +176,8 @@ import { PrinterOidService } from "./services/printerOid/printer.oid.service";
     SnmpController,
     InvoiceController,
     PrinterOidController,
+    PrinterController,
+    ArticleFeaturesController
   ],
   providers: [
     ArticleService,
@@ -195,7 +201,9 @@ import { PrinterOidService } from "./services/printerOid/printer.oid.service";
     OrganizationService,
     SnmpService,
     InvoiceService,
-    PrinterOidService
+    PrinterOidService,
+    PrinterService,
+    ArticleFeaturesService
   ],
   exports: [
     // zbog middleware potrebno je exportovati servis

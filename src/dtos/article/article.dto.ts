@@ -5,6 +5,8 @@ import { UserDTO } from "../user/user.dto";
 import { ArticleTimelineDTO } from "../article.timeline/article.timeline.dto";
 import { HelpdeskTicketsDTO } from "../helpdesk.tickets/helpdesk.tickets.dto";
 import { CategoryDTO } from "../category/category.dto";
+import { ArticleFeatures } from "src/entities/ArticleFeatures";
+import { ArticleFeaturesDto } from "../article.features/article.features.dto";
 
 // article.dto.ts
 export class ArticleDTO {
@@ -25,5 +27,6 @@ export class ArticleDTO {
     documents?: Partial<Documents>[];
     helpdeskTickets?: Partial<HelpdeskTicketsDTO>[];
     upgradeFeatures?: Partial<UpgradeFeature>[];
+    articleFeatures?: Partial<ArticleFeaturesDto>[];
   }
   

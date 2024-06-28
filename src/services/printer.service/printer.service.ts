@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import * as snmp from 'net-snmp';
 import { Oids } from 'src/entities/Oids';
 import { PrinterOid } from 'src/entities/PrinterOid';
@@ -9,7 +9,7 @@ import { ApiResponse } from 'src/misc/api.response.class';
 import { Article } from 'src/entities/Article';
 
 @Injectable()
-export class SnmpService {
+export class PrinterService {
 constructor(
     @InjectRepository(Article)
     private readonly articleRepository: Repository<Article>,
@@ -224,7 +224,7 @@ constructor(
 
             const oidValues = await this.getOidValues(printer, oids);
             const printerData = { printer: printer.stock.name, oids: oidValues };
-    
+
             for (const oid of oids) {
                 if(oid.status === 'deactivated') {
                     continue;
@@ -277,7 +277,7 @@ constructor(
     }
 
     private async getCurrentOidValues(articleId: number): Promise<Record<string, string>> {
-        const printer = await this.articleRepository.findOne({ where: { articleId:articleId }, relations:["articleFeatures", "articleFeatures.feature", "stock", "user"] });
+        const printer = await this.articleRepository.findOne({ where: { articleId:articleId } });
         const oids = await this.oidRepository.find();
         return this.getOidValues(printer, oids);
     }
@@ -289,21 +289,20 @@ constructor(
     public async syncOidValues(invoiceId: number): Promise<void> {
         const printers = await this.articleRepository.find(
             {
-                relations:["articleFeatures", "articleFeatures.feature", "stock", "user"], 
+                relations:["articleFeatures", "articleFeatures.feature", "stock"], 
                 where:{
                     stock:{
                         categoryId:11
                     }
                 },
             });
-        const oids = await this.oidRepository.find({where: {status:"activated"}});
+        const oids = await this.oidRepository.find();
     
         for (const printer of printers) {
-         const printerFeature = printer.articleFeatures.find(f => f.featureValue === 'activated')
-           /*  const connectionFeature = printer.articleFeatures.find(f => f.feature.name === 'Konekcija') */
-
-            if (!printerFeature || printerFeature.featureValue === "USB") {
-                console.log("skip", printer.user.fullname, printerFeature ? printerFeature.featureValue : 'undefined');
+            const statusFeature = printer.articleFeatures.find(f => f.feature.name === 'Status')
+            const connectionFeature = printer.articleFeatures.find(f => f.feature.name === 'Konekcija')
+            if (statusFeature.featureValue === 'deactivated' || connectionFeature.featureValue === "USB") {
+                console.log("skip", printer.user.fullname, connectionFeature.featureValue);
                 continue;
             }
     
@@ -324,13 +323,13 @@ constructor(
                 if (typeof currentValue === 'number' && typeof previousValue === 'number') {
                     if (currentValue > previousValue) {
                         await this.updateOidValues(printer.articleId, oid.oidId, currentValue, invoiceId);
-                        console.log("Printer:", printerFeature.articleFeatureId, "Prev:", previousValue, "New:", currentValue);
+                        console.log("Printer:", connectionFeature.articleFeatureId, "Prev:", previousValue, "New:", currentValue);
                     }
                 } else {
                     // Za ostale tipove, samo ažurirajte ako su različiti
                     if (currentValue !== previousValue) {
                         await this.updateOidValues(printer.articleId, oid.oidId, currentValue.toString(), invoiceId);
-                        console.log("Printer:", printer.articleId,":", printerFeature.featureValue, "Prev:", previousValue, "New:", currentValue);
+                        console.log("Printer:", printer.articleId,":", connectionFeature.featureValue, "Prev:", previousValue, "New:", currentValue);
                     }
                 }
             }
@@ -349,13 +348,13 @@ constructor(
         if (existingPrinterOid) {
             existingPrinterOid.value = value;
             await this.printerOidRepository.save(existingPrinterOid);
-        } else {
+        } /* else {
             const newPrinterOid = new PrinterOid();
-            newPrinterOid.articleId = articleId;
-            newPrinterOid.oidId = oidId;
+            newPrinterOid.printerId = printerId;
+            newPrinterOid.oidId = oid.oidId;
             newPrinterOid.value = value || "";
             newPrinterOid.invoiceId = invoiceId;
             await this.printerOidRepository.save(newPrinterOid);
-        }
+        } */
     }
 }

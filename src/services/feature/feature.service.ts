@@ -45,7 +45,7 @@ export class FeatureService extends TypeOrmCrudService<Feature> {
   async getByCategoryId(catId: number): Promise<Feature[] | null> {
     const categoryid = await this.feature.find({
       where: { categoryId: catId },
-      relations: ["category", "stockFeatures"],
+      relations: ["category", "stockFeatures", "articleFeatures"],
     });
     if (categoryid) {
       return categoryid;

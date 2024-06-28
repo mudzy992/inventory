@@ -372,6 +372,8 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         "articleTimelines",
         "articleTimelines.document",
         "articleTimelines.user",
+        "articleFeatures",
+        "articleFeatures.feature",
         "documents",
         "upgradeFeatures",
         "helpdeskTickets",
@@ -394,12 +396,22 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       timestamp: articleData.timestamp,
       userId: articleData.userId,
       category: {
+        categoryId: articleData.category.categoryId,
         imagePath: articleData.category.imagePath,
         group:{
           groupId: articleData.category.group.groupId,
           groupName: articleData.category.group.groupName,
         }
       },
+      articleFeatures: articleData.articleFeatures.map((item) => ({
+        articleFeatureId: item.articleFeatureId,
+        featureId: item.featureId,
+        featureValue: item.featureValue,
+        feature: {
+          featureId: item.feature.featureId,
+          name: item.feature.name,
+        },
+      })),
       user: {
         userId: articleData.user.userId,
         fullname: articleData.user.fullname,

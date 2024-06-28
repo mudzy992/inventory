@@ -14,6 +14,8 @@ import { ArticleTimeline } from "./ArticleTimeline";
 import { Documents } from "./Documents";
 import { UpgradeFeature } from "./UpgradeFeature";
 import { HelpdeskTickets } from "./HelpdeskTickets";
+import { ArticleFeatures } from "./ArticleFeatures";
+import { PrinterOid } from "./PrinterOid";
 
 @Index("user_id", ["userId"], {})
 @Index("fk_article_stock", ["stockId"], {})
@@ -79,6 +81,12 @@ export class Article {
   category: Category;
 
   @OneToMany(
+    () => ArticleFeatures,
+    (articleFeatures) => articleFeatures.article
+  )
+  articleFeatures: ArticleFeatures[];
+
+  @OneToMany(
     () => ArticleTimeline,
     (articleTimeline) => articleTimeline.article
   )
@@ -95,4 +103,7 @@ export class Article {
 
   @OneToMany(() => UpgradeFeature, (upgradeFeature) => upgradeFeature.article)
   upgradeFeatures: UpgradeFeature[];
+
+  @OneToMany(() => PrinterOid, (printerOid) => printerOid.article)
+  printerOs: PrinterOid[];
 }

@@ -6,8 +6,16 @@ export class PrinterDTO {
   serialNumber: string | null;
   activity: string | null;
   rentalType: string;
-  ownership: string | null;
+  user: string | null;
   status: 'activated' | 'deactivated' | null;
+  printerFeatures: {
+    featureId: number;
+    featureValue: string;
+    feature:{
+      featureId: number;
+      name: string
+    }
+  }[];
   counters: {
     oid27: { 
       current: { value: number, printerOidId: number | null } | null;

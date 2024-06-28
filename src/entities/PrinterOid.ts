@@ -7,19 +7,19 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Invoices } from "./Invoices";
+import { Article } from "./Article";
 import { Oids } from "./Oids";
-import { Printers } from "./Printers";
 
-@Index("FK_printer_oid_printers", ["printerId"], {})
-@Index("FK_printer_oid_oids", ["oidId"], {})
 @Index("fk_invoice_id", ["invoiceId"], {})
+@Index("FK_printer_oid_oids", ["oidId"], {})
+@Index("FK_printer_oid_printers", ["articleId"], {})
 @Entity("printer_oid", { schema: "inventory_v2" })
 export class PrinterOid {
   @PrimaryGeneratedColumn({ type: "int", name: "printer_oid_id" })
   printerOidId: number;
 
-  @Column("int", { name: "printer_id" })
-  printerId: number;
+  @Column("int", { name: "article_id" })
+  articleId: number;
 
   @Column("int", { name: "oid_id" })
   oidId: number;
@@ -37,17 +37,17 @@ export class PrinterOid {
   @JoinColumn([{ name: "invoice_id", referencedColumnName: "invoiceId" }])
   invoice: Invoices;
 
+  @ManyToOne(() => Article, (article) => article.printerOs, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
+  @JoinColumn([{ name: "article_id", referencedColumnName: "articleId" }])
+  article: Article;
+
   @ManyToOne(() => Oids, (oids) => oids.printerOs, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "oid_id", referencedColumnName: "oidId" }])
   oid: Oids;
-
-  @ManyToOne(() => Printers, (printers) => printers.printerOs, {
-    onDelete: "NO ACTION",
-    onUpdate: "NO ACTION",
-  })
-  @JoinColumn([{ name: "printer_id", referencedColumnName: "printerId" }])
-  printer: Printers;
 }
