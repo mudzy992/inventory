@@ -46,6 +46,21 @@ export class ArticleFeaturesService {
     return articleFeatures;
   }
 
+  async deleteMany(articleFeatureIds: number[]): Promise<void> {
+    const existingFeatures = await this.articleFeaturesRepository.findByIds(articleFeatureIds);
+  
+    const notFoundIds = articleFeatureIds.filter(id => !existingFeatures.some(feature => feature.articleFeatureId === id));
+    if (notFoundIds.length > 0) {
+      console.warn(`ArticleFeatureId(s) not found: ${notFoundIds.join(', ')}`);
+    }
+  
+    if (existingFeatures.length > 0) {
+      const foundIds = existingFeatures.map(feature => feature.articleFeatureId);
+      await this.articleFeaturesRepository.delete(foundIds);
+    }
+  }
+  
+
   async remove(id: number): Promise<void> {
     const articleFeature = await this.findOne(id);
     await this.articleFeaturesRepository.remove(articleFeature);
