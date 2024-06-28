@@ -141,7 +141,7 @@ export class InvoiceService {
   async getPrintersForInvoice(invoiceId: number): Promise<PrinterDTO[]> {
     const invoice = await this.invoiceRepository.findOne({
       where: { invoiceId: invoiceId },
-      relations: ['printerOs', 'printerOs.article.stock', 'printerOs.article.user', 'printerOs.article', 'printerOs.article.articleFeatures'],
+      relations: ['printerOs', 'printerOs.article.stock', 'printerOs.article.user', 'printerOs.article', 'printerOs.article.articleFeatures', 'printerOs.article.articleFeatures.feature'],
     });
   
     if (!invoice) {
@@ -177,7 +177,8 @@ export class InvoiceService {
       dto.printerId = printer.articleId;
       dto.printerType = printer.stock.name;
       dto.serialNumber = printer.serialNumber;
-      dto.ownership = printer.user.fullname;
+      dto.user = printer.user.fullname;
+      dto.printerFeatures = printer.articleFeatures;
   
       dto.counters = {
         oid27: this.getCounterData(currentOids, previousOids, 27),
