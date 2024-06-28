@@ -296,17 +296,14 @@ constructor(
                     }
                 },
             });
-            console.log(printers)
-        const oids = await this.oidRepository.find();
+        const oids = await this.oidRepository.find({where: {status:"activated"}});
     
         for (const printer of printers) {
-            console.log(printer)
-            const statusFeature = printer.articleFeatures.find(f => f.featureValue === 'activated')
+         const printerFeature = printer.articleFeatures.find(f => f.featureValue === 'activated')
            /*  const connectionFeature = printer.articleFeatures.find(f => f.feature.name === 'Konekcija') */
-            console.log(statusFeature)
 
-            if (!statusFeature || statusFeature.featureValue === "USB") {
-                console.log("skip", printer.user.fullname, statusFeature ? statusFeature.featureValue : 'undefined');
+            if (!printerFeature || printerFeature.featureValue === "USB") {
+                console.log("skip", printer.user.fullname, printerFeature ? printerFeature.featureValue : 'undefined');
                 continue;
             }
     
@@ -327,13 +324,13 @@ constructor(
                 if (typeof currentValue === 'number' && typeof previousValue === 'number') {
                     if (currentValue > previousValue) {
                         await this.updateOidValues(printer.articleId, oid.oidId, currentValue, invoiceId);
-                        console.log("Printer:", statusFeature.articleFeatureId, "Prev:", previousValue, "New:", currentValue);
+                        console.log("Printer:", printerFeature.articleFeatureId, "Prev:", previousValue, "New:", currentValue);
                     }
                 } else {
                     // Za ostale tipove, samo ažurirajte ako su različiti
                     if (currentValue !== previousValue) {
                         await this.updateOidValues(printer.articleId, oid.oidId, currentValue.toString(), invoiceId);
-                        console.log("Printer:", printer.articleId,":", statusFeature.featureValue, "Prev:", previousValue, "New:", currentValue);
+                        console.log("Printer:", printer.articleId,":", printerFeature.featureValue, "Prev:", previousValue, "New:", currentValue);
                     }
                 }
             }
@@ -352,13 +349,13 @@ constructor(
         if (existingPrinterOid) {
             existingPrinterOid.value = value;
             await this.printerOidRepository.save(existingPrinterOid);
-        } /* else {
+        } else {
             const newPrinterOid = new PrinterOid();
-            newPrinterOid.printerId = printerId;
-            newPrinterOid.oidId = oid.oidId;
+            newPrinterOid.articleId = articleId;
+            newPrinterOid.oidId = oidId;
             newPrinterOid.value = value || "";
             newPrinterOid.invoiceId = invoiceId;
             await this.printerOidRepository.save(newPrinterOid);
-        } */
+        }
     }
 }

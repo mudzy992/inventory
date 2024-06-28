@@ -402,6 +402,15 @@ export class ArticleService extends TypeOrmCrudService<Article> {
           groupName: articleData.category.group.groupName,
         }
       },
+      articleFeatures: articleData.articleFeatures.map((item) => ({
+        articleFeatureId: item.articleFeatureId,
+        featureId: item.featureId,
+        featureValue: item.featureValue,
+        feature: {
+          featureId: item.feature.featureId,
+          name: item.feature.name,
+        },
+      })),
       user: {
         userId: articleData.user.userId,
         fullname: articleData.user.fullname,

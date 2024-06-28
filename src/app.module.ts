@@ -76,6 +76,8 @@ import { PagePrices } from "./entities/PagePrices";
 import { InvoiceController } from "./controllers/api/invoice.controller";
 import { PrinterController } from "./controllers/api/printer.controller";
 import { PrinterService } from "./services/printer.service/printer.service";
+import { ArticleFeaturesController } from "./controllers/api/article.features.controller";
+import { ArticleFeaturesService } from "./services/article.features/article.features.service";
 
 @Module({
   imports: [
@@ -175,6 +177,7 @@ import { PrinterService } from "./services/printer.service/printer.service";
     InvoiceController,
     PrinterOidController,
     PrinterController,
+    ArticleFeaturesController
   ],
   providers: [
     ArticleService,
@@ -200,6 +203,7 @@ import { PrinterService } from "./services/printer.service/printer.service";
     InvoiceService,
     PrinterOidService,
     PrinterService,
+    ArticleFeaturesService
   ],
   exports: [
     // zbog middleware potrebno je exportovati servis
