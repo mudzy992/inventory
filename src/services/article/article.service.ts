@@ -396,6 +396,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       timestamp: articleData.timestamp,
       userId: articleData.userId,
       category: {
+        categoryId: articleData.category.categoryId,
         imagePath: articleData.category.imagePath,
         group:{
           groupId: articleData.category.group.groupId,

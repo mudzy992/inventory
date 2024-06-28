@@ -34,10 +34,10 @@ export class ArticleFeaturesController {
     return this.articleFeaturesService.createOrUpdateMany(updateManyArticleFeaturesDto);
   }
 
-  @Delete(':id')
+  @Delete()
   @UseGuards(RoleCheckedGuard)
   @AllowToRoles("administrator", "moderator")
-  remove(@Param('id') id: string) {
-    return this.articleFeaturesService.remove(+id);
+  remove(@Body('articleFeatureIds') articleFeatureIds: number[]) {
+    return this.articleFeaturesService.deleteMany(articleFeatureIds);
   }
 }
