@@ -122,7 +122,6 @@ export class InvoiceService {
               .map(af => parseFloat(af.featureValue) || 0); 
       
           totalRentPrice += featureValues.reduce((acc, val) => acc + val, 0); 
-          console.log(totalRentPrice)
       }
 
       const totalAmount = totalRentPrice + totalPrintAmount;
@@ -133,7 +132,7 @@ export class InvoiceService {
 
       return { message: 'Obračun fakture uspješno izvršen.' };
     } catch (error) {
-      console.error("Error calculating invoice: ", error);
+      console.error("Greška prilikom izračuna faktura: ", error);
       throw new Error("Došlo je do greške prilikom obračuna fakture.");
     }
   }
