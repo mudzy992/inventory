@@ -27,7 +27,7 @@ constructor(
     private sessionOptions = {
         port: 161,
         retries: 2,
-        timeout: 5000,
+        timeout: 10000,
         transport: 'udp4',
         trapPort: 162,
         backwardsGetNexts: true,
@@ -63,11 +63,17 @@ constructor(
             printerOs: [],
             status: 'activated'
             },
+            {
+            oidId: 0, code: '1.3.6.1.4.1.1602.1.11.1.3.1.4.123', name: 'Total (Full Color + Single Color/Small)',
+            printerOs: [],
+            status: 'activated'
+            },
         ];
 
         const allOids = isCanon ? oids.concat(canonSpecificOids) : oids;
 
         let completedRequests = 0;
+        let counter:number = 0;
 
         function checkAndResolve() {
             if (completedRequests === allOids.length) {
@@ -108,6 +114,7 @@ constructor(
             if (isCanon) {
                 results['1.3.6.1.4.1.1347.43.10.1.1.12.1.1'] = results['1.3.6.1.4.1.1602.1.11.1.3.1.4.113'];
                 results['1.3.6.1.4.1.1347.46.10.1.1.5.3'] = results['1.3.6.1.4.1.1602.1.11.1.3.1.4.501'];
+                results['1.3.6.1.4.1.1347.42.2.1.1.1.8.1.1'] = results['1.3.6.1.4.1.1602.1.11.1.3.1.4.123'];
             }
 
             session.close();
@@ -127,10 +134,13 @@ constructor(
             checkAndResolve();
             });
         }
-
+        
+        
         session.get([this.wakeUpOid], (error, varbinds) => {
+
             if (!error && varbinds && varbinds[0] && varbinds[0].value !== null) {
-            console.log(`Buđenje:${connectionFeature.featureValue} - ${printer.user.fullname}`);
+                counter++;
+                console.log(`${counter} - Buđenje:${connectionFeature.featureValue} - ${printer.user.fullname}`);
             }
 
             allOids.forEach((oid) => getOid(oid));
@@ -287,6 +297,7 @@ constructor(
     }
 
     public async syncOidValues(invoiceId: number): Promise<void> {
+        let counter:number = 0;
         const printers = await this.articleRepository.find(
             {
                 relations:["articleFeatures", "articleFeatures.feature", "stock", "user"], 
@@ -309,7 +320,7 @@ constructor(
     
             const currentOidValues = await this.getCurrentOidValues(printer.articleId);
             const previousOidValues = await this.getPreviousOidValues(printer.articleId);
-    
+            
             for (const oid of oids) {
                 const currentValue = currentOidValues[oid.code];
                 const previousValue = previousOidValues[oid.code];
@@ -323,14 +334,16 @@ constructor(
                 // Provjera za numeričke vrijednosti - ažurirati ako je trenutna veća od prethodne
                 if (typeof currentValue === 'number' && typeof previousValue === 'number') {
                     if (currentValue > previousValue) {
+                        counter++;
                         await this.updateOidValues(printer.articleId, oid.oidId, currentValue, invoiceId);
-                        console.log("Printer:", printerFeature.articleFeatureId, "Prev:", previousValue, "New:", currentValue);
+                        console.log(counter, " - Printer:", printerFeature.articleFeatureId, "Prev:", previousValue, "New:", currentValue);
                     }
                 } else {
                     // Za ostale tipove, samo ažurirajte ako su različiti
                     if (currentValue !== previousValue) {
+                        counter++;
                         await this.updateOidValues(printer.articleId, oid.oidId, currentValue.toString(), invoiceId);
-                        console.log("Printer:", printer.articleId,":", printerFeature.featureValue, "Prev:", previousValue, "New:", currentValue);
+                        console.log(counter, " - Printer:", printer.articleId,":", printerFeature.featureValue, "Prev:", previousValue, "New:", currentValue);
                     }
                 }
             }
