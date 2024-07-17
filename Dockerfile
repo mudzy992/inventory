@@ -8,13 +8,16 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Instaliramo ovisnosti
-RUN npm install
+RUN npm install --force
 
 # Kopiramo ostatak aplikacije
 COPY . .
 
-# Otvaramo port na kojem aplikacija radi
-EXPOSE 3005
+# Instaliramo PM2 globalno
+RUN npm install -g pm2
 
-# Pokrećemo aplikaciju
-CMD ["npm", "start"]
+# Otvaramo port na kojem aplikacija radi
+EXPOSE 3006
+
+# Pokrećemo aplikaciju sa PM2
+CMD ["pm2-runtime", "start", "npm", "--", "start"]
