@@ -1,5 +1,5 @@
 # Koristimo službeni Node.js image kao bazu
-FROM node:14
+FROM node:18
 
 # Kreiramo direktorij za aplikaciju unutar image-a
 WORKDIR /usr/src/app
