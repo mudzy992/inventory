@@ -1,18 +1,29 @@
-# Koristimo službeni Node.js image kao bazu
-FROM node:latest
+# Stage 1: Build
+FROM node:20-alpine AS builder
 
-
-# Kreiramo direktorij za aplikaciju unutar image-a
 WORKDIR /usr/src/app
 
-# Kopiramo ostatak aplikacije
-COPY . .
+# Kopiramo package.json i package-lock.json u radni direktorij
+COPY package*.json ./
 
 # Instaliramo ovisnosti
-RUN npm install
+RUN npm install --force --verbose
+
+# Kopiramo ostatak aplikacije
+COPY --chown=node:node . .
 
 # Build
-RUN npm run build
+RUN npm run build --verbose
+
+# Stage 2: Production image
+FROM node:20-alpine
+
+WORKDIR /usr/src/app
+
+# Kopiramo node_modules i dist iz builder faze
+COPY --from=builder --chown=node:node /usr/src/app/package*.json ./
+COPY --from=builder --chown=node:node /usr/src/app/node_modules ./node_modules
+COPY --from=builder --chown=node:node /usr/src/app/dist ./dist
 
 # Instaliramo PM2 globalno
 RUN npm install -g pm2
