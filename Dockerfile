@@ -10,7 +10,7 @@ RUN chmod -R 777 /usr/src/app
 # Kopiramo ostatak aplikacije
 COPY . .
 
-USER root
+USER node
 
 # Instaliramo ovisnosti
 RUN npm install --force
