@@ -4,22 +4,17 @@ FROM node:alpine
 # Kreiramo direktorij za aplikaciju unutar image-a
 WORKDIR /usr/src/app
 
-# Kopiramo package.json i package-lock.json u radni direktorij
-COPY package*.json ./
-
-# Instaliramo ovisnosti
-RUN npm install --force --verbose
-
 # Kopiramo ostatak aplikacije
 COPY . .
+
+# Instaliramo ovisnosti
+RUN npm install --force
+
 
 RUN npm install rimraf -g --force
 
 # Build
-RUN npm run build --verbose
-
-# Provjera sadržaja direktorija nakon builda
-RUN echo "Nakon builda:" && ls -la /usr/src/app
+RUN npm run build
 
 # Instaliramo PM2 globalno
 RUN npm install -g pm2
