@@ -1,5 +1,5 @@
 # Koristimo službeni Node.js image kao bazu
-FROM node:22.4.1-alpine3.20
+FROM node:alpine
 
 # Kreiramo direktorij za aplikaciju unutar image-a
 WORKDIR /usr/src/app
@@ -15,6 +15,10 @@ RUN npm install --force --verbose
 
 # Instaliramo PM2 globalno
 RUN npm install -g pm2
+
+# prebuild
+
+RUN npm run prebuild --verbose
 
 # Build
 
