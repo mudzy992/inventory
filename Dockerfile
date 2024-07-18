@@ -13,8 +13,14 @@ RUN npm install --force --verbose
 # Kopiramo ostatak aplikacije
 COPY . .
 
+# Provjera sadržaja direktorija prije builda
+RUN echo "Prije builda:" && ls -la /usr/src/app
+
 # Build
 RUN npm run build --verbose
+
+# Provjera sadržaja direktorija nakon builda
+RUN echo "Nakon builda:" && ls -la /usr/src/app
 
 # Instaliramo PM2 globalno
 RUN npm install -g pm2
