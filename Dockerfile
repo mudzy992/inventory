@@ -9,6 +9,8 @@ COPY package*.json ./
 # Instaliramo ovisnosti
 RUN npm install --force --verbose
 
+RUN npm install -g @nestjs/cli
+
 # Kopiramo ostatak aplikacije
 COPY --chown=node:node . .
 
