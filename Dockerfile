@@ -1,12 +1,14 @@
 # Koristimo službeni Node.js image kao bazu
 FROM node:latest
-USER root
+
 
 # Kreiramo direktorij za aplikaciju unutar image-a
 WORKDIR /usr/src/app
 
 # Kopiramo ostatak aplikacije
 COPY . .
+
+USER root
 
 # Instaliramo ovisnosti
 RUN npm install --force
