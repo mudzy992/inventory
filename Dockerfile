@@ -7,19 +7,14 @@ WORKDIR /usr/src/app
 # Kopiramo package.json i package-lock.json u radni direktorij
 COPY package*.json ./
 
-# prebuild
-
-RUN npm run prebuild --verbose
-
-# Build
-
-RUN npm run build --verbose
+# Instaliramo ovisnosti
+RUN npm install --force --verbose
 
 # Kopiramo ostatak aplikacije
 COPY . .
 
-# Instaliramo ovisnosti
-RUN npm install --force --verbose
+# Build
+RUN npm run build --verbose
 
 # Instaliramo PM2 globalno
 RUN npm install -g pm2
