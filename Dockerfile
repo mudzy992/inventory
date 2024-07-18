@@ -13,7 +13,7 @@ RUN npm install --force --verbose
 # Kopiramo ostatak aplikacije
 COPY . .
 
-RUN npm install rimraf
+RUN npm install rimraf -g --force
 
 # Build
 RUN npm run build --verbose
