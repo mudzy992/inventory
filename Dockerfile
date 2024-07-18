@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Instaliramo ovisnosti
-RUN npm install --force
+RUN npm install
 
 # Build
 RUN npm run build
