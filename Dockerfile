@@ -1,5 +1,5 @@
 # Koristimo službeni Node.js image kao bazu
-FROM node:18
+FROM node:18-alpine3.20
 
 # Kreiramo direktorij za aplikaciju unutar image-a
 WORKDIR /usr/src/app
@@ -15,6 +15,10 @@ COPY . .
 
 # Instaliramo PM2 globalno
 RUN npm install -g pm2
+
+# Build
+
+RUN npm run build
 
 # Otvaramo port na kojem aplikacija radi
 EXPOSE 3006
