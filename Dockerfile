@@ -1,5 +1,5 @@
 # Koristimo službeni Node.js image kao bazu
-FROM node:18-alpine3.20
+FROM node:22.4.1-alpine3.20
 
 # Kreiramo direktorij za aplikaciju unutar image-a
 WORKDIR /usr/src/app
@@ -18,7 +18,7 @@ RUN npm install -g pm2
 
 # Build
 
-RUN npm run build
+RUN npm run build --verbose
 
 # Otvaramo port na kojem aplikacija radi
 EXPOSE 3006
