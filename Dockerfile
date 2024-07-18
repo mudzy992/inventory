@@ -5,6 +5,8 @@ FROM node:latest
 # Kreiramo direktorij za aplikaciju unutar image-a
 WORKDIR /usr/src/app
 
+RUN chmod -R 777 /usr/src/app
+
 # Kopiramo ostatak aplikacije
 COPY . .
 
