@@ -13,8 +13,7 @@ RUN npm install --force --verbose
 # Kopiramo ostatak aplikacije
 COPY . .
 
-# Provjera sadržaja direktorija prije builda
-RUN echo "Prije builda:" && ls -la /usr/src/app
+RUN npm install rimraf
 
 # Build
 RUN npm run build --verbose
