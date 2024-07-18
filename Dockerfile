@@ -1,5 +1,5 @@
 # Koristimo službeni Node.js image kao bazu
-FROM node:20.12.7-alpine
+FROM node:latest
 
 # Kreiramo direktorij za aplikaciju unutar image-a
 WORKDIR /usr/src/app
