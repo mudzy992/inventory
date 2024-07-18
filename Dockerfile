@@ -24,8 +24,8 @@ WORKDIR /usr/src/app
 
 # Kopiramo node_modules i dist iz builder faze
 COPY --from=builder --chown=node:node /usr/src/app/package*.json ./
-COPY --from=builder --chown=node:node /usr/src/app/node_modules ./node_modules
-COPY --from=builder --chown=node:node /usr/src/app/dist ./dist
+COPY --from=builder --chown=node:node /usr/src/app/node_modules ./node_modules1
+COPY --from=builder --chown=node:node /usr/src/app/dist ./dist1
 
 # Instaliramo PM2 globalno
 RUN npm install -g pm2
