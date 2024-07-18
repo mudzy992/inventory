@@ -1,5 +1,6 @@
 # Koristimo službeni Node.js image kao bazu
 FROM node:latest
+USER root
 
 # Kreiramo direktorij za aplikaciju unutar image-a
 WORKDIR /usr/src/app
@@ -9,9 +10,6 @@ COPY . .
 
 # Instaliramo ovisnosti
 RUN npm install --force
-
-
-RUN npm install rimraf -g --force
 
 # Build
 RUN npm run build
