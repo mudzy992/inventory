@@ -1,7 +1,7 @@
-# Stage 1: Build
-FROM node:20-alpine AS builder
+# Stage 1: Install dependencies
+FROM node:20-alpine AS dependencies
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/backend/app
 
 # Kopiramo package.json i package-lock.json u radni direktorij
 COPY package*.json ./
@@ -9,23 +9,24 @@ COPY package*.json ./
 # Instaliramo ovisnosti
 RUN npm install --force --verbose
 
-RUN npm install -g @nestjs/cli
+# Stage 2: Build
+FROM dependencies AS build
 
 # Kopiramo ostatak aplikacije
-COPY --chown=node:node . .
+COPY . .
 
 # Build
 RUN npm run build --verbose
 
-# Stage 2: Production image
-FROM node:20-alpine
+# Stage 3: Production image
+FROM node:20-alpine AS production
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/backend/app
 
 # Kopiramo node_modules i dist iz builder faze
-COPY --from=builder --chown=node:node /usr/src/app/package*.json ./
-COPY --from=builder --chown=node:node /usr/src/app/node_modules ./node_modules1
-COPY --from=builder --chown=node:node /usr/src/app/dist ./dist1
+COPY --from=build /usr/src/backend/app/package*.json ./
+COPY --from=build /usr/src/backend/app/node_modules ./node_modules
+COPY --from=build /usr/src/backend/app/dist ./dist
 
 # Instaliramo PM2 globalno
 RUN npm install -g pm2
