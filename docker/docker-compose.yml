@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  backend:
+    image: inventory-backend-image
+    build:
+      context: /home/administrator/Documents/GitHub/inventory
+      dockerfile: Dockerfile
+    ports:
+      - "3005:3006"
+    volumes:
+      - /home/administrator/Documents/GitHub/inventory:/usr/src/app:rw
+    restart: always
