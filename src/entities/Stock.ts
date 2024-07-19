@@ -59,4 +59,6 @@ export class Stock {
 
   @OneToMany(() => StockFeature, (stockFeature) => stockFeature.stock)
   stockFeatures: StockFeature[];
+  @OneToMany(() => Article, (article) => article.articlesInStock)
+  stockArticle: Article[];
 }
