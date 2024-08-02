@@ -1,7 +1,7 @@
 export const StorageConfig = {
   prenosnica: {
-    template: "/usr/src/app/uploads/prenosnica.docx",
-    destination: "/usr/src/app/uploads",
+    template: "/usr/src/app/storage/prenosnica.docx",
+    destination: "/usr/src/app/storage",
     urlPrefix: "/prenosnica/",
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
