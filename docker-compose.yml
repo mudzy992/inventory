@@ -10,5 +10,5 @@ services:
       - "3005:3006"
     volumes:
       - /home/administrator/Documents/GitHub/inventory:/usr/src/app:rw
-      - /home/administrator/Documents/GitHub/storage/:/usr/src/app/storage:rw
+      - /home/administrator/Documents/GitHub/storage:/usr/src/app/storage:rw
     restart: always
