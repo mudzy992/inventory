@@ -638,9 +638,12 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
     try {
       const template = readFileSync(StorageConfig.prenosnica.template);
+/*       console.log(template) */
 
       const folderPath =
         StorageConfig.prenosnica.destination + currentYear + "/";
+
+        console.log(folderPath)
 
       if (!existsSync(folderPath)) {
         try {
