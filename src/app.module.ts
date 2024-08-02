@@ -219,7 +219,7 @@ export class AppModule implements NestModule {
       .apply(AuthMiddleware, SkipAuthMiddleware)
       // kada kažemo koji middleware naš konzumer treba da primjenjuje
       // moramo da damo nekoliko izuzetaka, i spisak ruta za koje će važiti
-      .exclude("auth/*") // Izbjegni sve što počinje sa auth/*, 'assets/*', 'uploads/*'itd.
+      .exclude("auth/*", 'storage/*') // Izbjegni sve što počinje sa auth/*, 'assets/*', 'uploads/*'itd.
       .forRoutes("api/*"); // Ali primjeni se na sve što počinje sa api/
   }
 }
