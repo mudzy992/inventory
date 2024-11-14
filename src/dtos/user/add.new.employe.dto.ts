@@ -40,7 +40,7 @@ export class AddNewEmployeDto {
 
   @Validator.IsNotEmpty()
   @Validator.IsString()
-  @Validator.Length(6, 12)
+  @Validator.Length(8, 20)
   password: string;
 
   @Validator.IsIn(["aktivan", "neaktivan"])
