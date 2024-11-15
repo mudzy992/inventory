@@ -6,6 +6,8 @@ import { Invoices } from 'src/entities/Invoices';
 import { PagePrices } from 'src/entities/PagePrices';
 import { PrinterOid } from 'src/entities/PrinterOid';
 import { LessThan, Repository } from 'typeorm'
+import { UpdateInvoiceDto } from 'src/dtos/invoice/update.invoice.dto';
+import { ApiResponse } from 'src/misc/api.response.class';
 
 @Injectable()
 export class InvoiceService {
@@ -23,6 +25,12 @@ export class InvoiceService {
   async getAllInvoices(): Promise<Invoices[]> {
     const invoices = await this.invoiceRepository.find();
     return invoices;
+  }
+
+  async getOneInvoice(invoiceId: number): Promise<Invoices>{
+    const invoice = await this.invoiceRepository.findOne({where:{invoiceId: invoiceId}})
+
+    return invoice
   }
 
   async calculateInvoice(): Promise<any> {
@@ -200,5 +208,21 @@ export class InvoiceService {
       previous: previous ? { value: Number(previous.value), printerOidId: previous.printerOidId } : null,
     };
   }
-  
+
+  async updateInvoice(
+    invoiceId: number,
+    updateInvoiceDto: UpdateInvoiceDto,
+  ): Promise<Invoices | ApiResponse> {
+    const invoice = await this.getOneInvoice(invoiceId)
+    if(!invoice){
+      return new ApiResponse('error', -5008, "Faktura ne može biti pronađena")
+    }
+    // Ažuriraj polja
+    invoice.issueDate = updateInvoiceDto.issueDate;
+    invoice.customer = updateInvoiceDto.customer;
+    invoice.status = updateInvoiceDto.status ?? invoice.status;
+
+    // Spremi promjene u bazu
+    return this.invoiceRepository.save(invoice);
+  }
 }
