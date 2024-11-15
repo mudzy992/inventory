@@ -179,6 +179,17 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     }
   }
 
+  async checkStockId(userId: number): Promise<number>{
+    const existingUser: User = await this.user.findOne({where: {userId: userId}})
+
+    let skladiste:number
+    if(existingUser.organizationId === 1) {
+      return skladiste=390
+    } else if(existingUser.organizationId === 2) {
+      return skladiste=395
+    }
+  }
+
   async changeStatus(
     articleId: number,
     data: AddArticleDto
@@ -189,7 +200,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       relations: ["user", "stock", "articleTimelines"],
     });
 
-    const skladiste = 390;
+    const skladiste = await this.checkStockId(existingArticle.userId)
 
     let predao: number;
     let preuzeo: number;
@@ -236,6 +247,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         existingArticle.status === "zaduženo"
       ) {
         // Ako je postojeći status "zadužueno", a šaljemo "razduženo" - tj. RAZDUŽUJEMO ARTIKAL. (SA KREIRANJEM KORISNIKA ZA SKLADIŠTE, TJ. PODRUŽNICU DO OVOG STANJA NIKADA DOĆI NEĆE)
+
         predao = existingArticle.userId;
         preuzeo = skladiste;
         const existingArticleTimeline = await this.articleTimeline.findOne({
