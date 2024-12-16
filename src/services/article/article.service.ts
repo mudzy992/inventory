@@ -64,12 +64,16 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       where: {
         userId: userId,
       },
-      relations: ["category", "stock.stockFeatures",
+      relations: ["category", "documents", "stock.stockFeatures",
       "stock.stockFeatures.feature"]
     });
 
     const response: ArticleDTO[] = article.map((item) => ({
       articleId: item.articleId,
+      serialNumber: item.serialNumber,
+      invNumber: item.invNumber,
+      documentId: item.documentId,
+      documents: item.documents.filter((doc) => doc.documentsId === item.documentId),
       category: {
         name: item.category.name,
         imagePath: item.category.imagePath,

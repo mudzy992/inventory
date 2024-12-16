@@ -107,4 +107,11 @@ export class HelpdeskTicketsController {
       status
       );
   }
+
+  @Get(":userId/user-tickets")
+  @UseGuards(RoleCheckedGuard)
+  @AllowToRoles("administrator", "moderator")
+  async getAllUserTickets(@Param("userId") userId: number): Promise<HelpdeskTicketsDTO[] | ApiResponse> {
+    return await this.service.getByUserId(userId);
+  }
 }

@@ -295,4 +295,70 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
       total: totalResults,
     };
   }
+
+  async getByUserId(userId: number): Promise<HelpdeskTicketsDTO[] | null> {
+    const tickets = await this.helpDeskTickets.find({
+      where: {userId: userId},
+      relations:['article.stock', 'group', 'groupPartent', 'assignedTo2', 'comments.user', 'comments.comments.user']
+    })
+
+    const response: HelpdeskTicketsDTO[] = (tickets || []).map((ticket) => ({
+      ticketId: ticket.ticketId,
+      createdAt: ticket.createdAt,
+      duoDate: ticket.duoDate,
+      clientDuoDate: ticket.clientDuoDate,
+      description: ticket.description,
+      resolveDescription: ticket.resolveDescription,
+      resolveDate: ticket.resolveDate,
+      status: ticket.status,
+      assignedTo2: ticket.assignedTo2 ? {
+        fullname: ticket.assignedTo2.fullname,
+        forname: ticket.assignedTo2.forname,
+        surname: ticket.assignedTo2.surname,
+        email: ticket.assignedTo2.email,
+      } : null,
+      group: ticket.group ? {
+        groupName: ticket.group.groupName,
+        groupId: ticket.group.groupId,
+      } : null,
+      groupPartent: {
+        groupName: ticket.groupPartent ? ticket.groupPartent.groupName : null,
+      },
+      article: ticket.article ? {
+        articleId: ticket.article.articleId,
+        invNumber: ticket.article.invNumber,
+        serialNumber: ticket.article.serialNumber,
+        stock: ticket.article.stock ? {
+          name: ticket.article.stock.name,
+        } : null,
+      } : null,
+      comments: (ticket.comments || [])
+        .filter((commentItem) => commentItem.parentCommentId === null)
+        .map((commentItem) => ({
+          commentId: commentItem.commentId,
+          text: commentItem.text,
+          createdAt: commentItem.createdAt,
+          parentCommentId: commentItem.parentCommentId,
+          user: commentItem.user ? {
+            fullname: commentItem.user.fullname,
+            forname: commentItem.user.forname,
+            surname: commentItem.user.surname,
+            email: commentItem.user.email,
+          } : null,
+          comments: (commentItem.comments || []).map((replies) => ({
+            commentId: replies.commentId,
+            parentCommentId: replies.parentCommentId,
+            text: replies.text,
+            createdAt: replies.createdAt,
+            user: replies.user ? {
+              fullname: replies.user.fullname,
+              forname: replies.user.forname,
+              surname: replies.user.surname,
+              email: replies.user.email,
+            } : null,
+          })),
+        })),
+    }));
+    return response
+  }
 }

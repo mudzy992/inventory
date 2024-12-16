@@ -137,24 +137,6 @@ export class UserService extends TypeOrmCrudService<User> {
         "job",
         "location",
         "organization",
-        "helpdeskTickets",
-        "helpdeskTickets.group",
-        "helpdeskTickets.groupPartent",
-        "helpdeskTickets.assignedTo2",
-        "helpdeskTickets2",
-        "helpdeskTickets2.article",
-        "helpdeskTickets2.article.stock",
-        "helpdeskTickets2.group",
-        "helpdeskTickets2.groupPartent",
-        "helpdeskTickets2.assignedTo2",
-        "helpdeskTickets2.comments",
-        "helpdeskTickets2.comments.user",
-        "helpdeskTickets2.comments.comments", 
-        "helpdeskTickets2.comments.comments.user",
-        "articles",
-        "articles.stock",
-        "articles.documents",
-        "articles.category",
       ],
     });
 
@@ -184,94 +166,6 @@ export class UserService extends TypeOrmCrudService<User> {
       code: userData.code,
       gender: userData.gender,
       lastLoginDate: userData.lastLoginDate,
-      articles: userData.articles.map((item) => ({
-        articleId: item.articleId,
-        serialNumber: item.serialNumber,
-        invNumber: item.invNumber,
-        documents: item.documents.map((doc) => ({
-          path: doc.path
-        })),
-        stock: {
-          name: item.stock.name,
-        },
-        category: {
-          name: item.category.name,
-        }
-      })),
-      helpdeskTickets: (userData.helpdeskTickets || []).map((ticket) => ({
-        ticketId: ticket.ticketId,
-        createdAt: ticket.createdAt,
-        duoDate: ticket.duoDate,
-        clientDuoDate: ticket.clientDuoDate,
-        description: ticket.description,
-        resolveDescription: ticket.description,
-        resolveDate: ticket.resolveDate,
-        status: ticket.status,
-        assignedTo2: {
-          fullname: ticket.assignedTo2 ? ticket.assignedTo2.fullname : null,
-        },
-        group: {
-          groupName: ticket.group ? ticket.group.groupName : null,
-        },
-        groupPartent: {
-          groupName: ticket.groupPartent ? ticket.groupPartent.groupName : null,
-        },
-
-      })),
-      helpdeskTickets2: (userData.helpdeskTickets2 || []).map((ticket) => ({
-        ticketId: ticket.ticketId,
-        createdAt: ticket.createdAt,
-        duoDate: ticket.duoDate,
-        clientDuoDate: ticket.clientDuoDate,
-        description: ticket.description,
-        resolveDescription: ticket.resolveDescription,
-        resolveDate: ticket.resolveDate,
-        status: ticket.status,
-        assignedTo2: {
-          fullname: ticket.assignedTo2 ? ticket.assignedTo2.fullname : null,
-        },
-        group: {
-          groupName: ticket.group ? ticket.group.groupName : null,
-        },
-        groupPartent: {
-          groupName: ticket.groupPartent ? ticket.groupPartent.groupName : null,
-        },
-        article: {
-          articleId: ticket.article ? ticket.article.articleId : null,
-          invNumber: ticket.article ? ticket.article.invNumber : null,
-          serialNumber: ticket.article ? ticket.article.serialNumber : null,
-          stock: ticket.article && ticket.article.stock ? {
-              name: ticket.article.stock.name,
-          } : null,
-        },
-        comments: (ticket.comments || [])
-        .filter((commentItem) => commentItem.parentCommentId === null)
-        .map((commentItem) => ({
-          commentId: commentItem.commentId,
-          text: commentItem.text,
-          createdAt: commentItem.createdAt,
-          parentCommentId: commentItem.parentCommentId,
-          user: {
-            fullname: commentItem.user.fullname,
-            forname: commentItem.user.forname,
-            surname: commentItem.user.surname,
-            email: commentItem.user.email,
-          },
-          comments: (commentItem.comments || []).map((replies) => ({
-            commentId: replies.commentId,
-            parentCommentId: replies.parentCommentId,
-            text: replies.text,
-            createdAt: replies.createdAt,
-            user: {
-              fullname: replies.user.fullname,
-              forname: replies.user.forname,
-              surname: replies.user.surname,
-              email: replies.user.email,
-            }
-          }))
-      }))
-      })),
-
     }
     return response
   }
