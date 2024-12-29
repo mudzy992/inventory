@@ -4,7 +4,7 @@ export class EditEmployeeDto {
   @Validator.IsNotEmpty()
   @Validator.IsString()
   @Validator.Length(2, 64)
-  surename?: string;
+  surname?: string;
 
   @Validator.IsNotEmpty()
   @Validator.IsString()

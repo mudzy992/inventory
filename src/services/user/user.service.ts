@@ -106,10 +106,10 @@ export class UserService extends TypeOrmCrudService<User> {
     const passwordHashString = passwordHash.digest("hex").toUpperCase();
 
     const existingUser = await this.user.findOne({ where: { userId: userId } });
-    const fullname = data.forname + " " + data.surename;
+    const fullname = data.forname + " " + data.surname;
 
     existingUser.forname = data.forname;
-    existingUser.surname = data.surename;
+    existingUser.surname = data.surname;
     existingUser.fullname = fullname;
     existingUser.email = data.email;
     existingUser.passwordHash = passwordHashString;
