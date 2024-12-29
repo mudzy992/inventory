@@ -39,9 +39,10 @@ export class EditEmployeeDto {
   @Validator.IsNumber()
   organizationId?: number;
 
-  @Validator.IsNotEmpty()
-  @Validator.IsString()
-  @Validator.Length(6, 12)
+  @Validator.ValidateIf((object) => object.password !== undefined)
+  @Validator.IsNotEmpty({ message: 'Lozinka ne smije biti prazna.' })
+  @Validator.IsString({ message: 'Lozinka mora biti string.' })
+  @Validator.Length(6, 12, { message: 'Lozinka mora biti između 6 i 12 karaktera.' })
   password?: string;
 
   @Validator.IsString()
