@@ -101,18 +101,16 @@ export class UserService extends TypeOrmCrudService<User> {
   }
 
   async editUser(userId: number, data: EditEmployeeDto) {
-    const passwordHash = crypto.createHash("sha512");
-    passwordHash.update(data.password);
-    const passwordHashString = passwordHash.digest("hex").toUpperCase();
-
     const existingUser = await this.user.findOne({ where: { userId: userId } });
-    const fullname = data.forname + " " + data.surname;
+    if (!existingUser) {
+        return new ApiResponse("error", -6001, "Korisnik nije pronađen");
+    }
 
+    const fullname = `${data.forname} ${data.surname}`;
     existingUser.forname = data.forname;
     existingUser.surname = data.surname;
     existingUser.fullname = fullname;
     existingUser.email = data.email;
-    existingUser.passwordHash = passwordHashString;
     existingUser.localNumber = data.localNumber;
     existingUser.telephone = data.telephone;
     existingUser.jobId = data.jobId;
@@ -123,11 +121,22 @@ export class UserService extends TypeOrmCrudService<User> {
     existingUser.code = data.code;
     existingUser.gender = data.gender;
 
+    // Ažuriraj lozinku samo ako postoji
+    if (data.password) {
+        const passwordHash = crypto.createHash("sha512");
+        passwordHash.update(data.password);
+        const passwordHashString = passwordHash.digest("hex").toUpperCase();
+        existingUser.passwordHash = passwordHashString;
+    }
+
     const saveEditedUser = await this.user.save(existingUser);
     if (!saveEditedUser) {
-      return new ApiResponse("error", -6002, "Korisnik ne može biti izmjenjen");
+        return new ApiResponse("error", -6002, "Korisnik ne može biti izmjenjen");
     }
-  }
+
+    return new ApiResponse("success", 0, "Korisnik je uspješno izmjenjen");
+}
+
 
   async getById(id): Promise<UserDTO | ApiResponse> {
     const userData = await this.user.findOne({
