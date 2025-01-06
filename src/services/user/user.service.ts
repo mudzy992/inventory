@@ -134,7 +134,7 @@ export class UserService extends TypeOrmCrudService<User> {
         return new ApiResponse("error", -6002, "Korisnik ne može biti izmjenjen");
     }
 
-    return new ApiResponse("success", 0, "Korisnik je uspješno izmjenjen");
+    return saveEditedUser;
 }
 
 
