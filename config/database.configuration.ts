@@ -7,9 +7,10 @@ export const DatabaseConfiguration = {
 }; //PRODUKCIONA
 
 /* export const DatabaseConfiguration = {
-  hostname: '77.221.31.121',
+  hostname: 'inventory.hopto.org',
   database: 'inventory_test',
   username: 'mudzy',
   password: 'nije,kikiriki',
   port: 3306,
-}; //TEST */
+}; //TEST BAZA
+ */
