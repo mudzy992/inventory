@@ -12,3 +12,6 @@ services:
       - /home/administrator/Documents/GitHub/inventory:/usr/src/app:rw
       - /home/administrator/Documents/GitHub/storage:/usr/src/app/storage:rw
     restart: always
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
