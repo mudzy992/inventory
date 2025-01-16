@@ -5,6 +5,8 @@ import {
   Req,
   HttpStatus,
   HttpException,
+  UsePipes,
+  ValidationPipe,
 } from "@nestjs/common";
 import { Request } from "express";
 import { ApiResponse } from "src/misc/api.response.class";
@@ -84,6 +86,7 @@ export class AuthController {
   }
 
   @Post("refresh")
+  @UsePipes(new ValidationPipe({ whitelist: false, transform: true }))
   async userTokenRefresh(
     @Req() req: Request,
     @Body() data: UserRefreshTokenDto
