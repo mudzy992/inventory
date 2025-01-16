@@ -16,16 +16,15 @@ export class AuthMiddleware implements NestMiddleware {
     public userService: UserService
   ) {}
   async use(req: Request, res: Response, next: NextFunction) {
-    if (req.path === "/api/webhook/github") {
-      return next();
-    } else {
+    try{
       if (!req.headers.authorization) {
-        throw new HttpException("Nema tokena", HttpStatus.UNAUTHORIZED);
+        throw new HttpException("Tokena apsolutno nema. Potrebno generisati novi.", HttpStatus.UNAUTHORIZED);
       }
+
       const token = req.headers.authorization;
       const tokenParts = token.split(" ");
       if (tokenParts.length !== 2) {
-        throw new HttpException("Ne valja token", HttpStatus.UNAUTHORIZED);
+        throw new HttpException("Token nije ispravan.", HttpStatus.UNAUTHORIZED);
       }
       const tokenString = tokenParts[1];
 
@@ -34,38 +33,31 @@ export class AuthMiddleware implements NestMiddleware {
       try {
         jwtData = jwt.verify(tokenString, jwtSecret);
       } catch (e) {
-        throw new HttpException("Bad token found", HttpStatus.UNAUTHORIZED);
+        throw new HttpException("Token nije ispravan, razlog nepoznat.", HttpStatus.UNAUTHORIZED);
       }
 
-      if (!jwtData) {
-        throw new HttpException("Bad token found", HttpStatus.UNAUTHORIZED);
-      }
-
-      if (jwtData.ip !== req.ip.toString()) {
-        throw new HttpException("Bad token found", HttpStatus.UNAUTHORIZED);
-      }
-
-      if (jwtData.ua !== req.headers["user-agent"]) {
-        throw new HttpException("Bad token found", HttpStatus.UNAUTHORIZED);
+      if (!jwtData || jwtData.ip !== req.ip || jwtData.ua !== req.headers["user-agent"]) {
+        throw new HttpException("Token neispravan. IP, Internet Pregledač ili neki drugi uslov. ", HttpStatus.UNAUTHORIZED);
       }
 
       const user = await this.userService.getById(jwtData.id);
       if (!user) {
-        throw new HttpException("Account not found", HttpStatus.UNAUTHORIZED);
+        throw new HttpException("Korisnički račun nije pronađen. Molimo za provjeru podataka.", HttpStatus.UNAUTHORIZED);
       }
 
       const trenutniTimestamp = new Date().getTime() / 1000;
       if (trenutniTimestamp >= jwtData.exp) {
         throw new HttpException(
-          "The token has expired",
+          "Token je istekao",
           HttpStatus.UNAUTHORIZED
         );
       }
-
       req.token = jwtData;
-
       next();
-      // Nakon što smo sve provjere završili, potrebo je AuthMiddleware implementirati u app.module.ts
+    } catch(error){
+      res.status(
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR
+      ).json({ error: error.message || "Greška na serveru." });
     }
   }
 }
