@@ -118,8 +118,8 @@ import { ArticleFeaturesService } from "./services/article.features/article.feat
         ArticleFeatures
       ],
       extra:{
-        connectionLimit: 10,
-        connectTimeout: 5000,
+        connectionLimit: 20,
+        connectTimeout: 60000,
       }
     }),
     TypeOrmModule.forFeature([
