@@ -31,6 +31,7 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
+      skipMissingProperties: true,
       exceptionFactory: (errors) =>
         new HttpException(
           { message: "Greška prilikom validacije podataka!", errors },
