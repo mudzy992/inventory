@@ -19,11 +19,11 @@ export class AddNewEmployeDto {
   email: string;
 
   @Validator.IsString()
-  @Validator.Length(2, 50)
+  @Validator.IsOptional()
   localNumber: string;
 
   @Validator.IsString()
-  @Validator.Length(2, 50)
+  @Validator.IsOptional()
   telephone: string | null; // Since it's nullable in the entity
 
   @Validator.IsNumber()
@@ -44,9 +44,11 @@ export class AddNewEmployeDto {
   password: string;
 
   @Validator.IsIn(["aktivan", "neaktivan"])
+  @Validator.IsOptional()
   status: "aktivan" | "neaktivan";
 
   @Validator.IsNumber()
+  @Validator.IsOptional()
   code: number;
 
   @Validator.IsIn(["muško", "žensko"])
