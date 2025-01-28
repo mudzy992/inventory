@@ -1,5 +1,5 @@
 export const DatabaseConfiguration = {
-  hostname: 'inventory.hopto.org',
+  hostname: 'host.docker.internal',
   database: 'inventory_v2',
   username: 'mudzy',
   password: 'nije,kikiriki',

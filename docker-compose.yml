@@ -3,15 +3,18 @@ version: '3.8'
 services:
   backend:
     image: inventory-backend-image
+    container_name: inventory-backend
     build:
       context: /home/administrator/Documents/GitHub/inventory
       dockerfile: Dockerfile
     ports:
       - "3005:3006"
+    networks:
+      - inventory-network
     volumes:
       - /home/administrator/Documents/GitHub/inventory:/usr/src/app:rw
       - /home/administrator/Documents/GitHub/storage:/usr/src/app/storage:rw
     restart: always
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
+networks:
+  inventory-network:
+    driver: bridge
