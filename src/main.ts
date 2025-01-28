@@ -11,7 +11,8 @@ async function bootstrap() {
     'http://localhost:4001',
     'http://192.168.4.180:4001',
     'http://inventory.hopto.org',
-    'http://mudzy-docker.hopto.org'
+    'http://frontend:4001',
+    'http://backend:3005'
   ];
 
   const corsOptions = {
