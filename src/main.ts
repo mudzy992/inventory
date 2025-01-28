@@ -9,8 +9,9 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const allowedOrigins = [
     'http://localhost:4001',
-    'http://192.168.4.180:4001', // Promjenjivo u odnosu na lokalhost (upisuje se adresa uređaja na kojem je pokrenut frontend)
+    'http://192.168.4.180:4001',
     'http://inventory.hopto.org',
+    'http://mudzy-docker.hopto.org'
   ];
 
   const corsOptions = {
