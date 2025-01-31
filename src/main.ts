@@ -8,10 +8,8 @@ import { HttpException, HttpStatus, ValidationPipe } from "@nestjs/common";
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const allowedOrigins = [
-    'http://backend:3006',
+    'http://localhost:4001',
     'https://inventory.hopto.org',
-    'http://frontend:4001',
-
   ];
 
   const corsOptions = {
