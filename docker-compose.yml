@@ -13,7 +13,7 @@ services:
       - inventory-network
     volumes:
       - /home/administrator/Documents/GitHub/inventory:/usr/src/app:rw
-      - /home/administrator/Documents/GitHub/storage:/usr/src/app/storage:rw
+      - /mnt/shared-app-files/inventory:/usr/src/app/storage:rw
     restart: always
 networks:
   inventory-network:
