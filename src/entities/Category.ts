@@ -13,7 +13,7 @@ import { Stock } from "./Stock";
 import { TicketGroup } from "./TicketGroup";
 
 @Index("parent_category_id", ["parentCategoryId"], {})
-@Entity("category", { schema: "inventory_v2" })
+@Entity("category")
 export class Category {
   @PrimaryGeneratedColumn({ type: "int", name: "category_id" })
   categoryId: number;

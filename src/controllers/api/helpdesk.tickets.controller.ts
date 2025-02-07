@@ -96,8 +96,9 @@ export class HelpdeskTicketsController {
     @Query("query") query: string = "",
     @Query("assignedTo") assignedTo?: number, 
     @Query("status") status?: string,
-    ) {
+  ) {
     const offset = (page - 1) * perPage;
+  
     return await this.service.getAllTicketsByGroupLocationPagginedSearch(
       userId, 
       perPage, 
@@ -105,8 +106,9 @@ export class HelpdeskTicketsController {
       query,
       assignedTo,
       status
-      );
+    );
   }
+  
 
   @Get(":userId/user-tickets")
   @UseGuards(RoleCheckedGuard)

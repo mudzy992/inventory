@@ -14,7 +14,7 @@ import { Documents } from "./Documents";
 @Index("user_id", ["userId"], {})
 @Index("document_id", ["documentId"], {})
 @Index("article_timeline_ivfk_3", ["subbmitedId"], {})
-@Entity("article_timeline", { schema: "inventory_test" })
+@Entity("article_timeline")
 export class ArticleTimeline {
   @PrimaryGeneratedColumn({ type: "int", name: "article_timeline_id" })
   articleTimelineId: number;

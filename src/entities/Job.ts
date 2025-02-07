@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { DepartmentJob } from "./DepartmentJob";
 import { User } from "./User";
 
-@Entity("job", { schema: "inventory_v2" })
+@Entity("job")
 export class Job {
   @PrimaryGeneratedColumn({ type: "int", name: "job_id" })
   jobId: number;

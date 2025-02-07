@@ -13,7 +13,7 @@ import { User } from "./User";
 @Index("fk_helpdesk_ticket_id", ["ticketId"], {})
 @Index("fk_parent_comment_id", ["parentCommentId"], {})
 @Index("fk_user_user_id", ["userId"], {})
-@Entity("comments", { schema: "inventory_v2" })
+@Entity("comments")
 export class Comments {
   @PrimaryGeneratedColumn({ type: "int", name: "comment_id" })
   commentId: number;

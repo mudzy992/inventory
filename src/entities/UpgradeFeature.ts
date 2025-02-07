@@ -9,7 +9,7 @@ import {
 import { Article } from "./Article";
 
 @Index("article_id", ["articleId"], {})
-@Entity("upgrade_feature", { schema: "inventory_v2" })
+@Entity("upgrade_feature")
 export class UpgradeFeature {
   @PrimaryGeneratedColumn({ type: "int", name: "upgrade_feature_id" })
   upgradeFeatureId: number;

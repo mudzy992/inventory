@@ -12,7 +12,7 @@ import { Category } from "./Category";
 import { StockFeature } from "./StockFeature";
 
 @Index("FK_stock_category", ["categoryId"], {})
-@Entity("stock", { schema: "inventory_v2" })
+@Entity("stock")
 export class Stock {
   @PrimaryGeneratedColumn({ type: "int", name: "stock_id" })
   stockId: number;

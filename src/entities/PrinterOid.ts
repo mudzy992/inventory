@@ -13,7 +13,7 @@ import { Oids } from "./Oids";
 @Index("fk_invoice_id", ["invoiceId"], {})
 @Index("FK_printer_oid_oids", ["oidId"], {})
 @Index("FK_printer_oid_printers", ["articleId"], {})
-@Entity("printer_oid", { schema: "inventory_v2" })
+@Entity("printer_oid")
 export class PrinterOid {
   @PrimaryGeneratedColumn({ type: "int", name: "printer_oid_id" })
   printerOidId: number;

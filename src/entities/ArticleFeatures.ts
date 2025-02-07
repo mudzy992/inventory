@@ -11,7 +11,7 @@ import { Feature } from "./Feature";
 
 @Index("article_id", ["articleId"], {})
 @Index("feature_id", ["featureId"], {})
-@Entity("article_features", { schema: "inventory_v2" })
+@Entity("article_features")
 export class ArticleFeatures {
   @PrimaryGeneratedColumn({ type: "int", name: "article_feature_id" })
   articleFeatureId: number;

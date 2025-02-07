@@ -24,7 +24,7 @@ import { UserToken } from "./UserToken";
 @Index("job_id", ["jobId"], {})
 @Index("location_id", ["locationId"], {})
 @Index("user_ibfk_4", ["organizationId"], {})
-@Entity("user", { schema: "inventory_v2" })
+@Entity("user")
 export class User {
   @PrimaryGeneratedColumn({ type: "int", name: "user_id" })
   userId: number;

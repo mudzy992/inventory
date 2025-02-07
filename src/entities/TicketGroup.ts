@@ -14,7 +14,7 @@ import { Category } from "./Category";
 
 @Index("location_id", ["locationId"], {})
 @Index("fk2_parent_group_id_group_id", ["parentGroupId"], {})
-@Entity("ticket_group", { schema: "inventory_v2" })
+@Entity("ticket_group")
 export class TicketGroup {
   @PrimaryGeneratedColumn({ type: "int", name: "group_id" })
   groupId: number;

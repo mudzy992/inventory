@@ -20,7 +20,7 @@ import { PrinterOid } from "./PrinterOid";
 @Index("user_id", ["userId"], {})
 @Index("fk_article_stock", ["stockId"], {})
 @Index("article_ibfk_3", ["categoryId"], {})
-@Entity("article", { schema: "inventory_v2" })
+@Entity("article")
 export class Article {
   @PrimaryGeneratedColumn({ type: "int", name: "article_id" })
   articleId: number;

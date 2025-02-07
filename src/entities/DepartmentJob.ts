@@ -13,7 +13,7 @@ import { Location } from "./Location";
 @Index("department_id", ["departmentId"], {})
 @Index("job_id", ["jobId"], {})
 @Index("location_id", ["locationId"], {})
-@Entity("department_job", { schema: "inventory_v2" })
+@Entity("department_job")
 export class DepartmentJob {
   @PrimaryGeneratedColumn({ type: "int", name: "department_job_id" })
   departmentJobId: number;

@@ -11,7 +11,7 @@ import { DepartmentJob } from "./DepartmentJob";
 import { User } from "./User";
 
 @Index("parent_department_id", ["parentDepartmentId"], {})
-@Entity("department", { schema: "inventory_v2" })
+@Entity("department")
 export class Department {
   @PrimaryGeneratedColumn({ type: "int", name: "department_id" })
   departmentId: number;

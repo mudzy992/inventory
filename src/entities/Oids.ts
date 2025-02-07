@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { PrinterOid } from "./PrinterOid";
 
-@Entity("oids", { schema: "inventory_v2" })
+@Entity("oids")
 export class Oids {
   @PrimaryGeneratedColumn({ type: "int", name: "oid_id" })
   oidId: number;

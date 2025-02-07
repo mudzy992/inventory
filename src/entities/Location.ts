@@ -13,7 +13,7 @@ import { TicketGroup } from "./TicketGroup";
 
 @Index("code", ["code"], { unique: true })
 @Index("parent_location_id", ["parentLocationId"], {})
-@Entity("location", { schema: "inventory_v2" })
+@Entity("location")
 export class Location {
   @PrimaryGeneratedColumn({ type: "int", name: "location_id" })
   locationId: number;

@@ -11,7 +11,7 @@ import { User } from "./User";
 
 @Index("group_id", ["groupId"], {})
 @Index("user_id", ["userId"], {})
-@Entity("moderator_group_mapping", { schema: "inventory_test" })
+@Entity("moderator_group_mapping")
 export class ModeratorGroupMapping {
   @PrimaryGeneratedColumn({ type: "int", name: "mapping_id" })
   mappingId: number;

@@ -17,7 +17,7 @@ import { TicketGroup } from "./TicketGroup";
 @Index("fk_ticket_parent_group", ["groupPartentId"], {})
 @Index("group_id", ["groupId"], {})
 @Index("user_id", ["userId"], {})
-@Entity("helpdesk_tickets", { schema: "inventory_v2" })
+@Entity("helpdesk_tickets")
 export class HelpdeskTickets {
   @PrimaryGeneratedColumn({ type: "int", name: "ticket_id" })
   ticketId: number;

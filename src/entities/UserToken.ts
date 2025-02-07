@@ -9,7 +9,7 @@ import {
 import { User } from "./User";
 
 @Index("user_id", ["userId"], {})
-@Entity("user_token", { schema: "inventory_v2" })
+@Entity("user_token")
 export class UserToken {
   @PrimaryGeneratedColumn({ type: "int", name: "user_token_id" })
   userTokenId: number;

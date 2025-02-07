@@ -11,7 +11,7 @@ import { Stock } from "./Stock";
 
 @Index("FK_stock_feature_feature", ["featureId"], {})
 @Index("FK_stock_feature_stock", ["stockId"], {})
-@Entity("stock_feature", { schema: "inventory_v2" })
+@Entity("stock_feature")
 export class StockFeature {
   @PrimaryGeneratedColumn({ type: "int", name: "stock_feature_id" })
   stockFeatureId: number;

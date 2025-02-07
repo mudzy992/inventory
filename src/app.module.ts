@@ -78,6 +78,9 @@ import { PrinterController } from "./controllers/api/printer.controller";
 import { PrinterService } from "./services/printer.service/printer.service";
 import { ArticleFeaturesController } from "./controllers/api/article.features.controller";
 import { ArticleFeaturesService } from "./services/article.features/article.features.service";
+import { CallLog } from "./entities/CallLog";
+import { CallLogController } from "./controllers/api/call.log.controller";
+import { CallLogService } from "./services/calllog/call.log.service";
 
 @Module({
   imports: [
@@ -115,7 +118,8 @@ import { ArticleFeaturesService } from "./services/article.features/article.feat
         Invoices,
         PagePrices,
 /*         RentType, */
-        ArticleFeatures
+        ArticleFeatures,
+        CallLog,
       ],
       extra:{
         connectionLimit: 20,
@@ -148,7 +152,8 @@ import { ArticleFeaturesService } from "./services/article.features/article.feat
       Invoices,
       PagePrices,
 /*       RentType, */
-      ArticleFeatures
+      ArticleFeatures,
+      CallLog,
     ]),
   ],
   controllers: [
@@ -177,7 +182,8 @@ import { ArticleFeaturesService } from "./services/article.features/article.feat
     InvoiceController,
     PrinterOidController,
     PrinterController,
-    ArticleFeaturesController
+    ArticleFeaturesController,
+    CallLogController,
   ],
   providers: [
     ArticleService,
@@ -203,7 +209,8 @@ import { ArticleFeaturesService } from "./services/article.features/article.feat
     InvoiceService,
     PrinterOidService,
     PrinterService,
-    ArticleFeaturesService
+    ArticleFeaturesService,
+    CallLogService,
   ],
   exports: [
     // zbog middleware potrebno je exportovati servis
@@ -219,7 +226,7 @@ export class AppModule implements NestModule {
       .apply(AuthMiddleware, SkipAuthMiddleware)
       // kada kažemo koji middleware naš konzumer treba da primjenjuje
       // moramo da damo nekoliko izuzetaka, i spisak ruta za koje će važiti
-      .exclude("auth/*", 'storage/*') // Izbjegni sve što počinje sa auth/*, 'assets/*' itd.
+      .exclude("auth/*", 'storage/*', 'call-logs') // Izbjegni sve što počinje sa auth/*, 'assets/*' itd.
       .forRoutes("api/*"); // Ali primjeni se na sve što počinje sa api/
   }
 }
