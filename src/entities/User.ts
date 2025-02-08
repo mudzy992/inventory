@@ -93,6 +93,9 @@ export class User {
   @Column("int", { name: "organization_id", nullable: true })
   organizationId: number | null;
 
+  @Column("varchar", { name: "phone_ip", length: 255 })
+  phoneIp: string;
+
   @OneToMany(() => Article, (article) => article.user)
   articles: Article[];
 

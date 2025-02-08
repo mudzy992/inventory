@@ -78,9 +78,6 @@ import { PrinterController } from "./controllers/api/printer.controller";
 import { PrinterService } from "./services/printer.service/printer.service";
 import { ArticleFeaturesController } from "./controllers/api/article.features.controller";
 import { ArticleFeaturesService } from "./services/article.features/article.features.service";
-import { CallLog } from "./entities/CallLog";
-import { CallLogController } from "./controllers/api/call.log.controller";
-import { CallLogService } from "./services/calllog/call.log.service";
 
 @Module({
   imports: [
@@ -118,8 +115,7 @@ import { CallLogService } from "./services/calllog/call.log.service";
         Invoices,
         PagePrices,
 /*         RentType, */
-        ArticleFeatures,
-        CallLog,
+        ArticleFeatures
       ],
       extra:{
         connectionLimit: 20,
@@ -152,8 +148,7 @@ import { CallLogService } from "./services/calllog/call.log.service";
       Invoices,
       PagePrices,
 /*       RentType, */
-      ArticleFeatures,
-      CallLog,
+      ArticleFeatures
     ]),
   ],
   controllers: [
@@ -182,8 +177,7 @@ import { CallLogService } from "./services/calllog/call.log.service";
     InvoiceController,
     PrinterOidController,
     PrinterController,
-    ArticleFeaturesController,
-    CallLogController,
+    ArticleFeaturesController
   ],
   providers: [
     ArticleService,
@@ -209,8 +203,7 @@ import { CallLogService } from "./services/calllog/call.log.service";
     InvoiceService,
     PrinterOidService,
     PrinterService,
-    ArticleFeaturesService,
-    CallLogService,
+    ArticleFeaturesService
   ],
   exports: [
     // zbog middleware potrebno je exportovati servis

@@ -47,6 +47,7 @@ export class AuthController {
     }
 
     const jwtData = new JWTDataDto();
+    jwtData.phoneIp = user.phoneIp;
     jwtData.role = user.role.role;
     jwtData.id = user.userId;
     jwtData.identity = user.email;
@@ -56,6 +57,7 @@ export class AuthController {
 
     const token: string = jwt.sign(jwtData.toPlainObject(), jwtSecret);
     const jwtRefreshData = new JwtRefreshDataDto();
+    jwtRefreshData.phoneIp = jwtData.phoneIp;
     jwtRefreshData.role = jwtData.role;
     jwtRefreshData.id = jwtData.id;
     jwtRefreshData.identity = jwtData.identity;
@@ -72,6 +74,7 @@ export class AuthController {
       user.role.role,
       user.email,
       token,
+      user.phoneIp,
       refreshToken,
       this.getIsoDate(jwtRefreshData.exp)
     );
@@ -129,6 +132,7 @@ export class AuthController {
     }
 
     const jwtData = new JWTDataDto();
+    jwtData.phoneIp = jwtRefreshData.phoneIp;
     jwtData.role = jwtRefreshData.role;
     jwtData.id = jwtRefreshData.id;
     jwtData.identity = jwtRefreshData.identity;
@@ -143,6 +147,7 @@ export class AuthController {
       jwtData.role,
       jwtData.identity,
       token,
+      jwtData.phoneIp,
       data.token,
       this.getIsoDate(jwtRefreshData.exp)
     );

@@ -24,7 +24,7 @@ export class AddNewEmployeDto {
 
   @Validator.IsString()
   @Validator.IsOptional()
-  telephone: string | null; // Since it's nullable in the entity
+  telephone: string | null;
 
   @Validator.IsNumber()
   departmentId: number;
@@ -53,4 +53,8 @@ export class AddNewEmployeDto {
 
   @Validator.IsIn(["muško", "žensko"])
   gender: "muško" | "žensko";
+
+  @Validator.IsString()
+  @Validator.IsOptional()
+  phoneIp: string | null;
 }

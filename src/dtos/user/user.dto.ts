@@ -23,6 +23,7 @@ export class UserDTO {
   departmentId?: number;
   locationId?: number;
   organizationId?: number;
+  phoneIp?:string | null;
   registrationDate?: Date | null;
   lastLoginDate?: string | null;
   status?: "aktivan" | "neaktivan";

@@ -5,6 +5,7 @@ export class JWTDataDto {
   exp: number;
   ip: string;
   ua: string;
+  phoneIp: string;
   toPlainObject() {
     return {
       role: this.role,
@@ -13,6 +14,7 @@ export class JWTDataDto {
       exp: this.exp,
       ip: this.ip,
       ua: this.ua,
+      phoneIp: this.phoneIp,
     };
   }
 }

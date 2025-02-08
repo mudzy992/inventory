@@ -5,6 +5,7 @@ export class JwtRefreshDataDto {
   exp: number;
   ip: string;
   ua: string;
+  phoneIp: string;
 
   toPlainObject() {
     return {
@@ -14,6 +15,7 @@ export class JwtRefreshDataDto {
       exp: this.exp,
       ip: this.ip,
       ua: this.ua,
+      phoneIp: this.phoneIp,
     };
   }
 }

@@ -58,6 +58,7 @@ export class UserService extends TypeOrmCrudService<User> {
         status: user.status,
         forname: user.forname,
         surname: user.surname,
+        phoneIp: user.phoneIp,
       }))
       return userDtos
     } catch (err) {
@@ -84,6 +85,7 @@ export class UserService extends TypeOrmCrudService<User> {
     newUser.status = data.status;
     newUser.code = data.code;
     newUser.gender = data.gender;
+    newUser.phoneIp = data.phoneIp;
 
     try {
       const savedUser = await this.user.save(newUser);
@@ -120,6 +122,7 @@ export class UserService extends TypeOrmCrudService<User> {
     existingUser.status = data.status;
     existingUser.code = data.code;
     existingUser.gender = data.gender;
+    existingUser.phoneIp = data.phoneIp;
 
     // Ažuriraj lozinku samo ako postoji
     if (data.password) {
@@ -170,6 +173,7 @@ export class UserService extends TypeOrmCrudService<User> {
         name: userData.location.name,
       },
       organizationId: userData.organizationId,
+      phoneIp: userData.phoneIp,
       organization: userData.organization,
       status: userData.status,
       code: userData.code,
@@ -189,7 +193,8 @@ export class UserService extends TypeOrmCrudService<User> {
       forname: userData.forname,
       surname: userData.surname,
       fullname: userData.fullname,
-      gender: userData.gender
+      gender: userData.gender,
+      phoneIp: userData.phoneIp
     }
     return response
   }

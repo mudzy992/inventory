@@ -54,4 +54,8 @@ export class EditEmployeeDto {
 
   @Validator.IsIn(["muško", "žensko"])
   gender: "muško" | "žensko";
+
+  @Validator.IsString()
+  @Validator.IsOptional()
+  phoneIp: string | null;
 }
