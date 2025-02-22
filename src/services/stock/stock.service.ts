@@ -32,27 +32,21 @@ export class StockService extends TypeOrmCrudService<Stock> {
       stock.sapNumber = newStock.sapNumber;
       stock.valueAvailable = newStock.valueAvailable;
       stock.valueOnContract = newStock.valueOnContract;
-
-      // Ako koristite TypeORM, možete koristiti `save` za čuvanje novog stock-a
       const createdStock = await this.stockRepository.save(stock);
 
-      // Dodavanje vrednosti za stock, pretpostavimo da imate odgovarajući DTO
+      // Dodavanje vrijednosti za stock, pretpostavimo da imate odgovarajući DTO
       if (newStock.features) {
         for (const feature of newStock.features) {
           const stockFeature = new StockFeature();
           stockFeature.featureId = feature.featureId;
           stockFeature.value = feature.value;
           stockFeature.stock = createdStock; // Postavljanje veze sa stock-om
-
-          // Ako koristite TypeORM, možete koristiti `save` za čuvanje novog stock feature-a
           await this.stockFeatureRepository.save(stockFeature);
         }
       }
 
       return createdStock;
-      /* Prilagoditi malo povratni stock sa relacijama kako bi bio prikazan full (mada i ne treba) */
     } catch (error) {
-      // Obrada greške ako je potrebno
       throw new ApiResponse(
         "error",
         -1000,
@@ -61,65 +55,63 @@ export class StockService extends TypeOrmCrudService<Stock> {
     }
   }
 
-  /* const stock = await this.stockRepository.findOne({ where: { stockId }, relations: ['category', 'category.features', 'category.features.stockFeatures'] }); */
-
   async updateStock(
     stockId: number,
     updatedStock: UpdateStockDto
   ): Promise<Stock | ApiResponse> {
+    console.log(updatedStock);
+
     const stock = await this.stockRepository.findOne({
       where: { stockId },
       relations: ["stockFeatures", "stockFeatures.feature"],
     });
+
+    if (!stock) {
+      return new ApiResponse("error", -1002, "Skladište nije pronađeno.");
+    }
+
     try {
       if (updatedStock.features) {
-        // Provjeriti koji stockFeature nedostaju u payload-u
+        // 1️⃣ Pronađi koje feature-e treba obrisati
         const stockFeaturesToRemove = stock.stockFeatures.filter(
           (existingFeature) =>
             !updatedStock.features.some(
               (updatedFeature) =>
-                updatedFeature.featureId === existingFeature.featureId
+                updatedFeature.featureId === existingFeature.feature.featureId
             )
         );
 
-        // Obriši StockFeature entitete koji nisu prisutni u payload-u
-        await Promise.all(
-          stockFeaturesToRemove.map(async (featureToRemove) => {
-            await this.stockFeatureRepository.remove(featureToRemove);
-          })
-        );
+        // 2️⃣ Obriši ih iz baze
+        if (stockFeaturesToRemove.length > 0) {
+          await this.stockFeatureRepository.remove(stockFeaturesToRemove);
+        }
 
-        // Iteriraj kroz feature-ove u payload-u
-        for (const updatedFeature of updatedStock.features) {
-          const feature = stock.stockFeatures.find(
+        // 3️⃣ Iteriraj kroz feature-ove u payload-u i obavi dodavanje ili ažuriranje
+        const featurePromises = updatedStock.features.map(async (updatedFeature) => {
+          let feature = stock.stockFeatures.find(
             (f) => f.feature.featureId === updatedFeature.featureId
           );
 
           if (!feature) {
-            // Ako ne postoji, kreirajte novi StockFeature i dodajte ga u stock.stockFeatures
+            // Dodavanje novog feature-a
             const newStockFeature = new StockFeature();
             newStockFeature.stockId = stockId;
             newStockFeature.featureId = updatedFeature.featureId;
             newStockFeature.value = updatedFeature.value;
 
-            stock.stockFeatures.push(newStockFeature); // Dodajte novi StockFeature u stock.stockFeatures
-
-            const savedFeature = await this.stockFeatureRepository.save(
-              newStockFeature
-            );
-          } else {
-            // Ako postoji, izvršite ažuriranje
-            if (updatedFeature.value !== undefined) {
-              feature.value = updatedFeature.value;
-              const savedFeature = await this.stockFeatureRepository.save(
-                feature
-              );
-            }
+            return this.stockFeatureRepository.save(newStockFeature);
+          } else if (feature.value !== updatedFeature.value) {
+            // Ažuriranje postojećeg feature-a
+            feature.value = updatedFeature.value;
+            return this.stockFeatureRepository.save(feature);
           }
-        }
+        });
+
+        // ✅ Paralelno izvršavanje svih operacija
+        await Promise.all(featurePromises);
       }
 
-      // Ažuriraj "core" podatke za artikal
+      // 4️⃣ Ažuriranje osnovnih podataka
       stock.name = updatedStock.name;
       stock.excerpt = updatedStock.excerpt;
       stock.description = updatedStock.description;
