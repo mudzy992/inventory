@@ -208,7 +208,7 @@ export class StockService extends TypeOrmCrudService<Stock> {
       return new ApiResponse(
         "error",
         -1004,
-        "Skladište artikla za tu kategoriju nije pronađeno. Moguće da artikal ne postoji na skladištu."
+        "Skladište artikla za ovu kategoriju ne psotoji. Moguće da artikal ne postoji na skladištu."
       );
     }
     return response;
