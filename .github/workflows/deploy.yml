@@ -1,0 +1,50 @@
+name: Deploy na server
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Provjera koda iz repository-ja
+        uses: actions/checkout@v4
+
+      - name: Postavljanje SSH ključa
+        run: |
+          set -x
+          echo "Postavljanje SSH ključa..."
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p ${{ secrets.SERVER_SSH_PORT }} ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+          echo "SSH ključ uspješno postavljen."
+
+      - name: Provjera konekcije (test SSH)
+        run: |
+          set -x
+          echo "Provjera SSH konekcije..."
+          ssh -p ${{ secrets.SERVER_SSH_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "echo 'SSH konekcija uspješna'"
+          echo "Test SSH konekcije uspješan."
+
+      - name: Pull najnovijeg koda na serveru
+        run: |
+          set -x
+          echo "Preuzimanje posljednjih izmjena iz repository-ja..."
+          ssh -p ${{ secrets.SERVER_SSH_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "
+            cd ${{ secrets.APP_PATH}} &&
+            git reset --hard &&
+            git pull origin master"
+          echo "Kod uspješno preuzet."
+
+      - name: Restart Docker aplikacije
+        run: |
+          set -x
+          echo "Restartovanje Docker kontejnera..."
+          ssh -p ${{ secrets.SERVER_SSH_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "
+            cd ${{ secrets.APP_PATH}} &&
+            docker compose down &&
+            docker compose up -d --build --remove-orphans"
+          echo "Docker kontejner uspješno restartovan, aplikacija je online."
