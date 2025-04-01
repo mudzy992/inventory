@@ -65,11 +65,11 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
 
   async editTicket(ticketId: number, editTicketDto: EdiTicketDto): Promise<ApiResponse> {
     const existingTicket = await this.helpDeskTickets.findOne({where: {ticketId: ticketId}, relations:["user"]});
-  
+
     if (!existingTicket) {
       return new ApiResponse('error', -11002, 'Ticket not found.');
     }
-  
+
     // Ažurirajte atribute tiketa na osnovu DTO objekta
     existingTicket.groupId = editTicketDto.groupId;
     existingTicket.groupPartentId = editTicketDto.groupPartentId;
@@ -81,7 +81,7 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
     existingTicket.status = editTicketDto.status;
     existingTicket.priority = editTicketDto.priority;
     existingTicket.resolveResolution = editTicketDto.resolveResolution;
-  
+
     try {
       await this.helpDeskTickets.save(existingTicket);
       if(editTicketDto.status === 'zatvoren'){
@@ -98,11 +98,11 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
 
   async deleteTicket(ticketId: number): Promise<ApiResponse> {
     const existingTicket = await this.helpDeskTickets.findOne({where: {ticketId: ticketId}});
-  
+
     if (!existingTicket) {
       return new ApiResponse('error', -11002, 'Ticket not found.');
     }
-  
+
     try {
       await this.helpDeskTickets.remove(existingTicket);
       return new ApiResponse('success',-11005, 'Ticket deleted successfully.');
@@ -117,15 +117,15 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
         relations: [
         "user",
         "user.department",
-        "user.location", 
-        "group", 
-        "groupPartent", 
-        "assignedTo2", 
-        "article", 
+        "user.location",
+        "group",
+        "groupPartent",
+        "assignedTo2",
+        "article",
         "article.stock",
         "comments",
         "comments.user",
-        "comments.comments", 
+        "comments.comments",
         "comments.comments.user",
       ]});
 
@@ -194,11 +194,11 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
           }))
       }))
     }
-  
+
     if (!response) {
       return new ApiResponse('error', -11002, 'Ticket not found.');
     }
-  
+
     return response;
   }
 
@@ -206,11 +206,11 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
     const ticket = await this.helpDeskTickets.find({
         relations: ["user", "group", "assignedTo2", "article", "article.stock"]
     });
-  
+
     if (!ticket) {
       return new ApiResponse('error', -11002, 'Ticket not found.');
     }
-  
+
     return ticket;
   }
 
@@ -220,11 +220,11 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
         where: { group: { locationId: user.location.parentLocationId }},
         relations: ["user", "group", "assignedTo2", "article", "article.stock"]
     });
-  
+
     if (!ticket) {
       return new ApiResponse('error', -11002, 'Ticket not found.');
     }
-  
+
     return ticket;
   }
 
@@ -267,7 +267,6 @@ export class HelpdeskTicketService extends TypeOrmCrudService<HelpdeskTickets> {
       ticketsQuery.andWhere("ticket.assignedTo = :assignedTo", { assignedTo });
     }
     if (status) {
-      console.log("Status okida")
       ticketsQuery.andWhere("ticket.status = :status", { status });
     }
 
