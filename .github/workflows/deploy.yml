@@ -42,7 +42,7 @@ jobs:
       - name: Restart Docker aplikacije
         run: |
           set -x
-          echo "Restartovanje Docker kontejnera..."
+          echo "Reset kontejnera..."
           ssh -p ${{ secrets.SERVER_SSH_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "
             cd ${{ secrets.APP_PATH}} &&
             docker compose down &&
