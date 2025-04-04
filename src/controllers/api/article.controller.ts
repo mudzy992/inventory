@@ -11,6 +11,7 @@ import {
 import { Crud } from "@nestjsx/crud";
 import { AddArticleDto } from "src/dtos/article/add.article.dto";
 import { ArticleDTO } from "src/dtos/article/article.dto";
+import { EditArticleDto } from "src/dtos/article/edit.full.article.dto";
 import { Article } from "src/entities/Article";
 import { AllowToRoles } from "src/misc/allow.to.roles.descriptor";
 import { ApiResponse } from "src/misc/api.response.class";
@@ -122,13 +123,13 @@ export class ArticleController {
     return await this.service.changeStatus(id, data);
   }
 
-  // @Patch(':id')
-  // async editFullArticleController(
-  //   @Param('id') id: number,
-  //   @Body() data: EditArticleDto,
-  // ) {
-  //   return await this.service.editArticle(id, data);
-  // }
+  @Patch('edit/comment/:articleId')
+  async editComment(
+    @Param('articleId') articleId: number,
+    @Body() comment: string,
+  ) {
+    return await this.service.editComment(articleId, comment);
+  }
 
   // @Patch('/stock/:id')
   // async changeStockExistArticle(

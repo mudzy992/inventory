@@ -411,6 +411,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       status: articleData.status,
       timestamp: articleData.timestamp,
       userId: articleData.userId,
+      comment: articleData.comment,
       category: {
         categoryId: articleData.category.categoryId,
         imagePath: articleData.category.imagePath,
@@ -657,7 +658,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       const template = readFileSync(StorageConfig.prenosnica.template);
       const folderPath =
         StorageConfig.prenosnica.destination + currentYear + "/";
-        
+
       if (!existsSync(folderPath)) {
         try {
           mkdirSync(folderPath, { recursive: true });
@@ -696,5 +697,24 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         "Greška prilikom pravljenja prenosnice. Greška: " + err
       );
     }
+  }
+
+  async editComment(articleId: number, comment: string): Promise<Article | ApiResponse> {
+    const existingArticle = await this.article.findOne({
+      where: { articleId: articleId }
+    });
+
+    if (!existingArticle) {
+      return new ApiResponse(
+        "error",
+        -8000,
+        "Artikal sa serijskim brojem ne postoji."
+      );
+    }
+
+    existingArticle.comment = comment;
+    await this.article.save(existingArticle);
+
+    return existingArticle;
   }
 } /* Kraj koda */
