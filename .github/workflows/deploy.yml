@@ -45,6 +45,7 @@ jobs:
           echo "Reset kontejnera..."
           ssh -p ${{ secrets.SERVER_SSH_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "
             cd ${{ secrets.APP_PATH}} &&
-            docker compose down &&
-            docker compose up -d --build --remove-orphans"
+            docker compose down --remove-orphans --volumes &&
+            docker container prune -f &&
+            docker compose up -d --build"
           echo "Docker kontejner uspješno restartovan, aplikacija je online."
