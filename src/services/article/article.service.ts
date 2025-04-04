@@ -134,7 +134,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       newArticle.status = data.status;
       newArticle.stockId = stockId;
       newArticle.comment = data.comment;
-      /* Sada kada smo kreirali artikal, njega je potrebno snimiti u neku konstantu i čuvati ga na await 
+      /* Sada kada smo kreirali artikal, njega je potrebno snimiti u neku konstantu i čuvati ga na await
         to radimo u ovom trenutku jer ćemo tako dobiti articleId, već ovdje artikal ide u bazu podataka (na returnu)*/
 
       const savedArticle = await this.article.save(newArticle);
@@ -153,7 +153,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       /* Dodati taj artikal u skladište */
 
       /* sada kada imamo articleId smješteno u savedArticle možemo za taj artikal dodati feature i njih snimiti isto u neku konstantu
-        pošto je features jedan niz podataka (tako smo naveli u Dto, ali i planirali u bazi, artikal može imati više features-a) 
+        pošto je features jedan niz podataka (tako smo naveli u Dto, ali i planirali u bazi, artikal može imati više features-a)
         tu se koristi for petlja konstrukcije za svaki varijantu feature dodaj određeni podatak i vrti u krug */
       /* za svaki slučaj je ovaj if, iako je u DTO postavljen kao opcionalan */
       if (data.features) {
@@ -282,7 +282,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         );
 
         const newValueAvailable =
-          (await existingArticle.stock.valueAvailable) + 1;
+          (existingArticle.stock.valueAvailable) + 1;
         await this.stock.update(existingArticle.stock.stockId, {
           valueAvailable: newValueAvailable,
           timestamp: new Date(),
@@ -321,14 +321,13 @@ export class ArticleService extends TypeOrmCrudService<Article> {
           preuzeo
         );
 
-        if (existingArticle.status === "razduženo") {
-          const newValueAvailable =
-            (await existingArticle.stock.valueAvailable) - 1;
-          await this.stock.update(existingArticle.stock.stockId, {
+        const currentValue = existingArticle.stock.valueAvailable;
+        const newValueAvailable = currentValue > 0 ? currentValue - 1 : 0;
+
+        await this.stock.update(existingArticle.stock.stockId, {
             valueAvailable: newValueAvailable,
             timestamp: new Date(),
-          });
-        }
+        });
 
         return await this.findOne({
           where: { articleId: existingArticle.articleId },
@@ -359,7 +358,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         );
 
         const newValueAvailable =
-          (await existingArticle.stock.valueAvailable) - 1;
+          (existingArticle.stock.valueAvailable) - 1;
         await this.stock.update(existingArticle.stock.stockId, {
           valueAvailable: newValueAvailable,
           timestamp: new Date(),
@@ -399,7 +398,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         "helpdeskTickets.assignedTo2",
         "helpdeskTickets.comments",
         "helpdeskTickets.comments.user",
-        "helpdeskTickets.comments.comments", 
+        "helpdeskTickets.comments.comments",
         "helpdeskTickets.comments.comments.user",
       ],
     });
