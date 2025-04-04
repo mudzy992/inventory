@@ -59,8 +59,6 @@ export class StockService extends TypeOrmCrudService<Stock> {
     stockId: number,
     updatedStock: UpdateStockDto
   ): Promise<Stock | ApiResponse> {
-    console.log(updatedStock);
-
     const stock = await this.stockRepository.findOne({
       where: { stockId },
       relations: ["stockFeatures", "stockFeatures.feature"],
