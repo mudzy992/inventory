@@ -250,7 +250,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
         data.status === "razduženo" &&
         existingArticle.status === "zaduženo"
       ) {
-        // Ako je postojeći status "zadužueno", a šaljemo "razduženo" - tj. RAZDUŽUJEMO ARTIKAL. (SA KREIRANJEM KORISNIKA ZA SKLADIŠTE, TJ. PODRUŽNICU DO OVOG STANJA NIKADA DOĆI NEĆE)
+        // Ako je postojeći status "zaduženo", a šaljemo "razduženo" - tj. RAZDUŽUJEMO ARTIKAL. (SA KREIRANJEM KORISNIKA ZA SKLADIŠTE, TJ. PODRUŽNICU DO OVOG STANJA NIKADA DOĆI NEĆE)
 
         predao = existingArticle.userId;
         preuzeo = skladiste;
