@@ -311,14 +311,15 @@ export class ArticleService extends TypeOrmCrudService<Article> {
           status: "otpisano",
           comment: "OTPIS: " + data.comment,
         });
-
+        const signedpath = '2025/potpisano/otpis.pdf'
         await this.createDocument(
           existingArticle.articleId,
           data.comment,
           existingArticle.stock.name,
           data.invNumber,
           predao,
-          preuzeo
+          preuzeo,
+          signedpath
         );
 
         const currentValue = existingArticle.stock.valueAvailable;
@@ -564,7 +565,8 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     name: string,
     invNumber: string,
     predao: number,
-    preuzeo: number
+    preuzeo: number,
+    signedPath?: string
   ) {
     let documentNumber: number;
 
@@ -581,7 +583,6 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       documentNumber = lastRecord.documentNumber + 1;
     }
 
-    /* let currentYear = lastRecord ? new Date(lastRecord.created_date).getFullYear() : new Date().getFullYear(); */
     let currentYear;
     if (lastRecord && lastRecord.createdDate) {
       currentYear = new Date(lastRecord.createdDate).getFullYear();
@@ -600,6 +601,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     newDoc.path = currentYear + "/prenosnica" + documentNumber + ".docx";
     newDoc.documentNumber = documentNumber;
     newDoc.articleId = articleId;
+    signedPath && (newDoc.signed_path = signedPath);
 
     const savedDocument = await this.document.save(newDoc);
     if (!savedDocument) {
@@ -653,8 +655,6 @@ export class ArticleService extends TypeOrmCrudService<Article> {
 
     try {
       const template = readFileSync(StorageConfig.prenosnica.template);
-/*       console.log(template) */
-
       const folderPath =
         StorageConfig.prenosnica.destination + currentYear + "/";
 
