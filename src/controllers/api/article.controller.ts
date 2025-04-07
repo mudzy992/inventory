@@ -126,9 +126,9 @@ export class ArticleController {
   @Patch('edit/comment/:articleId')
   async editComment(
     @Param('articleId') articleId: number,
-    @Body() comment: string,
+    @Body() data:{comment: string},
   ) {
-    return await this.service.editComment(articleId, comment);
+    return await this.service.editComment(articleId, data.comment);
   }
 
   // @Patch('/stock/:id')

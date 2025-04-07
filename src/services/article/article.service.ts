@@ -74,6 +74,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
       invNumber: item.invNumber,
       documentId: item.documentId,
       documents: item.documents.filter((doc) => doc.documentsId === item.documentId),
+      comment: item.comment,
       category: {
         name: item.category.name,
         imagePath: item.category.imagePath,
@@ -703,7 +704,6 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     const existingArticle = await this.article.findOne({
       where: { articleId: articleId }
     });
-
     if (!existingArticle) {
       return new ApiResponse(
         "error",
@@ -713,8 +713,7 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     }
 
     existingArticle.comment = comment;
-    await this.article.save(existingArticle);
-
-    return existingArticle;
+    const saved = await this.article.save(existingArticle);
+    return saved;
   }
 } /* Kraj koda */
