@@ -16,7 +16,7 @@ import { AdministratorDashboardService } from "src/services/administrator.dashbo
 @Controller("api/admin/dashboard") //kada ovdje dodamo prefiks, onda ne moramo dolje ispod, podrazumijeva se
 export class AdministratorDashboardController {
   constructor(
-    // Uključiti servise administratora
+    // Uključiti servise admina
     private service: AdministratorDashboardService
   ) {}
   /* Articles */
