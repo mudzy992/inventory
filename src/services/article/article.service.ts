@@ -716,4 +716,4 @@ export class ArticleService extends TypeOrmCrudService<Article> {
     const saved = await this.article.save(existingArticle);
     return saved;
   }
-} /* Kraj koda */
+}
