@@ -4,7 +4,7 @@ export const DatabaseConfiguration = {
   username: 'mudzy',
   password: 'nije,kikiriki',
   port: 3306,
-}; //PRODUKCIONA NA SERVERU
+}; //PRODUKCIONA NA SERVERU!
 
 /* export const DatabaseConfiguration = {
   // hostname: '192.168.0.32',
