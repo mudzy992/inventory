@@ -33,37 +33,49 @@ export class DocumentService extends TypeOrmCrudService<Documents> {
     await this.document.update(id, { signed_path: filePath });
   }
 
-  async uploadPdf(documentId: number, file: multer.Multer.File): Promise<void> {
+  async uploadPdf(
+    documentId: number,
+    file?: multer.Multer.File,
+    pathOverride?: string
+    ): Promise<void> {
     try {
-      if (!file) {
-        throw new Error("PDF file not provided");
-      }
-
-      const document = await this.findOneById(documentId);
-      if (!document) {
+        const document = await this.findOneById(documentId);
+        if (!document) {
         throw new Error("Document not found");
-      }
+        }
 
-      const currentYear = new Date().getFullYear();
-      const destination = path.join(
-        StorageConfig.prenosnica.destination,
-        `${currentYear}/potpisano`
-      );
-      await fs.mkdir(destination, { recursive: true });
+        let storedPath: string;
 
-      const fileName = `prenosnica-${document.documentNumber}.pdf`;
-      const filePath = path.join(destination, fileName);
+        if (pathOverride) {
+        storedPath = pathOverride;
+        } else {
+        if (!file) {
+            throw new Error("PDF file not provided");
+        }
 
-      // Sačuvaj binarne podatke fajla na ciljnu putanju
-      await fs.writeFile(filePath, file.buffer);
+        const currentYear = new Date().getFullYear();
+        const destination = path.join(
+            StorageConfig.prenosnica.destination,
+            `${currentYear}/potpisano`
+        );
+        await fs.mkdir(destination, { recursive: true });
 
-      const storedPath = `${currentYear}/potpisano/${fileName}`;
-      await this.updateDocumentPath(documentId, storedPath);
-    } catch (error) {
-      console.error("Error uploading PDF file:", error);
-      throw new Error("Error uploading PDF file");
+        const fileName = `prenosnica-${document.documentNumber}.pdf`;
+        const filePath = path.join(destination, fileName);
+
+        await fs.writeFile(filePath, file.buffer);
+
+        storedPath = `${currentYear}/potpisano/${fileName}`;
+        }
+
+        await this.updateDocumentPath(documentId, storedPath);
+
+        } catch (error) {
+            console.error("Error uploading PDF file:", error);
+            throw new Error("Error uploading PDF file");
+        }
     }
-  }
+
 
   async getAll() {
     return await this.document.find({

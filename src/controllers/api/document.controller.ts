@@ -7,6 +7,7 @@ import {
   Get,
   Query,
   UseGuards,
+  Body,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Crud } from "@nestjsx/crud";
@@ -47,10 +48,11 @@ export class DocumentController {
   @UseInterceptors(FileInterceptor("file"))
   async uploadPdf(
     @Param("id") documentId: number,
-    @UploadedFile() file
+    @UploadedFile() file,
+    @Body() data: { pathOverride?: string }
   ): Promise<any> {
     try {
-      await this.service.uploadPdf(documentId, file);
+      await this.service.uploadPdf(documentId, file, data.pathOverride);
       return { message: "PDF file uploaded successfully" };
     } catch (error) {
       console.error(error);
