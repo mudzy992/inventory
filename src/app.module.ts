@@ -207,7 +207,7 @@ import { ArticleFeaturesService } from "./services/article.features/article.feat
   ],
   exports: [
     // zbog middleware potrebno je exportovati servis
-    // da bi svi ostali elementi koji se nalaze van okvira modula
+    // da bi svi ostali elementi koji se nalaze van okvira modula 
     UserService,
   ],
 })
