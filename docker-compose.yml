@@ -5,6 +5,7 @@ services:
   backend:
     image: inventory-backend-image
     container_name: inventory-backend
+    network_mode: bridge
     networks:
       - inventory-network
     build:
