@@ -11,7 +11,7 @@ import { Repository } from "typeorm";
 export class CategoryService extends TypeOrmCrudService<Category> {
   constructor(
     @InjectRepository(Category)
-    private readonly category: Repository<Category> //Čim spomenenom neki repozitorijum moramo da taj repozitoriju evidentiramo u našem osnovnom modulu (app.module.ts)
+    private readonly category: Repository<Category> 
   ) {
     super(category);
   }
