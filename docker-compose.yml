@@ -1,20 +1,13 @@
-networks:
-  inventory-network:
-    name: inventory-network
 services:
   backend:
     image: inventory-backend-image
     container_name: inventory-backend
     network_mode: bridge
-    networks:
-      - inventory-network
     build:
       context: /home/administrator/Documents/GitHub/inventory
       dockerfile: Dockerfile
     ports:
       - "3005:3006"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     volumes:
       - /home/administrator/Documents/GitHub/inventory:/usr/src/app:rw
       - /mnt/shared-app-files/inventory:/usr/src/app/storage:rw
