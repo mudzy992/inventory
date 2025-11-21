@@ -9,12 +9,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3005:3006"
-    networks:
-      - inventory-network
     volumes:
       - /home/administrator/Documents/GitHub/inventory:/usr/src/app:rw
       - /mnt/shared-app-files/inventory:/usr/src/app/storage:rw
     restart: always
-networks:
-  inventory-network:
-    driver: bridge
