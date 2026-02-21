@@ -21,4 +21,4 @@ networks:
   web:
     external: true
   inventory-network:
-    driver: bridge
+    external: true
