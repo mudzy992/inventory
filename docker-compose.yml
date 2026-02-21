@@ -10,7 +10,17 @@ services:
     volumes:
       - /mnt/shared-app-files/inventory:/usr/src/app/storage
     labels:
-      - "traefik.enable=false" # backend interno, nema javnog routinga
+      - "traefik.enable=true"
+      # Path-based routing na /backend/ točno
+      - "traefik.http.routers.inventory-backend.rule=Host(`inventory.hopto.org`) && PathPrefix(`/backend/`)"
+      - "traefik.http.routers.inventory-backend.entrypoints=websecure"
+      - "traefik.http.routers.inventory-backend.tls=true"
+      - "traefik.http.routers.inventory-backend.tls.certresolver=le"
+      # Loadbalancer port backend-a
+      - "traefik.http.services.inventory-backend.loadbalancer.server.port=3006"
+      # StripPrefix da backend vidi request-e relativno na /
+      - "traefik.http.middlewares.backend-strip.stripprefix.prefixes=/backend"
+      - "traefik.http.routers.inventory-backend.middlewares=backend-strip"
     expose:
       - "3006" # expose unutar mreže da frontend može pozivati
 networks:
