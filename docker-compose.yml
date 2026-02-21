@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   backend:
     build:
@@ -9,16 +7,12 @@ services:
     restart: unless-stopped
     networks:
       - web
-      - inventory-network
     volumes:
       - /mnt/shared-app-files/inventory:/usr/src/app/storage
     labels:
       - "traefik.enable=false" # backend interno, nema javnog routinga
     expose:
       - "3006" # expose unutar mreže da frontend može pozivati
-
 networks:
   web:
-    external: true
-  inventory-network:
     external: true
