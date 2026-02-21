@@ -1,14 +1,24 @@
+version: '3.9'
+
 services:
   backend:
-    image: inventory-backend-image
-    container_name: inventory-backend
-    network_mode: bridge
     build:
-      context: /home/administrator/Documents/GitHub/inventory
+      context: .
       dockerfile: Dockerfile
-    ports:
-      - "3005:3006"
-    volumes:
-      - /home/administrator/Documents/GitHub/inventory:/usr/src/app:rw
-      - /mnt/shared-app-files/inventory:/usr/src/app/storage:rw
+    container_name: inventory-backend
     restart: unless-stopped
+    networks:
+      - web
+      - inventory-network
+    volumes:
+      - /mnt/shared-app-files/inventory:/usr/src/app/storage
+    labels:
+      - "traefik.enable=false" # backend interno, nema javnog routinga
+    expose:
+      - "3006" # expose unutar mreže da frontend može pozivati
+
+networks:
+  web:
+    external: true
+  inventory-network:
+    driver: bridge

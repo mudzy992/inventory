@@ -1,38 +1,23 @@
-# Stage 1: Install dependencies
+# Stage 1: dependencies
 FROM node:20-alpine AS dependencies
-
-WORKDIR /usr/src/backend/app
-
-# Kopiramo package.json i package-lock.json u radni direktorij
+WORKDIR /usr/src/app
 COPY package*.json ./
+RUN npm install --force --silent
 
-# Instaliramo ovisnosti
-RUN npm install --force --verbose
-
-# Stage 2: Build
+# Stage 2: build
 FROM dependencies AS build
-
-# Kopiramo ostatak aplikacije
 COPY . .
-
-# Build
 RUN npm run build --verbose
 
-# Stage 3: Production image
+# Stage 3: production
 FROM node:20-alpine AS production
+WORKDIR /usr/src/app
+COPY --from=build /usr/src/app/package*.json ./
+COPY --from=build /usr/src/app/node_modules ./node_modules
+COPY --from=build /usr/src/app/dist ./dist
 
-WORKDIR /usr/src/backend/app
+# Storage mount
+VOLUME ["/usr/src/app/storage"]
 
-# Kopiramo node_modules i dist iz builder faze
-COPY --from=build /usr/src/backend/app/package*.json ./
-COPY --from=build /usr/src/backend/app/node_modules ./node_modules
-COPY --from=build /usr/src/backend/app/dist ./dist
-
-# Instaliramo PM2 globalno
-RUN npm install -g pm2
-
-# Otvaramo port na kojem aplikacija radi
 EXPOSE 3006
-
-# Pokrećemo aplikaciju sa PM2
 CMD ["node", "dist/src/main.js"]
