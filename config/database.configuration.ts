@@ -1,8 +1,8 @@
 export const DatabaseConfiguration = {
-  hostname: 'inventory.hopto.org',
-  database: 'inventory_v2',
-  username: 'mudzy',
-  password: 'nije,kikiriki',
+  hostname: "ba101.top",
+  database: "inventory_v2",
+  username: "mudzy",
+  password: "nije,kikiriki",
   port: 3306,
 }; //PRODUKCIONA NA SERVERU!
 

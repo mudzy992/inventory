@@ -9,7 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const allowedOrigins = [
     'http://localhost:4001',
-    'https://inventory.hopto.org',
+    'https://inventory.ba101.top',
   ];
 
   const corsOptions = {
@@ -18,7 +18,7 @@ async function bootstrap() {
         callback(null, true);
       } else {
         console.warn(`CORS blokira zahtjev: ${origin}`);
-        callback(null, false); 
+        callback(null, false);
       }
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
@@ -37,7 +37,7 @@ async function bootstrap() {
           HttpStatus.BAD_REQUEST,
         ),
     }),
-  );  
+  );
   app.useStaticAssets(StorageConfig.prenosnica.destination, {
     prefix: StorageConfig.prenosnica.urlPrefix,
     maxAge: StorageConfig.prenosnica.maxAge,
