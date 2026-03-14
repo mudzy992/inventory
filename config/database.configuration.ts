@@ -1,5 +1,5 @@
 export const DatabaseConfiguration = {
-  hostname: "ba101.top",
+  hostname: "sql.ba101.top",
   database: "inventory_v2",
   username: "mudzy",
   password: "nije,kikiriki",
